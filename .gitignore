@@ -218,3 +218,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# TrialMatch generated raw ClinicalTrials.gov data
+services/trial_ingestion/data/raw/*.json
