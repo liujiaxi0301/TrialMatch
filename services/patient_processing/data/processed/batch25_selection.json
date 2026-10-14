@@ -1,0 +1,132 @@
+{
+  "archive_sha256": "6d3c5433bcae4791bc5c30469d1445b430fb4894d5c13bda15fee0584bbd7778",
+  "reference_date": "2021-11-30",
+  "selection_rule": "adult (age >= 18) at reference_date with exact T2D Condition; sort by Patient.id then archive member path; take first N",
+  "selected": [
+    {
+      "patient_id": "060e72d3-912e-55cd-0c92-5faa6cb7a6db",
+      "archive_member": "fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json",
+      "source_sha256": "67ec6b87be1775138d11af6658391f2f3ad31aa1dde3c565d23555a0c0210567"
+    },
+    {
+      "patient_id": "1293efbb-72dc-8b15-3bd6-916f96ed54f4",
+      "archive_member": "fhir/Chauncey770_Jones311_1293efbb-72dc-8b15-3bd6-916f96ed54f4.json",
+      "source_sha256": "9811c8ada2c54eb7be9792daad62d1f87e996ded4dd147658ecb4d1670d3bd20"
+    },
+    {
+      "patient_id": "165a4435-31ff-0493-eb3f-3a86106f3a59",
+      "archive_member": "fhir/Thelma273_Bayer639_165a4435-31ff-0493-eb3f-3a86106f3a59.json",
+      "source_sha256": "e802213325783618e6d483466d55d6ebad6986d4ee328a7b233950b9ce5841f7"
+    },
+    {
+      "patient_id": "1cfa5a70-7f3c-4227-5cf1-e182fcff4cd4",
+      "archive_member": "fhir/Alaine226_Willms744_1cfa5a70-7f3c-4227-5cf1-e182fcff4cd4.json",
+      "source_sha256": "7ce2c755312d5d81ba9e8e3185522e692b848a9f7793be5a3a082a26024b98d6"
+    },
+    {
+      "patient_id": "28db1c55-fe99-d5c8-8fc4-bffda09ab3be",
+      "archive_member": "fhir/Sana377_Wolff180_28db1c55-fe99-d5c8-8fc4-bffda09ab3be.json",
+      "source_sha256": "5f6e6a895a116e6eb6adc3fb57ae8acdb6a4b6fff298896790fb2bb6dbaf5537"
+    },
+    {
+      "patient_id": "30db29cb-a1c0-272e-bfed-ce88ebc23b2d",
+      "archive_member": "fhir/Barbara209_Acevedo301_30db29cb-a1c0-272e-bfed-ce88ebc23b2d.json",
+      "source_sha256": "ade42d497fa9cb03871086e72a2b387f1e154c5dfd9ba477f505b9a71083cec4"
+    },
+    {
+      "patient_id": "3beee40e-512b-420f-38a3-28e56cddbc9b",
+      "archive_member": "fhir/Lou594_Crooks415_3beee40e-512b-420f-38a3-28e56cddbc9b.json",
+      "source_sha256": "b4514aa91eb1f8fd49a06292cbd89243e584c94c388ca881dfa7b45c066410f6"
+    },
+    {
+      "patient_id": "3dfce025-b696-711a-8c2d-6903736e2882",
+      "archive_member": "fhir/Henry768_Gottlieb798_3dfce025-b696-711a-8c2d-6903736e2882.json",
+      "source_sha256": "858fcb61890e274c96b12674ddd91b68459dec71c3b35ad7f62f6745db3d79ff"
+    },
+    {
+      "patient_id": "40ef2428-c142-6e65-8e0e-0ee4098dda28",
+      "archive_member": "fhir/Meghan514_Jacobson885_40ef2428-c142-6e65-8e0e-0ee4098dda28.json",
+      "source_sha256": "c25be6dd36bd6190aa69f62df8c266cba39814ec5f78d70caca115aa03836e53"
+    },
+    {
+      "patient_id": "475803f3-ae29-ba8d-bdd1-25145a94eaee",
+      "archive_member": "fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json",
+      "source_sha256": "726f05437a3cc85418f6037d1521e510b968ac1fc1f31667df5a7f1865b3f4c1"
+    },
+    {
+      "patient_id": "4b10c406-d391-31dc-cefd-5812b6832cf9",
+      "archive_member": "fhir/Beth967_Osinski784_4b10c406-d391-31dc-cefd-5812b6832cf9.json",
+      "source_sha256": "cd7a7cd188a1b8e2b18c1afcd3b828197ecf5a4cb5808b4d1fefb8ddf21b6aad"
+    },
+    {
+      "patient_id": "509f9a77-2a22-f98b-c539-9a44057efb51",
+      "archive_member": "fhir/Loretta235_Bosco882_509f9a77-2a22-f98b-c539-9a44057efb51.json",
+      "source_sha256": "c5ef4a93f81b0410edcea89c631243fdb9d40639092ad7e051ab6b2f3eee7ad0"
+    },
+    {
+      "patient_id": "55c5b8d3-99d0-58ad-8444-e42bb81bd5c7",
+      "archive_member": "fhir/Jospeh459_Gerhold939_55c5b8d3-99d0-58ad-8444-e42bb81bd5c7.json",
+      "source_sha256": "2cdcecadea1b70a663864a2eef71d4d1253060569e80d3e1da67a73015ccc398"
+    },
+    {
+      "patient_id": "56cfe6a5-4835-d925-fd7a-84faf11306f0",
+      "archive_member": "fhir/Matthew562_O'Connell601_56cfe6a5-4835-d925-fd7a-84faf11306f0.json",
+      "source_sha256": "0b7e3fe248a15fb907ea1fcf07a7dcb3190f15a0695770fb742de9ca8a0ea25b"
+    },
+    {
+      "patient_id": "76b289fd-e825-734c-8446-316f59643593",
+      "archive_member": "fhir/Agueda283_Gerhold939_76b289fd-e825-734c-8446-316f59643593.json",
+      "source_sha256": "a2f5c8e587684df1e6917fee9a9ceba119a0a96f7bef76a5f3863b7dd8042fc3"
+    },
+    {
+      "patient_id": "80534c6c-b12d-caa5-42de-b179fd7f9695",
+      "archive_member": "fhir/Anthony633_Wehner319_80534c6c-b12d-caa5-42de-b179fd7f9695.json",
+      "source_sha256": "c4f6603a075a669f2ee1ef39b449a78d6f9b0b64e3f40302f44fb5f04f3a7d77"
+    },
+    {
+      "patient_id": "83f922a9-3567-cb65-b57f-2da9cc05af15",
+      "archive_member": "fhir/Sofia418_Mesa630_83f922a9-3567-cb65-b57f-2da9cc05af15.json",
+      "source_sha256": "260bb9bc806ffae26d0081ba2c033dba72febb09b44d821c8cf064014bc66a7c"
+    },
+    {
+      "patient_id": "8c6ae452-5f8c-9ff6-006d-c6c860acf5cd",
+      "archive_member": "fhir/Darla154_Hoppe518_8c6ae452-5f8c-9ff6-006d-c6c860acf5cd.json",
+      "source_sha256": "cd35f156f1b5ec21f9421df08da5b422f0a248b959456ae20f7d8defc92b01d3"
+    },
+    {
+      "patient_id": "9e84e569-7adc-ff42-ccdb-9fe9c23842a6",
+      "archive_member": "fhir/Armando772_Hilll811_9e84e569-7adc-ff42-ccdb-9fe9c23842a6.json",
+      "source_sha256": "5dca0f33698bc213667b9434b1c75548846acc8413520e3c397536c2e6dff86e"
+    },
+    {
+      "patient_id": "9ef4db86-c427-ddfe-a607-737f08ffb0c1",
+      "archive_member": "fhir/Terrilyn343_Murphy561_9ef4db86-c427-ddfe-a607-737f08ffb0c1.json",
+      "source_sha256": "029bbbd64d5e78e5176636a21f592e6234b44e326d12d522aadef76e8e65b5bb"
+    },
+    {
+      "patient_id": "aa01ba4c-e0ac-805a-f1cb-9b38dc431f4f",
+      "archive_member": "fhir/Lizette501_Nikolaus26_aa01ba4c-e0ac-805a-f1cb-9b38dc431f4f.json",
+      "source_sha256": "f4e483a25b6884b638283c81181ccbc2b69c88cf497bd7f36e33d410cd04cd1d"
+    },
+    {
+      "patient_id": "aade3c61-92bd-d079-9d28-0b2b7fde0fbb",
+      "archive_member": "fhir/Sal878_Hoppe518_aade3c61-92bd-d079-9d28-0b2b7fde0fbb.json",
+      "source_sha256": "2e56ddbf38161e1578a33e7ec36224361c4abc20198e6911a3edccadeeb529c5"
+    },
+    {
+      "patient_id": "be82309d-1a8f-df82-4cd6-5f03e1060e8e",
+      "archive_member": "fhir/Felton646_Pouros728_be82309d-1a8f-df82-4cd6-5f03e1060e8e.json",
+      "source_sha256": "15e06291fb254765a14c72b981d41b74771a50db575d12d911491bbb666e1bfb"
+    },
+    {
+      "patient_id": "c893e2b1-4238-52b6-e8e1-1ed709e42ce3",
+      "archive_member": "fhir/Darron84_Rowe323_c893e2b1-4238-52b6-e8e1-1ed709e42ce3.json",
+      "source_sha256": "a84c9d9873acf878fb47d83b512da57a7470358bbd4674a1b48bcbe87f5ac0ac"
+    },
+    {
+      "patient_id": "d362f4e5-244f-cf80-f2d5-25bcd2c97785",
+      "archive_member": "fhir/Lorinda137_Rosenbaum794_d362f4e5-244f-cf80-f2d5-25bcd2c97785.json",
+      "source_sha256": "e94f1ac4bfbda3561d54459f3ad960b7424538f155fa9d3ba5b95c20587efb46"
+    }
+  ]
+}
