@@ -1,0 +1,36 @@
+services:
+  workspace:
+    build: .
+    profiles: [dev]
+    volumes:
+      - .:/app
+    environment:
+      TRIALMATCH_MODE: offline
+
+  rag-api:
+    build: .
+    command: uv run --frozen python -m uvicorn services.rag_workflow.api:app --host 0.0.0.0 --port 8080
+    environment:
+      TRIALMATCH_MODE: offline
+      CHROMADB_HOST: rag-chromadb
+      CHROMADB_PORT: "8000"
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - .:/app:ro
+      - ./artifacts:/app/artifacts
+    depends_on:
+      - rag-chromadb
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health', timeout=5)"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  rag-chromadb:
+    image: chromadb/chroma:1.5.9
+    volumes:
+      - rag-chroma-data:/data
+
+volumes:
+  rag-chroma-data:
