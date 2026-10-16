@@ -1,0 +1,8 @@
+# Add with -f after docker-compose.yml for live GCP calls.
+services:
+  rag-api:
+    environment:
+      TRIALMATCH_MODE: live
+      GOOGLE_APPLICATION_CREDENTIALS: /secrets/llm-service-account.json
+    volumes:
+      - ${GOOGLE_APPLICATION_CREDENTIALS:?Set an absolute host credential JSON path}:/secrets/llm-service-account.json:ro

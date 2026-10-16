@@ -1,0 +1,117 @@
+{
+  "checked_at": "2026-10-15T20:09:28.936985+00:00",
+  "scope": "MS2 technical verification, not clinical validation",
+  "source_patient_count": 25,
+  "trial_corpus_count": 1313,
+  "demo_trial_count": 50,
+  "indexed_fragments": 607,
+  "automated_tests": {
+    "count": 25,
+    "passed": true,
+    "command": "python -m unittest discover -s services/rag_workflow/tests -v"
+  },
+  "lint": {
+    "passed": true,
+    "command": "ruff check services/rag_workflow"
+  },
+  "live_cli": {
+    "result_status": "OK",
+    "patient_id": "060e72d3-912e-55cd-0c92-5faa6cb7a6db",
+    "question": "Which clinical trials may suit this patient? Explain supporting evidence, screening barriers, and concerns requiring review.",
+    "candidate_count": 3,
+    "metrics": {
+      "latency_seconds": 1.033,
+      "candidate_count": 3,
+      "corpus_trial_count": 50,
+      "embedding_requests": 0,
+      "generation_requests": 0,
+      "cache_hits": 15,
+      "prompt_tokens": 0,
+      "output_tokens": 0
+    },
+    "trial_results": [
+      {
+        "trial_id": "NCT04670666",
+        "screening_status": "NEEDS_MORE_INFORMATION",
+        "match_score": 0.0,
+        "coverage": {
+          "total": 25,
+          "completed": 25,
+          "known": 0,
+          "unknown": 25,
+          "screening_barriers": 0
+        }
+      },
+      {
+        "trial_id": "NCT04501406",
+        "screening_status": "NEEDS_MORE_INFORMATION",
+        "match_score": 4.3,
+        "coverage": {
+          "total": 23,
+          "completed": 23,
+          "known": 1,
+          "unknown": 22,
+          "screening_barriers": 0
+        }
+      },
+      {
+        "trial_id": "NCT04874012",
+        "screening_status": "SCREENING_BARRIER",
+        "match_score": 9.1,
+        "coverage": {
+          "total": 11,
+          "completed": 11,
+          "known": 2,
+          "unknown": 9,
+          "screening_barriers": 1
+        }
+      }
+    ]
+  },
+  "provider_smoke": {
+    "embedding_dimension": 256,
+    "generation_model": "gemini-3.1-flash-lite",
+    "generation_schema_valid": true,
+    "metrics": {
+      "embedding_requests": 1,
+      "generation_requests": 1,
+      "cache_hits": 0,
+      "prompt_tokens": 143,
+      "output_tokens": 46
+    }
+  },
+  "http_api": "FastAPI TestClient /health, /patients, /screen; offline responses and invalid requests checked",
+  "docker": {
+    "image": "trialmatch-rag-ms2:local",
+    "build_passed": true,
+    "compose_config_valid": true,
+    "offline_networkless_smoke": "passed: --network none, --rm; 1 candidate; OK"
+  },
+  "manual_source_checks": [
+    "Patient age 52 at 2021-11-30 matches demographics.",
+    "Latest usable HbA1c 3.6% on 2021-08-13 matches source LOINC 4548-4, not a synthesized value.",
+    "NCT04874012 age over 30 and HbA1c 7.5%-10.5% compared to exact source criteria.",
+    "Every returned criterion present exactly once and evidence IDs resolve to the selected synthetic patient.",
+    "Unverified negative evidence, medication requests alone, complex thresholds/time logic are downgraded to UNKNOWN; model_decision preserves the proposed decision for audit."
+  ],
+  "limitations": [
+    "Most conditions in the checked live example remain UNKNOWN; no clinical accuracy claim.",
+    "No real patients, calibration, full 25 x 1313 evaluation, production security or deployed frontend.",
+    "Mixed patient/registry reference dates are retained and labeled.",
+    "Cohort detection and evidence guards are conservative heuristics; human review remains required."
+  ],
+  "source_sha256": {
+    "trials": "1678d523a1246319d4ae5ba8d2dd5d4ab1359746ad71fb7feee67b20bb07edd6",
+    "criteria": "f7701a9979eb105219407c553703752879f6a2c55fb8736240c8e7bddc96de59",
+    "patients": "33ac165b9be7c564207325ae951d40b9cfdc3b72f8fb2f56e3e58193894331a1"
+  },
+  "english_cli_revision": {
+    "checked_at": "2026-10-16T01:25:50.102426+00:00",
+    "language": "English",
+    "cli_focused_tests_passed": 20,
+    "offline_result_status": "OK",
+    "live_result_status": "OK",
+    "browser_or_http_server_started": false,
+    "note": "The successful live replay reused real English GCP model responses from cache. Grouped valid citations are now accepted and each identifier is checked."
+  }
+}

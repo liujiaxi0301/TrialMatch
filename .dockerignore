@@ -1,0 +1,9 @@
+.git
+**/.venv
+**/__pycache__
+**/.env
+**/secrets
+**/*service-account*.json
+**/*credentials*.json
+artifacts
+**/.ruff_cache
