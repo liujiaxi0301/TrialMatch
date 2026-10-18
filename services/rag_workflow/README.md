@@ -46,7 +46,9 @@ uv run --project services/rag_workflow --locked --env-file services/rag_workflow
   python -m services.rag_workflow.cli build-index
 ```
 
-This embeds 607 criterion retrieval fragments with `gemini-embedding-001` at 256 dimensions, with at most four concurrent requests. Embeddings are cached under `artifacts/rag_workflow/cache/embeddings/`; embedded Chroma data is stored under `artifacts/rag_workflow/chroma/`. Repeated runs reuse the cache and upsert records without deleting an existing collection. The initial build incurs model API usage. Changes to source data, the model, dimensions, or the trial subset produce a different collection version.
+This embeds 607 criterion retrieval fragments with `gemini-embedding-001` at 256 dimensions, with at most four concurrent requests. Embeddings are cached under `artifacts/rag_workflow/cache/embeddings/`; embedded Chroma data is stored under `artifacts/rag_workflow/chroma/`. Repeated builds verify and reuse a completed collection without model calls; an interrupted unpublished build can reuse embedding caches. The initial build incurs model API usage. Changes to source data, the model, dimensions, or the trial subset produce a different collection version.
+
+**ChromaDB versioning:** [INDEX_VERSIONING.md](INDEX_VERSIONING.md) explains snapshot export, DVC tracking, integrity checks, restoration and the Part 4 handoff. An actual 607-vector snapshot is cached locally with a Git-reviewable summary and DVC pointer. The shared remote still needs to be supplied by Part 4; a Git clone alone does not provide the snapshot. The snapshot has not been uploaded to shared cloud storage. For an older local index, run `build-index` once to add a checksum without re-embedding.
 
 Each Vertex request to `gemini-embedding-001` sends one input text. The tutorial's multi-text request pattern is not reused. Long criteria may be split into traceable retrieval fragments, but screening always evaluates the complete original criterion.
 
@@ -141,12 +143,13 @@ HTTP behavior: invalid requests or patient records return 422; unknown patient I
 | `retrieve.py` | BM25, patient retrieval profiles, lexical/vector rank fusion, trial deduplication, and criterion-specific patient evidence selection |
 | `rules.py` | Exact simple age ranges/comparisons, HbA1c percentage comparisons, and explicit time windows; unsupported wording requires LLM interpretation or UNKNOWN |
 | `providers.py` | Google Gen AI client, single-text embeddings, structured generation, caches, bounded retries, token metrics, and sanitized error messages |
-| `index.py` | Criterion vector ingestion, long-criterion retrieval fragments, versioned collections, persistence, and index completeness checks for embedded or HTTP Chroma |
+| `index.py` | Criterion vector ingestion, immutable completed collections, backend-specific readiness, checksum verification and portable export/restore for embedded or HTTP Chroma |
+| `index_versions.py` | Strict snapshot schema, canonical record hashing, paged reads and float32 import comparison |
 | `judge.py` | Batched LLM judgments, per-criterion evidence allowlists, one repair attempt, abstention on persistent failure, and citation checks for trial explanations |
 | `workflow.py` | Public function, pipeline orchestration, complete criterion coverage, rule-first assessment, LLM budgets, aggregation, scoring, evidence ledger, and responses |
 | `schemas.py` | Pydantic contracts for requests, responses, states, and LLM output; rejects undefined fields |
 | `api.py` | `/health`, `/patients`, `/screen`, OpenAPI, and local frontend CORS, without duplicating business logic |
-| `cli.py` | inspect-data / make-manifest / build-index / screen / export-schema commands |
+| `cli.py` | inspect-data / make-manifest / build-index / index-status / export-index / restore-index / screen / export-schema commands |
 | `prompts/criterion_judge.txt` | Evidence, negation, medication, and timing instructions for criterion judgments |
 | `prompts/trial_explanation.txt` | Answers the question from validated assessments; disallows unsupported treatment-risk or probability claims |
 | `examples/demo_manifest.json` | Fixed 50-trial subset, 25 patient IDs, three demo patient IDs, source hashes, and selection rules |
@@ -156,9 +159,14 @@ HTTP behavior: invalid requests or patient records return 422; unknown patient I
 | `examples/demo_live.json` | Actual GCP + Chroma + LLM response, retaining its mode, timing, and cache metrics |
 | `examples/contract.schema.json` | Automatically exported request/response JSON schemas |
 | `examples/verification.json` | Verification results and scope; not clinical validation |
+| `examples/index_versioning_verification.json` | Actual 607-vector snapshot/embedded/Docker restore verification; no new model calls |
+| `index_snapshots/current.manifest.json`, `index_snapshots/current.json.dvc` | Git-reviewable snapshot summary and DVC pointer; the vector payload is Git-ignored |
+| `.dvc/`, `.dvcignore` | Isolated DVC project for index snapshots; local cache/config/internal state are ignored |
 | `tests/__init__.py` | Test package marker |
 | `tests/test_workflow.py` | Synthetic edge cases, evidence references, failure handling, actual cohort/API integration, and embedded Chroma tests |
 | `tests/test_evidence_support.py` | Regressions from live smoke testing: missing data is not negative evidence, prescriptions do not establish drug use, short-reference mapping, and context budgets |
+| `tests/test_index_versions.py` | Snapshot restore, version isolation, source/checksum tampering, conflict preservation, legacy migration and credential-free CLI checks |
+| `tests/test_dvc_snapshot.py` | Optional DVC/Git historical-pointer recovery test with a disposable local remote |
 | `pyproject.toml`, `uv.lock` | Independent dependency definitions and locked versions, without changing Part 2's environment |
 | `.env.example`, `.env` | Committable configuration template / Git-ignored local configuration |
 | `.gitignore` | Excludes local configuration, the virtual environment, and caches |
@@ -166,6 +174,7 @@ HTTP behavior: invalid requests or patient records return 422; unknown patient I
 | `docker-compose.yml` | Local offline API + Chroma without credential mounts; integration example for Part 4 |
 | `docker-compose.live.yml` | Adds an external service-account credential mount and enables live mode |
 | `README.md` | Setup, file descriptions, and team handoff instructions |
+| `INDEX_VERSIONING.md` | DVC and Chroma versioning tutorial, precision limits, restoration and shared-storage handoff |
 
 The repository-level `.dockerignore` excludes virtual environments, credentials, and artifacts from the build context. The root `.gitignore` adds exclusions for Part 3 local state, and the root README links to this module. Part 1/2 processing code and data were not modified.
 
@@ -202,7 +211,7 @@ Workflow: patient record + question → BM25/vector retrieval → candidate tria
 
 ## 6. Docker integration for Part 4
 
-Local development can use embedded Chroma. Setting `CHROMADB_HOST` switches to a separate HTTP Chroma service. Their storage differs: rebuild the index in the target service when switching. Embedding caches can be reused, but copying an index-ready file does not populate the target database.
+Local development can use embedded Chroma. Setting `CHROMADB_HOST` switches to a separate HTTP Chroma service. Their storage differs: restore a matching exported snapshot or build the index in the target service when switching. Embedding caches can be reused, but copying an index-ready file does not populate the target database. See [INDEX_VERSIONING.md](INDEX_VERSIONING.md) for restoration without new embedding calls.
 
 ```bash
 docker compose --env-file services/rag_workflow/.env \
@@ -237,7 +246,9 @@ Tests do not automatically call GCP. They cover the actual 25-patient/50-trial i
 
 Actual live-run records are in `examples/verification.json` and `artifacts/rag_workflow/`. These technical checks are not clinical-validity or accuracy evaluations. Full 25-patient × full-corpus inference, double annotation, and ablation experiments are deferred to later milestones.
 
-Completed checks: 25 automated tests, Ruff, a real 607-fragment embedding index, a live CLI run for one synthetic patient and three candidates (`OK`, no system errors), a Docker build, and an offline container run without network access or credentials. Of the current English live example's 59 criteria, 3 received definite assessments and 56 remained UNKNOWN. This describes coverage, not accuracy. Live timing includes cache hits; see the verification record. HTTP endpoints were checked with TestClient; the complete Compose stack has not been deployed as a persistent service.
+Original MS2 checks: 25 automated tests, Ruff, a real 607-fragment embedding index, a live CLI run for one synthetic patient and three candidates (`OK`, no system errors), a Docker build, and an offline container run without network access or credentials. Of the current English live example's 59 criteria, 3 received definite assessments and 56 remained UNKNOWN. This describes coverage, not accuracy. Live timing includes cache hits; see the verification record. HTTP endpoints were checked with TestClient; the complete Compose stack has not been deployed as a persistent service.
+
+The Chroma versioning revision passes 42 automated tests, including 15 index-version tests and one real DVC/Git historical-pointer recovery test, plus Ruff. The existing 607-vector snapshot was recovered from the DVC cache and restored into fresh embedded and isolated Docker HTTP Chroma stores. Three stored-vector probes returned the same top-five trial IDs across all three databases. No new model calls were made; the temporary Docker service was removed. Shared GCS storage remains a Part 4 configuration step. Details are in `examples/index_versioning_verification.json`.
 
 ## 8. Team handoff
 
@@ -251,7 +262,8 @@ Completed checks: 25 automated tests, Ruff, a real 607-fragment embedding index,
 
 1. Share `pyproject.toml`, `uv.lock`, the Dockerfile, both Compose files, and `.env.example`.
 2. Agree on API port 8080, Chroma host/port, read-only inputs from both data modules, persistent artifacts, and credential mounts.
-3. Incorporate this example into the team's root Compose/Makefile without duplicating databases. Expose the `build-index` and `screen` commands.
+3. Incorporate this example into the team's root Compose/Makefile without duplicating databases. Expose `build-index`, `index-status`, `export-index`, `restore-index` and `screen`.
+4. Follow [INDEX_VERSIONING.md](INDEX_VERSIONING.md): agree on shared DVC storage, grant object access, publish/pull the snapshot separately from Git, and restore into the target Chroma service. DVC runs on the host/CI, not inside the database image.
 
 **Parts 1 and 2 (data):**
 
