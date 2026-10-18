@@ -53,5 +53,5 @@
   "model_calls": 0,
   "container_or_api_test": false,
   "team_handoff_acceptance": "Not confirmed; no team message sent.",
-  "note": "This delivery excludes the separate optional manual verification package. Processor, patient facts and cohort selection are unchanged."
+  "note": "Patient-module validation record. TF-requested verification is included separately; see evaluation/verification/evidence/checks.json."
 }

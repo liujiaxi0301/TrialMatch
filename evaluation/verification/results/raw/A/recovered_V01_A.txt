@@ -1,0 +1,182 @@
+{
+  "pair_id": "V01",
+  "trial_id": "NCT07156539",
+  "search_status": "NOT_USED",
+  "source_urls": [],
+  "retrieved_eligibility_text": null,
+  "source_criterion_issues": [
+    "Run-settings limitation: I cannot turn off web search, browsing, connected apps, or memory from inside the conversation. None of them were used. No search, fetch, connector, or memory tool was called. Account memory context was present in the session's system context, but it was not used for this evaluation. The run log should record the actual app settings.",
+    "Coverage check: the stored eligibility_text has 4 inclusion clauses and 6 exclusion clauses. Each one maps 1:1, verbatim, to a parsed_criteria row (inc_001 to inc_004, exc_001 to exc_006). No raw clause is missing from the parsed rows.",
+    "Possible source incompleteness, not verifiable with search off: the trial's conditions and title target Type 2 diabetes, but the stored eligibility text has no explicit inclusion clause requiring a T2DM diagnosis. The official_title string ends with 'Type 2 Diabete', which looks truncated. Without retrieval, this run cannot confirm that the stored eligibility text is the complete registry text. No definite overall-eligibility statement is made.",
+    "inc_001 combines two conditions in one row: sex ('Males and females') and age (≥18 years at informed consent). The anchor is the consent date, and no consent date is supplied.",
+    "inc_002 groups two alternative background-therapy regimens in one row: (1) metformin alone, and (2) metformin plus one SGLT-2 inhibitor. Either one presumably satisfies the clause. The phrase 'or maximum tolerated (≥1000mg daily)' is ambiguous about who determines tolerability and how it is documented. 'Stable' is defined only as ≥90 days before screening. The screening date is not supplied.",
+    "inc_003 gives an HbA1c range but does not say when the value must be measured (for example, at screening or by central lab). The wording 'Glycated hemoglobin was' implies a screening value, but that is not stated.",
+    "inc_004 gives a BMI threshold with no stated measurement time (presumably screening).",
+    "exc_004 has a typo ('bady' for 'body') and a full-width semicolon. It is unclear whether diabetes itself, obesity, or metabolic syndrome count as an 'endocrine disorder or history that may significantly affect body weight'. The listed examples are Cushing's syndrome and thyroid disorders.",
+    "exc_006 joins two windows (12 weeks, and 5 half-lives of a trial drug) with 'whichever is Longer'. The half-life of any prior investigational drug would be needed to apply it.",
+    "Temporal mismatch: the patient facts end on 2020-12-28, and reference_date is 2021-11-30. The trial snapshot is from 2026-10-11 and the trial status is NOT_YET_RECRUITING. reference_date is used only as a hypothetical screening anchor. No consent, screening, or randomization date is supplied, and no claim about current eligibility is made.",
+    "The patient's diabetes condition record (SNOMED 44054006) has display text 'Diabetes' with no stated type. The code was not looked up against a terminology source in this search-off run, so diabetes type is not inferred. T2D is not inferred from the metformin prescriptions either. The record also contains both an active 'Diabetes' condition (onset 2017-12-11) and an active 'Prediabetes' condition (onset 2018-12-17), which is internally inconsistent for a synthetic record.",
+    "Every patient fact has status_at_reference_date = 'undetermined'. Raw FHIR statuses (active/resolved/stopped) were not treated as status on the reference date."
+  ],
+  "criteria": [
+    {
+      "criterion_id": "NCT07156539_inc_001",
+      "criterion_type": "inclusion",
+      "criterion_text": "Males and females, Age ≥18 years at the time of signing informed consent.",
+      "status": "MET",
+      "evidence_fact_ids": [
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Patient/475803f3-ae29-ba8d-bdd1-25145a94eaee"
+      ],
+      "reasoning": "Demographics give gender 'male' and birth_date 1977-12-05. The criterion admits both sexes. No consent date is supplied, but the patient would be ≥18 on any date on or after 1995-12-05. That covers the hypothetical reference date (age 43 per the record) and every date after the trial's listed start date of 2025-09-30. The age threshold therefore holds whatever consent date is assumed after that point. deceased_date is null, but that does not establish vital status at any future consent date. The criterion does not address vital status.",
+      "missing_information": [
+        "Actual informed-consent date"
+      ]
+    },
+    {
+      "criterion_id": "NCT07156539_inc_002",
+      "criterion_type": "inclusion",
+      "criterion_text": "Stable daily dose(s) for ≥90 days prior to screening of : 1) Any metformin formulations ≥1500 mg daily or maximum tolerated (≥1000mg daily). 2) Any metformin formulations ≥1500 mg daily or maximum tolerated (≥1000mg daily) with one type of SGLT-2 inhibitors;",
+      "status": "UNKNOWN",
+      "evidence_fact_ids": [
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#MedicationRequest/c74da480-25fd-1657-b6af-63b5f3d684d7",
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#MedicationRequest/3a90f34d-6c4c-ad58-2417-1679766f5ca3",
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#MedicationRequest/1e9d1d62-9b5f-2488-7143-4fd02edfd693",
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#MedicationRequest/96a11941-f74e-b0f5-4579-4b8256d566bd",
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#MedicationRequest/f4dd6251-41d6-6fb5-c9a1-fab6cafb2377"
+      ],
+      "reasoning": "There are five MedicationRequests (RxNorm 860975, 24 HR Metformin hydrochloride 500 MG Extended Release Oral Tablet). They were authored 2017-12-11 (two), 2018-12-17, and 2019-12-23 (raw status 'stopped'), and 2020-12-28 (raw status 'active'). These are prescriptions, not evidence of dispensing or actual use. Every dosage_instruction array is empty, so the daily dose cannot be computed. Tablet strength alone (500 mg) does not establish whether the patient took ≥1500 mg/day or a maximum-tolerated ≥1000 mg/day. Raw status 'active' on the 2020-12-28 order does not establish use on the reference date, and no record covers the 90 days before 2021-11-30. No SGLT-2 inhibitor prescription is recorded, which is relevant to option 2 only. Missing records do not prove absence.",
+      "missing_information": [
+        "Screening date",
+        "Prescribed daily metformin dose (dosage instructions)",
+        "Evidence of actual metformin use (dispensing/administration/patient report) covering ≥90 days before screening",
+        "Documentation of dose stability over that period",
+        "Documentation of maximum tolerated dose if <1500 mg/day",
+        "SGLT-2 inhibitor use, if option 2 is relevant"
+      ]
+    },
+    {
+      "criterion_id": "NCT07156539_inc_003",
+      "criterion_type": "inclusion",
+      "criterion_text": "Glycated hemoglobin was 7.5% ≤HbA1c ≤11.0%;",
+      "status": "UNKNOWN",
+      "evidence_fact_ids": [
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Observation/aad90e36-493b-fc60-a8ab-fbd0ab22c792",
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Observation/20272654-060b-68cf-4390-82ca9eb7cf22",
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Observation/895b6f05-b551-69a9-d7bb-d3428f5aa738",
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Observation/b2a5b557-b3e8-9b23-6778-02e6495bc533"
+      ],
+      "reasoning": "LOINC 4548-4 (Hemoglobin A1c/Hemoglobin.total in Blood, unit %). Values: 7.56% on 2017-12-11, 6.06% on 2018-12-17, 5.47% on 2019-12-23, and 5.62% on 2020-12-28. The units match the criterion (%), so no conversion is needed. The most recent recorded value (5.62%, about 11 months before the hypothetical reference date) is below the 7.5% lower bound. The three most recent values are all below the range, which points toward not meeting the criterion. However, the criterion presumably applies to a screening-time value, and none is available at or near the reference date. A dated contradiction at screening is therefore not established.",
+      "missing_information": [
+        "Screening date",
+        "HbA1c measured at screening (and lab method/whether central lab)"
+      ]
+    },
+    {
+      "criterion_id": "NCT07156539_inc_004",
+      "criterion_type": "inclusion",
+      "criterion_text": "BMI ≥ 23 kg/m2.",
+      "status": "UNKNOWN",
+      "evidence_fact_ids": [
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Observation/0c83872a-3e76-fccf-735e-d325c0db024f",
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Observation/b02d90b0-94d5-bc42-9157-27cd7c7213cc",
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Observation/501cbac9-1cdd-ff08-c6a3-46b8ed609709",
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Observation/7f9890b5-cfa4-9b33-325c-ed84d34b9e27",
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Observation/23f3872e-3ad9-90d7-c0bd-4b8f8a2a2651",
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Observation/eace721d-83a0-becd-3693-b064ed652aff"
+      ],
+      "reasoning": "LOINC 39156-5 (Body Mass Index, kg/m2). Values: 29.18 on 2012-02-20, 30.22 on 2015-02-23, 30.22 on 2017-12-11, 30.22 on 2018-12-17, 27.89 on 2019-12-23, and 28.49 on 2020-12-28. The units match, so no conversion is needed. Every recorded value is ≥23 kg/m2. The most recent (28.49) is about 11 months before the hypothetical reference date. This supports the criterion, but no BMI is recorded at or near screening. The status is left UNKNOWN for consistency with the timing standard applied to the HbA1c criterion.",
+      "missing_information": [
+        "Screening date",
+        "BMI (height and weight) measured at screening"
+      ]
+    },
+    {
+      "criterion_id": "NCT07156539_exc_001",
+      "criterion_type": "exclusion",
+      "criterion_text": "Uncontrollable hypertension(with or without antihypertensive treatment) : systolic blood pressure ≥160 mmHg or diastolic blood pressure ≥100 mmHg at screening.",
+      "status": "UNKNOWN",
+      "evidence_fact_ids": [
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Observation/b2ffd6e9-6749-ce85-fd70-6de5a53f0649",
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Observation/b29c7f2f-6c82-1bb6-0da9-db3c6e9320ae",
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Observation/6c100ad3-dda8-609b-1040-0c24cce5a582",
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Observation/bfd41bac-eff8-ea32-fe4a-1327b09ce05f",
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Observation/5bec34f5-1e51-f824-7800-73e52fe1f8b4",
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Observation/36aecf82-fdc2-7667-32fc-957acd026124"
+      ],
+      "reasoning": "LOINC 85354-9 blood pressure panels, systolic (8480-6) / diastolic (8462-4), in mm[Hg]: 117/78 on 2012-02-20, 124/88 on 2015-02-23, 114/78 on 2017-12-11, 120/76 on 2018-12-17, 136/83 on 2019-12-23, and 117/80 on 2020-12-28. None reach SBP ≥160 or DBP ≥100. The criterion is defined by blood pressure 'at screening', however, and no measurement exists at or near the hypothetical reference date (latest is 2020-12-28). Affirmative evidence that the exclusion is false at screening is therefore unavailable.",
+      "missing_information": [
+        "Screening date",
+        "Blood pressure measured at screening"
+      ]
+    },
+    {
+      "criterion_id": "NCT07156539_exc_002",
+      "criterion_type": "exclusion",
+      "criterion_text": "Diagnosed or suspected with type 1 diabetes mellitus, special types of diabetes or secondary diabetes.",
+      "status": "UNKNOWN",
+      "evidence_fact_ids": [
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/317aae16-fa4a-e38f-b118-7fcdbb88e36b",
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/2534ae75-3e98-43fc-045d-c4cbeb5e09b9"
+      ],
+      "reasoning": "The record has a Condition with SNOMED code 44054006 and display text 'Diabetes' (onset 2017-12-11, raw clinical status active). It also has 'Prediabetes' (15777000) and 'Hyperglycemia (disorder)' (80394007), both with onset 2018-12-17. The supplied display does not state diabetes type, and the code was not looked up in this search-off run, so the type is not inferred. No type 1, special-type, or secondary diabetes diagnosis is recorded, but missing records do not prove absence. Affirmative evidence that the exclusion is false is not available.",
+      "missing_information": [
+        "Documented diabetes type/classification",
+        "Clinician assessment ruling out type 1, special-type, or secondary diabetes (e.g., autoantibody or C-peptide results if used)"
+      ]
+    },
+    {
+      "criterion_id": "NCT07156539_exc_003",
+      "criterion_type": "exclusion",
+      "criterion_text": "History of significant hematological disorders (e.g., sickle cell disease, hemolytic anemia, myelodysplastic syndrome, etc.) or other conditions causing hemolysis or instability of red blood cells (e.g., malaria, hypersplenism, etc.).",
+      "status": "UNKNOWN",
+      "evidence_fact_ids": [],
+      "reasoning": "No hematological disorder, hemolytic condition, malaria, or hypersplenism appears among the Condition records. Complete blood count observations exist (2012-02-20 and 2017-12-11), but lab values alone were not interpreted as ruling out a diagnosed disorder, and no reference ranges are supplied. Missing records do not prove absence, so there is no affirmative evidence that the exclusion is false.",
+      "missing_information": [
+        "Complete medical history documenting the presence or absence of hematological disorders or hemolytic conditions"
+      ]
+    },
+    {
+      "criterion_id": "NCT07156539_exc_004",
+      "criterion_type": "exclusion",
+      "criterion_text": "Presence of an endocrine disorder or history that may significantly affect bady weight(e.g., Cushing's syndrome, hypothyroidism or hyperthyroidism, except hypothyroidism if thyroid hormone replacement dose has been stable for at least 6 months) ；",
+      "status": "UNKNOWN",
+      "evidence_fact_ids": [
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/a125d66e-6785-08b4-f79c-abbc315d0873",
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/d257eb86-b139-c396-422b-eab147783d64"
+      ],
+      "reasoning": "No Cushing's syndrome, thyroid disorder, thyroid hormone prescription, or thyroid laboratory result is recorded. The record does include 'Body mass index 30+ - obesity (finding)' (162864005, onset 2015-02-23) and 'Metabolic syndrome X (disorder)' (237602007, onset 2018-12-17). The criterion does not say whether these, or diabetes itself, count as an 'endocrine disorder or history that may significantly affect body weight', so they are not treated as meeting it. Missing records do not prove the listed conditions are absent.",
+      "missing_information": [
+        "Documented history regarding Cushing's syndrome and thyroid disorders (e.g., thyroid function tests)",
+        "Sponsor clarification of whether obesity, metabolic syndrome, or diabetes fall under this exclusion"
+      ]
+    },
+    {
+      "criterion_id": "NCT07156539_exc_005",
+      "criterion_type": "exclusion",
+      "criterion_text": "Severe infection, severe trauma, or moderate-to-major surgery within 4 weeks before screening.",
+      "status": "UNKNOWN",
+      "evidence_fact_ids": [
+        "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/b4844e32-11de-c7c9-c62d-9febe305309b"
+      ],
+      "reasoning": "Using the hypothetical reference date 2021-11-30, the 4-week window is about 2021-11-02 to 2021-11-30. No patient facts fall in that window; the latest dated facts are from 2020-12-28. The only infection recorded is viral sinusitis (444814009), 2019-02-22 to 2019-03-12, far outside the window. The recorded procedures are screening and assessment procedures, not surgery. Having no records in the window does not show the exclusion is false.",
+      "missing_information": [
+        "Screening date",
+        "Records covering the 4 weeks before screening (infections, trauma, surgeries)"
+      ]
+    },
+    {
+      "criterion_id": "NCT07156539_exc_006",
+      "criterion_type": "exclusion",
+      "criterion_text": "Participated in clinical trials of any drug or medical device within 12 weeks prior to screening, and participation in clinical trials is defined as signing informed consent and using investigational drugs (including placebo) or investigational medical devices; Or is still in the trial drug within 5 half-lives (whichever is Longer).",
+      "status": "UNKNOWN",
+      "evidence_fact_ids": [],
+      "reasoning": "The patient facts contain no information about clinical trial participation, investigational drug or device use, or placebo exposure. Missing records do not prove non-participation. The 5-half-life window also requires drug-specific half-life data that is not supplied.",
+      "missing_information": [
+        "Screening date",
+        "History of clinical trial participation in the 12 weeks before screening",
+        "Identity and half-life of any recent investigational drug, if applicable"
+      ]
+    }
+  ]
+}

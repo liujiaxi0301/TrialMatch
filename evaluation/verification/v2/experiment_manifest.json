@@ -1,0 +1,29 @@
+{
+  "policy_version": "v2.0_offline_prescreening",
+  "assessment_date": "2021-11-30",
+  "actual_trial_dates": {
+    "screening_date": null,
+    "consent_date": null,
+    "V1_date": null
+  },
+  "model_runs": "NOT_ESTABLISHED_BY_BUILDING_INPUTS",
+  "sources_sha256": {
+    "v2/policy.json": "55c7497d7d51e9f0542aa287002ad4dc00c82a536c178b5555b5a8b1b2a32c15",
+    "v2/prompt_A.md": "567bd1cccef7b1592ef68045fe597af045a69ee9e53cca33dfe4e4a9fd772b66",
+    "v2/RUN_FIRST.md": "5fce311b10846e99a1de396b955fe040a5de034e8f5f6e74f16d3775aa2055ee",
+    "v2/proposals/trials/NCT06774950.json": "93a92db5540ba683e90c027a44cc405d8e02de6b7d8a5528738e82aceb924dce",
+    "build_v2.py": "41068df7b25322b395aa01aa55526bdbcfc9b1652bf35d1587fff564619ae871",
+    "v2/proposals/patients/475803f3-ae29-ba8d-bdd1-25145a94eaee.json": "ae86eaa6753660be68b137658a6627000341364d82e9e98ee19612923c9527a2",
+    "v2/proposals/patients/80534c6c-b12d-caa5-42de-b179fd7f9695.json": "0280785dd06089819badf2cd10c630b51aeafeb2c0e19c83d524727b63e35b72"
+  },
+  "fixed_outputs_sha256": {
+    "uploads/A/V2P01.json": "437079c9d0909f41eda0087d01196ed77b1965386cbf4d9325bc5d13a1b8ae62",
+    "uploads/A/V2P02.json": "df7e07efb5e3d6711effc307026ea7a4d908ab81d41b7a580c37be02397bb8cc",
+    "cases.csv": "782bc0357cc496c0d5ddef5eee114e51d5c525403058dd906d78c9f662320e34",
+    "templates/reference_suggestions.csv": "522a915692d63e2dd9522c44d18f223bd0ab52bd565a508d5301be07746de6a9",
+    "manual_upload_kit.zip": "da6f89e86c58b7dc0968e62c4812d1005c1470328c97b17c24274564c6be9656"
+  },
+  "mutable_reference_table": "templates/reference_answers.csv",
+  "labels_not_in_uploads": true,
+  "all_reference_suggestions_unreviewed": true
+}

@@ -1,0 +1,17 @@
+{
+  "snapshot_date": "2026-10-18",
+  "policy": "v1_strict_unknown_actual_trial_dates",
+  "status": "PAUSED_FOR_EVALUATION_DESIGN_REVISION",
+  "confirmed_source_clauses": 22,
+  "pending_source_clauses": 8,
+  "confirmed_status_counts": {
+    "UNKNOWN": 21,
+    "MET": 1
+  },
+  "scope": "Historical user-confirmed decisions, not revised prescreening gold labels or final eligibility judgments.",
+  "files": {
+    "reference_answers.csv": "27370386a0d0aa96bdc062c2f57ed307b7c72c7ce4b84439228bccd8815ecf1e",
+    "reference_suggestions.csv": "95dad30c6d7578dddc47a5531cd73ac95fdb1018af37dbc7821eb6ec7a32dfeb",
+    "review_rules.md": "8bcdd4477c63052ea0202482d649a27d64340ae3be73a9d03b7aefa624bc4456"
+  }
+}

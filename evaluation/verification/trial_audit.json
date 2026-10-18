@@ -1,0 +1,29 @@
+[
+  {
+    "trial_id": "NCT07156539",
+    "snapshot_date": "2026-10-11",
+    "criterion_count": 10,
+    "ambiguous_count": 0,
+    "all_raw_clause_text_preserved": true,
+    "stored_parser_output_matches": true,
+    "limitation": "Compound clauses remain whole; parsed does not establish clinical clarity. No live website verification."
+  },
+  {
+    "trial_id": "NCT07580638",
+    "snapshot_date": "2026-10-11",
+    "criterion_count": 10,
+    "ambiguous_count": 0,
+    "all_raw_clause_text_preserved": true,
+    "stored_parser_output_matches": true,
+    "limitation": "Compound clauses remain whole; parsed does not establish clinical clarity. No live website verification."
+  },
+  {
+    "trial_id": "NCT07658417",
+    "snapshot_date": "2026-10-11",
+    "criterion_count": 10,
+    "ambiguous_count": 0,
+    "all_raw_clause_text_preserved": true,
+    "stored_parser_output_matches": true,
+    "limitation": "Compound clauses remain whole; parsed does not establish clinical clarity. No live website verification."
+  }
+]

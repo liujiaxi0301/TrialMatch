@@ -1,0 +1,109 @@
+{
+  "recovered_on": "2026-10-18",
+  "source_thread_id": "01a13c1f-a2ff-7588-8756-99f437a7b0ec",
+  "patient_processing_commit": "9d6886a7ea925d9068bc38d669987036727873d5",
+  "recovery_scope": "Original user-pasted response attachments only. Original fixed inputs, prompts, scripts, review tables, and review notes have not been recovered.",
+  "model_name_and_version_user_reported": "Claude Opus 5.5",
+  "interface_user_reported": "Claude web",
+  "raw_responses": [
+    {
+      "pair_id": "V01",
+      "mode": "A",
+      "trial_id": "NCT07156539",
+      "source_attachment_id": "file_000000000ea081f587705d1fb8c502ef",
+      "raw_response_path": "results/raw/A/recovered_V01_A.txt",
+      "response_sha256": "68af0f75698e2a012c79ae08fc2a4b6434d09af0f50b84dbdb08a979938daeb9",
+      "size_bytes": 18901,
+      "criterion_count": 10,
+      "model_status_counts": {
+        "MET": 1,
+        "UNKNOWN": 9
+      },
+      "search_enabled_user_reported": false,
+      "source_turn_id": "01a14065-9448-77b9-a103-ad79ad80b912",
+      "limitation": "Original response reports automatically supplied memory context; strict context isolation is not established. Search-off setting is user-reported."
+    },
+    {
+      "pair_id": "V01",
+      "mode": "B",
+      "trial_id": "NCT07156539",
+      "source_attachment_id": "file_0000000059cc81f5be46d0d0bad81d67",
+      "raw_response_path": "results/raw/B/recovered_V01_B.txt",
+      "response_sha256": "9e547f551d997491fddfa8112eadcf1deebb97b4c24d0c107c4f9841046caef4",
+      "size_bytes": 18444,
+      "criterion_count": 10,
+      "model_status_counts": {
+        "MET": 1,
+        "UNKNOWN": 9
+      },
+      "search_enabled_user_reported": true,
+      "source_turn_id": "01a140da-6bc0-75b5-bee8-231f07d936ff",
+      "limitation": "Prior review found the sixth exclusion criterion text missing from retrieval. Ten entries does not establish complete criteria."
+    },
+    {
+      "pair_id": "V02",
+      "mode": "A",
+      "trial_id": "NCT07580638",
+      "source_attachment_id": "file_00000000ee44820c9cdc757183a864de",
+      "raw_response_path": "results/raw/A/recovered_V02_A.txt",
+      "response_sha256": "acc2c89aaafbc58b3f07cba7e72dafbce1c862b960987bf7da09f78e7e86f42b",
+      "size_bytes": 16816,
+      "criterion_count": 10,
+      "model_status_counts": {
+        "MET": 2,
+        "UNKNOWN": 8
+      },
+      "search_enabled_user_reported": false,
+      "source_turn_id": "01a1411b-42ec-7726-a008-ba8c4bd12112",
+      "limitation": "Original response reports automatically supplied memory context; strict context isolation is not established. Search-off setting is user-reported."
+    },
+    {
+      "pair_id": "V02",
+      "mode": "B",
+      "trial_id": "NCT07580638",
+      "source_attachment_id": "file_00000000ee5881f49d7a57ce0595ae02",
+      "raw_response_path": "results/raw/B/recovered_V02_B.txt",
+      "response_sha256": "797c988374b106e861fc7e4819d62ecd81f9c74f19277f2b80793dd87d3ca370",
+      "size_bytes": 14233,
+      "criterion_count": 10,
+      "model_status_counts": {
+        "MET": 1,
+        "UNKNOWN": 9
+      },
+      "search_enabled_user_reported": true,
+      "source_turn_id": "01a1413b-6058-7373-8a78-fd9159ace1ea"
+    },
+    {
+      "pair_id": "V03",
+      "mode": "A",
+      "trial_id": "NCT07658417",
+      "source_attachment_id": "file_00000000f6708230bfc38e7947db2e2f",
+      "raw_response_path": "results/raw/A/recovered_V03_A.txt",
+      "response_sha256": "ee947f5e8b7de9cfcf7875d5515b90f946ca22aadff9eb8f83e78eb8cb9fa246",
+      "size_bytes": 16915,
+      "criterion_count": 10,
+      "model_status_counts": {
+        "UNKNOWN": 9,
+        "MET": 1
+      },
+      "search_enabled_user_reported": false,
+      "source_turn_id": "01a14149-5dba-7198-957c-b4e74b4ca18f",
+      "limitation": "Original response reports automatically supplied memory context; strict context isolation is not established. Search-off setting is user-reported."
+    },
+    {
+      "pair_id": "V03",
+      "mode": "B",
+      "trial_id": "NCT07658417",
+      "source_attachment_id": "file_00000000549c820c9fb817f218b47207",
+      "raw_response_path": "results/raw/B/recovered_V03_B.txt",
+      "response_sha256": "e366d58df07f94293e4641c5332a1726314e7938425836291642fa94eab94eb2",
+      "size_bytes": 15927,
+      "criterion_count": 10,
+      "model_status_counts": {
+        "UNKNOWN": 9,
+        "MET": 1
+      },
+      "search_enabled_user_reported": true
+    }
+  ]
+}

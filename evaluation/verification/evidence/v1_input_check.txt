@@ -1,0 +1,1 @@
+Checked 6 A/B input pairs; 30 source criteria; 60 reference rows; 22/30 round-one references confirmed.

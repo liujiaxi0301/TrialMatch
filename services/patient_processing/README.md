@@ -65,7 +65,7 @@ These counts indicate presence of exact-coded records, not measurement freshness
 
 `reference_date` is the facts cutoff and stored-age anchor; it is not a real screening, consent or V1 date. Actual study dates are not supplied by this module. Patient facts stay schema 0.3; no trial dates or eligibility labels are injected into the source data.
 
-See [MS2_HANDOFF.md](MS2_HANDOFF.md) for this module's delivery checklist, validation evidence and facts contract for consuming modules. The optional manual verification package is kept separately and is not included in this patient-module submission. Downstream clinical judgments, APIs, retrieval, containers and UI remain with their respective owners.
+See [MS2_HANDOFF.md](MS2_HANDOFF.md) for this module's delivery checklist, validation evidence and facts contract. The user confirmed that the TF separately requested verification; the [verification package](../../evaluation/verification/README.md) is therefore included in this personal delivery. The patient processor itself still only extracts facts. Downstream clinical judgments, APIs, retrieval, containers and UI remain with their respective owners.
 
 ## Validation covered
 
