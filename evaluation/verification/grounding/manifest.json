@@ -1,0 +1,43 @@
+{
+  "experiment_id": "G01_CLOSED_CONTEXT_CODE_SEMANTICS",
+  "prepared_date": "2026-10-19",
+  "requirement_source": "TF feedback supplied by the user; original incident identity confirmed by the user on 2026-10-19",
+  "requirement_quote": "Instruct the model to answer only from the retrieved context and to return \"insufficient information\" otherwise, ask for citations to criterion and patient fields, and add this case to your verification tests.",
+  "scope": "Supplied-context regression with a controlled terminology-mapping change; not actual vector retrieval or backend enforcement.",
+  "preparation_stage_model_runs": 0,
+  "run_state": "READY_FOR_MANUAL_RUN_NOT_RUN",
+  "protocol_expectations_not_clinical_gold": {
+    "G01_NO_MAPPING": "UNKNOWN",
+    "G01_WITH_MAPPING": "MET"
+  },
+  "sources_sha256": {
+    "v2/proposals/patients/475803f3-ae29-ba8d-bdd1-25145a94eaee.json": "ae86eaa6753660be68b137658a6627000341364d82e9e98ee19612923c9527a2",
+    "inputs/trials/NCT07580638.json": "48e70624427bfbdab9ca3d138d21d62dacd446e331fa5681d915bb22ebd82545",
+    "v2/uploads/A/V2P01.json": "437079c9d0909f41eda0087d01196ed77b1965386cbf4d9325bc5d13a1b8ae62",
+    "v2/results/raw/A/V2P01_A_user_upload_d7942088e197.txt": "d7942088e19762e572c159a1379ad504b1699c97f884684a4b592ade38859a0c",
+    "results/raw/A/recovered_V02_A.txt": "acc2c89aaafbc58b3f07cba7e72dafbce1c862b960987bf7da09f78e7e86f42b",
+    "templates/reference_answers.csv": "85878e39d5ea28d619e0f112dcc0ed8272dc4c91848ef694d06ed21ab2fc2183"
+  },
+  "fixed_artifacts_sha256": {
+    "uploads/G01_NO_MAPPING.json": "6f032f436602c6434d647d20e91529576c58ea270e3def0de3b60ce2406a5ae9",
+    "uploads/G01_WITH_MAPPING.json": "c34407ffa6e2354f91f4e6bf02ac71089fb64ca4c65dbe8ad27796a65ba0b7a9",
+    "prompt.md": "39dcdc979a7202bfc0112dd47d618a86eb63c89ed0788807e1449099c73d96e1",
+    "candidate_finding.json": "ade108c14ee0e2b3fee49865e030b504310e3b5afac38dfd583de9b62ff5edcf"
+  },
+  "mutable_review_template": "review_template.csv",
+  "results_directory": "results/",
+  "preserve_history": "Do not change prior patient facts, v1/v2 references, raw model outputs or original experiment manifests. Future real responses must be recorded as separate runs.",
+  "original_sources_sha256": {
+    "v2/proposals/patients/475803f3-ae29-ba8d-bdd1-25145a94eaee.json": "ae86eaa6753660be68b137658a6627000341364d82e9e98ee19612923c9527a2",
+    "inputs/trials/NCT07580638.json": "48e70624427bfbdab9ca3d138d21d62dacd446e331fa5681d915bb22ebd82545",
+    "v2/uploads/A/V2P01.json": "437079c9d0909f41eda0087d01196ed77b1965386cbf4d9325bc5d13a1b8ae62",
+    "v2/results/raw/A/V2P01_A_user_upload_d7942088e197.txt": "d7942088e19762e572c159a1379ad504b1699c97f884684a4b592ade38859a0c",
+    "results/raw/A/recovered_V02_A.txt": "acc2c89aaafbc58b3f07cba7e72dafbce1c862b960987bf7da09f78e7e86f42b",
+    "templates/reference_answers.csv": "76c575533e6a4c5a8a8fbd5dcd22bb3f5a6ef8396b0151e0ec429ea0e09a4d87"
+  },
+  "delivery_revision": {
+    "date": "2026-10-19",
+    "pre_revision_manifest_sha256": "a821ba382f1e0e3d78639132e55acec6dc40f5820c2d2656a1381c7f7d955c58",
+    "note": "One source-table hash changed through punctuation normalization; grounding inputs, prompt, original quotes and raw responses are unchanged."
+  }
+}

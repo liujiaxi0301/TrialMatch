@@ -1,0 +1,11 @@
+test_official_procedure_and_medication_definition_are_separate_evidence (test_process_patients.PatientProcessingTests.test_official_procedure_and_medication_definition_are_separate_evidence) ... ok
+test_official_samples_keep_patient_links_provenance_and_medication_references (test_process_patients.PatientProcessingTests.test_official_samples_keep_patient_links_provenance_and_medication_references) ... ok
+test_synthetic_fixture_cutoff_missing_data_and_wrong_patient (test_process_patients.PatientProcessingTests.test_synthetic_fixture_cutoff_missing_data_and_wrong_patient) ... ok
+test_synthetic_fixture_exact_date_boundary_and_period (test_process_patients.PatientProcessingTests.test_synthetic_fixture_exact_date_boundary_and_period) ... ok
+test_synthetic_fixture_missing_birth_and_observation_value (test_process_patients.PatientProcessingTests.test_synthetic_fixture_missing_birth_and_observation_value) ... ok
+test_synthetic_fixture_unresolved_medication_reference_warns (test_process_patients.PatientProcessingTests.test_synthetic_fixture_unresolved_medication_reference_warns) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.090s
+
+OK

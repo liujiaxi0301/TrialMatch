@@ -1,0 +1,54 @@
+{
+  "reconstruction_date": "2026-10-18",
+  "source_commit": "9d6886a7ea925d9068bc38d669987036727873d5",
+  "original_upload_hashes": "UNAVAILABLE: reconstructed files do not establish original upload byte identity",
+  "delivery_text_policy": "Normalize fullwidth semicolons to ASCII in verification copies only; upstream trial files remain unchanged. See delivery_revision.json for original hashes.",
+  "sources": {
+    "services/patient_processing/data/processed/patients.jsonl": "e8227c3934bafb639150fda65c58a44ebe07afefc63efed696113ece9b8876fb",
+    "services/trial_ingestion/data/processed/trials.jsonl": "1678d523a1246319d4ae5ba8d2dd5d4ab1359746ad71fb7feee67b20bb07edd6",
+    "services/trial_ingestion/data/processed/criteria.jsonl": "f7701a9979eb105219407c553703752879f6a2c55fb8736240c8e7bddc96de59",
+    "services/trial_ingestion/scripts/parse_criteria.py": "efd7d6cfc98cb3cbf5fc5a19796738cc1a20aa6926b42fdf52c6d98865103ffc",
+    "evaluation/verification/common.py": "ceec425e651ebe2a13b3cd1dbd24698ef2f1968e7ac78fa907a509d453d38934",
+    "evaluation/verification/build_cases.py": "04db6595dc12b2f3afc9989c7a80cea52a6b4e41999fa6ed85ae675ddd55aab8",
+    "services/patient_processing/scripts/process_patients.py": "f382df1a30a27eba88f04158556317c2ce7935be86a12a1a50b34fdbd49988d5",
+    "services/patient_processing/data/sample_source.json": "5be350e46a33319f9fafae7a08a5119cbc2786ac905d600e4b5cab079a9b061e",
+    "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json": "726f05437a3cc85418f6037d1521e510b968ac1fc1f31667df5a7f1865b3f4c1",
+    "services/patient_processing/data/raw/Shakira391_Haag279_bf113937-f532-94bb-66e1-9c7111f68207.json": "77270f7156b0638fdf33d4de237f2128ca1466eaba51a88cc8b18d98c628dbaa"
+  },
+  "reconstructed_protocols": {
+    "prompts/mode_A.md": "b2db811c83e215100f8500ecfa44f28f468f46136403a76d38cd29750ef7b7d3",
+    "prompts/mode_B.md": "5b59d6ac77cb0d6fd18a01c6ac1733c9f73fdc8bc825635ea5f6e80ef4034424"
+  },
+  "fixed_files": {
+    "inputs/patients/475803f3-ae29-ba8d-bdd1-25145a94eaee.json": "9fb934e797fcc932ebd3fe6a47bf5bc4930ffbb7c4feefc5dfb3c52f5e8c09d0",
+    "inputs/patients/bf113937-f532-94bb-66e1-9c7111f68207.json": "0ce71b9e3b24497e30162766b90a5db41ee8b1e81900a9197b7fab760038476a",
+    "inputs/trials/NCT07156539.json": "c979331e43a1436ff468a5b6b2279f8ce79961bd3ad9ae5ad1e98bebf94c0f40",
+    "inputs/trials/NCT07580638.json": "48e70624427bfbdab9ca3d138d21d62dacd446e331fa5681d915bb22ebd82545",
+    "inputs/trials/NCT07658417.json": "b4ff1eb425985e0353d9b53930b4f361933d59e96e1c30c035ecde3c71e782f0",
+    "uploads/A/V01.json": "53ced3028cf9709cc34c5447a7570914ddcba590da493fd8b89da48c540b0850",
+    "uploads/B/V01.json": "c936f9e7433c9f653e1e3354dda61b884dc38315ff79dc97a68b3dda05994f74",
+    "uploads/A/V02.json": "097c185d6f29566e9efb143792838f073a56d9d6a38e4f47ae362c0237c6fc22",
+    "uploads/B/V02.json": "e72e35536d7c6c5ef35b7376dc82b4e0b295c7a4420e2a0bee07887b104abbfc",
+    "uploads/A/V03.json": "b0a978752eaf7f0f104db1fb619a4001e9308b74313f651effa615a59c51e9cb",
+    "uploads/B/V03.json": "9b281a5a6ea4c8a7e21aafe865fe0af377ee945b6a215ff58f10d1cb028c91fa",
+    "uploads/A/V04.json": "87af5b76165331526eecd7a8809cc6e59ba25c861fd158d651aa045d08f7eb1c",
+    "uploads/B/V04.json": "961cdd076a5bee05fb2fd061e6a686fb2f90786b7c274ea91718778cfe047d58",
+    "uploads/A/V05.json": "28ff88be35b441ff06f99b4f4dc3aabecc5e40183b3da252d33f16e23bdcd982",
+    "uploads/B/V05.json": "30c8e364017809eaf6a1f3ba31d76eafa8f18df53e1153736fec239b7db8c692",
+    "uploads/A/V06.json": "c973aad8efa0f72ec7f3b306f63cd4e49a59d84a97ba0238efef469d17d1f999",
+    "uploads/B/V06.json": "846536d2b8f36ca4a6847ca1f76a68cc02202a115051ad130cb01cf992b09d20",
+    "cases.csv": "be54a2267a3c3cc5ec62f0afeac11a65034bddc8a5ea6ea00790835ae212b1d4",
+    "trial_audit.json": "7ce6ed9953e223012af94b1b6adb46b4d81c396cd2b02bc2d04e43dc068ca1e0"
+  },
+  "mutable_reference_table": "templates/reference_answers.csv",
+  "round1_pairs": [
+    "V01",
+    "V02",
+    "V03"
+  ],
+  "prepared_only_pairs": [
+    "V04",
+    "V05",
+    "V06"
+  ]
+}

@@ -85,75 +85,187 @@ def numeric_rule(criterion: dict, patient: dict) -> CriterionAssessment | None:
             [demo["fact_id"]],
         )
 
-    hba = re.fullmatch(
-        r"(?:HbA1c|hemoglobin A1c)\s*(>=|<=|>|<)\s*(\d+(?:\.\d+)?)\s*%(?:\s+within (?:the )?(?:last |past )?(\d+) (days?|weeks?|months?|years?))?",
-        text,
-        re.IGNORECASE,
-    )
-    hba_range = re.fullmatch(
-        r"(?:HbA1c|hemoglobin A1c)\s*(?:between\s+)?(\d+(?:\.\d+)?)\s*%?\s*(?:and|to|-)\s*(\d+(?:\.\d+)?)\s*%(?:\s+within (?:the )?(?:last |past )?(\d+) (days?|weeks?|months?|years?))?",
-        text,
-        re.IGNORECASE,
-    )
-    if not hba and not hba_range:
+    return measurement_rule(criterion, patient)
+
+
+def measurement_rule(criterion: dict, patient: dict) -> CriterionAssessment | None:
+    """Parse complete supported comparisons before evaluating any numeric branch."""
+    text = re.sub(r"(?<=\d),(?=\d)", ".", normalized(criterion["criterion_text"]))
+    leaf = parse_measurement(text)
+    if leaf is not None:
+        return evaluate_measurement(criterion, patient, leaf)
+    has_or = bool(re.search(r"\bor\b", text, re.IGNORECASE))
+    has_and = bool(re.search(r"\band\b", text, re.IGNORECASE))
+    if has_or == has_and or "(" in text or ")" in text:
+        return None  # No partial interpretation of mixed/parenthesized/unsupported logic.
+    join = "or" if has_or else "and"
+    parts = re.split(rf"\s+{join}\s+", text, flags=re.IGNORECASE)
+    leaves = [parse_measurement(part) for part in parts]
+    if any(item is None for item in leaves):
         return None
-    time_count, time_unit = (hba[3], hba[4]) if hba else (hba_range[3], hba_range[4])
-    candidates = []
-    anchor = parse_date(patient["reference_date"])
-    for fact in patient.get("observations", []):
-        codings = (fact.get("code") or {}).get("coding", [])
-        if not any(
-            c.get("system") == "http://loinc.org" and c.get("code") == "4548-4" for c in codings
-        ):
-            continue
-        when = parse_date(
-            fact.get("effective_date") or (fact.get("effective_period") or {}).get("start")
+    branches = [evaluate_measurement(criterion, patient, item) for item in leaves]
+    if join == "or":
+        decision = (
+            Decision.MET
+            if any(row.decision == Decision.MET for row in branches)
+            else Decision.NOT_MET
+            if all(row.decision == Decision.NOT_MET for row in branches)
+            else Decision.UNKNOWN
         )
-        value = fact.get("value") or {}
-        raw = value.get("data") or {}
-        if (
-            value.get("type") != "Quantity"
-            or raw.get("unit") != "%"
-            or when is None
-            or when > anchor
-        ):
+    else:
+        decision = (
+            Decision.NOT_MET
+            if any(row.decision == Decision.NOT_MET for row in branches)
+            else Decision.MET
+            if all(row.decision == Decision.MET for row in branches)
+            else Decision.UNKNOWN
+        )
+    refs = list(dict.fromkeys(ref for row in branches for ref in row.evidence_fact_ids))
+    result = assessment(
+        criterion,
+        decision,
+        f"{join.upper()} evaluated with three-valued logic: "
+        + "; ".join(row.reason for row in branches),
+        refs,
+        [row.reason for row in branches if row.decision == Decision.UNKNOWN]
+        if decision == Decision.UNKNOWN
+        else [],
+    )
+    result.validation_warnings = list(
+        dict.fromkeys(w for row in branches for w in row.validation_warnings)
+    )
+    return result
+
+
+MEASURE = r"(?P<measure>BMI|body mass index|HbA1c|hemoglobin A1c|fasting (?:glucose|glycemia)|non[- ]?fasting (?:glucose|glycemia))"
+NUMBER = r"\d+(?:\.\d+)?"
+UNIT = r"(?:%|kg/m(?:²|2|\^2)|mmol/l|mg/dl)"
+WINDOW = (
+    r"(?:\s+within (?:the )?(?:last |past )?(?P<count>\d+) (?P<unit>days?|weeks?|months?|years?))?"
+)
+
+
+def parse_measurement(text: str) -> dict | None:
+    bound = re.fullmatch(
+        MEASURE + rf"\s*(?P<op>>=|<=|>|<)\s*(?P<low>{NUMBER})\s*(?P<units>{UNIT})?" + WINDOW,
+        text,
+        re.IGNORECASE,
+    )
+    span = re.fullmatch(
+        MEASURE
+        + rf"\s*(?:between\s+)?(?P<low>{NUMBER})\s*(?:%)?\s*(?:and|to|-)\s*(?P<high>{NUMBER})\s*(?P<units>{UNIT})"
+        + WINDOW,
+        text,
+        re.IGNORECASE,
+    )
+    match = bound or span
+    if not match:
+        return None
+    parsed = match.groupdict()
+    name = parsed["measure"].lower()
+    kind = (
+        "bmi"
+        if name in {"bmi", "body mass index"}
+        else "hba1c"
+        if "a1c" in name
+        else "nonfasting"
+        if name.startswith("non")
+        else "fasting"
+    )
+    units = parsed.get("units")
+    if kind != "bmi" and units is None:
+        return None  # Never supply a missing unit/threshold from medical knowledge.
+    parsed.update(kind=kind, units=canonical_unit(units or "kg/m2"))
+    return parsed
+
+
+def canonical_unit(unit: str) -> str:
+    return unit.lower().replace(" ", "").replace("²", "2").replace("^2", "2")
+
+
+def measurement_kind(fact: dict, kind: str) -> bool:
+    code = fact.get("code") or {}
+    names = " ".join(
+        [code.get("text", ""), *[c.get("display", "") for c in code.get("coding", [])]]
+    ).lower()
+    codes = {c.get("code") for c in code.get("coding", []) if c.get("system") == "http://loinc.org"}
+    if kind == "bmi":
+        return "39156-5" in codes or bool(re.search(r"\bbmi\b|body mass index", names))
+    if kind == "hba1c":
+        return "4548-4" in codes or bool(re.search(r"hba1c|hemoglobin a1c", names))
+    if not re.search(r"\b(glucose|glycemia)\b", names):
+        return False
+    nonfasting = bool(re.search(r"non[- ]?fasting", names))
+    # Generic glucose is not assumed fasting or non-fasting.
+    return (
+        nonfasting
+        if kind == "nonfasting"
+        else bool(re.search(r"\bfasting\b", names)) and not nonfasting
+    )
+
+
+def evaluate_measurement(criterion: dict, patient: dict, spec: dict) -> CriterionAssessment:
+    from .data import event_date
+
+    anchor = parse_date(patient.get("reference_date"))
+    count, unit = spec.get("count"), spec.get("unit")
+    candidates = []
+    for fact in patient.get("observations", []):
+        if not measurement_kind(fact, spec["kind"]):
             continue
-        if fact.get("raw_status") not in {"final", "amended", "corrected"}:
+        value = fact.get("value") or {}
+        raw = value.get("data")
+        if value.get("type") != "Quantity" or not isinstance(raw, dict):
             continue
         number = raw.get("value")
         if (
             isinstance(number, bool)
             or not isinstance(number, (int, float))
             or not math.isfinite(number)
+            or not isinstance(raw.get("unit"), str)
+            or canonical_unit(raw["unit"]) != spec["units"]
         ):
             continue
-        if time_count and when < shift_back(anchor, int(time_count), time_unit):
+        if fact.get("raw_status") not in {None, "final", "amended", "corrected"}:
             continue
-        candidates.append((when, float(number), fact["fact_id"]))
+        when = parse_date(event_date(fact) or fact.get("event_date"))
+        if when and (anchor is None or when > anchor):
+            continue
+        if count and (not anchor or not when or when < shift_back(anchor, int(count), unit)):
+            continue
+        candidates.append((when, float(number), fact))
     if not candidates:
         return unknown(
-            criterion, "No final, dated HbA1c in % satisfies the required measurement window."
+            criterion,
+            f"No usable {spec['measure']} measurement with matching units"
+            + (" and a dated value within the specified window." if count else "."),
         )
-    latest = max(c[0] for c in candidates)
-    selected = [c for c in candidates if c[0] == latest]
-    if len({c[1] for c in selected}) != 1:
+    dated = [row for row in candidates if row[0] is not None]
+    latest = max((row[0] for row in dated), default=None)
+    selected = [row for row in candidates if row[0] is None or row[0] == latest]
+    if len({row[1] for row in selected}) != 1:
         return unknown(
-            criterion, "Conflicting HbA1c values on the latest usable date require review."
+            criterion, "Conflicting latest or undated measurements cannot be ordered reliably."
         )
     value = selected[0][1]
-    if hba_range:
-        passed = float(hba_range[1]) <= value <= float(hba_range[2])
+    low = float(spec["low"])
+    if spec.get("high") is not None:
+        passed = low <= value <= float(spec["high"])
     else:
-        threshold, op = float(hba[2]), hba[1]
-        passed = {
-            ">=": value >= threshold,
-            "<=": value <= threshold,
-            ">": value > threshold,
-            "<": value < threshold,
-        }[op]
-    return assessment(
+        passed = {">=": value >= low, "<=": value <= low, ">": value > low, "<": value < low}[
+            spec["op"]
+        ]
+    result = assessment(
         criterion,
         Decision.MET if passed else Decision.NOT_MET,
-        f"HbA1c {value}% on {latest.isoformat()}, relative to {anchor.isoformat()}.",
-        [c[2] for c in selected],
+        f"Verified {spec['measure']} {value} {spec['units']} against the supplied threshold; "
+        + (
+            f"dated {latest}, relative to {anchor}."
+            if all(row[0] is not None for row in selected)
+            else "source is undated; no recency is asserted or required by this statement."
+        ),
+        [row[2]["fact_id"] for row in selected],
     )
+    if any(row[0] is None for row in selected):
+        result.validation_warnings.append("UNDATED_MEASUREMENT_NO_RECENCY_CLAIM")
+    return result

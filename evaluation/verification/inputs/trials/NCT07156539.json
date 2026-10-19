@@ -1,0 +1,136 @@
+{
+  "trial_record": {
+    "trial_id": "NCT07156539",
+    "brief_title": "A Phase 3 Study of HS-20094 in Patients With T2DM",
+    "official_title": "A Study of HS-20094 Versus Dulaglutide Once Weekly as Add-on Therapy to Metformin Monotherapy or in Combination With SGLT2 Inhibitors in Participants With Type 2 Diabete",
+    "overall_status": "NOT_YET_RECRUITING",
+    "conditions": [
+      "Type 2 Diabetes"
+    ],
+    "keywords": [],
+    "mesh_terms": [
+      "Diabetes Mellitus, Type 2"
+    ],
+    "study_type": "INTERVENTIONAL",
+    "phases": [
+      "PHASE3"
+    ],
+    "brief_summary": "The study is being conducted to evaluate the efficacy and safety of HS-20094 once weekly (QW) in subjects with type 2 diabetes mellitus not adequately controlled with metformin monotherapy or in combination with SGLT2 inhibitors compared to Dulaglutide QW for 44 weeks and 52 weeks.",
+    "minimum_age": "18 Years",
+    "maximum_age": null,
+    "sex": "ALL",
+    "healthy_volunteers": false,
+    "eligibility_text": "Inclusion Criteria:\n\n1. Males and females, Age ≥18 years at the time of signing informed consent.\n2. Stable daily dose(s) for ≥90 days prior to screening of : 1) Any metformin formulations ≥1500 mg daily or maximum tolerated (≥1000mg daily). 2) Any metformin formulations ≥1500 mg daily or maximum tolerated (≥1000mg daily) with one type of SGLT-2 inhibitors;\n3. Glycated hemoglobin was 7.5% ≤HbA1c ≤11.0%;\n4. BMI ≥ 23 kg/m2.\n\nExclusion Criteria:\n\n1. Uncontrollable hypertension(with or without antihypertensive treatment) : systolic blood pressure ≥160 mmHg or diastolic blood pressure ≥100 mmHg at screening.\n2. Diagnosed or suspected with type 1 diabetes mellitus, special types of diabetes or secondary diabetes.\n3. History of significant hematological disorders (e.g., sickle cell disease, hemolytic anemia, myelodysplastic syndrome, etc.) or other conditions causing hemolysis or instability of red blood cells (e.g., malaria, hypersplenism, etc.).\n4. Presence of an endocrine disorder or history that may significantly affect bady weight(e.g., Cushing's syndrome, hypothyroidism or hyperthyroidism, except hypothyroidism if thyroid hormone replacement dose has been stable for at least 6 months) ;\n5. Severe infection, severe trauma, or moderate-to-major surgery within 4 weeks before screening.\n6. Participated in clinical trials of any drug or medical device within 12 weeks prior to screening, and participation in clinical trials is defined as signing informed consent and using investigational drugs (including placebo) or investigational medical devices; Or is still in the trial drug within 5 half-lives (whichever is Longer).",
+    "locations": [
+      {
+        "facility": "Shandong Provincial Hospital",
+        "status": null,
+        "city": "Jinan",
+        "state": "Shandong",
+        "zip": null,
+        "country": "China",
+        "latitude": 36.66833,
+        "longitude": 116.99722
+      },
+      {
+        "facility": "Tianjin Medical University General Hospital (Zhu Xianyi Memorial Hospital)",
+        "status": null,
+        "city": "Tianjin",
+        "state": "Tianjn",
+        "zip": null,
+        "country": "China",
+        "latitude": 39.14222,
+        "longitude": 117.17667
+      }
+    ],
+    "enrollment_count": 546,
+    "enrollment_type": "ESTIMATED",
+    "start_date": "2025-09-30",
+    "completion_date": "2027-05-30",
+    "last_update_date": "2025-09-05",
+    "source": "ClinicalTrials.gov API v2",
+    "snapshot_date": "2026-10-11"
+  },
+  "parsed_criteria": [
+    {
+      "trial_id": "NCT07156539",
+      "criterion_id": "NCT07156539_inc_001",
+      "criterion_type": "inclusion",
+      "criterion_text": "Males and females, Age ≥18 years at the time of signing informed consent.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT07156539",
+      "criterion_id": "NCT07156539_inc_002",
+      "criterion_type": "inclusion",
+      "criterion_text": "Stable daily dose(s) for ≥90 days prior to screening of : 1) Any metformin formulations ≥1500 mg daily or maximum tolerated (≥1000mg daily). 2) Any metformin formulations ≥1500 mg daily or maximum tolerated (≥1000mg daily) with one type of SGLT-2 inhibitors;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT07156539",
+      "criterion_id": "NCT07156539_inc_003",
+      "criterion_type": "inclusion",
+      "criterion_text": "Glycated hemoglobin was 7.5% ≤HbA1c ≤11.0%;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT07156539",
+      "criterion_id": "NCT07156539_inc_004",
+      "criterion_type": "inclusion",
+      "criterion_text": "BMI ≥ 23 kg/m2.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT07156539",
+      "criterion_id": "NCT07156539_exc_001",
+      "criterion_type": "exclusion",
+      "criterion_text": "Uncontrollable hypertension(with or without antihypertensive treatment) : systolic blood pressure ≥160 mmHg or diastolic blood pressure ≥100 mmHg at screening.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT07156539",
+      "criterion_id": "NCT07156539_exc_002",
+      "criterion_type": "exclusion",
+      "criterion_text": "Diagnosed or suspected with type 1 diabetes mellitus, special types of diabetes or secondary diabetes.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT07156539",
+      "criterion_id": "NCT07156539_exc_003",
+      "criterion_type": "exclusion",
+      "criterion_text": "History of significant hematological disorders (e.g., sickle cell disease, hemolytic anemia, myelodysplastic syndrome, etc.) or other conditions causing hemolysis or instability of red blood cells (e.g., malaria, hypersplenism, etc.).",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT07156539",
+      "criterion_id": "NCT07156539_exc_004",
+      "criterion_type": "exclusion",
+      "criterion_text": "Presence of an endocrine disorder or history that may significantly affect bady weight(e.g., Cushing's syndrome, hypothyroidism or hyperthyroidism, except hypothyroidism if thyroid hormone replacement dose has been stable for at least 6 months) ;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT07156539",
+      "criterion_id": "NCT07156539_exc_005",
+      "criterion_type": "exclusion",
+      "criterion_text": "Severe infection, severe trauma, or moderate-to-major surgery within 4 weeks before screening.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT07156539",
+      "criterion_id": "NCT07156539_exc_006",
+      "criterion_type": "exclusion",
+      "criterion_text": "Participated in clinical trials of any drug or medical device within 12 weeks prior to screening, and participation in clinical trials is defined as signing informed consent and using investigational drugs (including placebo) or investigational medical devices; Or is still in the trial drug within 5 half-lives (whichever is Longer).",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "trial_record": {
+    "trial_id": "NCT07580638",
+    "brief_title": "Chiglitazar Added to SGLT-2 Inhibitors for Type 2 Diabetes",
+    "official_title": "Chiglitazar Add-On to SGLT-2 Inhibitors in Patients With Type 2 Diabetes: A Nationwide, Multicenter Registry Study (C-STAR)",
+    "overall_status": "NOT_YET_RECRUITING",
+    "conditions": [
+      "T2DM (Type 2 Diabetes Mellitus)"
+    ],
+    "keywords": [],
+    "mesh_terms": [
+      "Diabetes Mellitus, Type 2"
+    ],
+    "study_type": "OBSERVATIONAL",
+    "phases": [],
+    "brief_summary": "The goal of this observational study is to evaluate the comprehensive clinical efficacy, cardiovascular, renal, and hepatic benefits, as well as the safety of adding Chiglitazar to SGLT-2 inhibitor therapy in adult patients with Type 2 Diabetes Mellitus (T2DM) . The main questions it aims to answer are:\n\nWhat is the real-world effectiveness of Chiglitazar, when added to an SGLT-2 inhibitor, on glycemic control? What are the effects of this combination therapy on cardiovascular, renal, and hepatic outcomes? What is the overall safety of this treatment regimen?\n\nThis is a non-interventional study. Participants will be prescribed Chiglitazar or other oral antidiabetic drugs by their treating physician as part of their routine clinical care. For the purpose of this registry study, data will be collected from their regular medical follow-ups. Participants will:\n\nAttend regular follow-up visits as part of their standard diabetes care. Have data collected from their routine clinical assessments.",
+    "minimum_age": "18 Years",
+    "maximum_age": "75 Years",
+    "sex": "ALL",
+    "healthy_volunteers": false,
+    "eligibility_text": "Inclusion Criteria:\n\n* Age between 18 and 75 years, inclusive.\n* Diagnosis of Type 2 Diabetes Mellitus (T2DM) .\n* Receiving stable-dose SGLT-2 inhibitor monotherapy or in combination with one other oral antidiabetic drug for at least one month prior to screening, but with inadequate glycemic control, defined as HbA1c ≥ 7.5%.\n* Must be willing to participate and have provided written informed consent.\n\nExclusion Criteria:\n\n* Current or routine use of insulin therapy.\n* Use of three or more antidiabetic drugs within one month prior to screening.\n* Current treatment with a thiazolidinedione (TZD) or a GLP-1 receptor agonist (GLP-1 RA).\n* Prior treatment with Chiglitazar Sodium.\n* Presence of life-threatening comorbidities, severe edema, or severe hepatic impairment (Child-Pugh Class C).\n* Laboratory findings meeting any of the following criteria: a) Aspartate aminotransferase (AST) or Alanine aminotransferase (ALT) \\> 5 times the upper limit of normal (ULN); b) Estimated glomerular filtration rate (eGFR) \\< 30 mL/min/1.73 m².",
+    "locations": [],
+    "enrollment_count": 3550,
+    "enrollment_type": "ESTIMATED",
+    "start_date": "2026-07-18",
+    "completion_date": "2028-07-18",
+    "last_update_date": "2026-05-12",
+    "source": "ClinicalTrials.gov API v2",
+    "snapshot_date": "2026-10-11"
+  },
+  "parsed_criteria": [
+    {
+      "trial_id": "NCT07580638",
+      "criterion_id": "NCT07580638_inc_001",
+      "criterion_type": "inclusion",
+      "criterion_text": "Age between 18 and 75 years, inclusive.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT07580638",
+      "criterion_id": "NCT07580638_inc_002",
+      "criterion_type": "inclusion",
+      "criterion_text": "Diagnosis of Type 2 Diabetes Mellitus (T2DM) .",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT07580638",
+      "criterion_id": "NCT07580638_inc_003",
+      "criterion_type": "inclusion",
+      "criterion_text": "Receiving stable-dose SGLT-2 inhibitor monotherapy or in combination with one other oral antidiabetic drug for at least one month prior to screening, but with inadequate glycemic control, defined as HbA1c ≥ 7.5%.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT07580638",
+      "criterion_id": "NCT07580638_inc_004",
+      "criterion_type": "inclusion",
+      "criterion_text": "Must be willing to participate and have provided written informed consent.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT07580638",
+      "criterion_id": "NCT07580638_exc_001",
+      "criterion_type": "exclusion",
+      "criterion_text": "Current or routine use of insulin therapy.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT07580638",
+      "criterion_id": "NCT07580638_exc_002",
+      "criterion_type": "exclusion",
+      "criterion_text": "Use of three or more antidiabetic drugs within one month prior to screening.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT07580638",
+      "criterion_id": "NCT07580638_exc_003",
+      "criterion_type": "exclusion",
+      "criterion_text": "Current treatment with a thiazolidinedione (TZD) or a GLP-1 receptor agonist (GLP-1 RA).",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT07580638",
+      "criterion_id": "NCT07580638_exc_004",
+      "criterion_type": "exclusion",
+      "criterion_text": "Prior treatment with Chiglitazar Sodium.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT07580638",
+      "criterion_id": "NCT07580638_exc_005",
+      "criterion_type": "exclusion",
+      "criterion_text": "Presence of life-threatening comorbidities, severe edema, or severe hepatic impairment (Child-Pugh Class C).",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT07580638",
+      "criterion_id": "NCT07580638_exc_006",
+      "criterion_type": "exclusion",
+      "criterion_text": "Laboratory findings meeting any of the following criteria: a) Aspartate aminotransferase (AST) or Alanine aminotransferase (ALT) \\> 5 times the upper limit of normal (ULN); b) Estimated glomerular filtration rate (eGFR) \\< 30 mL/min/1.73 m².",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    }
+  ]
+}

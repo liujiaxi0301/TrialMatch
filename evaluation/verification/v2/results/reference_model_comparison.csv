@@ -1,0 +1,11 @@
+pair_id,criterion_id,criterion_type,reference_precheck_status,model_precheck_status,labels_agree,run_id,interpretation
+V2P01,NCT06774950_inc_001,inclusion,MET,MET,TRUE,V2P01_A_user_upload_d7942088e197,Label agreement under the accepted offline rule; not independent clinical validation.
+V2P01,NCT06774950_inc_002,inclusion,MET,MET,TRUE,V2P01_A_user_upload_d7942088e197,Label agreement under the accepted offline rule; not independent clinical validation.
+V2P01,NCT06774950_exc_001,exclusion,UNKNOWN,UNKNOWN,TRUE,V2P01_A_user_upload_d7942088e197,Label agreement under the accepted offline rule; not independent clinical validation.
+V2P01,NCT06774950_exc_002,exclusion,UNKNOWN,NOT_MET,FALSE,V2P01_A_user_upload_d7942088e197,Reproductive-status evidence-rule disagreement; not an independently established clinical error.
+V2P01,NCT06774950_exc_003,exclusion,UNKNOWN,UNKNOWN,TRUE,V2P01_A_user_upload_d7942088e197,Label agreement under the accepted offline rule; not independent clinical validation.
+V2P02,NCT06774950_inc_001,inclusion,MET,MET,TRUE,V2P02_A_user_upload_4377993a11b6,Label agreement under the accepted offline rule; not independent clinical validation.
+V2P02,NCT06774950_inc_002,inclusion,NOT_MET,NOT_MET,TRUE,V2P02_A_user_upload_4377993a11b6,Label agreement under the accepted offline rule; not independent clinical validation.
+V2P02,NCT06774950_exc_001,exclusion,UNKNOWN,UNKNOWN,TRUE,V2P02_A_user_upload_4377993a11b6,Label agreement under the accepted offline rule; not independent clinical validation.
+V2P02,NCT06774950_exc_002,exclusion,UNKNOWN,NOT_MET,FALSE,V2P02_A_user_upload_4377993a11b6,Reproductive-status evidence-rule disagreement; not an independently established clinical error.
+V2P02,NCT06774950_exc_003,exclusion,UNKNOWN,UNKNOWN,TRUE,V2P02_A_user_upload_4377993a11b6,Label agreement under the accepted offline rule; not independent clinical validation.

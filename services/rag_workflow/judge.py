@@ -3,6 +3,7 @@
 import re
 
 from .config import MODULE
+from .evidence_rules import context_patient, evidence_rule
 from .providers import ProviderError
 from .rules import unknown
 from .schemas import CriterionAssessment, Decision, LLMExplanation, LLMJudgments
@@ -11,45 +12,57 @@ JUDGE_PROMPT = (MODULE / "prompts/criterion_judge.txt").read_text()
 EXPLAIN_PROMPT = (MODULE / "prompts/trial_explanation.txt").read_text()
 
 
-def evidence_guard(assessment: CriterionAssessment, facts: list[dict]):
-    """Conservative MS2 checks; do not mistake source ID validity for semantic support."""
+def evidence_guard(assessment: CriterionAssessment, facts: list[dict], reference_date=None):
+    """Check cited evidence, not keywords in a model's explanation alone."""
     if assessment.decision == Decision.UNKNOWN:
         return assessment
+    cited = [fact for fact in facts if fact["fact_id"] in assessment.evidence_fact_ids]
     text, reason = assessment.criterion_text.lower(), assessment.reason.lower()
-    cited_facts = [f for f in facts if f["fact_id"] in assessment.evidence_fact_ids]
+    negative_reason = bool(
+        re.search(r"no (?:evidence|record|history)|absence of|not provided", reason)
+    )
+    verified = evidence_rule(
+        {
+            key: getattr(assessment, key)
+            for key in ("criterion_id", "criterion_type", "criterion_text")
+        },
+        context_patient(cited, reference_date),
+    )
+    if verified is not None:
+        proposal = assessment.decision
+        assessment.decision = verified.decision
+        assessment.reason = verified.reason
+        assessment.evidence_fact_ids = verified.evidence_fact_ids
+        assessment.missing_information = verified.missing_information
+        assessment.validation_warnings.extend(verified.validation_warnings)
+        if verified.decision != proposal:
+            assessment.model_decision = proposal
+            assessment.method = "llm_abstain" if verified.decision == Decision.UNKNOWN else "rule"
+        if verified.decision == Decision.UNKNOWN and negative_reason:
+            assessment.validation_warnings.append("ABSENCE_IS_NOT_NEGATIVE_EVIDENCE")
+        return assessment
     issue = None
-    negative = r"no (?:evidence|record|history|clinical|specific|comprehensive)|absence of|does not (?:indicate|contain)|not provided|没有|未见|未记录|未提供|无.{0,10}记录"
-    numeric_text = re.sub(r"type\s*(?:2|ii)|t2dm?|dm2", "diabetes", text)
-    if any(f.get("resource_type") in {"MedicationRequest", "Medication"} for f in cited_facts):
+    if any(fact.get("resource_type") in {"MedicationRequest", "Medication"} for fact in cited):
         issue = "ORDER_OR_DEFINITION_DOES_NOT_ESTABLISH_ACTUAL_DRUG_USE"
-    elif re.search(negative, reason):
+    elif negative_reason:
         issue = "ABSENCE_IS_NOT_NEGATIVE_EVIDENCE"
     elif re.search(
-        r"\d|\bmonths?\b|\bweeks?\b|\byears?\b|\bcurrent\b|\bactive\b|\bstable\b|\bsevere\b|\buncontrolled\b|\bscreening\b",
-        numeric_text,
+        r"[<>≥≤]|\bbetween\b|\bmonths?\b|\bweeks?\b|\byears?\b|\bcurrent\b|\bactive\b|\bstable\b|\bsevere\b|\buncontrolled\b|\bscreening\b",
+        text,
     ):
-        issue = "UNVERIFIED_NUMERIC_TEMPORAL_OR_SEVERITY_LOGIC"
+        issue = "UNSUPPORTED_NUMERIC_TEMPORAL_OR_SEVERITY_EXPRESSION"
     elif re.search(r"\band\b|\bor\b|including|unless|consent|willing|competent|investigator", text):
-        issue = "COMPOSITE_OR_SUBJECTIVE_REQUIREMENT_NEEDS_REVIEW"
+        issue = "UNSUPPORTED_COMPOSITE_OR_SUBJECTIVE_EXPRESSION"
     elif assessment.criterion_type == "exclusion" and assessment.decision == Decision.NOT_MET:
-        cited = [f for f in facts if f["fact_id"] in assessment.evidence_fact_ids]
-        explicit_negative = any(
-            (f.get("value") or {}).get("type", "").lower() == "boolean"
-            and (f.get("value") or {}).get("data") is False
-            for f in cited
-        )
-        if not explicit_negative:
-            issue = "EXPLICIT_NEGATIVE_EVIDENCE_REQUIRED"
-    elif all(
-        f.get("resource_type") == "Patient"
-        for f in facts
-        if f["fact_id"] in assessment.evidence_fact_ids
-    ):
+        issue = "EXPLICIT_NEGATIVE_SCOPE_NOT_VERIFIED"
+    elif not cited or all(fact.get("resource_type") == "Patient" for fact in cited):
         issue = "DEMOGRAPHICS_DO_NOT_ESTABLISH_CLINICAL_CRITERION"
     if issue:
         assessment.model_decision = assessment.decision
         assessment.decision = Decision.UNKNOWN
-        assessment.reason = "Model conclusion did not pass the evidence-support guard; additional evidence or review is required."
+        assessment.reason = (
+            "The supplied evidence does not verify the complete criterion: " + issue + "."
+        )
         assessment.missing_information = [issue]
         assessment.validation_warnings.append(issue)
         assessment.method = "llm_abstain"
@@ -131,7 +144,10 @@ def judge_batch(provider, patient: dict, question: str, trial: dict, items: list
             contexts = {
                 item["criterion"]["criterion_id"]: item["patient_evidence"] for item in items
             }
-            return [evidence_guard(a, contexts[a.criterion_id]) for a in assessments]
+            return [
+                evidence_guard(a, contexts[a.criterion_id], patient["reference_date"])
+                for a in assessments
+            ]
         except ProviderError as exc:
             last_error = exc.code
             break
