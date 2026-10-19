@@ -1,0 +1,82 @@
+```json
+{
+  "case_id": "G01_NO_MAPPING",
+  "criterion_id": "NCT07580638_inc_002",
+  "criterion_type": "inclusion",
+  "criterion_text": "Diagnosis of Type 2 Diabetes Mellitus (T2DM) .",
+  "precheck_status": "UNKNOWN",
+  "answer": "insufficient information",
+  "criterion_source_id": "repository:NCT07580638:2026-10-11:NCT07580638_inc_002",
+  "evidence": [
+    {
+      "source_type": "criterion",
+      "source_id": "repository:NCT07580638:2026-10-11:NCT07580638_inc_002",
+      "field_path": "/trial_criterion/criterion_text",
+      "quoted_value": "Diagnosis of Type 2 Diabetes Mellitus (T2DM) ."
+    },
+    {
+      "source_type": "patient",
+      "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+      "field_path": "/patient/conditions/14/code/coding/0/code",
+      "quoted_value": "44054006"
+    },
+    {
+      "source_type": "patient",
+      "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+      "field_path": "/patient/conditions/14/code/coding/0/display",
+      "quoted_value": "Diabetes"
+    },
+    {
+      "source_type": "patient",
+      "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+      "field_path": "/patient/conditions/14/code/text",
+      "quoted_value": "Diabetes"
+    },
+    {
+      "source_type": "patient",
+      "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+      "field_path": "/patient/conditions/14/raw_clinical_status/coding/0/code",
+      "quoted_value": "active"
+    },
+    {
+      "source_type": "patient",
+      "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+      "field_path": "/patient/conditions/14/raw_verification_status/coding/0/code",
+      "quoted_value": "confirmed"
+    },
+    {
+      "source_type": "patient",
+      "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+      "field_path": "/patient/conditions/14/onset_date",
+      "quoted_value": "2017-12-11T19:37:30-05:00"
+    },
+    {
+      "source_type": "patient",
+      "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+      "field_path": "/patient/conditions/14/status_at_reference_date",
+      "quoted_value": "undetermined"
+    },
+    {
+      "source_type": "patient",
+      "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/317aae16-fa4a-e38f-b118-7fcdbb88e36b",
+      "field_path": "/patient/conditions/19/code/text",
+      "quoted_value": "Prediabetes"
+    }
+  ],
+  "reasoning": "The criterion (repository:NCT07580638:2026-10-11:NCT07580638_inc_002) requires a diagnosis of Type 2 Diabetes Mellitus specifically. The closest patient fact is Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47, whose source display and text fields both read \"Diabetes\" (code \"44054006\"), with raw clinical status \"active\", verification status \"confirmed\", onset \"2017-12-11T19:37:30-05:00\", and status_at_reference_date \"undetermined\". The supplied source text establishes a diabetes condition record, but no patient field states a subtype: the strings \"Type 2\", \"T2DM\" or \"Type 2 Diabetes Mellitus\" do not appear in this condition's display or text. Under the evidence policy, code \"44054006\" is an opaque identifier, and /allowed_terminology_mappings is an empty array, so no mapping_id exists that could map this code or the term \"Diabetes\" to Type 2 Diabetes Mellitus. The policy also forbids inferring subtype from the trial requirement, cohort selection, laboratory thresholds (e.g., Hemoglobin A1c and Glucose observations in the record), medications (e.g., the MedicationRequest entries whose text names metformin), or remembered code meanings; those facts are therefore not used to supply the subtype. A separate active condition, Condition/317aae16-fa4a-e38f-b118-7fcdbb88e36b, has text \"Prediabetes\"; it neither establishes nor excludes Type 2 Diabetes Mellitus and is noted only as co-existing record context. Because the required clinical meaning (diabetes subtype = Type 2) is missing rather than contradicted, the result is UNKNOWN, not NOT_MET. Additionally, the condition's status at the reference date (2021-11-30) is recorded as \"undetermined\"; the raw \"active\" status is a source status and is not treated as a reconstructed status at the assessment date.",
+  "missing_information": [
+    "No patient source field states the diabetes subtype (e.g., text explicitly naming Type 2 Diabetes Mellitus / T2DM) for Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47.",
+    "No allowed_terminology_mappings entry (mapping_id) maps code 44054006 or the term \"Diabetes\" to Type 2 Diabetes Mellitus; /allowed_terminology_mappings is an empty array.",
+    "Condition status at the reference date 2021-11-30 is \"undetermined\" in /patient/conditions/14/status_at_reference_date; no reconstructed status at the assessment date is supplied."
+  ],
+  "search_status": "NOT_USED",
+  "context_limitations": [
+    "Package content was read from the inline attachment text in the conversation; no file-reading or search tool was called, and no vector-retrieval trace exists (context_origin.actual_vector_retrieval is false).",
+    "JSON Pointer array indices (/patient/conditions/14 and /patient/conditions/19) were determined by manual counting of the conditions array in the inline text, not by programmatic resolution; the fact_id in each evidence entry is the authoritative identifier.",
+    "This is a one-criterion, diagnosis-only regression exercise; it does not assess the complete trial, other criteria, or clinical eligibility.",
+    "Self-reported settings (no search, no memory, no external knowledge) are not independently verified tool traces."
+  ],
+  "actual_trial_dates": {"screening_date": null, "consent_date": null, "V1_date": null},
+  "overall_enrollment_decision": null
+}
+```

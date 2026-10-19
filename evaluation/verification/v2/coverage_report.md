@@ -1,83 +1,70 @@
-# 25 位患者的证据覆盖与下一轮建议
+# Evidence coverage of the 25-patient cohort
 
-本文保留覆盖分析及候选准备阶段的描述。后续用户已选择 2021-11-30 作为独立初筛 assessment_date，新版可上传材料见 [RUN_FIRST.md](RUN_FIRST.md) 和 [V2 说明](README.md)；实际试验日期仍未知。`proposals/` 中的原始候选快照未被改写。
+This is a descriptive coverage audit and case-selection record. Original `coverage_manifest.json` and `proposals/` retain preparation-stage metadata, including an unset assessment date. Subsequently the user selected 2021-11-30 and completed a separate ten-clause v2 review; see the [current results](results/reference_review_completed.md). No patient fact or source date was changed.
 
-本次完成数据覆盖核对和案例候选准备；尚未设置新版 assessment_date、建立新 gold labels 或调用模型。第一版 22 条人工确认和六份原始回答保持原样。
+## Recorded coverage
 
-## 先做什么
-
-先用完整病历和完整试验条件，检查模型能否分别给出：有证据支持的条件、明确冲突的条件、缺失临床信息、研究流程待办。先确定离线 assessment_date，再生成独立的 v2 测试输入和参考表。实际筛查、同意书和 V1 日期继续保持未知，不替代。
-
-## 覆盖结果
-
-| 数据项目 | 覆盖人数 | 含义 |
+| Item | Patients | Interpretation |
 | --- | ---: | --- |
-| 精确 T2D 编码 | 25/25 | 队列本就按此规则抽样，不是随机患者人群 |
-| HbA1c、BMI、血压记录 | 25、25、25/25 | 保存原始值和测量日期，不当作真实筛查当天数值 |
-| eGFR | 24/25 | 仅指定 LOINC 代码覆盖 |
-| AST、ALT | 5、5/25 | 还需相应单位、正常上限和时间信息 |
-| 至少一条处方 | 25/25 | 不等于实际使用、稳定剂量或依从性 |
-| 至少一条给药记录 | 4/25 | 不自动等同于长期降糖药治疗 |
-| 发药 / 用药陈述 | 0 / 0 | 当前这两类证据缺少 |
-| 有胰岛素药名的处方 | 6/25 | 未在给药、发药或用药陈述中命中；药名扫描不是完整术语分类 |
-| 有 SGLT-2 药名命中 | 0/25 | 以 gliflozin 文本匹配，不能代替全部药物代码审计 |
-| HbA1c 测量在参考日前 90 天内 | 7/25 | 仅相对数据参考日的描述；不是实际 V1 窗口或通用近期标准 |
-| 参考日前已记录死亡 | 2/25 | 从临床候选演示中排除，保留为质量检查案例 |
+| Exact T2D code | 25/25 | Selection rule, not a random patient population |
+| HbA1c / BMI / blood pressure | 25 / 25 / 25 | Preserve values/dates; not necessarily screening measurements |
+| eGFR | 24/25 | Specified LOINC codes only |
+| AST / ALT | 5 / 5 | Units, upper limits and relevant dates still needed |
+| At least one prescription | 25/25 | Does not establish actual use, stability or adherence |
+| At least one administration | 4/25 | Does not establish long-term glucose-lowering treatment |
+| Dispensing / medication statements | 0 / 0 | These evidence types are absent from this cohort |
+| Insulin-name order matches | 6/25 | No matching insulin administrations/dispensing/statements; display-name scan is not full code classification |
+| SGLT-2-name matches | 0/25 | gliflozin text search, not a comprehensive drug-code audit |
+| Latest HbA1c within 90 days before cutoff | 7/25 | Descriptive cutoff-relative interval, not V1 or a universal recency rule |
+| Recorded deaths on/before cutoff | 2/25 | Excluded from clinical demonstrations, retained for data-quality checks |
 
-其余 23 位没有记录参考日之前死亡，不等于已证明他们在真实试验期间存活或可招募。25 位是成年 T2D 数据样本，不能称为 25 位可入组患者。年龄范围 27–104 岁包含已记录死亡者的参考日历年龄。
+The other 23 have no recorded death before cutoff; this does not confirm survival during a trial. The cohort is an adult T2D processing sample, not 25 eligible participants. Ages span 27-104, including calendar age for recorded-deceased records.
 
-## 建议先用两对案例
+## Selected cases
 
-本次从现有语料中选了一个原文完整、年龄条件清楚的试验 NCT06774950（Value-based Care in Type 2 Diabetes），共 5 条源条件。保留整条合并症排除条件及医生判断，没有把它们简单化为可自动判断。
+NCT06774950 has five complete source clauses, including the full compound comorbidity exclusion and investigator judgment. Cleveland (age 43) and Anthony (27) provide age support and conflict under the offline date rule. Neither case tests endpoint inclusivity for 40 or 65. Selection is purposeful, not representative, and does not establish overall eligibility.
 
-| 候选 | 患者 | 参考日年龄 | 用途 |
-| --- | --- | ---: | --- |
-| P01 | Cleveland，475803f3… | 43 | 在建议离线场景下，年龄处于 40–65 区间；同时检验 T2D 证据、病史缺失和流程信息的处理 |
-| P02 | Anthony，80534c6c… | 27 | 在同一建议场景下，年龄明确低于区间，形成有事实依据的冲突案例 |
+The 2026-10-11 snapshot is NOT_YET_RECRUITING. Applying these newer criteria at hypothetical assessment_date 2021-11-30 is an offline method exercise, not proof that the trial existed or recruited then. Complete cohort facts and ZIP-member fact IDs were retained. Actual study dates remain unknown.
 
-这不是两位患者的整体入组结论，病例也没有成为已确认参考答案。原文未明确区间边界是否包含端点，本次年龄远离端点，不用这两个病例测试边界语义。先用这两对检查流程是否正确，再扩展检验数值、用药和更多患者；不据此报告通用性能。
+Original candidates remain in `proposals/cases.csv`, `proposals/patients/`, and `proposals/trials/NCT06774950.json`. Final model inputs are separate under `uploads/A/`; the preparation state must not be mistaken for the current run/review state.
 
-试验来自 2026-10-11 的仓库快照，状态为 NOT_YET_RECRUITING。建议采用 2021-11-30 的离线评估场景仅用于旧数据上的初筛逻辑测试，不声称该试验当时存在、可招募或当前状态仍相同。病例文件保留完整 cohort facts 和其原始来源 ID，不是患者简介。模型输入容量仍需按实际界面检查。
+## Rejected source-text candidate
 
-候选文件：`proposals/cases.csv`、`proposals/patients/`、`proposals/trials/NCT06774950.json`。新评估日尚未确定；源日期不改动。
+NCT07376655 was rejected because parsed criteria omitted BMI continuation lines from the original text. The finding is recorded in `proposals/trial_selection_audit.json`; trial ingestion was not modified. A parsed status alone does not establish full source coverage. NCT06774950 passed the completeness check.
 
-## 选试验时发现的原文覆盖问题
+## Per-patient summary
 
-另一个候选 NCT07376655 的原始条件包含 BMI 的续行，但仓库的 parsed_criteria 没有保留这些行。它已被排除出本次候选，并记录于 `proposals/trial_selection_audit.json`。未修改 trial_ingestion 模块。本次选用的试验通过完整原文覆盖检查；这也说明不能只凭 parse_status=parsed 判断条件完整。
+Full fact IDs, raw statuses, values and dates are in `cohort_evidence_coverage.json`; CSV supports filtering. Dates below are latest valid calendar dates, with same-day facts retained in the full records.
 
-## 每位患者的简表
-
-完整 fact ID、源状态、测量值和日期见 `cohort_evidence_coverage.json`；CSV 可按字段筛选。以下日期只表示最新有效测量的日历日期，同日多条均保留。
-
-| patient_id 前 8 位 | 参考日年龄 | HbA1c 最新日期 | 距参考日天数 | 处方/给药条数 | 参考日前死亡记录 |
+| patient_id prefix | Age at cutoff | Latest HbA1c date | Days before cutoff | Orders / administrations | Recorded death before cutoff |
 | --- | ---: | --- | ---: | --- | --- |
-| 060e72d3 | 52 | 2021-08-13 | 109 | 42 / 0 | 未记录，不等于确认存活 |
-| 1293efbb | 62 | 2021-02-07 | 296 | 63 / 2 | 未记录，不等于确认存活 |
-| 165a4435 | 49 | 2021-03-25 | 250 | 22 / 0 | 未记录，不等于确认存活 |
-| 1cfa5a70 | 63 | 2021-01-13 | 321 | 26 / 2 | 未记录，不等于确认存活 |
-| 28db1c55 | 44 | 2021-03-25 | 250 | 62 / 0 | 未记录，不等于确认存活 |
-| 30db29cb | 56 | 2021-03-14 | 261 | 37 / 0 | 未记录，不等于确认存活 |
-| 3beee40e | 69 | 2021-06-21 | 162 | 77 / 0 | 未记录，不等于确认存活 |
-| 3dfce025 | 59 | 2021-10-21 | 40 | 201 / 0 | 未记录，不等于确认存活 |
-| 40ef2428 | 47 | 2021-10-21 | 40 | 6 / 0 | 未记录，不等于确认存活 |
-| 475803f3 | 43 | 2020-12-28 | 337 | 5 / 0 | 未记录，不等于确认存活 |
-| 4b10c406 | 69 | 2021-05-27 | 187 | 3 / 0 | 未记录，不等于确认存活 |
-| 509f9a77 | 56 | 2021-11-15 | 15 | 98 / 0 | 未记录，不等于确认存活 |
-| 55c5b8d3 | 79 | 2021-11-04 | 26 | 825 / 0 | 未记录，不等于确认存活 |
-| 56cfe6a5 | 51 | 2021-03-06 | 269 | 41 / 0 | 未记录，不等于确认存活 |
-| 76b289fd | 36 | 2019-05-19 | 926 | 12 / 3 | 未记录，不等于确认存活 |
-| 80534c6c | 27 | 2019-10-18 | 774 | 1 / 0 | 未记录，不等于确认存活 |
-| 83f922a9 | 57 | 2020-12-12 | 353 | 56 / 0 | 未记录，不等于确认存活 |
-| 8c6ae452 | 104 | 2016-04-12 | 2058 | 808 / 0 | 有，排除候选 |
-| 9e84e569 | 76 | 2021-03-07 | 268 | 443 / 0 | 未记录，不等于确认存活 |
-| 9ef4db86 | 48 | 2020-11-16 | 379 | 96 / 0 | 未记录，不等于确认存活 |
-| aa01ba4c | 58 | 2021-11-12 | 18 | 45 / 0 | 未记录，不等于确认存活 |
-| aade3c61 | 36 | 2020-04-01 | 608 | 4 / 0 | 未记录，不等于确认存活 |
-| be82309d | 51 | 2021-10-16 | 45 | 36 / 0 | 未记录，不等于确认存活 |
-| c893e2b1 | 80 | 1992-07-26 | 10719 | 28 / 1 | 有，排除候选 |
-| d362f4e5 | 47 | 2021-09-10 | 81 | 8 / 0 | 未记录，不等于确认存活 |
+| 060e72d3 | 52 | 2021-08-13 | 109 | 42 / 0 | Not recorded; survival unconfirmed |
+| 1293efbb | 62 | 2021-02-07 | 296 | 63 / 2 | Not recorded; survival unconfirmed |
+| 165a4435 | 49 | 2021-03-25 | 250 | 22 / 0 | Not recorded; survival unconfirmed |
+| 1cfa5a70 | 63 | 2021-01-13 | 321 | 26 / 2 | Not recorded; survival unconfirmed |
+| 28db1c55 | 44 | 2021-03-25 | 250 | 62 / 0 | Not recorded; survival unconfirmed |
+| 30db29cb | 56 | 2021-03-14 | 261 | 37 / 0 | Not recorded; survival unconfirmed |
+| 3beee40e | 69 | 2021-06-21 | 162 | 77 / 0 | Not recorded; survival unconfirmed |
+| 3dfce025 | 59 | 2021-10-21 | 40 | 201 / 0 | Not recorded; survival unconfirmed |
+| 40ef2428 | 47 | 2021-10-21 | 40 | 6 / 0 | Not recorded; survival unconfirmed |
+| 475803f3 | 43 | 2020-12-28 | 337 | 5 / 0 | Not recorded; survival unconfirmed |
+| 4b10c406 | 69 | 2021-05-27 | 187 | 3 / 0 | Not recorded; survival unconfirmed |
+| 509f9a77 | 56 | 2021-11-15 | 15 | 98 / 0 | Not recorded; survival unconfirmed |
+| 55c5b8d3 | 79 | 2021-11-04 | 26 | 825 / 0 | Not recorded; survival unconfirmed |
+| 56cfe6a5 | 51 | 2021-03-06 | 269 | 41 / 0 | Not recorded; survival unconfirmed |
+| 76b289fd | 36 | 2019-05-19 | 926 | 12 / 3 | Not recorded; survival unconfirmed |
+| 80534c6c | 27 | 2019-10-18 | 774 | 1 / 0 | Not recorded; survival unconfirmed |
+| 83f922a9 | 57 | 2020-12-12 | 353 | 56 / 0 | Not recorded; survival unconfirmed |
+| 8c6ae452 | 104 | 2016-04-12 | 2058 | 808 / 0 | Recorded; excluded from demonstrations |
+| 9e84e569 | 76 | 2021-03-07 | 268 | 443 / 0 | Not recorded; survival unconfirmed |
+| 9ef4db86 | 48 | 2020-11-16 | 379 | 96 / 0 | Not recorded; survival unconfirmed |
+| aa01ba4c | 58 | 2021-11-12 | 18 | 45 / 0 | Not recorded; survival unconfirmed |
+| aade3c61 | 36 | 2020-04-01 | 608 | 4 / 0 | Not recorded; survival unconfirmed |
+| be82309d | 51 | 2021-10-16 | 45 | 36 / 0 | Not recorded; survival unconfirmed |
+| c893e2b1 | 80 | 1992-07-26 | 10719 | 28 / 1 | Recorded; excluded from demonstrations |
+| d362f4e5 | 47 | 2021-09-10 | 81 | 8 / 0 | Not recorded; survival unconfirmed |
 
-## 如何复现
+## Reproduce the audit
 
 ```bash
 python evaluation/verification/analyze_cohort.py
@@ -85,4 +72,4 @@ python evaluation/verification/analyze_cohort.py --check
 python -m unittest discover -s evaluation/verification/tests -p test_cohort_coverage.py -v
 ```
 
-覆盖脚本记录输入和输出哈希。原始 ZIP 成员在本次未重新下载、逐一重验；来源沿用已提交 cohort、选择清单及归档哈希。仅核心指定 LOINC/SNOMED 代码做精确统计，药物名称做明确标记的文本扫描；不声称穷尽所有临床概念。
+The analyzer records input/output hashes. Original ZIP members were not downloaded and individually revalidated during this coverage audit; provenance uses the committed cohort, selection manifest and archive hash. Core specified LOINC/SNOMED codes are counted exactly; medication names use an explicitly labeled text scan. This does not claim exhaustive coverage of all clinical concepts.

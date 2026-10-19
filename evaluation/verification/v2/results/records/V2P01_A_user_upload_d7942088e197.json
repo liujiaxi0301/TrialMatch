@@ -153,7 +153,7 @@
       "confirmed_at_utc": "2026-10-18T18:56:27.229970+00:00",
       "source": "user reply",
       "question_id": "call_bd1b738ea7214935b3481637627b5064",
-      "user_confirmation": "Claude opus5.5，新建对话，关闭搜索和memory",
+      "user_confirmation": "Claude Opus 5.5; new conversation; search and memory disabled.",
       "previous_fields": {
         "model": "UNCONFIRMED",
         "model_version": "UNCONFIRMED",
@@ -167,7 +167,14 @@
         "interface": "Claude UI (client unspecified)",
         "search_enabled_user_reported": "FALSE",
         "context_isolation_user_reported": "CONFIRMED"
-      }
+      },
+      "user_confirmation_is_translation": true
     }
-  ]
+  ],
+  "delivery_revision": {
+    "date": "2026-10-19",
+    "change": "User confirmation text translated; no model output, clinical fact, label, setting or evidence ID changed.",
+    "pre_revision_record_sha256": "dc57cae3b56d65d5344e80e87ff7869fe7469b39efaf9278ce45222155bbd078",
+    "original_bytes_preserved_outside_repository": true
+  }
 }

@@ -1,48 +1,50 @@
-# 修订方案：可追溯的患者初筛
+# Design revision: traceable offline patient prescreening
 
-状态：V2P01、V2P02 两例方式 A 回答均已保存，assessment_date 为用户确认的 2021-11-30；两例均确认 Claude Opus 5.5、独立新对话、搜索与 memory 关闭。新版参考标签尚未确认，上下文及证据口径限制继续保留。见 [两例结果汇总](v2/results/two_case_pilot_summary.md)。第一版人工确认暂停在 22/30 条，已保存至 `results/policy_v1_snapshot/`，其中 21 条 UNKNOWN、1 条 MET。原始回答及确认记录保留。
+## Current status
 
-进度：25 人证据覆盖分析已完成，见 [覆盖报告](v2/coverage_report.md)。发现 2 位记录已在参考日前死亡，临床候选方案排除这两位；其余 23 位不自动视为已确认存活。已准备两对完整输入（Cleveland、Anthony 对 NCT06774950），用于对照有支持与有冲突的年龄条件，同时保留缺失临床资料和研究流程待办。评估日已确认；10 行新参考表仍待独立复核。
+Both Mode A responses and all **10/10 user-confirmed reference labels** are recorded: 3 MET, 1 NOT_MET, 6 UNKNOWN. Eight model labels agree with the references; two reproductive-status labels differ under the accepted evidence rule. This was AI-assisted, non-blinded review by a non-clinician, not a clinical accuracy benchmark. See the [completed review](v2/results/reference_review_completed.md) and [two-case report](v2/results/two_case_pilot_summary.md).
 
-## 当前设计的问题
+V1 remains paused at 22/30 confirmed clauses (21 UNKNOWN, 1 MET). Its responses, strict-date decisions and snapshot are preserved. Do not revise historical results silently or transfer v1 labels into v2.
 
-1. **普通病历无法完成研究流程。** 知情同意、参加意愿、研究医生的独立治疗决定等是研究流程信息。它们未出现在合成病历里不意味着系统不能提供初筛价值；也不能因此判定患者不符合临床条件。
-2. **未知试验日期被过度扩展。** 出生日期和历史年龄是已知事实。将所有正式入组时点未定的情况直接汇总为无法初筛，遮蔽了已有证据。应明确区分“某评估日的临床初筛结论”和“真实同意书时点的最终条件确认”。
-3. **数据与试验用药要求不相称。** 当前 25 位患者中，按药名显示文本检索未见含 gliflozin 的用药记录；6 位有 insulin 处方，但未见 insulin 给药、发药或用药陈述记录。4 位有某种给药记录，这不证明有基础胰岛素持续治疗。该检查是药名文本覆盖检查，不是完整药物编码分类审计。当前所选试验却高度依赖 SGLT-2 或长期基础胰岛素使用证据。
-4. **时间与样本不适合直接展示实时匹配。** 当前患者事件截至 2020 年，reference_date 为 2021-11-30，试验快照为 2026-10-11。V01–V03 实际只测了同一个患者的三个试验，难以覆盖清楚满足、不满足和缺失三类情形。
-5. **确认标签不能替代方法验证。** 连续确认 UNKNOWN 没有证明模型有效或无效。第一版标签来自用户按严格日期口径的复核，不是独立临床专家基准；原始模型没有接受本修订方案，不能直接拿新口径给旧输出评分。
+## Why the first design needed revision
 
-## 修订后的输出
+1. Ordinary synthetic records do not complete study workflow. Consent, willingness, treatment decisions and the order of study activities require study-specific evidence; missing workflow data does not automatically imply clinical ineligibility.
+2. Unknown real trial dates should not hide known facts. Birth dates and documented diagnoses remain useful, even when age at an actual unknown consent date cannot be confirmed. Separate an explicit offline assessment from final enrollment checks.
+3. Medication evidence is limited. The 25-person cohort has no gliflozin display-name matches. Six patients have insulin orders, but no insulin match appears in administrations, dispensing or statements. Four patients have some administration record; that is not proof of long-term basal insulin use. Display-name scans are not comprehensive drug-code classification.
+4. Dates and sampling limit conclusions. The original Cleveland cases use older clinical events, a 2021-11-30 cutoff and 2026 trial snapshots. V01-V03 reuse one patient against three trials and do not form a representative benchmark.
+5. Repeated confirmation of UNKNOWN is not method validation. The original model outputs were not produced under this revised protocol. New rules cannot be applied retrospectively without documenting a separate experiment and scope.
 
-每个候选试验仍展示完整条件及来源，但将分析拆开：
+## Output contract
 
-| 证据性质 | 初筛时输出 | 仍须保留的限制 |
+Keep every complete source criterion, its ID and its compound logic. Separate:
+
+| Evidence or task | Offline output | Retained limitation |
 | --- | --- | --- |
-| 可从病历判断的事实 | 已有 T2D 诊断、出生日期、历史检验值等，附 fact ID | 不把事实存在直接等同于完整条件满足 |
-| 指定评估日可判断的临床要求 | 按明确 assessment_date 计算年龄、核查时间窗 | assessment_date 不是实际筛查、同意或 V1 日期 |
-| 需要更新或补充的临床证据 | 缺少近期 HbA1c、实际稳定用药等，逐项列出 | 不以处方证明给药，不创造近期天数阈值 |
-| 研究流程要求 | 同意书、参加意愿、研究活动时序等标为待流程确认 | 不删除原条款，也不自动当成临床不匹配 |
+| Documented facts | Diagnoses, birth date, measurements and their fact IDs | Fact presence alone does not establish a complete criterion |
+| Requirements assessable at a stated date | Age and supported time calculations at assessment_date | This date does not substitute for actual screening, consent or V1 |
+| Missing clinical evidence | List required measurements, severity or actual medication evidence | Do not invent recency thresholds or infer use from orders |
+| Study workflow | Keep consent, capacity and investigator follow-up explicit | Do not delete source clauses or turn missing workflow into automatic exclusion |
 
-复合条件保留原 criterion_id 和整条逻辑。例如 V03“确诊至少一年”：T2D 诊断事实可以明确，正式同意书时点的完整时长条件仍待确认。若同时展示评估日的病史时长，它是单独的初筛观察，不可冒充正式条件 MET。
+For example, a T2D diagnosis can be documented while a formal requirement for one year before an unknown consent date remains unresolved. Any duration calculated at a hypothetical assessment date is a separate preliminary observation.
 
-初筛结果应回答：哪些条件有支持证据、哪些有明确冲突、缺什么资料、还有哪些研究流程待办。没有充分证据时不输出“当前可入组”。候选排序应披露规则和信息覆盖，不能把 UNKNOWN 数量直接转成入组概率。
+Report supported, conflicting and unresolved criteria with correct inclusion/exclusion polarity. UNKNOWN counts are not enrollment probabilities. Do not issue a final enrollment decision.
 
-## 日期处理
+## Date and diagnosis rules
 
-- 新增明确且可配置的 `assessment_date`，由离线实验场景或产品输入提供。
-- 保留现有 `reference_date` 作为数据处理截断日；保留筛查、同意、V1 日期为实际未知，不替代。
-- 如演示采用 2021-11-30 作为 assessment_date，应写明这是旧合成数据上的离线场景，套用较新的条件仅用于测试，不声称试验当时可招募。
-- 如采用当前日期作评估日，出生日期可用于年龄初筛，但旧临床观察不得自动升级为当前状态。真实研究日期和正式资格仍需确认。
-- 用户已确认使用 2021-11-30 作为离线 assessment_date，记录于 `v2/policy.json`。第一版已确认标签不改写、不直接迁移；新版参考表单独复核。
+- The user selected **assessment_date = 2021-11-30** for offline replay.
+- `reference_date` remains the source cutoff. Their equal values in this scenario do not make either an actual study date.
+- Actual screening, consent and V1 dates remain null.
+- Newer trial criteria are intentionally applied to older synthetic data as a method exercise. Recruitment at the assessment date or now is not established.
+- Use the earliest retained exact-coded T2D Condition `recorded_date`; use `onset_date` only if recorded_date is missing. This is a documented-history surrogate, not proof of the true first-ever diagnosis date. The two inc_001 MET references are limited to this stated surrogate rule.
 
-## 数据和验证的下一步
+## Evidence-based case selection and completed review
 
-1. 为现有 25 位患者制作条件证据覆盖表：诊断、出生日期、HbA1c/BMI/血压日期、药物证据类型、时长、流程信息。结合相应试验要求选案例。
-2. 先挑选数据确实支持的判定情形，而非只挑文字简短的试验。当前 25 人 reference_date 年龄范围为 27–104 岁，可用于检验明确评估日的年龄上下界；用药要求则需如实体现证据局限。
-3. 新一轮设计应包含有充分支持、存在明确冲突和证据缺失的条件，以及多个患者。缺少某病记录不作为“明确冲突”。如现有样本无法覆盖持续用药，应寻找适当数据或调整所选试验；不可手工添加病史后冒充官方数据。
-4. 分别检查事实/引用正确性、检索条件完整性、指定评估日的临床判断，以及缺失信息识别。研究流程要求单列并保留，避免用共同缺失的同意书信息主导临床判断统计。
-5. 修订输入、输出和评分规则后，作为独立 v2 案例和运行保存。保留 v1 的六份原始回答、限制和历史参考表，不能用新口径静默替换旧结果。
+The [coverage audit](v2/coverage_report.md) examined all 25 processed patients. Two recorded deaths before the cutoff were excluded from clinical demonstrations; the other 23 were not automatically declared alive. Cleveland (43) and Anthony (27) were selected against the five complete criteria of NCT06774950 to cover age support, age conflict and unresolved evidence. Ages avoid the source's ambiguous boundary wording.
 
-## 当前分工
+Anthony has a recorded T2D neuropathy Condition. Severity and applicability to the broad exclusion still require clinical assessment. Both reproductive-status references remain UNKNOWN under the user-confirmed rule that administrative gender alone is insufficient. Both consent-capacity references remain UNKNOWN because missing signatures do not establish incapacity.
 
-患者处理模块的核心提取仍可复用。本次主要修订用户负责的 verification 材料、覆盖分析和 patient-facts 交接要求；完整检索/生成流程仍需与 Jenny 的模块对齐。没有修改处理模块、生成患者病史、运行模型、推送或合并。
+All confirmations occurred after model outputs were available. Preserve that limitation, the original suggestions and the two reproductive-status disagreements. Future policy changes require a separate version and explanation; no clinical expert validation, randomized sample, repeatability study or v2 Mode B experiment has been completed.
+
+## Ownership
+
+The patient extractor remains unchanged and can be reused. This revision concerns the user's verification materials and patient-facts handoff. Trial ingestion, RAG/API logic, shared containers and UI remain with their owners; this package does not implement those changes or establish integration acceptance.

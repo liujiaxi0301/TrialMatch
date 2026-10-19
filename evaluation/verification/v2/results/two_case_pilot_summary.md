@@ -1,35 +1,41 @@
-# 两例离线初筛：已观察到的结果
+# Two-case offline prescreening report
 
-两份用户提交的方式 A 回答已原样保存。每份都提供完整患者 facts 和同一试验 NCT06774950 的 5 条完整源条件，assessment_date 为用户确认的 2021-11-30；实际筛查、同意书和 V1 日期保持未知。
+The two user-submitted Mode A responses are preserved unchanged. Each received complete patient facts and all five source clauses of NCT06774950. Assessment_date is the approved hypothetical 2021-11-30; actual screening, consent and V1 dates remain null.
 
-两例的模型设置均已由用户确认一致：Claude Opus 5.5、分别新建对话、搜索关闭、memory 关闭。V2P01 回答自身仍提示继承上下文不能保证隔离；用户的界面设置确认不等于独立验证系统上下文。客户端具体类型及独立工具轨迹不可核实。
+The user reported the same settings for both: Claude Opus 5.5, separate new conversations, search off and memory off. Specific client and independent tool traces are unverified. V2P01 reports possible inherited context; interface settings alone do not prove isolation.
 
-## 并排比较
+## Original model outputs
 
-| 源条件 | Cleveland：V2P01 | Anthony：V2P02 | 可核对的事实或限制 |
+| Clause | V2P01 Cleveland | V2P02 Anthony | Checked fact or limitation |
 | --- | --- | --- | --- |
-| T2D 已记录病史不足十年 | MET | MET | 按已声明规则分别为 1450 天和 774 天，不是真正首次确诊时间的证明 |
-| 年龄 40–65 | MET | NOT_MET | 评估日分别为 43 岁、27 岁；出生日期能独立复算 |
-| 重要合并症及医生判断 | UNKNOWN | UNKNOWN | Anthony 实际有 T2D 神经病变记录，缺少严重度；不能描述成两个病例均无相关病史 |
-| 孕哺排除条件 | NOT_MET | NOT_MET | 都依据行政性别 male，需要固定该字段是否足以支持此条的证据契约；不直接作为已确认错误或正确答案 |
-| 无法作出签署知情同意 | UNKNOWN | UNKNOWN | 两者都区分了同意能力与是否已有签署文件 |
+| Documented T2D history under ten years | MET | MET | 1450 and 774 days under the supplied surrogate rule, not proof of true first diagnosis |
+| Age 40-65 | MET | NOT_MET | 43 and 27 at assessment_date |
+| Significant comorbidities/investigator judgment | UNKNOWN | UNKNOWN | Anthony has neuropathy; severity remains unknown |
+| Reproductive-status exclusion | NOT_MET | NOT_MET | Both model answers use administrative gender male |
+| Consent-capacity exclusion | UNKNOWN | UNKNOWN | Missing signatures are distinguished from inability to consent |
 
-V2P01：2 MET、1 NOT_MET、2 UNKNOWN，模型汇总为 3 条支持、0 条冲突、2 条未决。V2P02：1 MET、2 NOT_MET、2 UNKNOWN，汇总为 2 条支持、1 条冲突、2 条未决。排除条款 NOT_MET 属于不触发排除，不能当作负面冲突。
+V2P01's model labels are 2 MET, 1 NOT_MET, 2 UNKNOWN: three supported clauses, zero conflicts, two unresolved. V2P02's are 1 MET, 2 NOT_MET, 2 UNKNOWN: two supported clauses, one conflict, two unresolved. Exclusion NOT_MET means non-trigger under the model's reasoning, not a negative inclusion result.
 
-## 当前可以说明什么
+## Completed reference comparison
 
-- 这两份输出能够引用原始 facts、按明确评估日区分相反的年龄条件，并列出临床和研究流程待补信息。
-- 5+5 条完整源条件、23/8 个不同证据 ID 均通过结构与来源存在性核对；关键日期和所引用的数值经过源数据核对。引用存在性、结构正确与临床推理正确是不同检查。
-- Anthony 的神经病变体现了有内容的临床待核查项：诊断记录存在，但严重度与开放式医生判断尚不能自动解决。
+All **10/10** references were user-confirmed on 2026-10-18: 3 MET, 1 NOT_MET, 6 UNKNOWN. Review was AI-assisted, non-blinded and by a non-clinician. Five confirmation records and source links are in the [completed review](reference_review_completed.md).
 
-## 当前不能说明什么
+**Eight model/reference labels agree and two differ**, four agreements per patient. Both differences are reproductive-status clauses: model NOT_MET versus reference UNKNOWN under the accepted rule that administrative gender alone is insufficient. Report these as evidence-rule disagreements, not independently established clinical errors. See the [ten-row comparison](reference_model_comparison.csv).
 
-这是 2 位经过选择的合成患者、1 个试验、每例 1 次方式 A 回答。没有随机抽样、重复性实验、已确认完整临床 gold labels，也未测试 v2 搜索方式 B。10 行参考表仍待独立复核，不计算准确率、不宣称系统优于通用模型或证明可以入组。若后续复核参考答案已看过模型输出，应如实标记，不称为独立盲审。
+Under the reference rules Cleveland has two supported inclusions and three unresolved exclusions. Anthony has one supported inclusion, one age conflict and three unresolved exclusions. This does not establish eligibility for either patient.
 
-试验快照为 2026-10-11 且状态尚未招募，患者数据较旧；本实验只验证离线初筛方法，不验证真实历史或当前招募。参考建议与源输入保持冻结，不能为了使模型表现更好或更差而静默修改标签。
+## What the evidence supports
 
-## 下一步
+- All ten complete source clauses and 23/8 distinct evidence fact IDs passed structural/source checks; cited key dates and numerical values were checked against source facts.
+- The answers distinguish opposing age conditions at an explicit date and identify missing clinical/workflow evidence.
+- Anthony's neuropathy is a substantive follow-up item: diagnosis is present, but severity and investigator judgment remain unresolved.
 
-1. 用这份并排结果整理给团队/TF 的发现，集中复核证据契约与有临床意义的争议项，不再机械逐条确认 UNKNOWN。两例运行设置已补齐。
-2. 与 Jenny 对齐初筛输出：源 criterion_id、事实 evidence_fact_ids、precheck_status、missing_clinical_information、required_workflow_followup 及支持/冲突/未决分组。正式入组判定继续留给实际试验流程。
-3. 如需展示检索价值，再单独定义 v2 搜索方式 B 或接入检索流程，分别检验条件检索完整性和初筛判断；本轮不能冒充已经完成这些测试。
+## Limits
+
+Two selected synthetic patients, one trial and one response per patient do not establish general performance. There was no random sampling, repeated-run study, clinical expert reference or v2 Mode B test. Reference completion does not resolve clinical unknowns. Agreement is not clinical accuracy or proof of system superiority.
+
+The source trial snapshot is from 2026-10-11 and NOT_YET_RECRUITING; the patient records are older. This exercise tests offline reasoning only, not historical or current recruitment. No reference rule or original answer was silently changed to improve or worsen agreement.
+
+## Delivery follow-up
+
+Use this completed report for the personal verification handoff and TF explanation. Publication, shared container-run evidence and consuming-owner acceptance remain separate delivery actions. Retrieval/API/UI implementation remains with its owners. Any later retrieval or Mode B experiment needs its own protocol and run records.

@@ -139,7 +139,7 @@
     {
       "criterion_id": "NCT07156539_exc_004",
       "criterion_type": "exclusion",
-      "criterion_text": "Presence of an endocrine disorder or history that may significantly affect bady weight(e.g., Cushing's syndrome, hypothyroidism or hyperthyroidism, except hypothyroidism if thyroid hormone replacement dose has been stable for at least 6 months) ；",
+      "criterion_text": "Presence of an endocrine disorder or history that may significantly affect bady weight(e.g., Cushing's syndrome, hypothyroidism or hyperthyroidism, except hypothyroidism if thyroid hormone replacement dose has been stable for at least 6 months) ;",
       "status": "UNKNOWN",
       "evidence_fact_ids": [
         "services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/a125d66e-6785-08b4-f79c-abbc315d0873",

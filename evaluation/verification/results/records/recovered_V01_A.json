@@ -13,7 +13,7 @@
   "original_run_timestamp": null,
   "recorded_at_utc": "2026-10-18T17:55:06.306676+00:00",
   "raw_response_path": "results/raw/A/recovered_V01_A.txt",
-  "response_sha256": "68af0f75698e2a012c79ae08fc2a4b6434d09af0f50b84dbdb08a979938daeb9",
+  "response_sha256": "1dd612e7e24fcb7459627c57fa58a0f56a373f4a5ac1012d8d4f7fcf7cd6a4fe",
   "parse_status": "PARSED",
   "validation_warnings": [],
   "context_limitations": [
@@ -132,7 +132,7 @@
       "source_criterion_id": "NCT07156539_exc_004",
       "alignment_state": "NORMALIZED_TEXT_MATCH",
       "criterion_type": "exclusion",
-      "criterion_text": "Presence of an endocrine disorder or history that may significantly affect bady weight(e.g., Cushing's syndrome, hypothyroidism or hyperthyroidism, except hypothyroidism if thyroid hormone replacement dose has been stable for at least 6 months) ；",
+      "criterion_text": "Presence of an endocrine disorder or history that may significantly affect bady weight(e.g., Cushing's syndrome, hypothyroidism or hyperthyroidism, except hypothyroidism if thyroid hormone replacement dose has been stable for at least 6 months) ;",
       "model_status": "UNKNOWN",
       "evidence_fact_ids": "[\"services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/a125d66e-6785-08b4-f79c-abbc315d0873\", \"services/patient_processing/data/raw/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/d257eb86-b139-c396-422b-eab147783d64\"]",
       "reasoning": "No Cushing's syndrome, thyroid disorder, thyroid hormone prescription, or thyroid laboratory result is recorded. The record does include 'Body mass index 30+ - obesity (finding)' (162864005, onset 2015-02-23) and 'Metabolic syndrome X (disorder)' (237602007, onset 2018-12-17). The criterion does not say whether these, or diabetes itself, count as an 'endocrine disorder or history that may significantly affect body weight', so they are not treated as meeting it. Missing records do not prove the listed conditions are absent.",
@@ -169,6 +169,13 @@
   ],
   "criterion_count": 10,
   "aligned_criterion_count": 10,
-  "reconstructed_upload_sha256": "1bc8208aa71dd4d64018706452ab6a9f0851f8a631277fd19bce74b68fd134fd",
-  "original_upload_sha256": null
+  "reconstructed_upload_sha256": "53ced3028cf9709cc34c5447a7570914ddcba590da493fd8b89da48c540b0850",
+  "original_upload_sha256": null,
+  "original_response_sha256": "68af0f75698e2a012c79ae08fc2a4b6434d09af0f50b84dbdb08a979938daeb9",
+  "pre_revision_reconstructed_upload_sha256": "1bc8208aa71dd4d64018706452ab6a9f0851f8a631277fd19bce74b68fd134fd",
+  "delivery_revision": {
+    "date": "2026-10-19",
+    "pre_revision_record_sha256": "53bdf12f7f1802994abc31b446476f3547b2b21ff7479d8f542169631095ebad",
+    "note": "Delivery-copy punctuation normalized where needed; source identities, labels, evidence IDs and observed run settings unchanged. Original bytes retained outside repository."
+  }
 }

@@ -1,13 +1,15 @@
-# 先做 V2P01 的方式 A
+# Run the v2 Mode A procedure
 
-评估日已由用户确认：2021-11-30。它仅用于离线初筛，实际筛查、同意书和 V1 日期继续未知。所用试验快照为 2026-10-11，状态为尚未招募；不代表 2021 年实际可入组或当前可招募。
+This guide is a delivery rendition of the preparation instructions. Original guide/ZIP bytes and hashes were preserved outside the repository before conversion; see `../delivery_revision.json`. The model prompt and patient facts are unchanged. For current completed results, see [the reference review](results/reference_review_completed.md).
 
-1. 新建一个模型对话，记录实际模型名称、版本和界面，关闭搜索、浏览和连接源；若界面允许，关闭 memory。不能确认的设置如实标为未知。
-2. 只上传 `uploads/A/V2P01.json`。它包含 Cleveland 的完整 facts、指定试验的完整原文和 5 条源条件，没有参考答案。检查界面能完整读取附件；若有容量或截断提示，保留该情况，不静默删减病历。
-3. 打开 `prompt_A.md`，将分隔线下面的全部指令粘贴到对话中。
-4. 保存完整回答，包含 JSON 外文字、报错或遗漏，保留原样。将完整回答以及实际模型、版本、搜索和上下文设置发回当前聊天。
-5. 第一份结果完成记录后，再新开独立对话，以相同设置测试 `uploads/A/V2P02.json`。两份回答分别记录，不在同一模型对话中展示另一例或人工参考答案。
+The approved offline assessment date is 2021-11-30. Actual screening, consent and V1 dates remain unknown. The trial snapshot is dated 2026-10-11 and NOT_YET_RECRUITING; the exercise does not establish recruitment in 2021 or now.
 
-本阶段只有方式 A，先检查完整输入下的初筛判断和证据引用。搜索模式 B 后续单独设计和记录。本次准备材料没有运行模型，也不计算准确率。
+1. Start a new model conversation. Record the actual model name, version and interface. Turn off search, browsing and connected sources; disable memory where supported. Record uncertain settings as UNKNOWN.
+2. Upload only `uploads/A/V2P01.json`. It contains the complete Cleveland facts, complete trial text and five source clauses, without reference answers. Check attachment readability and preserve any truncation or capacity warning.
+3. Open `prompt_A.md` and paste all instructions below its separator into the model conversation.
+4. Save the full response unchanged, including preambles, errors or omissions, and record actual model/search/context settings.
+5. After recording the first response, use a separate new conversation with the same settings for `uploads/A/V2P02.json`. Do not expose the other response or reference answers to either model conversation.
 
-`templates/reference_answers.csv` 是人工参考表，当前没有确认标签；`templates/reference_suggestions.csv` 是未复核建议。不要把它们上传给被测试模型。正式评分前必须独立复核并固定参考口径，不能为了迎合模型结果再改答案。
+This stage tests Mode A using complete supplied facts and criteria. Mode B requires a separate design and record. Building materials does not itself call a model or establish accuracy.
+
+At preparation time no reference label was confirmed. Later all ten references were confirmed by a non-clinician after viewing model outputs. Keep that timeline explicit. Do not upload reference tables or reviewer notes to the model, and preserve a separate version for any later policy/label change.

@@ -13,7 +13,7 @@
   "original_run_timestamp": null,
   "recorded_at_utc": "2026-10-18T17:55:06.313812+00:00",
   "raw_response_path": "results/raw/B/recovered_V01_B.txt",
-  "response_sha256": "9e547f551d997491fddfa8112eadcf1deebb97b4c24d0c107c4f9841046caef4",
+  "response_sha256": "722943d67b661ad37122380917652619108fb2db803a7a57ab8907186a1fb11d",
   "parse_status": "PARSED",
   "validation_warnings": [
     "UNALIGNED_MODEL_CLAUSE:NCT07156539_web_exc_006",
@@ -134,7 +134,7 @@
       "source_criterion_id": "NCT07156539_exc_004",
       "alignment_state": "NORMALIZED_TEXT_MATCH",
       "criterion_type": "exclusion",
-      "criterion_text": "Presence of an endocrine disorder or history that may significantly affect bady weight(e.g., Cushing's syndrome, hypothyroidism or hyperthyroidism, except hypothyroidism if thyroid hormone replacement dose has been stable for at least 6 months) ；",
+      "criterion_text": "Presence of an endocrine disorder or history that may significantly affect bady weight(e.g., Cushing's syndrome, hypothyroidism or hyperthyroidism, except hypothyroidism if thyroid hormone replacement dose has been stable for at least 6 months) ;",
       "model_status": "UNKNOWN",
       "evidence_fact_ids": "[]",
       "reasoning": "No Cushing's syndrome, thyroid disorder or other weight-affecting endocrine diagnosis is recorded. There are no thyroid function tests and no thyroid hormone prescriptions. The recorded obesity finding and metabolic syndrome are not examples listed by the criterion. Absence of records is not affirmative evidence of absence.",
@@ -172,5 +172,12 @@
   "criterion_count": 10,
   "aligned_criterion_count": 9,
   "reconstructed_upload_sha256": "c936f9e7433c9f653e1e3354dda61b884dc38315ff79dc97a68b3dda05994f74",
-  "original_upload_sha256": null
+  "original_upload_sha256": null,
+  "original_response_sha256": "9e547f551d997491fddfa8112eadcf1deebb97b4c24d0c107c4f9841046caef4",
+  "pre_revision_reconstructed_upload_sha256": "c936f9e7433c9f653e1e3354dda61b884dc38315ff79dc97a68b3dda05994f74",
+  "delivery_revision": {
+    "date": "2026-10-19",
+    "pre_revision_record_sha256": "0781a546ad961f0dd0b60abb9aae730f4e05a3e98a4a6b1371eb647366720913",
+    "note": "Delivery-copy punctuation normalized where needed; source identities, labels, evidence IDs and observed run settings unchanged. Original bytes retained outside repository."
+  }
 }

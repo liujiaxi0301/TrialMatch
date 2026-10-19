@@ -12,8 +12,8 @@
       "trial_id": "NCT07156539",
       "source_attachment_id": "file_000000000ea081f587705d1fb8c502ef",
       "raw_response_path": "results/raw/A/recovered_V01_A.txt",
-      "response_sha256": "68af0f75698e2a012c79ae08fc2a4b6434d09af0f50b84dbdb08a979938daeb9",
-      "size_bytes": 18901,
+      "response_sha256": "1dd612e7e24fcb7459627c57fa58a0f56a373f4a5ac1012d8d4f7fcf7cd6a4fe",
+      "size_bytes": 18899,
       "criterion_count": 10,
       "model_status_counts": {
         "MET": 1,
@@ -21,7 +21,10 @@
       },
       "search_enabled_user_reported": false,
       "source_turn_id": "01a14065-9448-77b9-a103-ad79ad80b912",
-      "limitation": "Original response reports automatically supplied memory context; strict context isolation is not established. Search-off setting is user-reported."
+      "limitation": "Original response reports automatically supplied memory context; strict context isolation is not established. Search-off setting is user-reported.",
+      "original_response_sha256": "68af0f75698e2a012c79ae08fc2a4b6434d09af0f50b84dbdb08a979938daeb9",
+      "original_size_bytes": 18901,
+      "delivery_transform": "ASCII semicolon normalization only; exact original bytes preserved outside repository"
     },
     {
       "pair_id": "V01",
@@ -29,8 +32,8 @@
       "trial_id": "NCT07156539",
       "source_attachment_id": "file_0000000059cc81f5be46d0d0bad81d67",
       "raw_response_path": "results/raw/B/recovered_V01_B.txt",
-      "response_sha256": "9e547f551d997491fddfa8112eadcf1deebb97b4c24d0c107c4f9841046caef4",
-      "size_bytes": 18444,
+      "response_sha256": "722943d67b661ad37122380917652619108fb2db803a7a57ab8907186a1fb11d",
+      "size_bytes": 18440,
       "criterion_count": 10,
       "model_status_counts": {
         "MET": 1,
@@ -38,7 +41,10 @@
       },
       "search_enabled_user_reported": true,
       "source_turn_id": "01a140da-6bc0-75b5-bee8-231f07d936ff",
-      "limitation": "Prior review found the sixth exclusion criterion text missing from retrieval. Ten entries does not establish complete criteria."
+      "limitation": "Prior review found the sixth exclusion criterion text missing from retrieval. Ten entries does not establish complete criteria.",
+      "original_response_sha256": "9e547f551d997491fddfa8112eadcf1deebb97b4c24d0c107c4f9841046caef4",
+      "original_size_bytes": 18444,
+      "delivery_transform": "ASCII semicolon normalization only; exact original bytes preserved outside repository"
     },
     {
       "pair_id": "V02",
@@ -55,7 +61,10 @@
       },
       "search_enabled_user_reported": false,
       "source_turn_id": "01a1411b-42ec-7726-a008-ba8c4bd12112",
-      "limitation": "Original response reports automatically supplied memory context; strict context isolation is not established. Search-off setting is user-reported."
+      "limitation": "Original response reports automatically supplied memory context; strict context isolation is not established. Search-off setting is user-reported.",
+      "original_response_sha256": "acc2c89aaafbc58b3f07cba7e72dafbce1c862b960987bf7da09f78e7e86f42b",
+      "original_size_bytes": 16816,
+      "delivery_transform": "No response-byte change"
     },
     {
       "pair_id": "V02",
@@ -71,7 +80,10 @@
         "UNKNOWN": 9
       },
       "search_enabled_user_reported": true,
-      "source_turn_id": "01a1413b-6058-7373-8a78-fd9159ace1ea"
+      "source_turn_id": "01a1413b-6058-7373-8a78-fd9159ace1ea",
+      "original_response_sha256": "797c988374b106e861fc7e4819d62ecd81f9c74f19277f2b80793dd87d3ca370",
+      "original_size_bytes": 14233,
+      "delivery_transform": "No response-byte change"
     },
     {
       "pair_id": "V03",
@@ -88,7 +100,10 @@
       },
       "search_enabled_user_reported": false,
       "source_turn_id": "01a14149-5dba-7198-957c-b4e74b4ca18f",
-      "limitation": "Original response reports automatically supplied memory context; strict context isolation is not established. Search-off setting is user-reported."
+      "limitation": "Original response reports automatically supplied memory context; strict context isolation is not established. Search-off setting is user-reported.",
+      "original_response_sha256": "ee947f5e8b7de9cfcf7875d5515b90f946ca22aadff9eb8f83e78eb8cb9fa246",
+      "original_size_bytes": 16915,
+      "delivery_transform": "No response-byte change"
     },
     {
       "pair_id": "V03",
@@ -103,7 +118,15 @@
         "UNKNOWN": 9,
         "MET": 1
       },
-      "search_enabled_user_reported": true
+      "search_enabled_user_reported": true,
+      "original_response_sha256": "e366d58df07f94293e4641c5332a1726314e7938425836291642fa94eab94eb2",
+      "original_size_bytes": 15927,
+      "delivery_transform": "No response-byte change"
     }
-  ]
+  ],
+  "delivery_revision": {
+    "date": "2026-10-19",
+    "pre_revision_manifest_sha256": "4ed37b8bf837d07f7dab5d3de440338dc85e2618dedbb777c1a5958cfdd790c0",
+    "note": "Original attachment hashes and current delivery-copy hashes are distinguished; no new model run."
+  }
 }

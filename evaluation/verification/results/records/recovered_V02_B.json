@@ -167,5 +167,12 @@
   "criterion_count": 10,
   "aligned_criterion_count": 10,
   "reconstructed_upload_sha256": "e72e35536d7c6c5ef35b7376dc82b4e0b295c7a4420e2a0bee07887b104abbfc",
-  "original_upload_sha256": null
+  "original_upload_sha256": null,
+  "original_response_sha256": "797c988374b106e861fc7e4819d62ecd81f9c74f19277f2b80793dd87d3ca370",
+  "pre_revision_reconstructed_upload_sha256": "e72e35536d7c6c5ef35b7376dc82b4e0b295c7a4420e2a0bee07887b104abbfc",
+  "delivery_revision": {
+    "date": "2026-10-19",
+    "pre_revision_record_sha256": "4052ab66ecb502b76f9ecb5e7f34ef9c7b653ccbcae750ed61ee907f9dc87fd7",
+    "note": "Delivery-copy punctuation normalized where needed; source identities, labels, evidence IDs and observed run settings unchanged. Original bytes retained outside repository."
+  }
 }

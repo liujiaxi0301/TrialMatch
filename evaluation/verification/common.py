@@ -48,7 +48,8 @@ def fact_ids(value):
 
 
 def normalize_text(text):
-    """Ignore whitespace and Markdown escapes, preserving clinical wording."""
+    """Ignore formatting differences without changing clinical wording."""
+    text = text.replace("\uff1b", ";")
     return re.sub(r"\s+", " ", re.sub(r"\\([<>.*-])", r"\1", text)).strip()
 
 

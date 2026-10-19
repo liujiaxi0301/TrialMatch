@@ -15,6 +15,6 @@ test_recovered_bytes_fact_references_and_source_alignment (test_verification.Rec
 test_reference_check_accepts_human_edits_and_rejects_false_evidence (test_verification.RecoveryTests.test_reference_check_accepts_human_edits_and_rejects_false_evidence) ... ok
 
 ----------------------------------------------------------------------
-Ran 15 tests in 0.590s
+Ran 15 tests in 0.605s
 
 OK

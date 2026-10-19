@@ -1,91 +1,43 @@
-# 人工复核规则与建议
+> Historical v1 policy snapshot, rendered for delivery. Original bytes are preserved outside the repository.
 
-日期口径已由用户于 2026-10-18 确认。其他条款列出已有数据契约和复核建议，不代表已确认新的逐条参考答案。
+# Historical v1 review rules
 
-## 1. 日期口径：用户已确认保留实际日期未知
+V1 review is **paused at 22/30** confirmed source clauses (21 UNKNOWN, 1 MET). These historical rules do not define v2 references. See the [revised design](../../evaluation_design_v2.md) and [completed v2 review](../../v2/results/reference_review_completed.md).
 
-患者处理的 `reference_date = 2021-11-30` 用于数据截断和年龄计算；它不是已知的筛查、签署同意书或 V1 日期。
+The historical decisions and tables are retained in the v1 policy snapshot. [Revision provenance](../../LANGUAGE_AND_PROVENANCE.md) distinguishes original bytes from delivery copies. The reference table retains criterion-level decisions, evidence, reviewer and confirmation provenance; unconfirmed rows remain unconfirmed.
 
-**采用：保留实际日期未知。** 不自动把 reference_date 代入试验日期。若某条款必须依赖未知日期且现有证据不能判断，则标 UNKNOWN，并注明缺少哪个日期或近期测量。与日期无关且已有充分证据的部分仍可记录为已满足，但整条复合条件须按逻辑判断。
+## Actual trial dates
 
-本轮不设置“筛查、签署同意书和 V1 都发生在 2021-11-30”的演示假设。历史模型输出不修改；后续人工复核按本规则记录。
+The user confirmed on 2026-10-18 that actual screening, consent and V1 dates remain unknown. Patient `reference_date = 2021-11-30` is a data cutoff and stored-age anchor, not a study date. A clause dependent on an unknown study date remains UNKNOWN when other evidence cannot resolve it. Preserve known subfacts without claiming the complete compound clause is met.
 
-用户已确认 V01 `inc_001 = UNKNOWN`：尽管参考日期时年龄为 43 岁，仍保留同意书日期未知的限制。此决定是本轮明确约定的严格日期口径。
+Under this strict v1 rule, V01 age at consent remains UNKNOWN despite known age 43 at reference_date. Historical model decisions and reasoning are retained; any presentation-only conversion is recorded in the delivery revision. V2 subsequently introduced a separate explicit offline assessment date; do not silently substitute that policy into v1.
 
-年龄也遵守同一口径：reference_date 上的年龄是已知患者事实；若条款要求同意书时的年龄，应明确是否采用假设日期，不能默默把两个日期等同。
+## Diagnosis coding
 
-## 2. 编码与诊断证据：诊断单项已获用户确认
+The user confirmed V02 inc_002 MET: SNOMED CT `http://snomed.info/sct` code `44054006` supports the diagnosis-only T2D requirement. The source display Diabetes does not override the exact code. This does not establish a duration before unknown consent or exclude other diabetes types; V01 exc_002 remains UNKNOWN.
 
-用户另已确认 V01 `exc_002 = UNKNOWN`：T2D 记录不足以排除其他糖尿病类型。
+## Measurements and time
 
-用户确认 V02 `inc_002 = MET`：SNOMED CT 系统 `http://snomed.info/sct`、编码 `44054006` 足以支持这条仅要求 T2D 诊断的条件，沿用患者模块现有编码规则。显示名称仅写 Diabetes 不会把准确编码自动降为非特异性编码。是否符合其他整条条件仍取决于确诊时长、日期锚点和其他限定；有 T2D 记录不能独自证明不存在其他糖尿病类型。
+Preserve dates, values and units. Cleveland's latest HbA1c is 5.62%, BMI 28.49 kg/m2 and blood pressure 117/80 mmHg, all dated 2020-12-28. The user confirmed V01 inc_003, inc_004 and exc_001 UNKNOWN because trial-relevant measurements or the actual screening timepoint are unavailable. Do not invent a 30/90-day recency threshold absent from the source. Unit conversions require a verifiable basis.
 
-## 3. 检验数值和时间：HbA1c、BMI 和筛查血压单项已获用户确认
+## Medication evidence
 
-用户已确认 V01 `inc_003 = UNKNOWN` 和 `inc_004 = UNKNOWN`：2020-12-28 的 HbA1c 为 5.62%、BMI 为 28.49 kg/m2，缺少试验相关时点的测量，且原条款未规定具体近期天数。
+The user confirmed V01 inc_002 UNKNOWN. Orders, dispensing, administrations and statements are distinct. A prescription alone does not prove actual use, adherence, stable dose or a required duration. List drug types, dose, duration and missing evidence separately for compound requirements.
 
-用户另已确认 V01 `exc_001 = UNKNOWN`：2020-12-28 的血压为 117/80 mmHg，实际筛查时血压未知。
+## Missing evidence and logical polarity
 
-保留原日期、数值和单位。试验明确要求筛查时或某个时间窗内的测量，不能直接用窗口外的旧值代替。未定义时间窗的条款不自行添加“近 30/90 天”等阈值；根据选定日期口径与上下文记录不确定性。单位转换必须有明确可核查的依据。
+No record is not explicit absence. Exclusion MET means it applies; NOT_MET requires support that it does not apply. For an AND clause, a supported false component can establish NOT_MET; known true components with necessary unknown components remain UNKNOWN. For an OR clause, one supported true branch can establish MET. Do not mechanically label every compound clause UNKNOWN merely because some branches are unknown.
 
-## 4. 用药证据：稳定用药单项已获用户确认
+V01 severe hematological/hemolysis history is insufficient. For V01 exc_004, the historical user confirmation says obesity and metabolic syndrome do not trigger that clause, but other endocrine history is insufficient to clear the complete exclusion.
 
-用户已确认 V01 `inc_002 = UNKNOWN`：现有处方不足以证明条款要求的实际稳定用药。
+## Confirmed scope
 
-处方、发药、给药、用药陈述分别核查。单条处方不能独自证明实际使用、依从性、稳定剂量或持续满指定时长。复合用药条件应分别列出药物种类、剂量、时长及其缺失证据。
+| Pair | Confirmed clauses | Labels | Retained limitations |
+| --- | --- | --- | --- |
+| V01 | All 10 | 10 UNKNOWN | Unknown consent/screening dates, historical measurements, incomplete actual-use and relevant history |
+| V02 | All 10 | 1 MET, 9 UNKNOWN | T2D diagnosis-only MET; age timepoint, medications, consent, comorbidity severity and liver/kidney evidence remain unresolved |
+| V03 | inc_001 and inc_004 | 2 UNKNOWN | Trial consent/activity chronology and diagnosis duration before unknown consent |
 
-## 5. 缺失信息、排除条款及复合逻辑
+V01's four-week infection/trauma/surgery window and the longer of 12 weeks or five half-lives for other trial participation cannot be assessed without dates/history. V02's insulin, three-drug count, TZD/GLP-1, prior Chiglitazar, severe comorbidity and AST/ALT/eGFR exclusions remain UNKNOWN under the documented evidence gaps. Missing willingness is not refusal; missing treatment history is not never-use.
 
-用户已确认 V01 `exc_003 = UNKNOWN`：严重血液疾病及溶血相关病史不足，未记录不能证明不存在。
-
-没有病史记录不等于明确不存在。排除条件 MET 表示排除因素成立；NOT_MET 需要证据支持其不成立。AND 条件有明确不满足部分时可判 NOT_MET；仅已知部分满足而其他必要部分未知时为 UNKNOWN。OR 条件有一项明确成立时可判 MET；否则按各部分证据处理。不要把所有含未知部分的复合条款机械地判 UNKNOWN。
-
-## 6. 已确认的逐条决定
-
-- V01 `NCT07156539_exc_004 = UNKNOWN`：从历史用户确认带回。肥胖和代谢综合征不触发这条排除条款；其他相关内分泌病史不足仍不能判定整个排除条件不成立。
-- V02 `NCT07580638_inc_002 = MET`：用户于 2026-10-18 确认，该诊断编码足以支持仅要求 T2D 诊断的条件。
-- V03 `NCT07658417_inc_004 = UNKNOWN`：用户于 2026-10-18 确认，T2D 诊断本身有证据，但实际同意书日期未知，无法确认完整的确诊满一年条件。
-
-- V01 `NCT07156539_inc_002 = UNKNOWN`：用户于 2026-10-18 确认，处方不足以证明实际使用、每日剂量和至少 90 天的稳定用药，筛查日期也未知。
-
-- V01 `NCT07156539_inc_003 = UNKNOWN`：用户于 2026-10-18 确认，缺少试验相关时点的 HbA1c，不自行增加原条款未定义的近期天数。
-
-- V01 `NCT07156539_inc_004 = UNKNOWN`：用户于 2026-10-18 确认，缺少试验相关时点的 BMI，旧测量的适用性未确立。
-
-- V01 `NCT07156539_exc_001 = UNKNOWN`：用户于 2026-10-18 确认，缺少筛查时的血压。
-
-- V01 `NCT07156539_exc_002 = UNKNOWN`：用户于 2026-10-18 确认，T2D 记录不足以证明其他糖尿病类型不存在。
-
-- V01 `NCT07156539_exc_003 = UNKNOWN`：用户于 2026-10-18 确认，相关病史不足，不能确定是否触发严重血液疾病或溶血相关排除条件。
-
-- V01 `NCT07156539_exc_005 = UNKNOWN`：用户于 2026-10-18 确认，实际筛查日期及其前 4 周内严重感染、严重创伤或中大型手术病史不足。
-
-- V01 `NCT07156539_exc_006 = UNKNOWN`：用户于 2026-10-18 确认，筛查日期、既往试验参与及试验药物信息不足，无法核对 12 周或 5 个半衰期中较长的窗口。
-
-- V01 `NCT07156539_inc_001 = UNKNOWN`：用户于 2026-10-18 确认，保留实际同意书日期未知的限制；参考日期时 43 岁不直接替代同意书时点的年龄判断。
-
-V01 的 10/10 条已完成，按本轮确认口径均为 UNKNOWN。
-
-- V02 `NCT07580638_inc_001 = UNKNOWN`：用户于 2026-10-18 确认，参考日期时 43 岁已知，但仍保留实际试验年龄评估日期未知的限制。
-
-- V02 `NCT07580638_inc_003 = UNKNOWN`：用户于 2026-10-18 确认，实际 SGLT-2 稳定用药、筛查日期和相关 HbA1c 证据不足。
-
-- V02 `NCT07580638_inc_004 = UNKNOWN`：用户于 2026-10-18 确认，缺少参加本试验的意愿和书面知情同意证据；缺失不表示拒绝。
-
-- V02 `NCT07580638_exc_001 = UNKNOWN`：用户于 2026-10-18 确认，当前或常规胰岛素实际使用信息不足，未见记录不能证明未使用。
-
-- V02 `NCT07580638_exc_002 = UNKNOWN`：用户于 2026-10-18 确认，筛查前一个月的时间窗及完整实际用药信息不足，不能确定是否使用三种及以上降糖药。
-
-- V02 `NCT07580638_exc_003 = UNKNOWN`：用户于 2026-10-18 确认，当前实际 TZD 或 GLP-1 受体激动剂使用信息不足，缺失记录不能证明未使用。
-
-- V02 `NCT07580638_exc_004 = UNKNOWN`：用户于 2026-10-18 确认，既往 Chiglitazar Sodium 实际治疗史不足，未见记录不能证明从未治疗。
-
-- V02 `NCT07580638_exc_005 = UNKNOWN`：用户于 2026-10-18 确认，相关病史和严重程度评估不足，无法判断危及生命的合并症、严重水肿或 Child-Pugh C 肝损害的排除条件。
-
-- V02 `NCT07580638_exc_006 = UNKNOWN`：用户于 2026-10-18 确认，相关时点的 AST、ALT、正常上限及 eGFR 证据不足，无法判定 OR 排除条件。
-
-V02 的 10/10 条已完成：T2D 诊断条件为 MET，其余 9 条为 UNKNOWN。
-
-- V03 `NCT07658417_inc_001 = UNKNOWN`：用户于 2026-10-18 确认，缺少本试验同意书及研究活动时序证据。
-
-第一版口径已确认 22/30 条，剩余 8 条；因验证设计正在修订，暂停进一步逐条确认。现有确认作为第一版历史记录保留，不直接用于评估修订版初筛能力。
+The remaining eight V03 clauses are not confirmed. The current English table preserves all 60 prepared rows, including the 30 active V01-V03 source clauses; V04-V06 remain preparation only. Do not calculate v2 performance from v1 labels or represent these decisions as expert clinical validation.

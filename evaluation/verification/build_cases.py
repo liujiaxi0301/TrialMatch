@@ -85,7 +85,7 @@ def expected_files():
             row = {f: "" for f in REFERENCE_FIELDS}
             row.update(pair_id=pair, in_round1=cases[-1]["in_round1"], patient_id=patient_id,
                        trial_id=trial_id, criterion_id=c["criterion_id"], criterion_type=c["criterion_type"],
-                       criterion_text=c["criterion_text"], reference_evidence="[]", needs_review="TRUE",
+                       criterion_text=c["criterion_text"].replace("\uff1b", ";"), reference_evidence="[]", needs_review="TRUE",
                        review_state="UNREVIEWED")
             if number > 3:
                 row["review_state"] = "OUTSIDE_ROUND1"
@@ -103,13 +103,17 @@ def expected_files():
             references.append(row)
     files["cases.csv"] = csv_bytes(cases, list(cases[0]))
     files["trial_audit.json"] = json_bytes(audits)
+    # Keep upstream trial snapshots unchanged; normalize punctuation in delivery copies.
+    files = {name: data.replace("\uff1b".encode("utf-8"), b";") for name, data in files.items()}
     protocol_paths = [ROOT / "prompts/mode_A.md", ROOT / "prompts/mode_B.md"]
     source_paths = [patient_path, trial_path, criteria_path, parser_path,
+                    ROOT / "common.py", ROOT / "build_cases.py",
                     REPO / "services/patient_processing/scripts/process_patients.py",
                     REPO / "services/patient_processing/data/sample_source.json"]
     source_paths.extend(REPO / patients[p]["source_file"] for p in PATIENT_IDS)
     manifest = {"reconstruction_date": "2026-10-18", "source_commit": "9d6886a7ea925d9068bc38d669987036727873d5",
                 "original_upload_hashes": "UNAVAILABLE: reconstructed files do not establish original upload byte identity",
+                "delivery_text_policy": "Normalize fullwidth semicolons to ASCII in verification copies only; upstream trial files remain unchanged. See delivery_revision.json for original hashes.",
                 "sources": {str(p.relative_to(REPO)): sha256(p.read_bytes()) for p in source_paths},
                 "reconstructed_protocols": {str(p.relative_to(ROOT)): sha256(p.read_bytes()) for p in protocol_paths},
                 "fixed_files": {p: sha256(data) for p, data in files.items()},

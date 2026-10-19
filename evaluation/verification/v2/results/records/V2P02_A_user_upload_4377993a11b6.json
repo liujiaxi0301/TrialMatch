@@ -133,7 +133,7 @@
       "confirmed_at_utc": "2026-10-18T19:05:50.912072+00:00",
       "source": "user reply",
       "question_id": "call_be698b166f054daeb569109ce2b57a3d",
-      "user_confirmation": "是，模型和设置一致。",
+      "user_confirmation": "Yes, the model and settings are the same.",
       "previous_fields": {
         "model": "UNCONFIRMED",
         "model_version": "UNCONFIRMED",
@@ -147,7 +147,14 @@
         "interface": "Claude UI (client unspecified)",
         "search_enabled_user_reported": "FALSE",
         "context_isolation_user_reported": "CONFIRMED"
-      }
+      },
+      "user_confirmation_is_translation": true
     }
-  ]
+  ],
+  "delivery_revision": {
+    "date": "2026-10-19",
+    "change": "User confirmation text translated; no model output, clinical fact, label, setting or evidence ID changed.",
+    "pre_revision_record_sha256": "46d85f22121d382bd2b089f8a386ec891d321f4dda2eb9525a7a98b6d73a48ef",
+    "original_bytes_preserved_outside_repository": true
+  }
 }
