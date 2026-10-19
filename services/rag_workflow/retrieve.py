@@ -36,13 +36,13 @@ STOP = {
 def tokens(text: str) -> list[str]:
     # The corpus is English; expand common Chinese questions used in this demo.
     for source, target in (
-        ("糖尿病", " diabetes type 2 "),
-        ("年龄", " age "),
-        ("用药", " medication treatment "),
-        ("风险", " risk exclusion "),
-        ("肾", " renal kidney "),
-        ("肥胖", " obesity BMI "),
-        ("糖化", " HbA1c "),
+        (" diabetes type 2 "),
+        (" age "),
+        (" medication treatment "),
+        (" risk exclusion "),
+        (" renal kidney "),
+        (" obesity BMI "),
+        (" HbA1c "),
     ):
         text = text.replace(source, target)
     return [t for t in re.findall(r"[a-z0-9]+", text.lower()) if t not in STOP]
