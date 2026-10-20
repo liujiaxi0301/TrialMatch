@@ -12,11 +12,8 @@
   },
   "sources_sha256": {
     "v2/proposals/patients/475803f3-ae29-ba8d-bdd1-25145a94eaee.json": "ae86eaa6753660be68b137658a6627000341364d82e9e98ee19612923c9527a2",
-    "inputs/trials/NCT07580638.json": "48e70624427bfbdab9ca3d138d21d62dacd446e331fa5681d915bb22ebd82545",
     "v2/uploads/A/V2P01.json": "437079c9d0909f41eda0087d01196ed77b1965386cbf4d9325bc5d13a1b8ae62",
-    "v2/results/raw/A/V2P01_A_user_upload_d7942088e197.txt": "d7942088e19762e572c159a1379ad504b1699c97f884684a4b592ade38859a0c",
-    "results/raw/A/recovered_V02_A.txt": "acc2c89aaafbc58b3f07cba7e72dafbce1c862b960987bf7da09f78e7e86f42b",
-    "templates/reference_answers.csv": "85878e39d5ea28d619e0f112dcc0ed8272dc4c91848ef694d06ed21ab2fc2183"
+    "v2/results/raw/A/V2P01_A_user_upload_d7942088e197.txt": "d7942088e19762e572c159a1379ad504b1699c97f884684a4b592ade38859a0c"
   },
   "fixed_artifacts_sha256": {
     "uploads/G01_NO_MAPPING.json": "6f032f436602c6434d647d20e91529576c58ea270e3def0de3b60ce2406a5ae9",
@@ -39,5 +36,17 @@
     "date": "2026-10-19",
     "pre_revision_manifest_sha256": "a821ba382f1e0e3d78639132e55acec6dc40f5820c2d2656a1381c7f7d955c58",
     "note": "One source-table hash changed through punctuation normalization; grounding inputs, prompt, original quotes and raw responses are unchanged."
+  },
+  "archived_sources_sha256": {
+    "inputs/trials/NCT07580638.json": "48e70624427bfbdab9ca3d138d21d62dacd446e331fa5681d915bb22ebd82545",
+    "results/raw/A/recovered_V02_A.txt": "acc2c89aaafbc58b3f07cba7e72dafbce1c862b960987bf7da09f78e7e86f42b",
+    "templates/reference_answers.csv": "85878e39d5ea28d619e0f112dcc0ed8272dc4c91848ef694d06ed21ab2fc2183"
+  },
+  "layout_revision": {
+    "date": "2026-10-20",
+    "pre_cleanup_manifest_sha256": "7a40766f30ba63720706ce41178f5cccbf1959be3dc1c5ea4797948a2066003e",
+    "archive": "history/ms2_pre_cleanup_20261020.zip",
+    "archive_sha256": "aeb6f9a48faa730736feb16c71a4ae9ce9359fdb8b204e58cea62c908ac04415",
+    "note": "Documentation consolidated; clinical inputs, source identities, labels and original response bytes unchanged. Archived source paths resolve under evaluation/verification/ inside the ZIP."
   }
 }

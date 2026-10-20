@@ -220,10 +220,16 @@
       "confirmation_source": "User reply to question call_8168822889534fb8aab4cd3fea7f3fb3"
     }
   ],
-  "delivery_preparation_manifest_sha256": "7a40766f30ba63720706ce41178f5cccbf1959be3dc1c5ea4797948a2066003e",
+  "delivery_preparation_manifest_sha256": "a00999497a69315bec348c3c898fd4e3b05f1f8f13d4d2e38b0edde07b034f28",
   "delivery_revision": {
     "date": "2026-10-19",
     "pre_revision_record_sha256": "e12422e82d6225b73bcc69cd28362f376ec7a4bdb8be2dd6376a1130b6a13262",
     "note": "Original run-time preparation_manifest_sha256 retained; delivery_preparation_manifest_sha256 identifies the revised source-index copy. Raw response, input and prompt hashes unchanged."
+  },
+  "layout_revision": {
+    "date": "2026-10-20",
+    "previous_record_sha256": "29cd655eaeb9080be6cf2f1b8edcbaaea468197f2966614ff96314d9b5d08561",
+    "previous_delivery_preparation_manifest_sha256": "7a40766f30ba63720706ce41178f5cccbf1959be3dc1c5ea4797948a2066003e",
+    "note": "Preparation-source archive references updated; response/input/prompt and user-reported settings unchanged."
   }
 }

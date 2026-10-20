@@ -306,10 +306,16 @@
     "scope_limit": "One supplied-context positive-control response. No verified memory isolation, repeated-run robustness, actual vector retrieval or backend enforcement."
   },
   "metadata_amendments": [],
-  "delivery_preparation_manifest_sha256": "7a40766f30ba63720706ce41178f5cccbf1959be3dc1c5ea4797948a2066003e",
+  "delivery_preparation_manifest_sha256": "a00999497a69315bec348c3c898fd4e3b05f1f8f13d4d2e38b0edde07b034f28",
   "delivery_revision": {
     "date": "2026-10-19",
     "pre_revision_record_sha256": "ac682ea599f2b0fe4624dea361afb4287eee23aea786d67256a8840878635394",
     "note": "Original run-time preparation_manifest_sha256 retained; delivery_preparation_manifest_sha256 identifies the revised source-index copy. Raw response, input and prompt hashes unchanged."
+  },
+  "layout_revision": {
+    "date": "2026-10-20",
+    "previous_record_sha256": "cf22941d5f9a5de42d7e7766550974ff0a809c170e167a3dd33c82f0e63ce666",
+    "previous_delivery_preparation_manifest_sha256": "7a40766f30ba63720706ce41178f5cccbf1959be3dc1c5ea4797948a2066003e",
+    "note": "Preparation-source archive references updated; response/input/prompt and user-reported settings unchanged."
   }
 }
