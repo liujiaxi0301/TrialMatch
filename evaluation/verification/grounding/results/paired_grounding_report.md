@@ -17,7 +17,7 @@ The user reported Claude Opus 5.5 on Claude web, separate new conversations, sea
 
 The missing-mapping response abstains rather than treating missing meaning as a negative diagnosis. The positive-control response uses supplied evidence instead of abstaining automatically. These core outputs are consistent with the new context policy in this observed pair.
 
-Per-run reviews: [no mapping](review_G01_NO_MAPPING.md) and [with mapping](review_G01_WITH_MAPPING.md). [runs.csv](runs.csv) and [summary.json](summary.json) record results; raw responses and per-run metadata remain unchanged after import, except explicitly recorded metadata amendments.
+Full per-run review notes (`review_G01_NO_MAPPING.md` and `review_G01_WITH_MAPPING.md`) are preserved in the [pre-cleanup snapshot](../../history/ms2_pre_cleanup_20261020.zip), under `evaluation/verification/grounding/results/`. The current report retains their outcomes and qualifications. [runs.csv](runs.csv) and [summary.json](summary.json) record results; raw responses and per-run metadata remain unchanged after import, except explicitly recorded metadata amendments.
 
 ## Findings that limit the conclusion
 

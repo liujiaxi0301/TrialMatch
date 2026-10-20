@@ -1,6 +1,6 @@
 # Run the v2 Mode A procedure
 
-This guide is a delivery rendition of the preparation instructions. Original guide/ZIP bytes and hashes were preserved outside the repository before conversion; see `../delivery_revision.json`. The model prompt and patient facts are unchanged. For current completed results, see [the reference review](results/reference_review_completed.md).
+This is the manual v2 procedure. The pre-cleanup guide/ZIP and original-byte revision records are preserved in the history archive indexed by `../manifest.json`. The model prompt and patient facts are unchanged. For current completed results, see [the reference review](results/reference_review_completed.md).
 
 The approved offline assessment date is 2021-11-30. Actual screening, consent and V1 dates remain unknown. The trial snapshot is dated 2026-10-11 and NOT_YET_RECRUITING; the exercise does not establish recruitment in 2021 or now.
 

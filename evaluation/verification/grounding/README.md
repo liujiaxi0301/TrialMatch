@@ -56,6 +56,6 @@ The final report should show the original claim, missing contextual support, new
 
 ## Recording and integration boundary
 
-Raw responses and settings belong under `results/`, with response/input/prompt hashes and unique run IDs. The preparation manifest and `preparation_checks.json` retain their original zero-run state; live execution status is in `results/summary.json`. See [results/README.md](results/README.md). The existing v2 recorder validates different fixed cases; do not import G01 into those runs or alter their manifests.
+Raw responses and settings belong under `results/`, with response/input/prompt hashes and unique run IDs. The preparation manifest and `preparation_checks.json` retain their original zero-run state; live execution status is in `results/summary.json`. See [paired result report](results/paired_grounding_report.md). The existing v2 recorder validates different fixed cases; do not import G01 into those runs or alter their manifests.
 
 The RAG owner can apply this evidence contract to actual retrieved criteria and supplied patient facts and include the real retrieved chunks/citations in the team example. No team message, backend change, remote push or model call was performed by preparing these materials.

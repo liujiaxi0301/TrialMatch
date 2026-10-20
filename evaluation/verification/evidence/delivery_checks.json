@@ -1,94 +1,61 @@
 {
-  "checked_at_utc": "2026-10-19T18:28:01.448783+00:00",
+  "checked_at_utc": "2026-10-20T19:43:05.728936+00:00",
+  "target_base_commit": "64436278c7294681bef48c2af62807883ad7776b",
+  "cleanup_source_commit": "feae539fd89e8f4a46c50596b2ff2de2245f194e",
   "scope": [
-    "services/patient_processing",
-    "evaluation/verification"
+    "services/patient_processing/",
+    "evaluation/verification/"
   ],
-  "files_before": 188,
-  "files_after": 155,
-  "removed_files": 34,
-  "new_files": 1,
-  "pre_cleanup_backup_hashes_verified": 188,
-  "original_backup_hashes_verified": 187,
-  "unchanged_surviving_files": 135,
-  "cleanup_changes_limited_to_documents_manifests_and_checks": true,
-  "patient_code_and_facts_unchanged": true,
-  "experiment_inputs_prompts_responses_settings_and_references_unchanged_by_cleanup": true,
-  "reference_translation_parity": [
-    {
-      "file": "templates/reference_answers.csv",
-      "rows": 60,
-      "identities_labels_evidence_and_states_preserved": true
-    },
-    {
-      "file": "templates/reference_suggestions.csv",
-      "rows": 30,
-      "identities_labels_evidence_and_states_preserved": true
-    },
-    {
-      "file": "results/policy_v1_snapshot/reference_answers.csv",
-      "rows": 60,
-      "identities_labels_evidence_and_states_preserved": true
-    },
-    {
-      "file": "results/policy_v1_snapshot/reference_suggestions.csv",
-      "rows": 30,
-      "identities_labels_evidence_and_states_preserved": true
-    },
-    {
-      "file": "v2/templates/reference_answers.csv",
-      "rows": 10,
-      "identities_labels_evidence_and_states_preserved": true
-    },
-    {
-      "file": "v2/results/reference_answers_confirmed_20261018.csv",
-      "rows": 10,
-      "identities_labels_evidence_and_states_preserved": true
-    }
-  ],
+  "publication_state": "VALIDATION_COMPLETE_USER_APPROVED_FOR_PUBLICATION",
+  "repository_files_before": 256,
+  "repository_files_after": 186,
+  "personal_files_before": 153,
+  "personal_files_after": 83,
+  "personal_markdown_before": 37,
+  "personal_markdown_after": 12,
+  "files_archived_out_of_active_tree": 72,
+  "complete_personal_history_files_preserved": 155,
+  "history_source_commit": "9d49329c0b88d1d4d887465fff06f7ca2a2908c2",
+  "history_archive_sha256": "b4cc52bb1d69a13bf24e9ad87adc5269782381986710a0317a1bb31f777bf310",
+  "history_member_hashes_and_git_source_bytes_verified": true,
+  "standalone_environment_files_in_history_not_added_to_shared_checkout": true,
+  "shared_root_environment_and_all_teammate_files_unchanged": true,
+  "patient_data_runtime_code_inputs_prompts_raw_answers_settings_and_references_unchanged": true,
+  "all_five_confirmation_quotes_retained": true,
+  "current_and_archived_manifest_dependencies_valid": true,
+  "local_markdown_links_verified": 71,
+  "text_files_scanned": 81,
+  "zip_text_members_scanned": 163,
+  "han_character_matches": 0,
+  "fullwidth_character_matches": 0,
+  "external_links_to_removed_personal_files": [],
+  "four_patient_replay_byte_identical": true,
+  "patient_tests_passed": 6,
+  "active_verification_tests_passed": 10,
+  "archived_verification_tests_passed": 15,
+  "rag_tests_passed": 67,
+  "frontend_tests_passed": 5,
+  "historical_suite_is_preserved_not_an_independent_additional_experiment": true,
+  "v2_confirmed_references": 10,
   "v2_reference_status_counts": {
     "MET": 3,
-    "UNKNOWN": 6,
-    "NOT_MET": 1
+    "NOT_MET": 1,
+    "UNKNOWN": 6
   },
-  "v2_confirmed_reference_count": 10,
-  "model_label_agreements": 8,
-  "model_label_disagreements": 2,
-  "five_user_confirmation_records_retained": true,
-  "grounding_response_count": 2,
-  "grounding_context_limitation_and_reasoning_issue_retained": true,
-  "current_manifest_and_record_hashes_valid": true,
-  "text_files_scanned": 154,
-  "zip_members_scanned": 4,
-  "markdown_files_checked": 37,
-  "valid_local_markdown_links": 149,
-  "han_character_matches": 0,
-  "fullwidth_punctuation_matches": 0,
-  "decoded_json_string_matches": 0,
-  "intentional_identical_file_groups": [
-    [
-      "evaluation/verification/inputs/patients/bf113937-f532-94bb-66e1-9c7111f68207.json",
-      "services/patient_processing/examples/shakira_patient.json"
-    ],
-    [
-      "evaluation/verification/results/policy_v1_snapshot/reference_answers.csv",
-      "evaluation/verification/templates/reference_answers.csv"
-    ],
-    [
-      "evaluation/verification/results/policy_v1_snapshot/reference_suggestions.csv",
-      "evaluation/verification/templates/reference_suggestions.csv"
-    ],
-    [
-      "evaluation/verification/v2/results/reference_answers_confirmed_20261018.csv",
-      "evaluation/verification/v2/templates/reference_answers.csv"
-    ]
-  ],
-  "unexpected_identical_file_groups": 0,
-  "verification_tool_tests_passed": 15,
-  "check_record_sha256": "b579b10019489f34eaf0b4d493fe8cd0a25b5c16a285f2d86a066e012ea1a3fd",
-  "delivery_revision_sha256": "2f25a14766858dcae6b6241dfbc7c8a0c8f7a5bfaa9ea8dac982ecc63a1a85a9",
-  "model_calls": 0,
+  "label_agreements": 8,
+  "label_disagreements": 2,
+  "grounding_responses": 2,
+  "new_model_calls": 0,
   "clinical_accuracy_computed": false,
-  "remote_publication_executed_by_this_audit": false,
-  "merge_performed_by_this_audit": false
+  "docker_or_deployed_service_execution": false,
+  "git_branch_created": false,
+  "delivery_manifest_sha256": "644ef0840735471db39e6ded187bee3898436415fcc6cc6494f5704e56c2e2cb",
+  "check_record_sha256": "7bcbabac2128562bccc440e3548850daf8f63a9b4f5678b291b67785f8c00076",
+  "publication_approval": {
+    "target_branch": "yixiao/infra",
+    "user_approved": true,
+    "recorded_at_utc": "2026-10-20T19:53:49.261666+00:00"
+  },
+  "validation_itself_did_not_commit_push_or_merge": true,
+  "publication_note": "This record describes validation performed before publication. The user subsequently approved committing and pushing to yixiao/infra. The containing Git revision identifies the published delivery."
 }

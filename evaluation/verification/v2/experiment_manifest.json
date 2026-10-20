@@ -10,7 +10,7 @@
   "sources_sha256": {
     "v2/policy.json": "55c7497d7d51e9f0542aa287002ad4dc00c82a536c178b5555b5a8b1b2a32c15",
     "v2/prompt_A.md": "567bd1cccef7b1592ef68045fe597af045a69ee9e53cca33dfe4e4a9fd772b66",
-    "v2/RUN_FIRST.md": "55ac569ea5c371ad96448125cf294bde41eb37ff6085272c089a9957f881a88a",
+    "v2/RUN_FIRST.md": "3753ddc242785c5d985be5c1eed1ec4437a9d27c180950068d802f1637805adb",
     "v2/proposals/trials/NCT06774950.json": "93a92db5540ba683e90c027a44cc405d8e02de6b7d8a5528738e82aceb924dce",
     "build_v2.py": "41068df7b25322b395aa01aa55526bdbcfc9b1652bf35d1587fff564619ae871",
     "v2/proposals/patients/475803f3-ae29-ba8d-bdd1-25145a94eaee.json": "ae86eaa6753660be68b137658a6627000341364d82e9e98ee19612923c9527a2",
@@ -21,7 +21,7 @@
     "uploads/A/V2P02.json": "df7e07efb5e3d6711effc307026ea7a4d908ab81d41b7a580c37be02397bb8cc",
     "cases.csv": "782bc0357cc496c0d5ddef5eee114e51d5c525403058dd906d78c9f662320e34",
     "templates/reference_suggestions.csv": "522a915692d63e2dd9522c44d18f223bd0ab52bd565a508d5301be07746de6a9",
-    "manual_upload_kit.zip": "244ddc458c55b8d6c35c5bfdb144d08507366b6435ae11b79ce87808c6b58c13"
+    "manual_upload_kit.zip": "b3e862ae8ed1da7c58a6dc1ca3edadbab52a78b0da61a5a793435fafeeca293b"
   },
   "mutable_reference_table": "templates/reference_answers.csv",
   "labels_not_in_uploads": true,

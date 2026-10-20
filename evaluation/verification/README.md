@@ -1,57 +1,71 @@
 # Patient verification
 
-This package accompanies the [patient-processing handoff](../../services/patient_processing/MS2_HANDOFF.md). The user confirmed that the TF separately requested verification as part of this personal work. Trial ingestion, RAG/API, shared infrastructure, UI and final team submission have separate owners.
+**Presentation route:** [patient extraction](../../services/patient_processing/README.md) → [25-patient coverage](v2/coverage_report.md) → [completed two-case review](v2/results/reference_review_completed.md) → [grounding pair](grounding/results/paired_grounding_report.md).
 
-## Results and reading order
+This is the TF-requested personal verification package. It prepares supplied-context experiments, preserves manually obtained answers/settings, and checks source evidence. Model calls are not made by the builders or recorders. Shared retrieval, scoring, API, UI and container integration remain with their owners. This package supplies the patient-facts contract and supplied-context verification evidence within the integrated checkout.
 
-| Evidence | Canonical record |
+## Current results and limits
+
+| Experiment | Evidence | Interpretation |
+| --- | --- | --- |
+| V2: Cleveland (43) and Anthony (27), one trial, five clauses each | [Completed review](v2/results/reference_review_completed.md), [ten-row comparison](v2/results/reference_model_comparison.csv) | Ten user-confirmed references: 3 MET, 1 NOT_MET, 6 UNKNOWN; eight model agreements and two reproductive-status evidence-rule differences |
+| Grounding: same patient/clause, mapping absent versus supplied | [Paired report](grounding/results/paired_grounding_report.md), [prompt/procedure](grounding/README.md) | UNKNOWN / insufficient information without mapping; MET with mapping; 9/9 and 15/15 structured citations resolve |
+
+V2 review was AI-assisted, non-blinded and by a non-clinician after outputs were visible. Its diagnosis-duration rule uses documented history, not proven first-ever diagnosis. Actual screening/consent/V1 dates remain unknown; assessment_date 2021-11-30 is hypothetical. The 2026-10-11 trial snapshot is NOT_YET_RECRUITING. V2P01 and the grounding positive control report inherited-context caveats. The grounding report retains a minor reference-comparison wording issue. These observations establish neither clinical accuracy/eligibility nor clean isolation or system-wide grounding.
+
+## File map
+
+| Files | Role |
 | --- | --- |
-| V2: two selected synthetic patients, one trial, ten user-confirmed offline references; eight model/reference agreements and two evidence-rule differences | [Completed reference review](v2/results/reference_review_completed.md), [model-output report and limitations](v2/results/two_case_pilot_summary.md) |
-| Grounding: UNKNOWN without a supplied code mapping, MET with the mapping; 9/9 and 15/15 structured citations resolve | [Paired grounding report](grounding/results/paired_grounding_report.md), [protocol](grounding/README.md) |
-| V1: six recovered A/B responses, three trials, one patient; review paused at 22/30 confirmations | [Recovery report](reconstruction_report.md), [historical rules](review_rules.md) |
-| Missingness, deaths and candidate selection across the 25-patient cohort | [Coverage report](v2/coverage_report.md), [design revision](evaluation_design_v2.md) |
-| Current reproducibility checks and file audit | [Check record](evidence/checks.json), [delivery audit](evidence/delivery_checks.json) |
-
-V2 review was AI-assisted, non-blinded and by a non-clinician after model outputs were available. Its ten labels are **3 MET, 1 NOT_MET, 6 UNKNOWN**; the two differences concern the reproductive-status evidence rule. These counts are not clinical accuracy. UNKNOWN does not clear an exclusion or establish eligibility.
-
-The hypothetical assessment date is 2021-11-30; actual screening, consent and V1 dates remain unknown. The trial snapshot is dated 2026-10-11 and NOT_YET_RECRUITING. These observations do not establish recruitment availability, clinical eligibility or system-wide performance. Model-reported inherited context remains documented in V2P01 and the grounding positive control; user-reported search/memory settings do not prove isolation.
-
-## Files and procedures
-
-- [V2 file guide](v2/README.md) and the single [run procedure](v2/RUN_FIRST.md) describe fixed inputs, settings and reference-review separation. The ZIP packages that same procedure and the two complete inputs.
-- Current labels are in [v2/templates/reference_answers.csv](v2/templates/reference_answers.csv). Keep one [frozen completion snapshot](v2/results/reference_answers_confirmed_20261018.csv); later policy or label changes need a new review version.
-- V1 reconstructed inputs/protocols are distinguished from original run provenance in [manifest.json](manifest.json) and [recovery_manifest.json](recovery_manifest.json). Original upload bytes and prompt wording were unavailable. V01B matches only nine of ten source clauses. V04-V06 were prepared but never run.
-- V1's [policy snapshot](results/policy_v1_snapshot/snapshot_manifest.json) preserves its separate strict-date policy and 22 confirmations. Do not transfer these labels into v2.
-- [Provenance](LANGUAGE_AND_PROVENANCE.md) and [delivery_revision.json](delivery_revision.json) explain transformations, retained snapshots and removal of redundant copies. Exact pre-revision bytes are backed up outside the repository; those backups are not required to run the delivered checks.
-
-Generation-time statuses in `cases.csv`, proposal files and preparation manifests are historical. Live run/review state is in `results/` and the current reference table. Original responses and settings remain under each experiment's `results/raw/` and `results/records/`; model exports must not be edited as reference labels.
+| `analyze_cohort.py`, `build_v2.py` | Check descriptive coverage, complete source clauses, fixed inputs and editable reference identities |
+| `record_v2.py`, `common.py` | Preserve actual raw answers/settings and validate structure, dates, fact IDs and inclusion/exclusion polarity |
+| `v2/policy.json`, `v2/prompt_A.md`, [RUN_FIRST.md](v2/RUN_FIRST.md) | Fixed scenario, evidence rules, actual prompt and manual procedure |
+| `v2/uploads/A/`, `v2/manual_upload_kit.zip` | Two complete patient/criterion inputs; no reference labels in the upload kit |
+| `v2/proposals/`, coverage JSON/CSV/manifests | Fixed source snapshots and historical selection/coverage state; generated statuses are not live progress |
+| [Current references](v2/templates/reference_answers.csv), [frozen snapshot](v2/results/reference_answers_confirmed_20261018.csv), original suggestions | Human decisions, completion freeze and pre-review suggestions remain separate |
+| `v2/results/raw/`, `v2/results/records/`, result CSVs | Original model answers, settings and derived model exports; never edit exports as reference labels |
+| `grounding/uploads/`, prompt, manifests and `results/` | Controlled inputs, original outputs/settings and source review; preparation zero-run fields are historical |
+| `evidence/`, `tests/`, [manifest.json](manifest.json) | Current check logs, ten active tool tests, archive/source hashes and cleanup provenance |
+| [History ZIP](history/ms2_pre_cleanup_20261020.zip), `check_history.py` | Exact pre-cleanup snapshot and isolated historical reproduction |
 
 ## Reproduce the checks
 
-Run from the repository root; no model calls are made:
+From the repository root, using the shared [pyproject.toml](../../pyproject.toml) and [uv.lock](../../uv.lock). Install the shared environment with `uv sync --locked` first; see the [patient run instructions](../../services/patient_processing/README.md#run-from-the-repository-root):
 
 ```bash
-python evaluation/verification/build_cases.py --check
-python evaluation/verification/analyze_cohort.py --check
-python evaluation/verification/build_v2.py --check
-python -m unittest discover -s evaluation/verification/tests -v
+uv run --locked python evaluation/verification/analyze_cohort.py --check
+uv run --locked python evaluation/verification/build_v2.py --check
+uv run --locked python -m unittest discover -s evaluation/verification/tests -v
+uv run --locked python evaluation/verification/check_history.py --run-checks
 ```
 
-The builders verify source hashes, complete criteria, fixed inputs, reference identities and evidence IDs. They preserve edited references and refuse to replace changed fixed inputs. The current [logs](evidence/) contain one log per check, with exit codes and hashes in [checks.json](evidence/checks.json).
+The first three commands check current materials and ten active tests. The last verifies the snapshot, reconstructs a temporary historical checkout, and runs its three checks plus all fifteen original verification tests. No model/cloud calls are made and no historical files are restored into the working tree. Current [checks](evidence/checks.json) and [layout audit](evidence/delivery_checks.json) distinguish these counts.
 
-## Record a separate future response
+## History and provenance
 
-Follow the experiment's protocol and preserve actual settings; leave unverified settings UNKNOWN. Do not rerun merely to remove a disagreement or upload reference answers to the model.
+The [archive](history/ms2_pre_cleanup_20261020.zip) contains all **155 patient/verification files exactly as published on the original personal branch at commit `9d49329c0b88d1d4d887465fff06f7ca2a2908c2`**, including V1 inputs/code/tests, six recovered A/B answers, original/current hash records, five full confirmation notes and the former handoff. `SNAPSHOT.json` lists every member hash plus the three external trial-source hashes required for replay. Current inputs, patient facts, model labels and user references are unchanged by this cleanup.
+
+The integrated base contains 153 files in these two directories because its patient module already uses the root environment instead of the two standalone environment files. Those standalone files remain in the exact personal-history archive. Integration preserves the shared root environment; current file counts and adaptation provenance are recorded in [manifest.json](manifest.json).
+
+V1 remains historical: one patient against three trials, six recovered responses, 22/30 active reference clauses confirmed (21 UNKNOWN, 1 MET); V04-V06 were prepared but unrun. Original prompt/upload bytes were unavailable; V01B aligns only nine of ten source clauses. Historical policies must not be silently applied to V2. Earlier translation/original-byte provenance and external-backup references remain in the archived delivery revision; the ZIP preserves integrated delivery copies, not a new claim of verbatim original attachments.
+
+For manual inspection outside the working tree:
 
 ```bash
-python evaluation/verification/record_v2.py \
+python -m zipfile -e evaluation/verification/history/ms2_pre_cleanup_20261020.zip /tmp/trialmatch-ms2-history
+```
+
+The extracted `evaluation/verification/` contains original V1 prompts, raw responses and per-step review notes. Current manifests explicitly separate active source hashes from archived ones. Do not add new references or rerun models simply to remove disagreements.
+
+## Record a separately authorized future run
+
+Follow [RUN_FIRST.md](v2/RUN_FIRST.md), preserve actual settings and record unknown settings as UNKNOWN. Upload no reference answers or review notes.
+
+```bash
+uv run --locked python evaluation/verification/record_v2.py \
   --pair V2P01 --response /absolute/path/to/response.txt \
   --model 'Actual model name' --model-version 'Actual version' \
   --interface 'Actual interface' --search-enabled FALSE --context-isolation UNKNOWN
 ```
 
-For historical v1 formats use `record_run.py`; `--import-recovered` imports preserved responses idempotently. Recorders retain errors, invalid JSON and incomplete responses; identical imports do not create another run. Grounding uses its [separate procedure](grounding/README.md).
-
-## Handoff
-
-The two-case reference review and grounding response/source review are recorded with their limitations. Publication to the personal `feat/patient-processing` branch was authorized on 2026-10-19. Team `milestone2` integration, consuming-owner acceptance, shared integration evidence and presentation preparation remain tracked in the [patient handoff](../../services/patient_processing/MS2_HANDOFF.md#remaining-actions). No larger sample, clinical expert review or v2 Mode B requirement is established by the supplied rubric/feedback. No team merge or team message has been performed.
+Run IDs cannot replace different existing bytes/settings. Failed or incomplete outputs remain visible. No clinical expert reference, larger benchmark, repeated-run study or V2 Mode B result is claimed.
