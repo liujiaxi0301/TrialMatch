@@ -1,42 +1,53 @@
 {
-  "checked_at_utc": "2026-10-19T18:17:16.134209+00:00",
-  "scope": "Patient processing and TF-requested verification.",
+  "checked_at_utc": "2026-10-20T18:33:41.049837+00:00",
+  "scope": [
+    "services/patient_processing",
+    "evaluation/verification"
+  ],
+  "delivery_branch": "feat/patient-processing",
   "commands": [
     {
       "argv": [
-        "python",
-        "evaluation/verification/build_cases.py",
-        "--check"
-      ],
-      "exit_code": 0,
-      "duration_seconds": 0.56,
-      "log": "v1_input_check.txt",
-      "log_sha256": "674ce3f470f236596101912e2102c5f34ef91f68dbffa3df34653e38c522fa45"
-    },
-    {
-      "argv": [
+        "uv",
+        "run",
+        "--project",
+        "services/patient_processing",
+        "--locked",
+        "--offline",
         "python",
         "evaluation/verification/analyze_cohort.py",
         "--check"
       ],
       "exit_code": 0,
-      "duration_seconds": 1.216,
+      "duration_seconds": 5.761,
       "log": "coverage_check.txt",
       "log_sha256": "4f1b8ea275b58cf91e04ebf320f96e9f0638f9e0da21acb98b9163e5fbfd859e"
     },
     {
       "argv": [
+        "uv",
+        "run",
+        "--project",
+        "services/patient_processing",
+        "--locked",
+        "--offline",
         "python",
         "evaluation/verification/build_v2.py",
         "--check"
       ],
       "exit_code": 0,
-      "duration_seconds": 0.102,
+      "duration_seconds": 2.873,
       "log": "v2_input_check.txt",
       "log_sha256": "b22de64432b3c7acdf3aa7d05c885a8dc89d83e96658957007d4e24efab7c47b"
     },
     {
       "argv": [
+        "uv",
+        "run",
+        "--project",
+        "services/patient_processing",
+        "--locked",
+        "--offline",
         "python",
         "-m",
         "unittest",
@@ -46,17 +57,37 @@
         "-v"
       ],
       "exit_code": 0,
-      "duration_seconds": 0.805,
+      "duration_seconds": 9.49,
       "log": "verification_tests.txt",
-      "log_sha256": "b3ce2e1ad019a87d3e1bd54bda6d923773f5a51e066bea40d6c7c7f876d32bd5"
+      "log_section": "CURRENT MATERIALS: 10 active tool tests",
+      "log_sha256": "0b7cd04b081c49ce834c3505864e30579feda1374bd71dfb4a94182560897272"
+    },
+    {
+      "argv": [
+        "uv",
+        "run",
+        "--project",
+        "services/patient_processing",
+        "--locked",
+        "--offline",
+        "python",
+        "evaluation/verification/check_history.py",
+        "--run-checks"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 21.611,
+      "log": "verification_tests.txt",
+      "log_section": "ARCHIVED MATERIALS: 3 checks and 15 original tool tests",
+      "log_sha256": "0b7cd04b081c49ce834c3505864e30579feda1374bd71dfb4a94182560897272"
     }
   ],
-  "verification_tool_tests_passed": 15,
+  "active_verification_tool_tests_passed": 10,
+  "archived_verification_tool_tests_passed": 15,
+  "historical_tests_are_a_preserved_suite_not_additional_model_runs": true,
   "patient_validation_record": {
     "path": "services/patient_processing/evidence/patient_delivery_checks.json",
-    "sha256": "30d65f9564e78b27e733ee2b27a17489f0f81f8312b2464217aded4e6fedec52",
-    "patient_tests_previously_passed": 6,
-    "patient_code_and_facts_unchanged_in_cleanup": true
+    "sha256": "aceedbb16e50c41bfe745523eff1e388a072973e7ecb77bc3145900b4a47b5b7",
+    "patient_tests_passed": 6
   },
   "v2_mode_A_responses": 2,
   "v2_human_reference_confirmed": 10,
@@ -65,21 +96,11 @@
     "NOT_MET": 1,
     "UNKNOWN": 6
   },
-  "source_cohort_sha256": "33ac165b9be7c564207325ae951d40b9cfdc3b72f8fb2f56e3e58193894331a1",
-  "response_delivery_sha256": {
-    "evaluation/verification/results/raw/A/recovered_V01_A.txt": "1dd612e7e24fcb7459627c57fa58a0f56a373f4a5ac1012d8d4f7fcf7cd6a4fe",
-    "evaluation/verification/results/raw/A/recovered_V02_A.txt": "acc2c89aaafbc58b3f07cba7e72dafbce1c862b960987bf7da09f78e7e86f42b",
-    "evaluation/verification/results/raw/A/recovered_V03_A.txt": "ee947f5e8b7de9cfcf7875d5515b90f946ca22aadff9eb8f83e78eb8cb9fa246",
-    "evaluation/verification/results/raw/B/recovered_V01_B.txt": "722943d67b661ad37122380917652619108fb2db803a7a57ab8907186a1fb11d",
-    "evaluation/verification/results/raw/B/recovered_V02_B.txt": "797c988374b106e861fc7e4819d62ecd81f9c74f19277f2b80793dd87d3ca370",
-    "evaluation/verification/results/raw/B/recovered_V03_B.txt": "e366d58df07f94293e4641c5332a1726314e7938425836291642fa94eab94eb2",
-    "evaluation/verification/v2/results/raw/A/V2P01_A_user_upload_d7942088e197.txt": "d7942088e19762e572c159a1379ad504b1699c97f884684a4b592ade38859a0c",
-    "evaluation/verification/v2/results/raw/A/V2P02_A_user_upload_4377993a11b6.txt": "4377993a11b6de6b648caea28801b9b34dcda295662885a3bd1ddcbad6add0f6",
-    "evaluation/verification/grounding/results/raw/G01_NO_MAPPING_user_upload_baa833933332.txt": "baa833933332d3c6c6312741c08a79ef414467571d0ea08ac4dc3b9bd32cb6e4",
-    "evaluation/verification/grounding/results/raw/G01_WITH_MAPPING_user_upload_6d540aaa7bf9.txt": "6d540aaa7bf960f87cddb07910769a91dfa18d2160c70e63378315e8b80abd6d"
-  },
-  "grounding_source_review": "evaluation/verification/grounding/results/paired_grounding_checks.json",
+  "model_label_agreements": 8,
+  "model_label_disagreements": 2,
+  "grounding_responses": 2,
+  "grounding_citation_source_checks_preserved": 24,
   "model_calls_in_this_check": 0,
   "clinical_accuracy_computed": false,
-  "note": "Current checks replace redundant stage logs. Structural/source checks do not establish clinical eligibility, reasoning accuracy, context isolation or TF acceptance. Earlier logs and original response-byte provenance remain in the external backups recorded in delivery_revision.json."
+  "note": "Personal-branch cleanup preserves the module-local uv environment. Current checks and isolated historical replay use no model/cloud calls; they do not establish clinical accuracy or clean model context."
 }

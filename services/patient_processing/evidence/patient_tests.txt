@@ -6,6 +6,6 @@ test_synthetic_fixture_missing_birth_and_observation_value (test_process_patient
 test_synthetic_fixture_unresolved_medication_reference_warns (test_process_patients.PatientProcessingTests.test_synthetic_fixture_unresolved_medication_reference_warns) ... ok
 
 ----------------------------------------------------------------------
-Ran 6 tests in 0.090s
+Ran 6 tests in 0.796s
 
 OK

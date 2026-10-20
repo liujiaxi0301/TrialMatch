@@ -19,14 +19,14 @@
   "artifact_sha256": {
     "results/raw/G01_NO_MAPPING_user_upload_baa833933332.txt": "baa833933332d3c6c6312741c08a79ef414467571d0ea08ac4dc3b9bd32cb6e4",
     "results/raw/G01_WITH_MAPPING_user_upload_6d540aaa7bf9.txt": "6d540aaa7bf960f87cddb07910769a91dfa18d2160c70e63378315e8b80abd6d",
-    "manifest.json": "7a40766f30ba63720706ce41178f5cccbf1959be3dc1c5ea4797948a2066003e",
+    "manifest.json": "5ad3f7a1ea24dde61615b1a2d070a29d8f500d5dedfa6db7378df743a8dd7a26",
     "prompt.md": "39dcdc979a7202bfc0112dd47d618a86eb63c89ed0788807e1449099c73d96e1",
     "uploads/G01_NO_MAPPING.json": "6f032f436602c6434d647d20e91529576c58ea270e3def0de3b60ce2406a5ae9",
     "uploads/G01_WITH_MAPPING.json": "c34407ffa6e2354f91f4e6bf02ac71089fb64ca4c65dbe8ad27796a65ba0b7a9",
-    "results/records/G01_NO_MAPPING_user_upload_baa833933332.json": "29cd655eaeb9080be6cf2f1b8edcbaaea468197f2966614ff96314d9b5d08561",
-    "results/records/G01_WITH_MAPPING_user_upload_6d540aaa7bf9.json": "cf22941d5f9a5de42d7e7766550974ff0a809c170e167a3dd33c82f0e63ce666",
+    "results/records/G01_NO_MAPPING_user_upload_baa833933332.json": "a8e6298ad11515319e3e284e64a4a2244ff116904d6312253be1329fe7662e46",
+    "results/records/G01_WITH_MAPPING_user_upload_6d540aaa7bf9.json": "134e3ef8ab349081a35ebe0eb87c5762ac8c1f6122b1234ce0e04ed13aa4d776",
     "results/summary.json": "89d9d5257c00f02552587a91aa1994cd5f170b7365734f8073213f646bfff74b",
-    "results/paired_grounding_report.md": "04997dc5b8f0a6233c63236e3cc5d8ed18a239cb80793c9c75b2249136567618",
+    "results/paired_grounding_report.md": "a5e970104cd3facc2b9f3786c5bf65a3c1c9f61f86b1251a2f2bff9f0fd0f8e9",
     "results/runs.csv": "0ade42d3858946b142a34313e3bb7ed37be409b74554b34aa00c0a7237534aea",
     "review_template.csv": "7f762ce44a34850da31786b22c649d47dedd84a17c0c2bb9b83f502d842ef73b"
   },
@@ -45,5 +45,20 @@
     "results/runs.csv": "0ade42d3858946b142a34313e3bb7ed37be409b74554b34aa00c0a7237534aea",
     "review_template.csv": "7f762ce44a34850da31786b22c649d47dedd84a17c0c2bb9b83f502d842ef73b"
   },
-  "delivery_revision_date": "2026-10-19"
+  "delivery_revision_date": "2026-10-19",
+  "pre_consolidation_artifact_sha256": {
+    "results/raw/G01_NO_MAPPING_user_upload_baa833933332.txt": "baa833933332d3c6c6312741c08a79ef414467571d0ea08ac4dc3b9bd32cb6e4",
+    "results/raw/G01_WITH_MAPPING_user_upload_6d540aaa7bf9.txt": "6d540aaa7bf960f87cddb07910769a91dfa18d2160c70e63378315e8b80abd6d",
+    "manifest.json": "7a40766f30ba63720706ce41178f5cccbf1959be3dc1c5ea4797948a2066003e",
+    "prompt.md": "39dcdc979a7202bfc0112dd47d618a86eb63c89ed0788807e1449099c73d96e1",
+    "uploads/G01_NO_MAPPING.json": "6f032f436602c6434d647d20e91529576c58ea270e3def0de3b60ce2406a5ae9",
+    "uploads/G01_WITH_MAPPING.json": "c34407ffa6e2354f91f4e6bf02ac71089fb64ca4c65dbe8ad27796a65ba0b7a9",
+    "results/records/G01_NO_MAPPING_user_upload_baa833933332.json": "29cd655eaeb9080be6cf2f1b8edcbaaea468197f2966614ff96314d9b5d08561",
+    "results/records/G01_WITH_MAPPING_user_upload_6d540aaa7bf9.json": "cf22941d5f9a5de42d7e7766550974ff0a809c170e167a3dd33c82f0e63ce666",
+    "results/summary.json": "89d9d5257c00f02552587a91aa1994cd5f170b7365734f8073213f646bfff74b",
+    "results/paired_grounding_report.md": "04997dc5b8f0a6233c63236e3cc5d8ed18a239cb80793c9c75b2249136567618",
+    "results/runs.csv": "0ade42d3858946b142a34313e3bb7ed37be409b74554b34aa00c0a7237534aea",
+    "review_template.csv": "7f762ce44a34850da31786b22c649d47dedd84a17c0c2bb9b83f502d842ef73b"
+  },
+  "layout_revision_date": "2026-10-20"
 }

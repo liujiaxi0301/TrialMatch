@@ -1,7 +1,5 @@
-Using CPython 3.12.14 interpreter at: /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3
-Creating virtual environment at: /tmp/trialmatch-patient-scope-venv
-Saved 4 patients to /tmp/trialmatch-patient-handoff/patients.jsonl
-Saved coverage report to /tmp/trialmatch-patient-handoff/coverage_report.json
+Saved 4 patients to /tmp/trialmatch-personal-patient-f2hqxhju/patients.jsonl
+Saved coverage report to /tmp/trialmatch-personal-patient-f2hqxhju/coverage_report.json
 conditions: 87
 observations: 397
 procedures: 112
