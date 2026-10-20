@@ -171,8 +171,7 @@ HTTP behavior: invalid requests or patient records return 422; unknown patient I
 | Root `.env.example`, `.env` | Committable configuration template / Git-ignored local configuration |
 | `.gitignore` | Excludes local configuration, the virtual environment, and caches |
 | Root `Dockerfile` | Shared image using the root lockfile and an unprivileged user |
-| Root `docker-compose.yml` | Data preparation, offline app/API and persistent Chroma |
-| Root `docker-compose.live.yml` | Adds a local Google credential mount and enables live screening |
+| Root `docker-compose.yml` | Data preparation, offline/live app/API and persistent Chroma |
 | `README.md` | Setup, file descriptions, and team handoff instructions |
 | `INDEX_VERSIONING.md` | DVC and Chroma versioning tutorial, precision limits, restoration and shared-storage handoff |
 
@@ -218,20 +217,19 @@ make up
 ```
 
 The shared root configuration starts the frontend and API on `127.0.0.1:8080`.
-Offline mode does not require `.env` or a credential mount. For live mode,
-use the root environment files. Restore a
+Offline mode does not require `.env` or a credential file. For live mode,
+follow the root [credential setup](../../README.md#online-screening). Restore a
 matching Gemini snapshot or build its index before starting the live API:
 
 ```bash
-make pull-index
 make live
 ```
 
 The repository is mounted read-only at `/app`, with writable outputs under
 `/app/artifacts`. The integrated app reads the original processed data under
 `/app/services/` and uses `/app/artifacts/infra/rag_workflow` for caches.
-Chroma uses a separate volume. The live override mounts the Google ADC or service-account JSON
-read-only at `/secrets/google-credentials.json`. Do not run `down -v` against existing
+Chroma uses a separate volume. Compose mounts `secrets/` read-only;
+live mode reads `secrets/google-credentials.json`. Do not run `down -v` against existing
 Chroma data.
 
 This is a local demonstration API without public authentication/authorization. Part 4 should add access controls and deployment configuration before exposing it beyond the local machine.
@@ -269,10 +267,10 @@ The [case file guide](examples/grounding_case/README.md) links original inputs, 
 
 **Part 4 (infrastructure/integration):**
 
-1. Maintain the shared root `pyproject.toml`, `uv.lock`, Dockerfile, both Compose files and `.env.example`.
+1. Maintain the shared root `pyproject.toml`, `uv.lock`, Dockerfile, `docker-compose.yml` and `.env.example`.
 2. Agree on API port 8080, Chroma host/port, read-only inputs from both data modules, persistent artifacts, and credential mounts.
 3. Use the root Compose/Makefile. The existing CLI provides `build-index`, `index-status`, `export-index`, `restore-index` and `screen` inside the shared container.
-4. Follow [INDEX_VERSIONING.md](INDEX_VERSIONING.md): agree on shared DVC storage, grant object access, publish/pull the snapshot separately from Git, and restore into the target Chroma service. DVC runs on the host/CI, not inside the database image.
+4. Follow [INDEX_VERSIONING.md](INDEX_VERSIONING.md): agree on shared DVC storage, grant object access, publish/pull the snapshot separately from Git, and restore into the target Chroma service. DVC runs through `trial-processing` in the shared Python image.
 
 **Parts 1 and 2 (data):**
 

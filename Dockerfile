@@ -7,10 +7,12 @@ ENV UV_PROJECT_ENVIRONMENT=/.venv
 ENV PATH="/.venv/bin:$PATH"
 ENV UV_CACHE_DIR=/tmp/uv-cache
 ENV UV_NO_DEV=1
-# Avoid OpenSSL CPU-probe crashes on older Apple Silicon Docker versions.
 ENV OPENSSL_armcap=0
 
-RUN pip install --no-cache-dir uv==0.13.1
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git \
+    && rm -rf /var/lib/apt/lists/* \
+    && pip install --no-cache-dir uv==0.13.1
 
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev

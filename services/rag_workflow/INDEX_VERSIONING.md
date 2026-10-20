@@ -1,6 +1,6 @@
 # ChromaDB index versioning (MS2)
 
-This is a logical snapshot workflow for Part 3. Git records the code, dependency lockfile, source data, snapshot summary and DVC pointer. DVC stores the exported documents, metadata and vectors. Chroma serves a restored collection. DVC runs on a developer machine or in CI; it is not installed in the database container.
+This is a logical snapshot workflow for Part 3. Git records the code, dependency lockfile, source data, snapshot summary and DVC pointer. DVC stores the exported documents, metadata and vectors. Chroma serves a restored collection. DVC runs in the shared Python image through the `trial-processing` service.
 
 The current local snapshot contains **607 vectors, 256 dimensions, 50 trials** from the existing Gemini index. Export and restore do not call GCP or re-embed text. The snapshot contains public trial criteria and vectors, with no patient records, credentials or model-generated patient explanations. Patient files remain under the existing Git workflow; this change does not migrate Parts 1/2 to DVC.
 
@@ -22,15 +22,15 @@ Runtime readiness files for HTTP Chroma are namespaced by host/port under `artif
 
 Chroma can introduce float32 rounding during import. The snapshot file is checked exactly. Restored IDs/text/metadata must match exactly; vectors must match within absolute tolerance `1e-7` and relative tolerance `1e-6`. The restored database then receives its own exact record checksum, linked to the source snapshot's record checksum. Re-exporting an unchanged database is deterministic; exports from different backends can differ slightly in vector bytes. ANN index files and tie ordering are not promised to be byte-identical across platforms or database versions.
 
-## 1. Install the optional tooling
+## 1. Build the shared environment
 
 Run commands from the TrialMatch repository root:
 
 ```bash
-uv sync --locked --group versioning
+docker compose build trial-processing
 ```
 
-The `versioning` dependency group includes DVC and its Google Cloud Storage adapter. Normal API/Docker installations do not install this group. The DVC project is isolated in `services/rag_workflow/.dvc/` using DVC's subdirectory-project support; no repository-wide DVC migration is required. See [DVC initialization](https://dvc.org/doc/command-reference/init).
+DVC and its Google Cloud Storage adapter are installed in the shared Docker image. The DVC project is isolated in `services/rag_workflow/.dvc/` using DVC's subdirectory-project support; no repository-wide DVC migration is required. See [DVC initialization](https://dvc.org/doc/command-reference/init). The local Python CLI examples below are for development; use `make live` for the complete container workflow.
 
 ## 2. Verify the current index
 
@@ -59,10 +59,10 @@ uv run --locked \
   python -m services.rag_workflow.cli export-index \
   --output services/rag_workflow/index_snapshots/current.json
 
-uv run --locked --group versioning \
+docker compose run --rm trial-processing \
   dvc --cd services/rag_workflow add index_snapshots/current.json
 
-uv run --locked --group versioning \
+docker compose run --rm trial-processing \
   dvc --cd services/rag_workflow status
 ```
 
@@ -109,19 +109,24 @@ gs://trialmatch-ac215-yixiao-dvc/dvc
 
 The bucket belongs to GCP project `trialmatch-ac215-yixiao` and uses Standard storage in `us-east1`. It is private. Team accounts have bucket-level Storage Object Viewer and Storage Object Creator roles for downloading data and uploading new versions. Storage access is separate from Gemini access.
 
-With the Google Cloud CLI installed, sign in on your own machine, then download the snapshot from the repository root:
+With the Google Cloud CLI installed, sign in on your own machine:
 
 ```bash
 gcloud auth application-default login
-uv sync --locked --group versioning
-uv run --locked --group versioning \
+```
+
+Create `secrets/` and copy the credentials file printed by the command to `secrets/google-credentials.json`.
+Then download the snapshot from the repository root:
+
+```bash
+docker compose run --build --rm trial-processing \
   dvc --cd services/rag_workflow pull index_snapshots/current.json.dvc
 ```
 
 After recording a new snapshot with `dvc add`, upload it with:
 
 ```bash
-uv run --locked --group versioning \
+docker compose run --rm trial-processing \
   dvc --cd services/rag_workflow push index_snapshots/current.json.dvc
 ```
 
@@ -130,12 +135,12 @@ Commit the remote configuration and matching pointer/summary to Git. Keep creden
 On 2026-10-20, the existing 607-vector snapshot was uploaded with DVC 3.67.1 and downloaded into an empty directory/cache in Google Cloud Shell. Its SHA-256 matched `6093058582c851a5cefd0cf6987650cd3610eb5416752c7ac4d82a94e9046de6`, and `dvc status --cloud` reported that the cache and remote were in sync. This check used the project owner's account. No Gemini calls were needed.
 
 The same fresh-cache download was verified on the local Mac, followed by
-`make restore-index` against Docker Chroma. From the root, `make pull-index`
-uses the credentials configured in `.env`.
+restoration into Docker Chroma. From the root, `make live` downloads and restores
+the snapshot automatically using the credentials mounted from `secrets/google-credentials.json`.
 
 ## 6. Restore into the separate Docker Chroma service
 
-Part 4 can start the existing Compose services, pull the snapshot **on the host**, and restore it through the RAG container. The existing read-only services mount makes the pulled snapshot available without putting it in the image:
+`make live` pulls the snapshot through `trial-processing` and restores it through `rag-api`. The downloaded file is saved under `services/rag_workflow/index_snapshots/` and shared with the RAG container. To repeat just the restore and verification while the app is running:
 
 ```bash
 docker compose exec -T rag-api python -m services.rag_workflow.cli restore-index \
@@ -144,17 +149,17 @@ docker compose exec -T rag-api python -m services.rag_workflow.cli restore-index
 docker compose exec -T rag-api python -m services.rag_workflow.cli index-status
 ```
 
-The same commands work with the live Compose override when it is included in the deployment command. Build/pull a RAG image containing this revision first. No frontend work or API contract changes are required. The database volume provides persistence; DVC provides retrievable snapshot versions. This is a collection export using Chroma's [Get API](https://docs.trychroma.com/docs/querying-collections/query-and-get), not a physical backup of the server's database/configuration.
+The same commands work after `make live`; both modes use the root `docker-compose.yml`. Build/pull a RAG image containing this revision first. No frontend work or API contract changes are required. The database volume provides persistence; DVC provides retrievable snapshot versions. This is a collection export using Chroma's [Get API](https://docs.trychroma.com/docs/querying-collections/query-and-get), not a physical backup of the server's database/configuration.
 
 ## 7. Verification and review
 
 ```bash
-uv run --locked --group versioning \
+uv run --locked \
   python -m unittest discover -s services/rag_workflow/tests -v
 uv run --locked ruff check services/rag_workflow
 ```
 
-The DVC integration test uses a temporary Git repository and local-directory remote. It records two versions, selects the older Git pointer, removes only its disposable working file/cache, pulls the original bytes and verifies clean status. It never pushes this branch or uploads to cloud storage. Without the optional group that test is skipped; index tests still run.
+The DVC integration test uses a temporary Git repository and local-directory remote. It records two versions, selects the older Git pointer, removes only its disposable working file/cache, pulls the original bytes and verifies clean status. It never pushes this branch or uploads to cloud storage. DVC is included in the shared dependencies.
 
 `examples/index_versioning_verification.json` records the real 607-vector embedded/Docker restore checks. Stored document vectors are used as retrieval probes, so this verifies database restoration rather than a new LLM screening run. New model calls and frontend testing are outside this change.
 

@@ -2289,6 +2289,7 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "chromadb" },
+    { name = "dvc", extra = ["gs"] },
     { name = "fastapi" },
     { name = "google-genai" },
     { name = "pydantic" },
@@ -2301,13 +2302,11 @@ dev = [
     { name = "httpx" },
     { name = "ruff" },
 ]
-versioning = [
-    { name = "dvc", extra = ["gs"] },
-]
 
 [package.metadata]
 requires-dist = [
     { name = "chromadb", specifier = "==1.5.9" },
+    { name = "dvc", extras = ["gs"], specifier = "==3.67.1" },
     { name = "fastapi", specifier = "==0.143.2" },
     { name = "google-genai", specifier = "==2.31.0" },
     { name = "pydantic", specifier = "==2.14.1" },
@@ -2320,7 +2319,6 @@ dev = [
     { name = "httpx", specifier = ">=0.28,<1" },
     { name = "ruff", specifier = ">=0.11,<1" },
 ]
-versioning = [{ name = "dvc", extras = ["gs"], specifier = ">=3,<4" }]
 
 [[package]]
 name = "truststore"

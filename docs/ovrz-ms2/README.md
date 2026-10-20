@@ -18,7 +18,7 @@ The original application contribution added:
 The infrastructure integration now maintains Docker, Compose and dependencies
 at the repository root. The launchers use that shared environment. Application
 code, source data, RAG logic and existing tests are unchanged. See
-[the shared setup](../../README_INFRA.md).
+[the shared setup](../../README.md).
 
 ## Quick start
 
@@ -81,7 +81,7 @@ docker compose -f docker-compose.yml down
 input/output. Stop the existing local service before using port 8080 for Docker.
 
 The original frontend delivery was verified without Docker. Shared Docker
-commands are in [README_INFRA.md](../../README_INFRA.md); local run evidence
+commands are in [README.md](../../README.md); local run evidence
 is saved under `artifacts/infra/`.
 
 ## What to demonstrate
@@ -114,12 +114,11 @@ The local baseline and Gemini index have different model identities and
 collections. The local probe does not replace the team's live index or change
 the default BM25 screening path.
 
-For live operation, set `GCP_PROJECT`, `GCP_LOCATION`, and an absolute
-`GOOGLE_APPLICATION_CREDENTIALS` file path kept out of Git. Cloud calls
-can incur charges. After normal offline startup:
+For live operation, follow the root [credential setup](../../README.md#online-screening):
+copy the Google credentials to `secrets/google-credentials.json` and configure `.env`.
+Cloud calls can incur charges. After normal offline startup:
 
 ```bash
-make pull-index
 make live
 ```
 

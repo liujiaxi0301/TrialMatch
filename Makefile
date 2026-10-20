@@ -1,39 +1,26 @@
-.PHONY: build dev run up live down snapshot pull-index restore-index
-
-build:
-	docker compose --profile dev build
-
-dev:
-	docker compose run --rm workspace
-
-run:
-	docker compose run --rm workspace uv run --frozen \
-		python -m services.rag_workflow.cli --mode offline screen \
-		--patient-id 060e72d3-912e-55cd-0c92-5faa6cb7a6db \
-		--question "Which clinical trials may suit this patient, and what needs review?" \
-		--top-k 3 --output artifacts/rag_workflow/demo_offline.json
+.PHONY: up live down reproduce
 
 up:
-	docker compose up --wait --wait-timeout 180
-	$(MAKE) snapshot
+	TRIALMATCH_MODE=offline docker compose up --build --wait --wait-timeout 180
 
 live:
+	docker compose run --build --rm --no-deps rag-api python -c \
+		'import os; from pathlib import Path; assert os.environ["GCP_PROJECT"].strip(), "Set GCP_PROJECT in .env"; assert Path(os.environ["GOOGLE_APPLICATION_CREDENTIALS"]).is_file(), "Copy Google credentials to secrets/google-credentials.json"'
+	docker compose run --build --rm trial-processing \
+		dvc --cd services/rag_workflow pull index_snapshots/current.json.dvc
 	$(MAKE) up
-	$(MAKE) restore-index
-	docker compose -f docker-compose.yml -f docker-compose.live.yml up --wait --wait-timeout 180
+	docker compose exec -T rag-api python -m services.rag_workflow.cli restore-index \
+		--input services/rag_workflow/index_snapshots/current.json
+	docker compose exec -T rag-api python -m services.rag_workflow.cli index-status
+	TRIALMATCH_MODE=live docker compose up --wait --wait-timeout 180
 
 down:
 	docker compose down
 
-snapshot:
-	docker compose exec -T rag-api uv run --frozen python -c \
-		'from pathlib import Path; from services.frontend.vector_demo import LocalVectorDemo; index = LocalVectorDemo().index; result = index.export(Path("artifacts/infra/snapshots") / (index.name + ".json")); print("Saved", result["snapshot"])'
-
-pull-index:
-	uv run --env-file .env --frozen --group versioning \
-		dvc --cd services/rag_workflow pull index_snapshots/current.json.dvc
-
-restore-index:
-	docker compose exec -T rag-api python -m services.rag_workflow.cli restore-index \
-		--input services/rag_workflow/index_snapshots/current.json
-	docker compose exec -T rag-api python -m services.rag_workflow.cli index-status
+reproduce:
+	@test -f services/trial_ingestion/data/raw.dvc || \
+		(echo "Missing services/trial_ingestion/data/raw.dvc. See README.md under Data Reproduction."; exit 1)
+	docker compose run --build --rm trial-processing \
+		dvc --cd services/trial_ingestion pull data/raw.dvc
+	docker compose run --build --rm trial-processing uv run --frozen python prepare_data.py --from-raw
+	$(MAKE) up

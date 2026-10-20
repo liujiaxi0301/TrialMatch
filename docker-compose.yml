@@ -1,18 +1,12 @@
 services:
-  workspace:
-    build: .
-    profiles: [dev]
-    volumes:
-      - .:/app
-    environment:
-      TRIALMATCH_MODE: offline
-
   trial-processing:
     build: .
     command: uv run --frozen python prepare_data.py
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /secrets/google-credentials.json
     volumes:
-      - .:/app:ro
-      - ./artifacts:/app/artifacts
+      - .:/app
+      - ./secrets:/secrets:ro
 
   prepare:
     build: .
@@ -39,7 +33,13 @@ services:
     build: .
     command: uv run --frozen python -m uvicorn services.frontend.app:app --host 0.0.0.0 --port 8080
     environment:
-      TRIALMATCH_MODE: offline
+      TRIALMATCH_MODE: ${TRIALMATCH_MODE:-offline}
+      GCP_PROJECT: ${GCP_PROJECT:-}
+      GCP_LOCATION: ${GCP_LOCATION:-global}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-gemini-embedding-001}
+      GENERATIVE_MODEL: ${GENERATIVE_MODEL:-gemini-3.1-flash-lite}
+      EMBEDDING_DIMENSION: ${EMBEDDING_DIMENSION:-256}
+      GOOGLE_APPLICATION_CREDENTIALS: /secrets/google-credentials.json
       TRIALMATCH_TRIALS: services/trial_ingestion/data/processed/trials.jsonl
       TRIALMATCH_CRITERIA: services/trial_ingestion/data/processed/criteria.jsonl
       TRIALMATCH_PATIENTS: services/patient_processing/data/processed/batch25_patients.jsonl
@@ -53,11 +53,12 @@ services:
     volumes:
       - .:/app:ro
       - ./artifacts:/app/artifacts
+      - ./secrets:/secrets:ro
     depends_on:
       prepare:
         condition: service_completed_successfully
     healthcheck:
-      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health', timeout=5)"]
+      test: [CMD, python, -c, "import json, os, urllib.request; data = json.load(urllib.request.urlopen('http://127.0.0.1:8080/health', timeout=5)); assert data['mode'] == os.environ['TRIALMATCH_MODE']"]
       interval: 5s
       timeout: 5s
       retries: 18
