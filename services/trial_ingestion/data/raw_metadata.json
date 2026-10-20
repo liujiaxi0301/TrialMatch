@@ -1,0 +1,20 @@
+{
+  "dataset": "ClinicalTrials.gov Type 2 Diabetes trial snapshot",
+  "source": "ClinicalTrials.gov API v2",
+  "api_endpoint": "https://clinicaltrials.gov/api/v2/studies",
+  "query_condition": "Type 2 Diabetes",
+  "overall_statuses": [
+    "RECRUITING",
+    "NOT_YET_RECRUITING",
+    "ENROLLING_BY_INVITATION"
+  ],
+  "retrieval_script": "scripts/fetch_trials.py",
+  "retrieval_date": "2026-10-12",
+  "versioned_on": "2026-10-20",
+  "raw_file_count": 1385,
+  "storage_format": "one JSON file per unique NCT ID",
+  "deduplication_key": "NCT ID",
+  "dvc_path": "data/raw",
+  "dvc_md5": "628af4146845d3e2cfb12018594acdae.dir",
+  "dvc_size_bytes": 26019413
+}
