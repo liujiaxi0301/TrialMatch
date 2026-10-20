@@ -1,14 +1,13 @@
-"""Prepare the fixed offline data using Part 1's existing criterion parser."""
+"""Validate the existing source data and record its versions."""
 
 import hashlib
 import json
-import shutil
 from pathlib import Path
 
 from services.trial_ingestion.scripts.parse_criteria import parse_trial_criteria
 
 ROOT = Path(__file__).resolve().parent
-OUTPUT = ROOT / "artifacts/infra/data"
+OUTPUT = ROOT / "artifacts/infra"
 TRIAL_DATA = ROOT / "services/trial_ingestion/data/processed"
 PATIENTS = ROOT / "services/patient_processing/data/processed/batch25_patients.jsonl"
 MANIFEST = ROOT / "services/rag_workflow/examples/demo_manifest.json"
@@ -32,19 +31,15 @@ def main():
     criteria = [criterion for trial in trials for criterion in parse_trial_criteria(trial)]
     parsed = "".join(json.dumps(criterion) + "\n" for criterion in criteria).encode("utf-8")
     if parsed != sources["criteria"].read_bytes():
-        raise ValueError("Parsed criteria differ from Part 1's committed snapshot")
+        raise ValueError("Parsed criteria differ from the committed snapshot")
 
     OUTPUT.mkdir(parents=True, exist_ok=True)
-    shutil.copyfile(sources["trials"], OUTPUT / "trials.jsonl")
-    (OUTPUT / "criteria.jsonl").write_bytes(parsed)
-    shutil.copyfile(PATIENTS, OUTPUT / "patients.jsonl")
-    shutil.copyfile(MANIFEST, OUTPUT / "demo_manifest.json")
     (OUTPUT / "data_versions.json").write_text(
         json.dumps(versions, indent=2) + "\n", encoding="utf-8"
     )
-    print(f"Prepared {len(trials)} trials and {len(criteria)} criteria in {OUTPUT}")
-    print("Copied Part 2's 25-patient snapshot. Source files were not changed.")
-    print("Raw trial ingestion is pending the original snapshot; no data was downloaded.")
+    print(f"Validated {len(trials)} trials and {len(criteria)} criteria.")
+    print(f"Saved data versions to {OUTPUT / 'data_versions.json'}")
+    print("The app reads source data directly from services/.")
 
 
 if __name__ == "__main__":

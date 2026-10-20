@@ -8,10 +8,10 @@ Remove-Item Env:CHROMADB_HOST -ErrorAction SilentlyContinue
 if (-not (Get-Command uv -ErrorAction SilentlyContinue)) {
     throw 'Install uv and Python 3.12, then rerun this script.'
 }
-& uv sync --project demo/ovrz --locked --python 3.12
+& uv sync --locked --python 3.12
 if ($LASTEXITCODE -ne 0) { throw 'Dependency installation failed.' }
-& uv run --project demo/ovrz --locked python -m services.frontend.prepare
+& uv run --locked python -m services.frontend.prepare
 if ($LASTEXITCODE -ne 0) { throw 'Preparation failed. For source hash errors, see docs/ovrz-ms2/README.md.' }
 Write-Host "Open http://127.0.0.1:$Port/ . Keep this terminal open. Ctrl+C stops the server."
-& uv run --project demo/ovrz --locked python -m uvicorn services.frontend.app:app --host 127.0.0.1 --port $Port
+& uv run --locked python -m uvicorn services.frontend.app:app --host 127.0.0.1 --port $Port
 if ($LASTEXITCODE -ne 0) { throw 'Server exited with an error.' }

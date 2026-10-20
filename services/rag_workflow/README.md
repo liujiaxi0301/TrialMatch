@@ -11,9 +11,8 @@ Project interaction is in English: use English questions, and all generated reas
 Run all commands from the **TrialMatch repository root**:
 
 ```bash
-cd /Users/yangzhenyu/Desktop/AC215/TrialMatch
-uv sync --project services/rag_workflow --locked
-uv run --project services/rag_workflow --locked python -m services.rag_workflow.cli inspect-data
+uv sync --locked
+uv run --locked python -m services.rag_workflow.cli inspect-data
 ```
 
 Expected counts: 25 patients, 1,313 trials, and 18,456 criteria. This development branch is based on `feat/patient-processing`; the patient module is not present in the version of `main` used for this implementation. Do not replace the cohort with the four-patient `patients.jsonl` without updating the manifest.
@@ -21,7 +20,7 @@ Expected counts: 25 patients, 1,313 trials, and 18,456 criteria. This developmen
 **Run an offline demo without cloud access:**
 
 ```bash
-uv run --project services/rag_workflow --locked python -m services.rag_workflow.cli --mode offline screen \
+uv run --locked python -m services.rag_workflow.cli --mode offline screen \
   --patient-id 060e72d3-912e-55cd-0c92-5faa6cb7a6db \
   --question 'Which clinical trials may suit this patient, why, and what concerns need review?' \
   --top-k 3 --output artifacts/rag_workflow/demo_offline.json
@@ -32,17 +31,17 @@ Offline mode uses **real BM25 retrieval and deterministic numeric rules**. Unsup
 ## 2. Live mode: GCP + Chroma + LLM
 
 ```bash
-cp services/rag_workflow/.env.example services/rag_workflow/.env
+cp .env.example .env
 ```
 
-Edit `.env` to set `GCP_PROJECT` and the **absolute local path** to the credential JSON. Do not commit the credential file or `.env`. This local checkout already has a Git-ignored `.env` configured to use the tutorial's credential location; configure it again on another machine.
+Edit the root `.env` to set `GCP_PROJECT` and the **absolute local path** to the credential JSON. Do not commit the credential file or `.env`. Each developer supplies their own approved local configuration.
 
 Enable `aiplatform.googleapis.com`. The service account needs `roles/aiplatform.user` on the project used for inference; the displayed role name may be Vertex AI User or Agent Platform User. Existing working credentials do not need to be recreated.
 
 **Build the fixed 50-trial index for the first time:**
 
 ```bash
-uv run --project services/rag_workflow --locked --env-file services/rag_workflow/.env \
+uv run --locked --env-file .env \
   python -m services.rag_workflow.cli build-index
 ```
 
@@ -55,7 +54,7 @@ Each Vertex request to `gemini-embedding-001` sends one input text. The tutorial
 **Run the complete screening workflow:**
 
 ```bash
-uv run --project services/rag_workflow --locked --env-file services/rag_workflow/.env \
+uv run --locked --env-file .env \
   python -m services.rag_workflow.cli --mode live screen \
   --patient-id 060e72d3-912e-55cd-0c92-5faa6cb7a6db \
   --question 'Which clinical trials may suit this patient? Explain supporting evidence, screening barriers, and concerns requiring review.' \
@@ -83,11 +82,11 @@ Stop here for the current Part 3 walkthrough. The HTTP/browser integration below
 **Start the local API, which defaults to offline mode:**
 
 ```bash
-uv run --project services/rag_workflow --locked \
+uv run --locked \
   python -m uvicorn services.rag_workflow.api:app --host 127.0.0.1 --port 8080
 ```
 
-For a live API, set `TRIALMATCH_MODE=live` in `.env`, add `--env-file services/rag_workflow/.env` to `uv run`, and first complete `build-index` using the same Chroma configuration. Restart the API after changing its environment.
+For a live API, set `TRIALMATCH_MODE=live` in `.env`, add `--env-file .env` to `uv run`, and first complete `build-index` using the same Chroma configuration. Restart the API after changing its environment.
 
 - `GET /health`: checks data and the manifest. **It does not verify GCP permissions or vector-index readiness.**
 - `GET /patients`: returns the 25 selectable patient IDs, reference dates, ages, genders, and source death dates, without returning complete patient records.
@@ -168,12 +167,12 @@ HTTP behavior: invalid requests or patient records return 422; unknown patient I
 | `tests/test_evidence_support.py` | Regressions from live smoke testing: missing data is not negative evidence, prescriptions do not establish drug use, short-reference mapping, and context budgets |
 | `tests/test_index_versions.py` | Snapshot restore, version isolation, source/checksum tampering, conflict preservation, legacy migration and credential-free CLI checks |
 | `tests/test_dvc_snapshot.py` | Optional DVC/Git historical-pointer recovery test with a disposable local remote |
-| `pyproject.toml`, `uv.lock` | Independent dependency definitions and locked versions, without changing Part 2's environment |
-| `.env.example`, `.env` | Committable configuration template / Git-ignored local configuration |
+| Root `pyproject.toml`, `uv.lock` | Shared runtime dependencies, development tools and optional DVC group |
+| Root `.env.example`, `.env` | Committable configuration template / Git-ignored local configuration |
 | `.gitignore` | Excludes local configuration, the virtual environment, and caches |
-| `Dockerfile` | Runnable Part 3 image using the lockfile and an unprivileged user |
-| `docker-compose.yml` | Local offline API + Chroma without credential mounts; integration example for Part 4 |
-| `docker-compose.live.yml` | Adds an external service-account credential mount and enables live mode |
+| Root `Dockerfile` | Shared image using the root lockfile and an unprivileged user |
+| Root `docker-compose.yml` | Data preparation, offline app/API and persistent Chroma |
+| Root `docker-compose.live.yml` | Adds a local Google credential mount and enables live screening |
 | `README.md` | Setup, file descriptions, and team handoff instructions |
 | `INDEX_VERSIONING.md` | DVC and Chroma versioning tutorial, precision limits, restoration and shared-storage handoff |
 
@@ -192,7 +191,7 @@ services/patient_processing/data/processed/batch25_patients.jsonl
 The manifest selects the first 50 trials by trial_id among recruiting studies with 3–25 criteria and no detected ambiguous or cohort/group/arm markers. This is a reproducible, conservative technical subset, **not a guarantee of correct clinical logic**. After changing input data, explicitly regenerate the manifest. A source-hash mismatch produces an error instead of silently reusing a stale index.
 
 ```bash
-uv run --project services/rag_workflow --locked python -m services.rag_workflow.cli make-manifest --trial-count 50
+uv run --locked python -m services.rag_workflow.cli make-manifest --trial-count 50
 ```
 
 Workflow: patient record + question → BM25/vector retrieval → candidate trials → all criteria for each candidate from processed data → criterion-relevant patient facts → rules/LLM → validation → aggregation. A few highly similar retrieved criteria do not establish eligibility for an entire trial.
@@ -215,32 +214,33 @@ Workflow: patient record + question → BM25/vector retrieval → candidate tria
 Local development can use embedded Chroma. Setting `CHROMADB_HOST` switches to a separate HTTP Chroma service. Their storage differs: restore a matching exported snapshot or build the index in the target service when switching. Embedding caches can be reused, but copying an index-ready file does not populate the target database. See [INDEX_VERSIONING.md](INDEX_VERSIONING.md) for restoration without new embedding calls.
 
 ```bash
-docker compose --env-file services/rag_workflow/.env \
-  -f services/rag_workflow/docker-compose.yml up --build
+make up
 ```
 
-Offline mode does not require a credential mount. The API binds to `127.0.0.1:8080` on the host. For live mode, use both Compose files and ensure the credential path in `.env` exists:
+The shared root configuration starts the frontend and API on `127.0.0.1:8080`.
+Offline mode does not require `.env` or a credential mount. For live mode,
+use the root environment files. Restore a
+matching Gemini snapshot or build its index before starting the live API:
 
 ```bash
-docker compose --env-file services/rag_workflow/.env \
-  -f services/rag_workflow/docker-compose.yml \
-  -f services/rag_workflow/docker-compose.live.yml up --build -d
-
-docker compose --env-file services/rag_workflow/.env \
-  -f services/rag_workflow/docker-compose.yml \
-  -f services/rag_workflow/docker-compose.live.yml \
-  exec rag-api python -m services.rag_workflow.cli build-index
+make pull-index
+make live
 ```
 
-Source data is mounted at `/app/services`, outputs/caches at `/app/artifacts/rag_workflow`, and Chroma uses a separate volume. The service-account JSON is mounted read-only at `/secrets/llm-service-account.json`. Replace the tutorial-specific `../llm-rag:/app` mount when integrating TrialMatch. Do not run `down -v` against existing Chroma data.
+The repository is mounted read-only at `/app`, with writable outputs under
+`/app/artifacts`. The integrated app reads the original processed data under
+`/app/services/` and uses `/app/artifacts/infra/rag_workflow` for caches.
+Chroma uses a separate volume. The live override mounts the Google ADC or service-account JSON
+read-only at `/secrets/google-credentials.json`. Do not run `down -v` against existing
+Chroma data.
 
 This is a local demonstration API without public authentication/authorization. Part 4 should add access controls and deployment configuration before exposing it beyond the local machine.
 
 ## 7. Verification
 
 ```bash
-uv run --project services/rag_workflow --locked python -m unittest discover -s services/rag_workflow/tests -v
-uv run --project services/rag_workflow --locked ruff check services/rag_workflow
+uv run --locked python -m unittest discover -s services/rag_workflow/tests -v
+uv run --locked ruff check services/rag_workflow
 ```
 
 Tests do not automatically call GCP. They cover the actual 25-patient/50-trial inputs, inline-patient and patient-ID requests, incorrect subject references and future facts, age and HbA1c rules, missing units/dates, conflicting same-day results, exclusion direction, UNKNOWN handling, missing/duplicate/fabricated references, repair limits, 403 handling, the HTTP contract, and Chroma upserts/persistence/model-version isolation.
@@ -269,9 +269,9 @@ The [case file guide](examples/grounding_case/README.md) links original inputs, 
 
 **Part 4 (infrastructure/integration):**
 
-1. Share `pyproject.toml`, `uv.lock`, the Dockerfile, both Compose files, and `.env.example`.
+1. Maintain the shared root `pyproject.toml`, `uv.lock`, Dockerfile, both Compose files and `.env.example`.
 2. Agree on API port 8080, Chroma host/port, read-only inputs from both data modules, persistent artifacts, and credential mounts.
-3. Incorporate this example into the team's root Compose/Makefile without duplicating databases. Expose `build-index`, `index-status`, `export-index`, `restore-index` and `screen`.
+3. Use the root Compose/Makefile. The existing CLI provides `build-index`, `index-status`, `export-index`, `restore-index` and `screen` inside the shared container.
 4. Follow [INDEX_VERSIONING.md](INDEX_VERSIONING.md): agree on shared DVC storage, grant object access, publish/pull the snapshot separately from Git, and restore into the target Chroma service. DVC runs on the host/CI, not inside the database image.
 
 **Parts 1 and 2 (data):**

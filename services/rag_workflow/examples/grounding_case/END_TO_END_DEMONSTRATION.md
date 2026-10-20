@@ -148,8 +148,8 @@ The recorded configuration used `gemini-embedding-001` (256 dimensions), `gemini
 From the repository root, with credentials configured and the matching Chroma index available:
 
 ```bash
-uv run --project services/rag_workflow --locked \
-  --env-file services/rag_workflow/.env \
+uv run --locked \
+  --env-file .env \
   python -m services.rag_workflow.cli --mode live screen \
   --patient-file services/rag_workflow/examples/grounding_case/patient.json \
   --question 'Which clinical trials may suit this patient? Explain supporting evidence, screening barriers, and what remains unknown, using only the supplied trial criteria and patient record.' \

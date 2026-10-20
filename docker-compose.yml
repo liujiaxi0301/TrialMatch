@@ -19,10 +19,10 @@ services:
     command: uv run --frozen python -m services.frontend.prepare
     environment:
       TRIALMATCH_MODE: offline
-      TRIALMATCH_TRIALS: artifacts/infra/data/trials.jsonl
-      TRIALMATCH_CRITERIA: artifacts/infra/data/criteria.jsonl
-      TRIALMATCH_PATIENTS: artifacts/infra/data/patients.jsonl
-      TRIALMATCH_MANIFEST: artifacts/infra/data/demo_manifest.json
+      TRIALMATCH_TRIALS: services/trial_ingestion/data/processed/trials.jsonl
+      TRIALMATCH_CRITERIA: services/trial_ingestion/data/processed/criteria.jsonl
+      TRIALMATCH_PATIENTS: services/patient_processing/data/processed/batch25_patients.jsonl
+      TRIALMATCH_MANIFEST: services/rag_workflow/examples/demo_manifest.json
       TRIALMATCH_ARTIFACTS: artifacts/infra/rag_workflow
       CHROMADB_HOST: rag-chromadb
       CHROMADB_PORT: "8000"
@@ -40,13 +40,14 @@ services:
     command: uv run --frozen python -m uvicorn services.frontend.app:app --host 0.0.0.0 --port 8080
     environment:
       TRIALMATCH_MODE: offline
-      TRIALMATCH_TRIALS: artifacts/infra/data/trials.jsonl
-      TRIALMATCH_CRITERIA: artifacts/infra/data/criteria.jsonl
-      TRIALMATCH_PATIENTS: artifacts/infra/data/patients.jsonl
-      TRIALMATCH_MANIFEST: artifacts/infra/data/demo_manifest.json
+      TRIALMATCH_TRIALS: services/trial_ingestion/data/processed/trials.jsonl
+      TRIALMATCH_CRITERIA: services/trial_ingestion/data/processed/criteria.jsonl
+      TRIALMATCH_PATIENTS: services/patient_processing/data/processed/batch25_patients.jsonl
+      TRIALMATCH_MANIFEST: services/rag_workflow/examples/demo_manifest.json
       TRIALMATCH_ARTIFACTS: artifacts/infra/rag_workflow
       CHROMADB_HOST: rag-chromadb
       CHROMADB_PORT: "8000"
+      TRIALMATCH_CORS_ORIGINS: ${TRIALMATCH_CORS_ORIGINS:-http://localhost:3000,http://localhost:5173}
     ports:
       - "127.0.0.1:8080:8080"
     volumes:

@@ -14,7 +14,7 @@
 
 ## Shared infrastructure and RAG deliverables
 
-- [x] Dedicated Dockerfile, uv pyproject/lock and Compose configuration supplied.
+- [x] Dockerfile, uv pyproject/lock and Compose configuration consolidated at the repository root.
 - [x] One-command path from fixed snapshots to vector index, query/context and app.
 - [x] Source/version hashes and actual local sample input/output.
 - [x] Collection/preprocessing modules retained from the base branch.

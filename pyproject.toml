@@ -12,5 +12,14 @@ dependencies = [
     "uvicorn==0.54.0",
 ]
 
+[dependency-groups]
+dev = ["httpx>=0.28,<1", "ruff>=0.11,<1"]
+# Optional host tools for the existing DVC snapshot workflow.
+versioning = ["dvc[gs]>=3,<4"]
+
 [tool.uv]
 package = false
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100

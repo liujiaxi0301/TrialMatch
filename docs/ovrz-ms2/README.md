@@ -9,15 +9,16 @@ That branch already includes the patient and trial modules. The current `main`
 does not include all those dependencies. A PR to `main` would therefore show
 other teammates' commits too. Review this contribution against its stated base.
 
-Only these new directories belong to this addition:
+The original application contribution added:
 
 - `services/frontend/`: frontend, thin API wrapper, vector demo, preparation, tests.
-- `demo/ovrz/`: dedicated environment, container configuration and run scripts.
+- `demo/ovrz/`: local launchers and verification scripts.
 - `docs/ovrz-ms2/`: handoff, presentation notes, checklist and evidence.
 
-The root README, Docker configuration, source data, RAG code and teammates'
-tests are unchanged. Root configuration can be integrated later by the team's
-infrastructure owner.
+The infrastructure integration now maintains Docker, Compose and dependencies
+at the repository root. The launchers use that shared environment. Application
+code, source data, RAG logic and existing tests are unchanged. See
+[the shared setup](../../README_INFRA.md).
 
 ## Quick start
 
@@ -25,9 +26,12 @@ Python 3.12 and uv are required for local development. On Windows, preserve
 the source JSONL bytes because the upstream manifest checks their hashes:
 
 ```bash
-git -c core.autocrlf=false clone --branch ovrz/ms2-demo https://github.com/liujiaxi0301/TrialMatch.git
+git -c core.autocrlf=false clone --branch yixiao/infra https://github.com/liujiaxi0301/TrialMatch.git
 cd TrialMatch
 ```
+
+The consolidation is currently local and has not been pushed. Use this working
+checkout until the team publishes the integrated revision.
 
 Windows PowerShell:
 
@@ -52,33 +56,33 @@ the integrity check or replace teammates' manifests.
 From the repository root, with Docker Engine running:
 
 ```bash
-docker compose -f demo/ovrz/compose.yml up --build --wait --wait-timeout 300
+docker compose -f docker-compose.yml up --build --wait --wait-timeout 300
 ```
 
-This separate Compose project starts Chroma, runs preparation, then starts the
-app/API. Preparation verifies committed snapshots, builds/verifies 607 criterion
-vectors, retrieves context, and saves a real offline screening response.
+The shared Compose project validates the trial and patient snapshots, starts
+Chroma, runs preparation, then starts the app/API. Data is read directly from `services/`.
+Preparation builds/verifies 607 criterion vectors, retrieves context and saves
+a real offline screening response.
 
-Both Python services use `demo/ovrz/Dockerfile` with its dedicated
-`pyproject.toml` and `uv.lock`. Those dependency pins are copied from the team's
-infra branch `ec5ba6a91cb5d4c7bd1e248bfb3c29f9249049a2`.
-Chroma uses its pinned upstream image. Named volumes persist data. Only the
-application port is exposed, on loopback.
+Python services use the root Dockerfile, `pyproject.toml` and `uv.lock`.
+Chroma uses its pinned upstream image and a persistent named volume. Outputs
+are saved under `artifacts/infra/`. Only the application port is exposed,
+on loopback.
 
 ```bash
-docker compose -f demo/ovrz/compose.yml ps -a
-docker compose -f demo/ovrz/compose.yml logs --no-color
-docker compose -f demo/ovrz/compose.yml exec -T rag-api python demo/ovrz/verify_http.py
-docker compose -f demo/ovrz/compose.yml down
+docker compose -f docker-compose.yml ps -a
+docker compose -f docker-compose.yml logs --no-color
+docker compose -f docker-compose.yml exec -T rag-api python demo/ovrz/verify_http.py
+docker compose -f docker-compose.yml down
 ```
 
 `down` preserves volumes. The Windows script
 `demo/ovrz/verify-container.ps1` captures the actual container logs and HTTP
 input/output. Stop the existing local service before using port 8080 for Docker.
 
-**Docker is not available on the preparation machine. These container commands
-have not been executed here.** Container validation and screenshots remain with
-the team's Docker host. No completed container run is claimed.
+The original frontend delivery was verified without Docker. Shared Docker
+commands are in [README_INFRA.md](../../README_INFRA.md); local run evidence
+is saved under `artifacts/infra/`.
 
 ## What to demonstrate
 
@@ -111,12 +115,12 @@ collections. The local probe does not replace the team's live index or change
 the default BM25 screening path.
 
 For live operation, set `GCP_PROJECT`, `GCP_LOCATION`, and an absolute
-`GOOGLE_APPLICATION_CREDENTIALS` file path outside the repository. Cloud calls
+`GOOGLE_APPLICATION_CREDENTIALS` file path kept out of Git. Cloud calls
 can incur charges. After normal offline startup:
 
 ```bash
-docker compose -f demo/ovrz/compose.yml -f demo/ovrz/compose.live.yml run --rm rag-api python -m services.rag_workflow.cli --mode live build-index
-docker compose -f demo/ovrz/compose.yml -f demo/ovrz/compose.live.yml up -d --wait --wait-timeout 300
+make pull-index
+make live
 ```
 
 Verify the LIVE label, actual response status, errors and metrics.
@@ -149,8 +153,8 @@ collection-to-retrieval process and the snapshot boundary in the presentation.
 
 ```powershell
 $env:PYTHONUTF8 = '1'
-uv run --project services/rag_workflow --locked python -m unittest discover -s services/frontend/tests -v
-uv run --project demo/ovrz --locked python demo/ovrz/verify_http.py
+uv run --locked python -m unittest discover -s services/frontend/tests -v
+uv run --locked python demo/ovrz/verify_http.py
 ```
 
 See [evidence](evidence/README.md), [API contract](API.md),

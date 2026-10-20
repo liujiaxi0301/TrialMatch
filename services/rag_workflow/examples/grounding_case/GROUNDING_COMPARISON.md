@@ -65,8 +65,8 @@ These checks enforce the declared closed-context evidence policy. They are not p
 To reproduce both layers using the existing service-account configuration and matching index:
 
 ```bash
-uv run --project services/rag_workflow --locked \
-  --env-file services/rag_workflow/.env \
+uv run --locked \
+  --env-file .env \
   python -m services.rag_workflow.verify_grounding --live \
   --output-dir artifacts/rag_workflow/grounding_case_comparison_replay
 ```

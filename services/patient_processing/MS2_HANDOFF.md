@@ -10,7 +10,7 @@ Patient implementation baseline: `9d6886a7ea925d9068bc38d669987036727873d5` on `
 
 | Deliverable | Canonical files/evidence |
 | --- | --- |
-| Official synthetic source and reproduction | [README](README.md), [source/member hashes](data/sample_source.json), [pyproject.toml](pyproject.toml), [uv.lock](uv.lock) |
+| Official synthetic source and reproduction | [README](README.md), [source/member hashes](data/sample_source.json), [shared pyproject.toml](../../pyproject.toml), [shared uv.lock](../../uv.lock) |
 | FHIR to facts | [Processor](scripts/process_patients.py), [schema 0.3](SCHEMA.md), [source mapping](examples/fhir_to_facts_mapping.md) |
 | Four-patient sample | [Raw Bundles](data/raw/), [facts](data/processed/patients.jsonl), [coverage](data/processed/coverage_report.json) |
 | Deterministic 25-patient adult T2D cohort | [Facts](data/processed/batch25_patients.jsonl), [selection/member hashes](data/processed/batch25_selection.json), [archive coverage](data/processed/archive_coverage_report.json) |
@@ -27,12 +27,12 @@ Verification records include complete case inputs, responses, settings, source h
 From the repository root:
 
 ```bash
-uv sync --project services/patient_processing --locked
-uv run --project services/patient_processing --locked python services/patient_processing/scripts/process_patients.py \
+uv sync --locked
+uv run --locked python services/patient_processing/scripts/process_patients.py \
   --input services/patient_processing/data/raw \
   --output /tmp/trialmatch-patient-handoff/patients.jsonl \
   --reference-date 2021-11-30
-uv run --project services/patient_processing --locked python -m unittest discover \
+uv run --locked python -m unittest discover \
   -s services/patient_processing/tests -v
 ```
 

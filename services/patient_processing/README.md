@@ -10,16 +10,16 @@ Three selected patients have a Type 2 Diabetes Condition. The fourth covers with
 
 ## Environment and run
 
-Python 3.12.14 and uv 0.12.23 were used for validation. `pyproject.toml` requires Python 3.10 or newer; this module uses only the standard library. From the repository root:
+Python 3.12.14 and uv 0.12.23 were used for the original module validation. This module uses only the standard library. The integrated project uses Python 3.12 and the root `pyproject.toml` and `uv.lock`. From the repository root:
 
 ```bash
 export UV_CACHE_DIR=/tmp/trialmatch-uv-cache
-uv sync --project services/patient_processing --locked
-uv run --project services/patient_processing --locked python services/patient_processing/scripts/process_patients.py \
+uv sync --locked
+uv run --locked python services/patient_processing/scripts/process_patients.py \
   --input services/patient_processing/data/raw \
   --output services/patient_processing/data/processed/patients.jsonl \
   --reference-date 2021-11-30
-uv run --project services/patient_processing --locked python -m unittest discover \
+uv run --locked python -m unittest discover \
   -s services/patient_processing/tests -v
 ```
 
@@ -37,7 +37,7 @@ curl -fL --retry 2 -o /tmp/synthea_sample_data_fhir_r4_nov2021.zip \
 printf '%s  %s\n' 6d3c5433bcae4791bc5c30469d1445b430fb4894d5c13bda15fee0584bbd7778 \
   /tmp/synthea_sample_data_fhir_r4_nov2021.zip | sha256sum -c -
 export UV_CACHE_DIR=/tmp/trialmatch-uv-cache
-uv run --project services/patient_processing --locked python services/patient_processing/scripts/select_archive_cohort.py \
+uv run --locked python services/patient_processing/scripts/select_archive_cohort.py \
   --archive /tmp/synthea_sample_data_fhir_r4_nov2021.zip \
   --expected-sha256 6d3c5433bcae4791bc5c30469d1445b430fb4894d5c13bda15fee0584bbd7778 \
   --reference-date 2021-11-30 --count 25 \
