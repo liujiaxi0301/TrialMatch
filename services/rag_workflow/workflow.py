@@ -6,11 +6,12 @@ from datetime import UTC, datetime
 
 from .config import Settings
 from .data import DataStore, complexity_flags, parse_date, validate_patient
+from .evidence_rules import evidence_rule
 from .index import VectorIndex
 from .judge import explain_trial, judge_batch
 from .providers import GeminiProvider, ProviderError
 from .retrieve import ContextSelector, Retriever, fact_summary
-from .rules import numeric_rule, unknown
+from .rules import unknown
 from .schemas import (
     Coverage,
     Decision,
@@ -135,7 +136,7 @@ class ScreeningWorkflow:
                             )
                         )
                         continue
-                    rule = numeric_rule(criterion, patient)
+                    rule = evidence_rule(criterion, patient)
                     if rule is not None:
                         assessments.append(rule)
                         continue

@@ -34,17 +34,7 @@ STOP = {
 
 
 def tokens(text: str) -> list[str]:
-    # The corpus is English; expand common Chinese questions used in this demo.
-    for source, target in (
-        ("糖尿病", " diabetes type 2 "),
-        ("年龄", " age "),
-        ("用药", " medication treatment "),
-        ("风险", " risk exclusion "),
-        ("肾", " renal kidney "),
-        ("肥胖", " obesity BMI "),
-        ("糖化", " HbA1c "),
-    ):
-        text = text.replace(source, target)
+    # Project questions and source criteria are English.
     return [t for t in re.findall(r"[a-z0-9]+", text.lower()) if t not in STOP]
 
 
@@ -98,6 +88,9 @@ def fact_summary(fact: dict) -> dict:
         "effective_period",
         "dosage_instruction",
         "intent",
+        "medication_class",
+        "reference_range",
+        "timing",
     ):
         if key in fact:
             result[key] = fact[key]

@@ -7,3 +7,5 @@
 **/*credentials*.json
 artifacts
 **/.ruff_cache
+**/.dvc
+**/index_snapshots

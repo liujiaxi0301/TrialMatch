@@ -1,0 +1,24 @@
+{
+  "scope": "Predeclared closed-context technical checks, not clinically validated gold labels",
+  "focus": {
+    "NCT02390973_exc_005": {
+      "expected": "UNKNOWN",
+      "why": "No albumin reference range, low-albumin interpretation or pre-operative measurement timing is supplied."
+    },
+    "NCT02390973_exc_007": {
+      "expected": "UNKNOWN",
+      "why": "No corticosteroid class mapping is supplied for prednisone under the strict closed-context policy; record the raw model proposal separately."
+    },
+    "NCT02390973_exc_010": {
+      "expected": "UNKNOWN",
+      "why": "No known inflammatory bowel disease does not establish absence of all gastrointestinal inflammatory diseases."
+    }
+  },
+  "positive_controls": {
+    "NCT02390973_inc_001": "MET",
+    "NCT02390973_inc_002": "MET",
+    "NCT02390973_inc_003": "MET",
+    "NCT02390973_inc_004": "MET"
+  },
+  "positive_control_note": "All four inclusion statements have direct supporting fixture evidence under the source snapshot interpretation. Report conservatism/over-abstention separately rather than treating all UNKNOWN as success."
+}

@@ -24,6 +24,13 @@ def main(argv=None) -> int:
     manifest = commands.add_parser("make-manifest")
     manifest.add_argument("--trial-count", type=int, default=50)
     commands.add_parser("build-index")
+    commands.add_parser("index-status", help="Verify current source, manifest, and vector checksum")
+    export = commands.add_parser(
+        "export-index", help="Export a portable vector snapshot; no GCP calls"
+    )
+    export.add_argument("--output", type=Path, required=True)
+    restore = commands.add_parser("restore-index", help="Restore a matching snapshot; no GCP calls")
+    restore.add_argument("--input", type=Path, required=True)
     schema = commands.add_parser("export-schema")
     schema.add_argument("--output", type=Path, required=True)
     screen = commands.add_parser("screen")
@@ -72,15 +79,28 @@ def main(argv=None) -> int:
             )
         elif args.command == "build-index":
             settings = replace(settings, mode="live")
-            provider = GeminiProvider(settings)
+            index = VectorIndex(settings, store, store.manifest())
             try:
-                print(
-                    json.dumps(
-                        VectorIndex(settings, store, store.manifest(), provider).build(), indent=2
-                    )
-                )
-            finally:
-                provider.close()
+                result = index.build()
+            except ProviderError as exc:
+                if exc.code != "MISSING_PROVIDER":
+                    raise
+                provider = GeminiProvider(settings)
+                try:
+                    index.provider = provider
+                    result = index.build()
+                finally:
+                    provider.close()
+            print(json.dumps(result, indent=2))
+        elif args.command in {"index-status", "export-index", "restore-index"}:
+            index = VectorIndex(settings, store, store.manifest())
+            if args.command == "index-status":
+                result = index.status()
+            elif args.command == "export-index":
+                result = index.export(args.output)
+            else:
+                result = index.restore(args.input)
+            print(json.dumps(result, indent=2))
         else:
             request = ScreenRequest(
                 patient_id=args.patient_id,

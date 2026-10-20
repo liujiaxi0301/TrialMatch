@@ -20,13 +20,16 @@ def content_hash(value) -> str:
     ).hexdigest()
 
 
-def save_json(path: Path, value) -> None:
+def save_json(path: Path, value, *, sort_keys=False) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     # A unique temporary file also supports concurrent readers/API requests.
     import uuid
 
     temporary = path.with_name(path.name + f".{uuid.uuid4().hex}.tmp")
-    temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    temporary.write_text(
+        json.dumps(value, ensure_ascii=False, indent=2, sort_keys=sort_keys) + "\n",
+        encoding="utf-8",
+    )
     temporary.replace(path)
 
 

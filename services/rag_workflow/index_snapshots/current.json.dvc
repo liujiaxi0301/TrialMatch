@@ -1,0 +1,5 @@
+outs:
+- md5: 7998bf6ae0c40b2ec736baed30a0691b
+  size: 4980086
+  hash: md5
+  path: current.json
