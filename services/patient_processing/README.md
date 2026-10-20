@@ -50,6 +50,23 @@ uv run --project services/patient_processing --locked python services/patient_pr
 
 See [SCHEMA.md](SCHEMA.md) for fields and the contract. `examples/fhir_to_facts_mapping.md` traces one official patient's Condition, Observation, MedicationRequest, and MedicationAdministration back to raw FHIR. Full formatted records are in `examples/anthony_patient.json` and `examples/shakira_patient.json`.
 
+## Cohort limitations and handoff
+
+The 25-patient cohort is a deterministic **adult T2D processing sample, not 25 eligible or confirmed-living trial candidates**. Two records have a source death date on or before `2021-11-30`. The other 23 lack such a recorded death; this does not prove current living status. Preserve the source records and selection manifest rather than silently replacing patients.
+
+| Recorded evidence in the 25-patient cohort | Patients |
+| --- | ---: |
+| HbA1c / BMI / blood pressure | 25 / 25 / 25 |
+| eGFR / AST / ALT | 24 / 5 / 5 |
+| MedicationRequest / MedicationAdministration | 25 / 4 |
+| MedicationDispense / MedicationStatement | 0 / 0 |
+
+These counts indicate presence of exact-coded records, not measurement freshness, normal findings, adherence or absence of exclusions. Zero dispensing/statement records describe this dataset, not the patient's real treatment history. See [cohort evidence](evidence/cohort_scope.json) for codes, input hash and counting method.
+
+`reference_date` is the facts cutoff and stored-age anchor; it is not a real screening, consent or V1 date. Actual study dates are not supplied by this module. Patient facts stay schema 0.3; no trial dates or eligibility labels are injected into the source data.
+
+See [MS2_HANDOFF.md](MS2_HANDOFF.md) for this module's delivery checklist, validation evidence and facts contract. The user confirmed that the TF separately requested verification; the [verification package](../../evaluation/verification/README.md) is therefore included in this personal delivery. The patient processor itself still only extracts facts. Downstream clinical judgments, APIs, retrieval, containers and UI remain with their respective owners.
+
 ## Validation covered
 
 The six tests check official-sample patient links, fact provenance, Medication references, Procedure fields, and separation of orders, definitions, and administrations. Clearly marked synthetic test fixtures check the reference-date boundary, future-event exclusion, missing dates, missing codes and values, unknown historical status, wrong-patient references, and unresolved Medication references. The full archive scan independently verifies its SHA-256, records two nonpatient Bundles separately, and saves the exact first-cohort input hashes. The sample fixtures do not stand in for official patient data.

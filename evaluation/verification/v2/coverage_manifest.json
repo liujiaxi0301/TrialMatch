@@ -1,0 +1,19 @@
+{
+  "assessment_date": null,
+  "status": "DESCRIPTIVE_AUDIT_AND_UNAPPROVED_CASE_PROPOSALS_NO_NEW_MODEL_RUNS",
+  "source_commit": "9d6886a7ea925d9068bc38d669987036727873d5",
+  "fixed_outputs_sha256": {
+    "cohort_evidence_coverage.json": "677d965cf3dc7b33261bec2f19ea8930ab5ba14b2c3e41ffa50b678aaef5f2e6",
+    "cohort_evidence_coverage.csv": "d53365e5634aa75d7a11d2c50fe1c1fc8ceea910c449a521646a8ea7a111c2e3",
+    "proposals/trials/NCT06774950.json": "93a92db5540ba683e90c027a44cc405d8e02de6b7d8a5528738e82aceb924dce",
+    "proposals/patients/475803f3-ae29-ba8d-bdd1-25145a94eaee.json": "ae86eaa6753660be68b137658a6627000341364d82e9e98ee19612923c9527a2",
+    "proposals/patients/80534c6c-b12d-caa5-42de-b179fd7f9695.json": "0280785dd06089819badf2cd10c630b51aeafeb2c0e19c83d524727b63e35b72",
+    "proposals/cases.csv": "85c35a933c5cd5cf986a679d70ab2fb738ce12d3db20be8b05073cdde76dcbcb",
+    "proposals/trial_selection_audit.json": "25613d245129218ce14524ee6f68146f99a2d4e043ce31a780127c0197acb253"
+  },
+  "source_sha256": {
+    "services/patient_processing/data/processed/batch25_patients.jsonl": "33ac165b9be7c564207325ae951d40b9cfdc3b72f8fb2f56e3e58193894331a1",
+    "services/patient_processing/data/processed/batch25_selection.json": "872f1c5c2435326049c0666b29fb2c863f2639baa40135370596d6516aa97d4c"
+  },
+  "analyzer_sha256": "eb6e77db259bc7a78239602d005bd7f7507723277437cf50703d698ae687ed19"
+}

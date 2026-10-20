@@ -1,0 +1,37 @@
+{
+  "recorded_response_count": 2,
+  "case_responses_recorded": {
+    "G01_NO_MAPPING": 1,
+    "G01_WITH_MAPPING": 1
+  },
+  "observed_labels": {
+    "G01_NO_MAPPING": "UNKNOWN",
+    "G01_WITH_MAPPING": "MET"
+  },
+  "required_no_mapping_abstention_observed": true,
+  "structured_citations_valid": {
+    "G01_NO_MAPPING": 9,
+    "G01_WITH_MAPPING": 15
+  },
+  "structured_citations_total": 24,
+  "core_claims_consistent_with_supplied_policy_in_observed_pair": true,
+  "reviewer": "assistant",
+  "review_method": "Source checks and non-blinded assistant review; not independent clinical expert review",
+  "settings_user_confirmed": "Claude Opus 5.5, Claude web, separate new conversations, search off and memory off",
+  "with_mapping_model_reports_personal_memory_context_present": true,
+  "context_isolation_independently_verified": false,
+  "minor_reasoning_findings": 1,
+  "format_warning_each_run": "Markdown code fence despite JSON-only request",
+  "positive_control_response_recorded": true,
+  "paired_response_collection_and_source_review_complete": true,
+  "clean_context_isolation_experiment_complete": false,
+  "actual_vector_retrieval_tested": false,
+  "backend_enforcement_tested": false,
+  "clinical_accuracy_computed": false,
+  "repeated_runs_tested": false,
+  "raw_response_sha256": {
+    "G01_NO_MAPPING_user_upload_baa833933332": "baa833933332d3c6c6312741c08a79ef414467571d0ea08ac4dc3b9bd32cb6e4",
+    "G01_WITH_MAPPING_user_upload_6d540aaa7bf9": "6d540aaa7bf960f87cddb07910769a91dfa18d2160c70e63378315e8b80abd6d"
+  },
+  "scope_limit": "One patient, one diagnosis-only criterion, one run per context; inherited-context caveat retained. Do not infer system-wide grounding or causal improvement over historical policy."
+}
