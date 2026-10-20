@@ -1,0 +1,53 @@
+{
+  "patients": 25,
+  "reference_dates": [
+    "2021-11-30"
+  ],
+  "recorded_deceased_on_or_before_reference": 2,
+  "not_recorded_deceased_not_confirmed_alive": 23,
+  "exact_t2d_code_patients": 25,
+  "age_range_at_reference": [
+    27,
+    104
+  ],
+  "not_recorded_deceased_age_over_75_at_reference": 2,
+  "observation_patients": {
+    "hba1c": 25,
+    "bmi": 25,
+    "blood_pressure": 25,
+    "egfr": 24,
+    "ast": 5,
+    "alt": 5
+  },
+  "hba1c_within_90_days_before_reference_descriptive_only": 7,
+  "medication_patients": {
+    "requests": 25,
+    "definitions": 4,
+    "administrations": 4,
+    "dispenses": 0,
+    "statements": 0
+  },
+  "name_hit_patients_not_terminology_classification": {
+    "sglt2_name_hit": {
+      "requests": 0,
+      "definitions": 0,
+      "administrations": 0,
+      "dispenses": 0,
+      "statements": 0
+    },
+    "insulin_name_hit": {
+      "requests": 6,
+      "definitions": 0,
+      "administrations": 0,
+      "dispenses": 0,
+      "statements": 0
+    },
+    "metformin_name_hit": {
+      "requests": 14,
+      "definitions": 0,
+      "administrations": 0,
+      "dispenses": 0,
+      "statements": 0
+    }
+  }
+}

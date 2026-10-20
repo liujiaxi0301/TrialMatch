@@ -1,0 +1,16 @@
+{
+  "policy_version": "v2.0_offline_prescreening",
+  "assessment_date": "2021-11-30",
+  "assessment_date_provenance": "User selected 2021-11-30 on 2026-10-18; question call_6febb589b9dc454596db4fd032a648bf",
+  "scenario": "Offline replay of newer source criteria against older synthetic records; not historical or current enrollment eligibility",
+  "actual_trial_dates": {
+    "screening_date": null,
+    "consent_date": null,
+    "V1_date": null
+  },
+  "current_phase": "MODE_A_ONLY_FULL_FACTS_AND_FULL_CRITERIA_SEARCH_OFF",
+  "diagnosis_duration_rule": "For preliminary analysis only, use the earliest retained exact-coded T2D Condition recorded_date (onset_date only if recorded_date is missing). Describe it as documented history, not proof of the true first-ever diagnosis date.",
+  "preserve_unknowns": "Do not reconstruct historical source status, actual use, adherence, missing negative history, actual trial dates or consent capacity.",
+  "reference_status": "SUGGESTIONS_NOT_HUMAN_CONFIRMED_GOLD",
+  "recruitment_rule": "Retain the trial snapshot and status; do not infer availability at assessment_date or current availability."
+}

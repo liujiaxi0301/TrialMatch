@@ -1,0 +1,106 @@
+{
+  "checked_at_utc": "2026-10-20T18:33:41.049837+00:00",
+  "scope": [
+    "services/patient_processing",
+    "evaluation/verification"
+  ],
+  "delivery_branch": "feat/patient-processing",
+  "commands": [
+    {
+      "argv": [
+        "uv",
+        "run",
+        "--project",
+        "services/patient_processing",
+        "--locked",
+        "--offline",
+        "python",
+        "evaluation/verification/analyze_cohort.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 5.761,
+      "log": "coverage_check.txt",
+      "log_sha256": "4f1b8ea275b58cf91e04ebf320f96e9f0638f9e0da21acb98b9163e5fbfd859e"
+    },
+    {
+      "argv": [
+        "uv",
+        "run",
+        "--project",
+        "services/patient_processing",
+        "--locked",
+        "--offline",
+        "python",
+        "evaluation/verification/build_v2.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 2.873,
+      "log": "v2_input_check.txt",
+      "log_sha256": "b22de64432b3c7acdf3aa7d05c885a8dc89d83e96658957007d4e24efab7c47b"
+    },
+    {
+      "argv": [
+        "uv",
+        "run",
+        "--project",
+        "services/patient_processing",
+        "--locked",
+        "--offline",
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "evaluation/verification/tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 9.49,
+      "log": "verification_tests.txt",
+      "log_section": "CURRENT MATERIALS: 10 active tool tests",
+      "log_sha256": "0b7cd04b081c49ce834c3505864e30579feda1374bd71dfb4a94182560897272"
+    },
+    {
+      "argv": [
+        "uv",
+        "run",
+        "--project",
+        "services/patient_processing",
+        "--locked",
+        "--offline",
+        "python",
+        "evaluation/verification/check_history.py",
+        "--run-checks"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 21.611,
+      "log": "verification_tests.txt",
+      "log_section": "ARCHIVED MATERIALS: 3 checks and 15 original tool tests",
+      "log_sha256": "0b7cd04b081c49ce834c3505864e30579feda1374bd71dfb4a94182560897272"
+    }
+  ],
+  "active_verification_tool_tests_passed": 10,
+  "archived_verification_tool_tests_passed": 15,
+  "historical_tests_are_a_preserved_suite_not_additional_model_runs": true,
+  "patient_validation_record": {
+    "path": "services/patient_processing/evidence/patient_delivery_checks.json",
+    "sha256": "aceedbb16e50c41bfe745523eff1e388a072973e7ecb77bc3145900b4a47b5b7",
+    "patient_tests_passed": 6
+  },
+  "v2_mode_A_responses": 2,
+  "v2_human_reference_confirmed": 10,
+  "v2_reference_status_counts": {
+    "MET": 3,
+    "NOT_MET": 1,
+    "UNKNOWN": 6
+  },
+  "model_label_agreements": 8,
+  "model_label_disagreements": 2,
+  "grounding_responses": 2,
+  "grounding_citation_source_checks_preserved": 24,
+  "model_calls_in_this_check": 0,
+  "clinical_accuracy_computed": false,
+  "note": "Personal-branch cleanup preserves the module-local uv environment. Current checks and isolated historical replay use no model/cloud calls; they do not establish clinical accuracy or clean model context."
+}

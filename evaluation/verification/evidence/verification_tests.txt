@@ -1,0 +1,97 @@
+CURRENT MATERIALS: 10 active tool tests
+
+test_measurement_ties_preserved_and_issued_not_used_as_measurement (test_cohort_coverage.CohortCoverageTests.test_measurement_ties_preserved_and_issued_not_used_as_measurement) ... ok
+test_medication_definition_and_order_not_actual_administration (test_cohort_coverage.CohortCoverageTests.test_medication_definition_and_order_not_actual_administration) ... ok
+test_multiline_source_omission_rejects_candidate_trial (test_cohort_coverage.CohortCoverageTests.test_multiline_source_omission_rejects_candidate_trial) ... ok
+test_recorded_death_gate_and_missing_death_not_alive_claim (test_cohort_coverage.CohortCoverageTests.test_recorded_death_gate_and_missing_death_not_alive_claim) ... ok
+test_age_uses_explicit_assessment_date_and_birthday_boundary (test_v2.V2Tests.test_age_uses_explicit_assessment_date_and_birthday_boundary) ... ok
+test_complete_inputs_and_no_reference_leak_in_upload_kit (test_v2.V2Tests.test_complete_inputs_and_no_reference_leak_in_upload_kit) ... ok
+test_exclusion_met_is_conflicting_not_supported (test_v2.V2Tests.test_exclusion_met_is_conflicting_not_supported) ... ok
+test_failed_response_preserved_idempotently_and_not_scored (test_v2.V2Tests.test_failed_response_preserved_idempotently_and_not_scored) ... ok
+test_invented_trial_date_wrong_citation_and_final_decision_flagged (test_v2.V2Tests.test_invented_trial_date_wrong_citation_and_final_decision_flagged) ... ok
+test_omitted_clause_is_not_discarded_as_workflow_only (test_v2.V2Tests.test_omitted_clause_is_not_discarded_as_workflow_only) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 2.742s
+
+OK
+
+ARCHIVED MATERIALS: 3 checks and 15 original tool tests
+
+Verified exact pre-cleanup snapshot: 155 files.
+Checked 6 A/B input pairs; 30 source criteria; 60 reference rows; 22/30 round-one references confirmed.
+{
+  "patients": 25,
+  "reference_dates": [
+    "2021-11-30"
+  ],
+  "recorded_deceased_on_or_before_reference": 2,
+  "not_recorded_deceased_not_confirmed_alive": 23,
+  "exact_t2d_code_patients": 25,
+  "age_range_at_reference": [
+    27,
+    104
+  ],
+  "not_recorded_deceased_age_over_75_at_reference": 2,
+  "observation_patients": {
+    "hba1c": 25,
+    "bmi": 25,
+    "blood_pressure": 25,
+    "egfr": 24,
+    "ast": 5,
+    "alt": 5
+  },
+  "hba1c_within_90_days_before_reference_descriptive_only": 7,
+  "medication_patients": {
+    "requests": 25,
+    "definitions": 4,
+    "administrations": 4,
+    "dispenses": 0,
+    "statements": 0
+  },
+  "name_hit_patients_not_terminology_classification": {
+    "sglt2_name_hit": {
+      "requests": 0,
+      "definitions": 0,
+      "administrations": 0,
+      "dispenses": 0,
+      "statements": 0
+    },
+    "insulin_name_hit": {
+      "requests": 6,
+      "definitions": 0,
+      "administrations": 0,
+      "dispenses": 0,
+      "statements": 0
+    },
+    "metformin_name_hit": {
+      "requests": 14,
+      "definitions": 0,
+      "administrations": 0,
+      "dispenses": 0,
+      "statements": 0
+    }
+  }
+}
+V2: 2 full-patient inputs, 5 source clauses each, assessment_date=2021-11-30; 10/10 reference clauses human-confirmed.
+test_measurement_ties_preserved_and_issued_not_used_as_measurement (test_cohort_coverage.CohortCoverageTests.test_measurement_ties_preserved_and_issued_not_used_as_measurement) ... ok
+test_medication_definition_and_order_not_actual_administration (test_cohort_coverage.CohortCoverageTests.test_medication_definition_and_order_not_actual_administration) ... ok
+test_multiline_source_omission_rejects_candidate_trial (test_cohort_coverage.CohortCoverageTests.test_multiline_source_omission_rejects_candidate_trial) ... ok
+test_recorded_death_gate_and_missing_death_not_alive_claim (test_cohort_coverage.CohortCoverageTests.test_recorded_death_gate_and_missing_death_not_alive_claim) ... ok
+test_age_uses_explicit_assessment_date_and_birthday_boundary (test_v2.V2Tests.test_age_uses_explicit_assessment_date_and_birthday_boundary) ... ok
+test_complete_inputs_and_no_reference_leak_in_upload_kit (test_v2.V2Tests.test_complete_inputs_and_no_reference_leak_in_upload_kit) ... ok
+test_exclusion_met_is_conflicting_not_supported (test_v2.V2Tests.test_exclusion_met_is_conflicting_not_supported) ... ok
+test_failed_response_preserved_idempotently_and_not_scored (test_v2.V2Tests.test_failed_response_preserved_idempotently_and_not_scored) ... ok
+test_invented_trial_date_wrong_citation_and_final_decision_flagged (test_v2.V2Tests.test_invented_trial_date_wrong_citation_and_final_decision_flagged) ... ok
+test_omitted_clause_is_not_discarded_as_workflow_only (test_v2.V2Tests.test_omitted_clause_is_not_discarded_as_workflow_only) ... ok
+test_alignment_uses_text_not_web_id_or_order (test_verification.RecoveryTests.test_alignment_uses_text_not_web_id_or_order) ... ok
+test_invalid_json_is_preserved_and_run_id_cannot_replace_bytes (test_verification.RecoveryTests.test_invalid_json_is_preserved_and_run_id_cannot_replace_bytes) ... ok
+test_omission_invalid_fact_and_status_remain_visible (test_verification.RecoveryTests.test_omission_invalid_fact_and_status_remain_visible) ... ok
+test_recovered_bytes_fact_references_and_source_alignment (test_verification.RecoveryTests.test_recovered_bytes_fact_references_and_source_alignment) ... ok
+test_reference_check_accepts_human_edits_and_rejects_false_evidence (test_verification.RecoveryTests.test_reference_check_accepts_human_edits_and_rejects_false_evidence) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.851s
+
+OK
+Historical replay passed; working-tree files were not restored.

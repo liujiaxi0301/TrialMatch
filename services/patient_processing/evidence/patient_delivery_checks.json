@@ -1,0 +1,57 @@
+{
+  "checked_at_utc": "2026-10-20T18:33:40.981034+00:00",
+  "scope": "Patient extraction replay and six existing tests using the original personal module uv environment.",
+  "commands": [
+    {
+      "argv": [
+        "uv",
+        "run",
+        "--project",
+        "services/patient_processing",
+        "--locked",
+        "--offline",
+        "python",
+        "services/patient_processing/scripts/process_patients.py",
+        "--input",
+        "services/patient_processing/data/raw",
+        "--output",
+        "/tmp/trialmatch-personal-patient-f2hqxhju/patients.jsonl",
+        "--reference-date",
+        "2021-11-30"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.27,
+      "log": "sample_run.txt",
+      "log_sha256": "c5ddce57511b25cd0fd6b1051723eb666020227d3a93ddab27ac1e80d648b1f9"
+    },
+    {
+      "argv": [
+        "uv",
+        "run",
+        "--project",
+        "services/patient_processing",
+        "--locked",
+        "--offline",
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "services/patient_processing/tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 9.899,
+      "log": "patient_tests.txt",
+      "log_sha256": "1cc7f187434ad63b38c1a43bdda9586d419878edd1536601c68778943e9c3585"
+    }
+  ],
+  "patient_tests_passed": 6,
+  "sample_output_byte_identical": true,
+  "sample_output_sha256": "e8227c3934bafb639150fda65c58a44ebe07afefc63efed696113ece9b8876fb",
+  "cohort_sha256": "33ac165b9be7c564207325ae951d40b9cfdc3b72f8fb2f56e3e58193894331a1",
+  "full_archive_reprocessed": false,
+  "model_calls": 0,
+  "container_or_api_test": false,
+  "note": "Module-local pyproject.toml and uv.lock remain unchanged. Validation uses uv --project services/patient_processing --locked --offline. Shared container/application execution remains a separate team deliverable."
+}

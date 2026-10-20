@@ -1,0 +1,235 @@
+{
+  "run_id": "G01_NO_MAPPING_user_upload_baa833933332",
+  "case_id": "G01_NO_MAPPING",
+  "source_attachment_id": "file_00000000f43881f6a2c2d98ca1bab832",
+  "recorded_at_utc": "2026-10-19T17:37:34.685153+00:00",
+  "actual_model_run_timestamp": null,
+  "model_user_reported": "Claude Opus 5.5",
+  "model_version_user_reported": "5.5",
+  "interface_user_reported": "Claude web",
+  "new_conversation_user_reported": "TRUE",
+  "search_enabled_user_reported": "FALSE",
+  "memory_enabled_user_reported": "FALSE",
+  "settings_provenance": "User confirmed on 2026-10-19 in reply to question call_8168822889534fb8aab4cd3fea7f3fb3: new conversation, search off, memory off, Claude web. These are user-reported settings, not independent tool traces.",
+  "search_status_model_reported": "NOT_USED",
+  "context_limitations_model_reported": [
+    "Package content was read from the inline attachment text in the conversation; no file-reading or search tool was called, and no vector-retrieval trace exists (context_origin.actual_vector_retrieval is false).",
+    "JSON Pointer array indices (/patient/conditions/14 and /patient/conditions/19) were determined by manual counting of the conditions array in the inline text, not by programmatic resolution; the fact_id in each evidence entry is the authoritative identifier.",
+    "This is a one-criterion, diagnosis-only regression exercise; it does not assess the complete trial, other criteria, or clinical eligibility.",
+    "Self-reported settings (no search, no memory, no external knowledge) are not independently verified tool traces."
+  ],
+  "raw_response_path": "results/raw/G01_NO_MAPPING_user_upload_baa833933332.txt",
+  "response_sha256": "baa833933332d3c6c6312741c08a79ef414467571d0ea08ac4dc3b9bd32cb6e4",
+  "input_sha256": "6f032f436602c6434d647d20e91529576c58ea270e3def0de3b60ce2406a5ae9",
+  "prompt_sha256": "39dcdc979a7202bfc0112dd47d618a86eb63c89ed0788807e1449099c73d96e1",
+  "preparation_manifest_sha256": "a821ba382f1e0e3d78639132e55acec6dc40f5820c2d2656a1381c7f7d955c58",
+  "parse_status": "PARSED",
+  "format_warnings": [
+    "MARKDOWN_CODE_FENCE_DESPITE_JSON_ONLY_REQUEST"
+  ],
+  "response": {
+    "case_id": "G01_NO_MAPPING",
+    "criterion_id": "NCT07580638_inc_002",
+    "criterion_type": "inclusion",
+    "criterion_text": "Diagnosis of Type 2 Diabetes Mellitus (T2DM) .",
+    "precheck_status": "UNKNOWN",
+    "answer": "insufficient information",
+    "criterion_source_id": "repository:NCT07580638:2026-10-11:NCT07580638_inc_002",
+    "evidence": [
+      {
+        "source_type": "criterion",
+        "source_id": "repository:NCT07580638:2026-10-11:NCT07580638_inc_002",
+        "field_path": "/trial_criterion/criterion_text",
+        "quoted_value": "Diagnosis of Type 2 Diabetes Mellitus (T2DM) ."
+      },
+      {
+        "source_type": "patient",
+        "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+        "field_path": "/patient/conditions/14/code/coding/0/code",
+        "quoted_value": "44054006"
+      },
+      {
+        "source_type": "patient",
+        "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+        "field_path": "/patient/conditions/14/code/coding/0/display",
+        "quoted_value": "Diabetes"
+      },
+      {
+        "source_type": "patient",
+        "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+        "field_path": "/patient/conditions/14/code/text",
+        "quoted_value": "Diabetes"
+      },
+      {
+        "source_type": "patient",
+        "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+        "field_path": "/patient/conditions/14/raw_clinical_status/coding/0/code",
+        "quoted_value": "active"
+      },
+      {
+        "source_type": "patient",
+        "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+        "field_path": "/patient/conditions/14/raw_verification_status/coding/0/code",
+        "quoted_value": "confirmed"
+      },
+      {
+        "source_type": "patient",
+        "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+        "field_path": "/patient/conditions/14/onset_date",
+        "quoted_value": "2017-12-11T19:37:30-05:00"
+      },
+      {
+        "source_type": "patient",
+        "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+        "field_path": "/patient/conditions/14/status_at_reference_date",
+        "quoted_value": "undetermined"
+      },
+      {
+        "source_type": "patient",
+        "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/317aae16-fa4a-e38f-b118-7fcdbb88e36b",
+        "field_path": "/patient/conditions/19/code/text",
+        "quoted_value": "Prediabetes"
+      }
+    ],
+    "reasoning": "The criterion (repository:NCT07580638:2026-10-11:NCT07580638_inc_002) requires a diagnosis of Type 2 Diabetes Mellitus specifically. The closest patient fact is Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47, whose source display and text fields both read \"Diabetes\" (code \"44054006\"), with raw clinical status \"active\", verification status \"confirmed\", onset \"2017-12-11T19:37:30-05:00\", and status_at_reference_date \"undetermined\". The supplied source text establishes a diabetes condition record, but no patient field states a subtype: the strings \"Type 2\", \"T2DM\" or \"Type 2 Diabetes Mellitus\" do not appear in this condition's display or text. Under the evidence policy, code \"44054006\" is an opaque identifier, and /allowed_terminology_mappings is an empty array, so no mapping_id exists that could map this code or the term \"Diabetes\" to Type 2 Diabetes Mellitus. The policy also forbids inferring subtype from the trial requirement, cohort selection, laboratory thresholds (e.g., Hemoglobin A1c and Glucose observations in the record), medications (e.g., the MedicationRequest entries whose text names metformin), or remembered code meanings; those facts are therefore not used to supply the subtype. A separate active condition, Condition/317aae16-fa4a-e38f-b118-7fcdbb88e36b, has text \"Prediabetes\"; it neither establishes nor excludes Type 2 Diabetes Mellitus and is noted only as co-existing record context. Because the required clinical meaning (diabetes subtype = Type 2) is missing rather than contradicted, the result is UNKNOWN, not NOT_MET. Additionally, the condition's status at the reference date (2021-11-30) is recorded as \"undetermined\"; the raw \"active\" status is a source status and is not treated as a reconstructed status at the assessment date.",
+    "missing_information": [
+      "No patient source field states the diabetes subtype (e.g., text explicitly naming Type 2 Diabetes Mellitus / T2DM) for Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47.",
+      "No allowed_terminology_mappings entry (mapping_id) maps code 44054006 or the term \"Diabetes\" to Type 2 Diabetes Mellitus; /allowed_terminology_mappings is an empty array.",
+      "Condition status at the reference date 2021-11-30 is \"undetermined\" in /patient/conditions/14/status_at_reference_date; no reconstructed status at the assessment date is supplied."
+    ],
+    "search_status": "NOT_USED",
+    "context_limitations": [
+      "Package content was read from the inline attachment text in the conversation; no file-reading or search tool was called, and no vector-retrieval trace exists (context_origin.actual_vector_retrieval is false).",
+      "JSON Pointer array indices (/patient/conditions/14 and /patient/conditions/19) were determined by manual counting of the conditions array in the inline text, not by programmatic resolution; the fact_id in each evidence entry is the authoritative identifier.",
+      "This is a one-criterion, diagnosis-only regression exercise; it does not assess the complete trial, other criteria, or clinical eligibility.",
+      "Self-reported settings (no search, no memory, no external knowledge) are not independently verified tool traces."
+    ],
+    "actual_trial_dates": {
+      "screening_date": null,
+      "consent_date": null,
+      "V1_date": null
+    },
+    "overall_enrollment_decision": null
+  },
+  "citation_checks": [
+    {
+      "evidence_index": 0,
+      "source_type": "criterion",
+      "source_id": "repository:NCT07580638:2026-10-11:NCT07580638_inc_002",
+      "field_path": "/trial_criterion/criterion_text",
+      "quoted_value_matches": true,
+      "source_owner_matches": true
+    },
+    {
+      "evidence_index": 1,
+      "source_type": "patient",
+      "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+      "field_path": "/patient/conditions/14/code/coding/0/code",
+      "quoted_value_matches": true,
+      "source_owner_matches": true
+    },
+    {
+      "evidence_index": 2,
+      "source_type": "patient",
+      "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+      "field_path": "/patient/conditions/14/code/coding/0/display",
+      "quoted_value_matches": true,
+      "source_owner_matches": true
+    },
+    {
+      "evidence_index": 3,
+      "source_type": "patient",
+      "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+      "field_path": "/patient/conditions/14/code/text",
+      "quoted_value_matches": true,
+      "source_owner_matches": true
+    },
+    {
+      "evidence_index": 4,
+      "source_type": "patient",
+      "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+      "field_path": "/patient/conditions/14/raw_clinical_status/coding/0/code",
+      "quoted_value_matches": true,
+      "source_owner_matches": true
+    },
+    {
+      "evidence_index": 5,
+      "source_type": "patient",
+      "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+      "field_path": "/patient/conditions/14/raw_verification_status/coding/0/code",
+      "quoted_value_matches": true,
+      "source_owner_matches": true
+    },
+    {
+      "evidence_index": 6,
+      "source_type": "patient",
+      "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+      "field_path": "/patient/conditions/14/onset_date",
+      "quoted_value_matches": true,
+      "source_owner_matches": true
+    },
+    {
+      "evidence_index": 7,
+      "source_type": "patient",
+      "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+      "field_path": "/patient/conditions/14/status_at_reference_date",
+      "quoted_value_matches": true,
+      "source_owner_matches": true
+    },
+    {
+      "evidence_index": 8,
+      "source_type": "patient",
+      "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/317aae16-fa4a-e38f-b118-7fcdbb88e36b",
+      "field_path": "/patient/conditions/19/code/text",
+      "quoted_value_matches": true,
+      "source_owner_matches": true
+    }
+  ],
+  "source_review": {
+    "reviewer": "assistant",
+    "method": "Programmatic JSON Pointer/value/source-owner resolution followed by review of the supplied text and reasoning; not independent clinical expert review",
+    "protocol_label_matches": true,
+    "required_abstention_text_matches": true,
+    "criterion_citation_valid": true,
+    "structured_citations_checked": 9,
+    "structured_citations_valid": 9,
+    "distinct_patient_fact_ids": 2,
+    "invented_mapping_citation_detected": false,
+    "reasoning_assessment": "The response does not supply the remembered code meaning and bases UNKNOWN on generic source text plus the absent mapping. No unsupported subtype assignment is observed. Raw active status is not promoted to assessment-date status.",
+    "secondary_context_review": "Mentions of source-active Prediabetes, HbA1c/Glucose observations and metformin text were checked against the complete input. Their detailed raw-status/lab/medication fields are not all included as structured citations; the response says they do not supply subtype evidence. This is a citation-completeness caveat, not a detected false diagnosis claim.",
+    "scope_limit": "One observed no-mapping response under a new explicit protocol. Self-reported settings/context are not tool traces; the with-mapping control and backend retrieval/enforcement are not tested."
+  },
+  "metadata_amendments": [
+    {
+      "recorded_at_utc": "2026-10-19T17:38:25.379821+00:00",
+      "reason": "User supplied previously unknown per-run settings; original raw response and run identity unchanged.",
+      "previous_values": {
+        "interface_user_reported": "UNKNOWN",
+        "new_conversation_user_reported": "UNKNOWN",
+        "search_enabled_user_reported": "UNKNOWN",
+        "memory_enabled_user_reported": "UNKNOWN",
+        "settings_provenance": "User supplied model name only for this response; further settings requested separately. Do not inherit settings from other runs."
+      },
+      "confirmed_values": {
+        "interface_user_reported": "Claude web",
+        "new_conversation_user_reported": "TRUE",
+        "search_enabled_user_reported": "FALSE",
+        "memory_enabled_user_reported": "FALSE",
+        "settings_provenance": "User confirmed on 2026-10-19 in reply to question call_8168822889534fb8aab4cd3fea7f3fb3: new conversation, search off, memory off, Claude web. These are user-reported settings, not independent tool traces."
+      },
+      "confirmation_source": "User reply to question call_8168822889534fb8aab4cd3fea7f3fb3"
+    }
+  ],
+  "delivery_preparation_manifest_sha256": "5ad3f7a1ea24dde61615b1a2d070a29d8f500d5dedfa6db7378df743a8dd7a26",
+  "delivery_revision": {
+    "date": "2026-10-19",
+    "pre_revision_record_sha256": "e12422e82d6225b73bcc69cd28362f376ec7a4bdb8be2dd6376a1130b6a13262",
+    "note": "Original run-time preparation_manifest_sha256 retained; delivery_preparation_manifest_sha256 identifies the revised source-index copy. Raw response, input and prompt hashes unchanged."
+  },
+  "layout_revision": {
+    "date": "2026-10-20",
+    "previous_record_sha256": "29cd655eaeb9080be6cf2f1b8edcbaaea468197f2966614ff96314d9b5d08561",
+    "previous_delivery_preparation_manifest_sha256": "7a40766f30ba63720706ce41178f5cccbf1959be3dc1c5ea4797948a2066003e",
+    "note": "Preparation-source archive references updated; response/input/prompt and user-reported settings unchanged."
+  }
+}
