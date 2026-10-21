@@ -157,8 +157,7 @@ uv run --locked python -m unittest discover -s services/frontend/tests -v
 uv run --locked python demo/ovrz/verify_http.py
 ```
 
-See [evidence](evidence/README.md), [API contract](API.md),
-[English talk track and individual Q&A](PRESENTATION.md), and
-[submission checklist](CHECKLIST.md).
+See [evidence](evidence/README.md), [API contract](API.md), and
+[MS2 application mock-up and user flow](../ms2/TrialMatch-MS2-Mockup.pdf).
 
 Tests check software behavior and provenance, not clinical accuracy.

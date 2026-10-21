@@ -4,6 +4,15 @@ Submission branch: `milestone2`. Application and backend source tested from
 `799fd33785075d009afad57472e04ea0335662b0`; this delivery adds documentation and
 run evidence without changing application behavior.
 
+## Application mock-up
+
+[View the three-page application mock-up and user flow](TrialMatch-MS2-Mockup.pdf).
+It documents the current working UI using actual local screenshots:
+select a patient and enter a question, review candidate trials, then expand
+criterion-level judgments and supporting patient evidence. Each page describes
+the user action, visible feedback and next step. This is the MS2 implementation
+mock-up, not a reconstruction of the original MS1 design.
+
 ## Run the submitted app
 
 From a byte-preserving clone (`git -c core.autocrlf=false clone --branch milestone2
@@ -42,8 +51,7 @@ Generated artifacts are normally ignored; the small evidence set here is deliber
 - Raw snapshot reconstruction (`make reproduce`) is unavailable because the raw
   rebuild handoff is incomplete. The working demo starts from hash-checked,
   committed processed snapshots. See root README.
-- The team must bring final MS2 slides; `docs/ovrz-ms2/PRESENTATION.md` is a talk
-  track, not a finished slide deck. Include the original/refined wireframe or its link.
+- Final team presentation slides are prepared separately from this repository.
 - Repository owner must confirm the required `AC215_<GroupName>` name and
   `ac215harvard` collaborator access; the current contributor cannot administer these.
 - Canvas is not submitted by this delivery. Submit the full final commit SHA.
