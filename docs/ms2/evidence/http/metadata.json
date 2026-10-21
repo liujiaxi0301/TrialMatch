@@ -1,0 +1,20 @@
+{
+  "mode": "offline",
+  "synthetic_patients": true,
+  "patient_count": 25,
+  "trial_count": 1313,
+  "screening_subset_count": 50,
+  "source_hashes": {
+    "trials": "1678d523a1246319d4ae5ba8d2dd5d4ab1359746ad71fb7feee67b20bb07edd6",
+    "criteria": "f7701a9979eb105219407c553703752879f6a2c55fb8736240c8e7bddc96de59",
+    "patients": "33ac165b9be7c564207325ae951d40b9cfdc3b72f8fb2f56e3e58193894331a1"
+  },
+  "patient_reference_dates": [
+    "2021-11-30"
+  ],
+  "trial_snapshot_dates": [
+    "2026-10-11"
+  ],
+  "vector_demo_model": "local-signed-tokenhash-sha256-v1",
+  "health_scope": "Data and manifest only; /health does not verify cloud access or vector readiness."
+}

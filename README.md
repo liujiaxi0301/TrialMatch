@@ -1,5 +1,8 @@
 # TrialMatch
 
+Team: **Orange Chicken**. Submission branch: **milestone2**.
+See [MS2 submission evidence and remaining limitations](docs/ms2/README.md).
+
 TrialMatch uses synthetic patient records to retrieve type 2 diabetes clinical
 trials and review eligibility criteria. Results include supporting evidence,
 screening barriers and missing information.
@@ -32,7 +35,7 @@ The default offline mode uses the included processed data and requires no Google
 | `make up` | Build images, check the existing processed data, and start Chroma and the offline app. |
 | `make live` | Build images, download and restore the Gemini index, and start online screening. |
 | `make down` | Stop the containers and keep stored data. |
-| `make reproduce` | Download versioned raw trials, rebuild and check the processed files, then start the offline app. |
+| `make reproduce` | Reserved for raw snapshot reproduction; currently unavailable because the raw rebuild handoff is incomplete. Use `make up` for the submitted processed-snapshot demo. |
 
 Both modes use `docker-compose.yml`. Run `make up` to switch back to offline.
 Processed data stays under `services/`; generated results go to `artifacts/`.
@@ -55,6 +58,13 @@ See [shared storage](services/rag_workflow/INDEX_VERSIONING.md#5-shared-storage)
 for access and uploads. `make reproduce` uses the same container and credentials for DVC.
 
 ## Data Reproduction
+
+The submitted runnable demo starts from committed processed snapshots. Its
+hashes and criterion parsing are checked by `python prepare_data.py`.
+Raw download-to-snapshot reproduction is **not currently runnable** in this
+branch: `rebuild_snapshot.py` and `raw_snapshot.json` are absent. The existing
+`raw_metadata.json` is a different file and is not a drop-in replacement.
+The guard intentionally stops rather than overwriting the verified snapshot.
 
 `make reproduce` requires the raw snapshot's DVC pointer (`data/raw.dvc`),
 metadata (`data/raw_snapshot.json`) and rebuild script (`scripts/rebuild_snapshot.py`)

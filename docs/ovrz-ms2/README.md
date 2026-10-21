@@ -30,8 +30,8 @@ git -c core.autocrlf=false clone --branch yixiao/infra https://github.com/liujia
 cd TrialMatch
 ```
 
-The consolidation is currently local and has not been pushed. Use this working
-checkout until the team publishes the integrated revision.
+The integrated submission is published on `milestone2`; clone that branch
+for the submitted version. The earlier branch history remains available.
 
 Windows PowerShell:
 
@@ -91,7 +91,8 @@ is saved under `artifacts/infra/`.
 3. Run screening and inspect the returned trial IDs and source links.
 4. Expand criteria to review decisions, evidence and missing information.
 5. Open/download the actual response JSON.
-6. Inspect vector retrieval to show real Chroma context and provenance.
+6. Use `/docs` to call `/retrieve` and inspect Chroma context and provenance.
+   V2 intentionally removes the old Inspect vector retrieval button.
 
 The frontend calls HTTP endpoints; it does not substitute mock results when
 requests fail. Loading, cancel and error states are visible. Changing patients

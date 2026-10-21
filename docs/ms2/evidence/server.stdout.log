@@ -1,0 +1,23 @@
+INFO:     127.0.0.1:63227 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63229 - "GET /patients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63230 - "GET /patients/060e72d3-912e-55cd-0c92-5faa6cb7a6db HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57129 - "POST /screen HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57130 - "POST /retrieve HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57131 - "POST /screen HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57132 - "POST /screen HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:57133 - "POST /screen HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:57134 - "GET /metadata HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51019 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52778 - "GET /assets/style.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51019 - "GET /assets/theme.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56872 - "GET /assets/application.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50118 - "GET /assets/biolume.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60373 - "GET /assets/themes.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61535 - "GET /assets/cells.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51019 - "GET /assets/app.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61535 - "GET /patients HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51019 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60373 - "GET /metadata HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50118 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50118 - "GET /patients/060e72d3-912e-55cd-0c92-5faa6cb7a6db HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50118 - "POST /screen HTTP/1.1" 200 OK

@@ -1,0 +1,5 @@
+{
+  "patient_id": "060e72d3-912e-55cd-0c92-5faa6cb7a6db",
+  "question": "Which type 2 diabetes trials may suit this patient, and what information needs review?",
+  "top_k": 3
+}

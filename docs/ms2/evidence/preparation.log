@@ -1,0 +1,7 @@
+Validated 1313 trials and 18456 criteria.
+Saved data versions to C:\Users\ovrz4\Documents\Codex\2026-10-15\ch\outputs\TrialMatch-infra-ui-v2\artifacts\infra\data_versions.json
+The app reads source data directly from services/.
+[1/4] Validated source snapshots and fixed manifest
+[2/4] Chroma index verified: 607 criterion fragments
+[3/4] Retrieved 5 actual context fragments
+[4/4] Saved request, retrieval context, response, and manifest to C:\Users\ovrz4\Documents\Codex\2026-10-15\ch\outputs\TrialMatch-infra-ui-v2\artifacts\submission-check\ms2

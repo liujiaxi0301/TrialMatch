@@ -1,0 +1,38 @@
+[
+  {
+    "path": "/health",
+    "status": 200
+  },
+  {
+    "path": "/patients",
+    "status": 200
+  },
+  {
+    "path": "/patients/060e72d3-912e-55cd-0c92-5faa6cb7a6db",
+    "status": 200
+  },
+  {
+    "path": "/screen",
+    "status": 200
+  },
+  {
+    "path": "/retrieve",
+    "status": 200
+  },
+  {
+    "path": "/screen",
+    "status": 404
+  },
+  {
+    "path": "/screen",
+    "status": 422
+  },
+  {
+    "path": "/screen",
+    "status": 422
+  },
+  {
+    "path": "/metadata",
+    "status": 200
+  }
+]

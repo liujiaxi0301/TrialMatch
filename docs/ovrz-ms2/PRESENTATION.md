@@ -11,7 +11,7 @@ It also handles loading and errors, preserves unknown findings, and lets us
 inspect the returned JSON.
 
 The default demo uses offline retrieval and rules, which is clearly labeled.
-A separate view shows actual vector retrieval from Chroma. The live model
+The `/retrieve` API shows actual vector retrieval from Chroma. The live model
 workflow is available through the team's configuration.
 
 For MS2, I have prepared the application, API handoff, a dedicated environment
@@ -26,7 +26,7 @@ and container configuration, plus example inputs, outputs and test evidence.”
 5. Collapse the first trial and expand the second trial's criteria. Show an age
    assessment, fact references and UNKNOWN entries.
 6. Open the actual response JSON, then close it.
-7. Click Inspect vector retrieval. Show criterion text, source IDs and distance.
+7. Use `/docs` to call `/retrieve`. Show criterion text, source IDs and distance.
    Explain that this is a separate lexical-vector baseline, not offline
    screening's BM25 retriever.
 8. Show the source hashes and saved input/output in the repository.
@@ -36,7 +36,7 @@ and container configuration, plus example inputs, outputs and test evidence.”
 This is slide content and speaker preparation, not a finished team slide deck.
 
 **Application slide:** patient selection, question submission, actual backend
-response, criterion evidence and missing information. Use `evidence/ui-screening.png`.
+response, criterion evidence and missing information. Use `../ms2/evidence/ui-screening.png`.
 
 **Interface slide:** browser sends patient ID, question and top_k to `/screen`.
 Backend loads patient facts, retrieves trials and returns structured assessments.
@@ -44,7 +44,7 @@ Browser renders the response and preserves errors.
 
 **Reproducibility slide:** locked uv environment, isolated Compose project,
 fixed data hashes, actual query/context artifacts. Use
-`evidence/ui-retrieval.png`. Explicitly state the container/cloud validation
+`../ms2/evidence/retrieved_context.json`. Explicitly state the container/cloud validation
 status supported by the final team's evidence.
 
 ## Individual-check questions and concise answers

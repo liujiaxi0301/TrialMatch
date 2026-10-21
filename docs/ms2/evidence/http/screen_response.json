@@ -1,0 +1,1213 @@
+{
+  "schema_version": "0.1",
+  "run_id": "ef46127442f14e04af1a1ab7a86e6b82",
+  "patient_id": "060e72d3-912e-55cd-0c92-5faa6cb7a6db",
+  "question": "Which type 2 diabetes trials may suit this patient, and what information needs review?",
+  "patient_reference_date": "2021-11-30",
+  "mode": "offline",
+  "result_status": "OK",
+  "answer": "NCT04670666: NEEDS_MORE_INFORMATION. Needs review: This criterion requires interpretation; offline mode does not run an LLM. [NCT04670666_inc_001] Needs review: This criterion requires interpretation; offline mode does not run an LLM. [NCT04670666_inc_002] 25/25 criteria unknown. Match score is not an enrollment probability. Treatment adverse-event risks are not established by this dataset.\n\nNCT04501406: NEEDS_MORE_INFORMATION. Age is 52 at 2021-11-30; checked against the exact age statement. [NCT04501406_inc_002] Needs review: This criterion requires interpretation; offline mode does not run an LLM. [NCT04501406_inc_001] Needs review: This criterion requires interpretation; offline mode does not run an LLM. [NCT04501406_inc_003] 22/23 criteria unknown. Match score is not an enrollment probability. Treatment adverse-event risks are not established by this dataset.\n\nNCT04442451: NEEDS_MORE_INFORMATION. Needs review: This criterion requires interpretation; offline mode does not run an LLM. [NCT04442451_inc_001] Needs review: This criterion requires interpretation; offline mode does not run an LLM. [NCT04442451_inc_002] 14/14 criteria unknown. Match score is not an enrollment probability. Treatment adverse-event risks are not established by this dataset.",
+  "candidate_trials": [
+    {
+      "trial_id": "NCT04670666",
+      "brief_title": "Efficacy and Safety of Madalena Association in the Treatment of Type II Diabetes Mellitus",
+      "recruitment_status": "RECRUITING",
+      "screening_status": "NEEDS_MORE_INFORMATION",
+      "match_score": 0.0,
+      "score_type": "criterion_satisfaction_v0",
+      "eligibility_probability": null,
+      "retrieval": {
+        "trial_id": "NCT04670666",
+        "method": "bm25",
+        "rank_score": 0.01639344,
+        "bm25_score": 34.8432,
+        "semantic_hit": null
+      },
+      "summary": "0/25 criteria known; 0 confirmed barriers; 25 unknown.",
+      "question_response": "NCT04670666: NEEDS_MORE_INFORMATION. Needs review: This criterion requires interpretation; offline mode does not run an LLM. [NCT04670666_inc_001] Needs review: This criterion requires interpretation; offline mode does not run an LLM. [NCT04670666_inc_002] 25/25 criteria unknown. Match score is not an enrollment probability. Treatment adverse-event risks are not established by this dataset.",
+      "assessment_coverage": {
+        "total": 25,
+        "completed": 0,
+        "known": 0,
+        "unknown": 25,
+        "screening_barriers": 0
+      },
+      "criteria_assessments": [
+        {
+          "criterion_id": "NCT04670666_inc_001",
+          "criterion_type": "inclusion",
+          "criterion_text": "Ability to confirm voluntary participation and agree to all trial purposes by signing and dating the informed consent forms;",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04670666_inc_002",
+          "criterion_type": "inclusion",
+          "criterion_text": "Participants with 18 years of age or greater;",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04670666_inc_003",
+          "criterion_type": "inclusion",
+          "criterion_text": "Participants presenting the diagnosis of type II diabetes mellitus, and who did not reach the therapeutic goals of HbA1c with previous dietary, physical exercise guidance and at least 3 months with two anti-hyperglycemic agents (dual therapy);",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04670666_inc_004",
+          "criterion_type": "inclusion",
+          "criterion_text": "HbA1c ≥ 7,5% and ≤ 10,5% and fasting blood glucose \\> 100 mg/dL at the screening visit;",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04670666_inc_005",
+          "criterion_type": "inclusion",
+          "criterion_text": "BMI (body mass index) \\> 19 Kg/m2 and ≤ 45 Kg/m2.",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04670666_exc_001",
+          "criterion_type": "exclusion",
+          "criterion_text": "Any clinical and laboratory findings that, in the judgment of the investigator, may interfere with the safety of research participants;",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04670666_exc_002",
+          "criterion_type": "exclusion",
+          "criterion_text": "History of alcohol abuse or illicit drug use;",
+          "decision": "UNKNOWN",
+          "reason": "Explicit negative history does not cover every required condition and time window; missing: alcohol abuse, illicit drug use",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "Explicit negative history does not cover every required condition and time window; missing: alcohol abuse, illicit drug use"
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": [
+            "NEGATIVE_SCOPE_OR_WINDOW_INCOMPLETE"
+          ]
+        },
+        {
+          "criterion_id": "NCT04670666_exc_003",
+          "criterion_type": "exclusion",
+          "criterion_text": "Participation in a clinical trial in the year prior to this study;",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04670666_exc_004",
+          "criterion_type": "exclusion",
+          "criterion_text": "Pregnancy or risk of pregnancy and lactating patients;",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04670666_exc_005",
+          "criterion_type": "exclusion",
+          "criterion_text": "Known hypersensitivity to the formula components used during the clinical trial;",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04670666_exc_006",
+          "criterion_type": "exclusion",
+          "criterion_text": "Type 1 diabetes mellitus;",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04670666_exc_007",
+          "criterion_type": "exclusion",
+          "criterion_text": "Fasting blood glucose \\> 300 mg/dL;",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04670666_exc_008",
+          "criterion_type": "exclusion",
+          "criterion_text": "Risk factors for volume depletion;",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04670666_exc_009",
+          "criterion_type": "exclusion",
+          "criterion_text": "Impaired renal function and end-stage renal disease;",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04670666_exc_010",
+          "criterion_type": "exclusion",
+          "criterion_text": "Participants with current treatment and continued for more than 15 days with systemic steroids at the time of informed consent;",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04670666_exc_011",
+          "criterion_type": "exclusion",
+          "criterion_text": "Impaired hepatic function;",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04670666_exc_012",
+          "criterion_type": "exclusion",
+          "criterion_text": "Medical history of pancreatic diseases that may suggest insulin deficiency;",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04670666_exc_013",
+          "criterion_type": "exclusion",
+          "criterion_text": "Bariatric surgery in the last two years and/ or other gastrointestinal surgeries that can cause chronic malabsorption syndrome;",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04670666_exc_014",
+          "criterion_type": "exclusion",
+          "criterion_text": "Condition that, in the investigator's judgment, may favor clinically significant changes in CPK levels;",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04670666_exc_015",
+          "criterion_type": "exclusion",
+          "criterion_text": "Medical history of acute coronary syndrome, stroke, unstable congestive heart failure, or respiratory failure within 6 months prior to informed consent;",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04670666_exc_016",
+          "criterion_type": "exclusion",
+          "criterion_text": "Current medical history of cancer and/ or cancer treatment in the last 5 years;",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04670666_exc_017",
+          "criterion_type": "exclusion",
+          "criterion_text": "Medical history of metabolic acidosis and/or using drugs that may cause lactic acidosis;",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04670666_exc_018",
+          "criterion_type": "exclusion",
+          "criterion_text": "Medical history of blood dyscrasia or any other hemolytic disorders;",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04670666_exc_019",
+          "criterion_type": "exclusion",
+          "criterion_text": "Participants using sulfonylureas and/or insulin therapy;",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04670666_exc_020",
+          "criterion_type": "exclusion",
+          "criterion_text": "Treatment with anti-obesity drugs for less than 2 months or with dose change in the last 2 months.",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        }
+      ],
+      "evidence": {},
+      "missing_information": [
+        "This criterion requires interpretation; offline mode does not run an LLM.",
+        "Explicit negative history does not cover every required condition and time window; missing: alcohol abuse, illicit drug use"
+      ],
+      "screening_concerns": [],
+      "review_required": true,
+      "source_url": "https://clinicaltrials.gov/study/NCT04670666",
+      "trial_snapshot_date": "2026-10-11",
+      "warnings": []
+    },
+    {
+      "trial_id": "NCT04501406",
+      "brief_title": "Low-Dose Pioglitazone in Patients With NASH (AIM 2)",
+      "recruitment_status": "RECRUITING",
+      "screening_status": "NEEDS_MORE_INFORMATION",
+      "match_score": 4.3,
+      "score_type": "criterion_satisfaction_v0",
+      "eligibility_probability": null,
+      "retrieval": {
+        "trial_id": "NCT04501406",
+        "method": "bm25",
+        "rank_score": 0.01612903,
+        "bm25_score": 34.2158,
+        "semantic_hit": null
+      },
+      "summary": "1/23 criteria known; 0 confirmed barriers; 22 unknown.",
+      "question_response": "NCT04501406: NEEDS_MORE_INFORMATION. Age is 52 at 2021-11-30; checked against the exact age statement. [NCT04501406_inc_002] Needs review: This criterion requires interpretation; offline mode does not run an LLM. [NCT04501406_inc_001] Needs review: This criterion requires interpretation; offline mode does not run an LLM. [NCT04501406_inc_003] 22/23 criteria unknown. Match score is not an enrollment probability. Treatment adverse-event risks are not established by this dataset.",
+      "assessment_coverage": {
+        "total": 23,
+        "completed": 1,
+        "known": 1,
+        "unknown": 22,
+        "screening_barriers": 0
+      },
+      "criteria_assessments": [
+        {
+          "criterion_id": "NCT04501406_inc_001",
+          "criterion_type": "inclusion",
+          "criterion_text": "Able to communicate meaningfully with the investigator and legally competent to provide written informed consent.",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04501406_inc_002",
+          "criterion_type": "inclusion",
+          "criterion_text": "Aged 21 to 75 years.",
+          "decision": "MET",
+          "reason": "Age is 52 at 2021-11-30; checked against the exact age statement.",
+          "evidence_fact_ids": [
+            "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Patient/060e72d3-912e-55cd-0c92-5faa6cb7a6db"
+          ],
+          "context_fact_ids": [],
+          "missing_information": [],
+          "method": "rule",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04501406_inc_003",
+          "criterion_type": "inclusion",
+          "criterion_text": "Patients with a diagnosis T2DM based on prior medical history, medication use, or results from a fasting plasma glucose or hemoglobin A1c, according to American Diabetes Association guidelines.",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04501406_inc_004",
+          "criterion_type": "inclusion",
+          "criterion_text": "Patients will be allowed to participate the glycosylated hemoglobin (HbA1c) is ≤ 9.5% on diet alone or on a stable dose (for at least 2 months) of the following diabetes medications: metformin, sulfonylurea, acarbose, DPP-IV inhibitors, SGLT2 inhibitors or insulin. The insulin total daily dose should be stable (defined as within 20% for the prior 2 months prior to study entry). A GLP-1 receptor agonist will be allowed if on a stable dose for 6 months prior to enrollment and body weight stable (defined as within 3%) in the prior 3 months. Diabetes medications will be continued at stable doses during the entire study (except if glycemic control deteriorates based on HbA1c; addition of metformin, sulfonylurea, acarbose, DPP-IV or insulin will be allowed if needed; pioglitazone, GLP-1RA or SGLT2 inhibitors will not).",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04501406_inc_005",
+          "criterion_type": "inclusion",
+          "criterion_text": "Hemoglobin level of at least 11.0 g/L (men) or at least 10.0 g/L (women), leukocyte count of at least 3.0 × 109 cells/L, neutrophil count of at least 1.5 × 109 cells/L, platelet count of at least 100 × 109 cells/L, albumin level of at least 2.5 g/L, serum creatinine level of 2.5 mg/dL or less, INR \\> 1.4, bilirubin \\> 1.3 mg/dL (unless if non-conjugated bilirubin elevated in the setting of Gilbert's syndrome), and AST and ALT levels no more than 8 times the ULN.",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04501406_exc_001",
+          "criterion_type": "exclusion",
+          "criterion_text": "Past or current history of alcohol use (\\>20 g/d of ethanol in females or \\>30g/d in males). Alcohol abuse will be ruled out on the basis of physicians' judgment, self-reported alcohol use, and family members' report of the patient's alcohol use. In addition, the Alcohol Use Disorders Identification Test (AUDIT) score will be used to assess alcohol use.",
+          "decision": "UNKNOWN",
+          "reason": "Explicit negative history does not cover every required condition and time window; missing: \\>30g/d in males). alcohol abuse will be ruled out on the basis of physicians' judgment, family members' report of the patient's alcohol use. in addition, or current history of alcohol use (\\>20 g/d of ethanol in females, self-reported alcohol use, the alcohol use disorders identification test (audit) score will be used to assess alcohol use",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "Explicit negative history does not cover every required condition and time window; missing: \\>30g/d in males). alcohol abuse will be ruled out on the basis of physicians' judgment, family members' report of the patient's alcohol use. in addition, or current history of alcohol use (\\>20 g/d of ethanol in females, self-reported alcohol use, the alcohol use disorders identification test (audit) score will be used to assess alcohol use"
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": [
+            "NEGATIVE_SCOPE_OR_WINDOW_INCOMPLETE"
+          ]
+        },
+        {
+          "criterion_id": "NCT04501406_exc_002",
+          "criterion_type": "exclusion",
+          "criterion_text": "Receipt of long-term therapy with medications known to have adverse effects on glucose tolerance, unless the patient has been receiving a stable dose of such agents for 4 weeks before study entry.",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04501406_exc_003",
+          "criterion_type": "exclusion",
+          "criterion_text": "Use of medications that could induce steatosis, such as estrogen or other hormonal replacement therapy, amiodarone, methotrexate, tamoxifen, raloxifene, pharmacological doses of oral glucocorticoids (≥10 mg per day of prednisone or equivalent), or chloroquine.",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04501406_exc_004",
+          "criterion_type": "exclusion",
+          "criterion_text": "Use of vitamin E (doses ≥800 IU/dy) or pioglitazone or any FDA-approved drug for NASH to be approved during the study.",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04501406_exc_005",
+          "criterion_type": "exclusion",
+          "criterion_text": "Any cause of chronic liver disease other than NASH, including but not restricted to alcohol or drug abuse, medication, chronic hepatitis B or C virus infection, autoimmune liver disease, hemochromatosis, Wilson disease (if younger than age 50), α1-antitrypsin deficiency, history of exposure to hepatotoxic drugs or history of primary or metastatic liver cancer.",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04501406_exc_006",
+          "criterion_type": "exclusion",
+          "criterion_text": "Presence of other medical conditions known to cause fatty liver disease.",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04501406_exc_007",
+          "criterion_type": "exclusion",
+          "criterion_text": "Any clinical or laboratory evidence of cirrhosis or hepatic decompensation, such as history of ascites, esophageal bleeding varices, or spontaneous encephalopathy.",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04501406_exc_008",
+          "criterion_type": "exclusion",
+          "criterion_text": "Prior or scheduled surgical procedures, including gastroplasty or jejunoileal or jejunocolic bypass.",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04501406_exc_009",
+          "criterion_type": "exclusion",
+          "criterion_text": "Prior exposure to organic solvents, such as carbon tetrachloride.",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04501406_exc_010",
+          "criterion_type": "exclusion",
+          "criterion_text": "Total parenteral nutrition within the past 6 months.",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04501406_exc_011",
+          "criterion_type": "exclusion",
+          "criterion_text": "Patients with other forms of diabetes other than T2DM.",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04501406_exc_012",
+          "criterion_type": "exclusion",
+          "criterion_text": "History of clinically significant heart disease such as congestive heart failure (New York Heart Association Classification greater than grade II-IV), unstable cardiovascular disease such as unstable angina (i.e., new or worsening symptoms of coronary heart disease within the past 6 months), acute coronary syndrome or coronary artery intervention within the past 6 months, acute myocardial infarction in the past 6 months; history of (within prior 6 months) or current unstable cardiac dysrhythmias.",
+          "decision": "UNKNOWN",
+          "reason": "Explicit negative history does not cover every required condition and time window; missing: acute coronary syndrome, acute myocardial infarction in the past 6 months; history of (within prior 6 months), clinically significant heart disease such as congestive heart failure (new york heart association classification greater than grade ii-iv), coronary artery intervention within the past 6 months, current unstable cardiac dysrhythmias, new, unstable cardiovascular disease such as unstable angina (i.e., worsening symptoms of coronary heart disease within the past 6 months)",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "Explicit negative history does not cover every required condition and time window; missing: acute coronary syndrome, acute myocardial infarction in the past 6 months; history of (within prior 6 months), clinically significant heart disease such as congestive heart failure (new york heart association classification greater than grade ii-iv), coronary artery intervention within the past 6 months, current unstable cardiac dysrhythmias, new, unstable cardiovascular disease such as unstable angina (i.e., worsening symptoms of coronary heart disease within the past 6 months)"
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": [
+            "NEGATIVE_SCOPE_OR_WINDOW_INCOMPLETE"
+          ]
+        },
+        {
+          "criterion_id": "NCT04501406_exc_013",
+          "criterion_type": "exclusion",
+          "criterion_text": "Uncontrolled hypertension (systolic blood pressure \\>160 mmHg and/or diastolic blood pressure \\>100 mmHg); clinically evident peripheral vascular disease (history of claudication); stroke or transient ischemic attack within the prior 6 months; clinically significant pulmonary disease (dyspnea on exertion of ≤1 flight; abnormal breath sounds on auscultation), or kidney disease as defined above per plasma creatinine elevation or significant proteinuria (macroalbuminuria).",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04501406_exc_014",
+          "criterion_type": "exclusion",
+          "criterion_text": "Pregnancy or lactation in women. Must have a negative pregnancy test or at least be two-year post-menopausal. Women with childbearing potential (i.e. fertile, following menarche and until becoming post-menopausal unless permanently sterile) must be using a highly effective method of contraception (i.e. combined (estrogen and progesterone containing) hormonal/ progesterone-only hormonal contraception associated with inhibition of ovulation, intrauterine device, intrauterine hormone-releasing system, bilateral tubal occlusion, vasectomized partner). The contraceptive method will have to be followed for at least one menstruation cycle after the end of the study.",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04501406_exc_015",
+          "criterion_type": "exclusion",
+          "criterion_text": "History of malignancy in the past 5 years and/or active neoplasm with the exception of resolved superficial nonmelanoma skin cancer.",
+          "decision": "UNKNOWN",
+          "reason": "Explicit negative history does not cover every required condition and time window; missing: malignancy in the past 5 years and/or active neoplasm with the exception of resolved superficial nonmelanoma skin cancer",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "Explicit negative history does not cover every required condition and time window; missing: malignancy in the past 5 years and/or active neoplasm with the exception of resolved superficial nonmelanoma skin cancer"
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": [
+            "NEGATIVE_SCOPE_OR_WINDOW_INCOMPLETE"
+          ]
+        },
+        {
+          "criterion_id": "NCT04501406_exc_016",
+          "criterion_type": "exclusion",
+          "criterion_text": "History of bladder disease and/or hematuria or has current hematuria unless due to a recent urinary tract infection.",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04501406_exc_017",
+          "criterion_type": "exclusion",
+          "criterion_text": "Hemostasis disorders or current treatment with anticoagulants.",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04501406_exc_018",
+          "criterion_type": "exclusion",
+          "criterion_text": "Any other criteria that based on the assessment of the research team the patient is deemed to be a poor research candidate.",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        }
+      ],
+      "evidence": {
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Patient/060e72d3-912e-55cd-0c92-5faa6cb7a6db": {
+          "fact_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Patient/060e72d3-912e-55cd-0c92-5faa6cb7a6db",
+          "resource_type": "Patient",
+          "label": "",
+          "event_date": null,
+          "source_file": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json",
+          "source_resource_id": "060e72d3-912e-55cd-0c92-5faa6cb7a6db",
+          "gender": "male",
+          "birth_date": "1969-01-03",
+          "age_years_at_reference": 52,
+          "deceased_date": null
+        }
+      },
+      "missing_information": [
+        "This criterion requires interpretation; offline mode does not run an LLM.",
+        "Explicit negative history does not cover every required condition and time window; missing: \\>30g/d in males). alcohol abuse will be ruled out on the basis of physicians' judgment, family members' report of the patient's alcohol use. in addition, or current history of alcohol use (\\>20 g/d of ethanol in females, self-reported alcohol use, the alcohol use disorders identification test (audit) score will be used to assess alcohol use",
+        "Explicit negative history does not cover every required condition and time window; missing: acute coronary syndrome, acute myocardial infarction in the past 6 months; history of (within prior 6 months), clinically significant heart disease such as congestive heart failure (new york heart association classification greater than grade ii-iv), coronary artery intervention within the past 6 months, current unstable cardiac dysrhythmias, new, unstable cardiovascular disease such as unstable angina (i.e., worsening symptoms of coronary heart disease within the past 6 months)",
+        "Explicit negative history does not cover every required condition and time window; missing: malignancy in the past 5 years and/or active neoplasm with the exception of resolved superficial nonmelanoma skin cancer"
+      ],
+      "screening_concerns": [],
+      "review_required": true,
+      "source_url": "https://clinicaltrials.gov/study/NCT04501406",
+      "trial_snapshot_date": "2026-10-11",
+      "warnings": []
+    },
+    {
+      "trial_id": "NCT04442451",
+      "brief_title": "Mechanisms of Fatigability With Diabetes",
+      "recruitment_status": "RECRUITING",
+      "screening_status": "NEEDS_MORE_INFORMATION",
+      "match_score": 0.0,
+      "score_type": "criterion_satisfaction_v0",
+      "eligibility_probability": null,
+      "retrieval": {
+        "trial_id": "NCT04442451",
+        "method": "bm25",
+        "rank_score": 0.01587302,
+        "bm25_score": 32.3452,
+        "semantic_hit": null
+      },
+      "summary": "0/14 criteria known; 0 confirmed barriers; 14 unknown.",
+      "question_response": "NCT04442451: NEEDS_MORE_INFORMATION. Needs review: This criterion requires interpretation; offline mode does not run an LLM. [NCT04442451_inc_001] Needs review: This criterion requires interpretation; offline mode does not run an LLM. [NCT04442451_inc_002] 14/14 criteria unknown. Match score is not an enrollment probability. Treatment adverse-event risks are not established by this dataset.",
+      "assessment_coverage": {
+        "total": 14,
+        "completed": 0,
+        "known": 0,
+        "unknown": 14,
+        "screening_barriers": 0
+      },
+      "criteria_assessments": [
+        {
+          "criterion_id": "NCT04442451_inc_001",
+          "criterion_type": "inclusion",
+          "criterion_text": "Men and women adults 30 years to 85 years or less",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04442451_inc_002",
+          "criterion_type": "inclusion",
+          "criterion_text": "Pre-diabetes \\[glycosylated hemoglobin (HbA1c) of 5.7-6.4% and fasting plasma glucose 100-125 mg/dL at the time of initial screening\\]",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04442451_inc_003",
+          "criterion_type": "inclusion",
+          "criterion_text": "Controls \\[normoglycemic with a HbA1c level ≤5.6% and fasting blood glucose ≤ 99 mg/dL (5.5 mmol/L)\\]",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04442451_inc_004",
+          "criterion_type": "inclusion",
+          "criterion_text": "Type 2 Diabetes Mellitus \\[elevated glycosylated hemoglobin (HbA1c) \\>6.5% and \\<10%\\]",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04442451_exc_001",
+          "criterion_type": "exclusion",
+          "criterion_text": "Signs or symptoms of neuropathy",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04442451_exc_002",
+          "criterion_type": "exclusion",
+          "criterion_text": "Medications associated with advanced stages of T2D including insulin",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04442451_exc_003",
+          "criterion_type": "exclusion",
+          "criterion_text": "Poor glycemic control (HbA1c\\>10%)",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04442451_exc_004",
+          "criterion_type": "exclusion",
+          "criterion_text": "Peripheral edema",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04442451_exc_005",
+          "criterion_type": "exclusion",
+          "criterion_text": "Severe obesity (BMI, \\>45kg·m-2)",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04442451_exc_006",
+          "criterion_type": "exclusion",
+          "criterion_text": "Untreated hypothyroidism",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04442451_exc_007",
+          "criterion_type": "exclusion",
+          "criterion_text": "Smoking",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04442451_exc_008",
+          "criterion_type": "exclusion",
+          "criterion_text": "Hypertension",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04442451_exc_009",
+          "criterion_type": "exclusion",
+          "criterion_text": "Cardiovascular or musculoskeletal disease that preclude exercise testing",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        },
+        {
+          "criterion_id": "NCT04442451_exc_010",
+          "criterion_type": "exclusion",
+          "criterion_text": "Hormone replacement drugs or vasoactive medications",
+          "decision": "UNKNOWN",
+          "reason": "This criterion requires interpretation; offline mode does not run an LLM.",
+          "evidence_fact_ids": [],
+          "context_fact_ids": [],
+          "missing_information": [
+            "This criterion requires interpretation; offline mode does not run an LLM."
+          ],
+          "method": "abstain",
+          "error_code": null,
+          "model_decision": null,
+          "validation_warnings": []
+        }
+      ],
+      "evidence": {},
+      "missing_information": [
+        "This criterion requires interpretation; offline mode does not run an LLM."
+      ],
+      "screening_concerns": [],
+      "review_required": true,
+      "source_url": "https://clinicaltrials.gov/study/NCT04442451",
+      "trial_snapshot_date": "2026-10-11",
+      "warnings": []
+    }
+  ],
+  "warnings": [
+    "HISTORICAL_SYNTHETIC_DEMO: patient reference date and trial snapshot are separate; this is not current enrollment eligibility.",
+    "OFFLINE_MODE: real BM25 retrieval and deterministic rules; no embeddings or LLM calls; unsupported criteria remain UNKNOWN.",
+    "PATIENT_SOURCE_WARNINGS: 1; source processing omitted some resource types or retained uncertain facts."
+  ],
+  "errors": [],
+  "provenance": {
+    "engine_version": "0.1.0",
+    "created_at": "2026-10-21T02:01:38.477452+00:00",
+    "source_sha256": {
+      "trials": "1678d523a1246319d4ae5ba8d2dd5d4ab1359746ad71fb7feee67b20bb07edd6",
+      "criteria": "f7701a9979eb105219407c553703752879f6a2c55fb8736240c8e7bddc96de59",
+      "patients": "33ac165b9be7c564207325ae951d40b9cfdc3b72f8fb2f56e3e58193894331a1"
+    },
+    "patient_input": "cohort",
+    "embedding_model": null,
+    "generation_model": null,
+    "trial_ids": [
+      "NCT01945840",
+      "NCT01984762",
+      "NCT02037867",
+      "NCT02390973",
+      "NCT02836808",
+      "NCT02973412",
+      "NCT03059069",
+      "NCT03087032",
+      "NCT03156478",
+      "NCT03264352",
+      "NCT03323216",
+      "NCT03549754",
+      "NCT03569735",
+      "NCT03811470",
+      "NCT03821636",
+      "NCT03827382",
+      "NCT03865914",
+      "NCT03878706",
+      "NCT03883412",
+      "NCT03925714",
+      "NCT04024631",
+      "NCT04187443",
+      "NCT04284943",
+      "NCT04326192",
+      "NCT04432025",
+      "NCT04442334",
+      "NCT04442451",
+      "NCT04455867",
+      "NCT04501406",
+      "NCT04583800",
+      "NCT04621396",
+      "NCT04670666",
+      "NCT04687215",
+      "NCT04783441",
+      "NCT04791371",
+      "NCT04802395",
+      "NCT04869098",
+      "NCT04874012",
+      "NCT04880005",
+      "NCT04889053",
+      "NCT04932928",
+      "NCT04941794",
+      "NCT04943861",
+      "NCT05000996",
+      "NCT05015283",
+      "NCT05028140",
+      "NCT05071898",
+      "NCT05124457",
+      "NCT05129345",
+      "NCT05138432"
+    ],
+    "score_definition": "100 * (inclusion MET + exclusion NOT_MET) / total criteria; UNKNOWN remains in denominator; not probability"
+  },
+  "metrics": {
+    "latency_seconds": 0.031,
+    "candidate_count": 3,
+    "corpus_trial_count": 50
+  }
+}
