@@ -1,0 +1,81 @@
+{
+  "scope": "every fhir/*.json member of the verified official archive",
+  "archive": "synthea_sample_data_fhir_r4_nov2021.zip",
+  "archive_sha256": "6d3c5433bcae4791bc5c30469d1445b430fb4894d5c13bda15fee0584bbd7778",
+  "reference_date": "2021-11-30",
+  "total_json_members": 557,
+  "nonpatient_bundle_members": [
+    "fhir/hospitalInformation1637345232350.json",
+    "fhir/practitionerInformation1637345232350.json"
+  ],
+  "total_patients": 555,
+  "adult_patients": 439,
+  "adult_t2d_patients": 32,
+  "t2d_identification": {
+    "resource_type": "Condition",
+    "system": "http://snomed.info/sct",
+    "code": "44054006",
+    "rule": "exact coding match in retained Condition"
+  },
+  "adult_t2d_coverage": {
+    "patients": 32,
+    "hba1c": {
+      "patients": 32,
+      "facts": 719
+    },
+    "glucose": {
+      "patients": 32,
+      "facts": 860
+    },
+    "medications": {
+      "requests": {
+        "patients": 32,
+        "facts": 7689
+      },
+      "definitions": {
+        "patients": 5,
+        "facts": 9
+      },
+      "dispenses": {
+        "patients": 0,
+        "facts": 0
+      },
+      "administrations": {
+        "patients": 5,
+        "facts": 9
+      },
+      "statements": {
+        "patients": 0,
+        "facts": 0
+      }
+    },
+    "procedures": {
+      "patients": 32,
+      "facts": 6341
+    }
+  },
+  "unresolved_medication_references": 0,
+  "warning_reasons": {
+    "resource_types_outside_first_pass_scope": 555
+  },
+  "unprocessed_resource_types": {
+    "AllergyIntolerance": 499,
+    "CarePlan": 1831,
+    "CareTeam": 1831,
+    "Claim": 52068,
+    "Device": 44,
+    "DiagnosticReport": 45020,
+    "DocumentReference": 27812,
+    "Encounter": 27812,
+    "ExplanationOfBenefit": 27812,
+    "ImagingStudy": 297,
+    "Immunization": 8100,
+    "Provenance": 555,
+    "SupplyDelivery": 783
+  },
+  "selection": {
+    "requested": 25,
+    "selected": 25,
+    "rule": "adult (age >= 18) at reference_date with exact T2D Condition; sort by Patient.id then archive member path; take first N"
+  }
+}

@@ -1,0 +1,3 @@
+proposal_id,patient_id,trial_id,age_years_at_reference,reference_date,age_comparator_at_reference_not_final_criterion_status,assessment_date,proposed_assessment_date_for_review,actual_screening_consent_V1_dates,purpose,full_patient_json_bytes,review_state
+P01,475803f3-ae29-ba8d-bdd1-25145a94eaee,NCT06774950,43,2021-11-30,IN_40_TO_65_RANGE,,2021-11-30,UNKNOWN,Supported age component plus T2D evidence and missing-history/workflow handling,373345,PROPOSED_CASE_NOT_GOLD_NOT_RUN
+P02,80534c6c-b12d-caa5-42de-b179fd7f9695,NCT06774950,27,2021-11-30,OUTSIDE_40_TO_65_RANGE,,2021-11-30,UNKNOWN,Clear age conflict in the proposed offline scenario; no missing-record-as-negative shortcut,219117,PROPOSED_CASE_NOT_GOLD_NOT_RUN

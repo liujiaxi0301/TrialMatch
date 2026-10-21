@@ -1,0 +1,91 @@
+{
+  "automated_tests": {
+    "dvc_history_round_trip_tests": 1,
+    "index_version_tests": 15,
+    "passed": 42,
+    "skipped": 0,
+    "total": 42
+  },
+  "backend_manifest_isolation": "PASS",
+  "backends": {
+    "fresh_embedded_restore": {
+      "ids_documents_metadata_equal": true,
+      "max_absolute_vector_difference": 2.9802322387695312e-08,
+      "status": "VERIFIED",
+      "vector_count": 607,
+      "vectors_within_float32_tolerance": true
+    },
+    "isolated_docker_http_restore": {
+      "ids_documents_metadata_equal": true,
+      "max_absolute_vector_difference": 4.254722596463978e-08,
+      "status": "VERIFIED",
+      "vector_count": 607,
+      "vectors_within_float32_tolerance": true
+    },
+    "original_embedded": {
+      "ids_documents_metadata_equal": true,
+      "max_absolute_vector_difference": 0.0,
+      "status": "VERIFIED",
+      "vector_count": 607,
+      "vectors_within_float32_tolerance": true
+    }
+  },
+  "chroma_client_version": "1.5.9",
+  "cloud_api_calls": 0,
+  "date": "2026-10-18",
+  "dvc_status": "Data and pipelines are up to date.",
+  "dvc_version": "3.67.1",
+  "embedding_dimension": 256,
+  "git_push_during_verification": false,
+  "index_version": "8a7004181d978a705d94",
+  "lockfile_check": "PASS",
+  "offline_screen_regression": {
+    "candidate_count": 3,
+    "result_status": "OK"
+  },
+  "part_1_and_part_2_unchanged": true,
+  "real_snapshot_dvc_cache_checkout": "PASS: recovered identical 4.7 MiB snapshot from local DVC cache",
+  "retrieval_probes": [
+    {
+      "same_top_5_trial_ids_across_backends": true,
+      "source_criterion_fragment": "NCT01945840_exc_001__0",
+      "top_5_trial_ids": [
+        "NCT01945840",
+        "NCT04284943",
+        "NCT05071898",
+        "NCT05028140",
+        "NCT04187443"
+      ]
+    },
+    {
+      "same_top_5_trial_ids_across_backends": true,
+      "source_criterion_fragment": "NCT04432025_exc_003__0",
+      "top_5_trial_ids": [
+        "NCT04432025",
+        "NCT01945840",
+        "NCT04442451",
+        "NCT03264352",
+        "NCT04791371"
+      ]
+    },
+    {
+      "same_top_5_trial_ids_across_backends": true,
+      "source_criterion_fragment": "NCT05138432_inc_004__0",
+      "top_5_trial_ids": [
+        "NCT05138432",
+        "NCT04783441",
+        "NCT04791371",
+        "NCT05028140",
+        "NCT05124457"
+      ]
+    }
+  ],
+  "review_status": "Validation complete; owner approved Git publication. Shared DVC remote pending Part 4.",
+  "ruff_check": "PASS",
+  "scope": "ChromaDB logical snapshot versioning; no new model API calls",
+  "shared_dvc_remote_configured": false,
+  "snapshot_records_sha256": "e2b9bcc7902a23a59e06216e99c12ec0d75c8578dab4c3345f63c088ad077356",
+  "snapshot_summary_sha256_matches_file": true,
+  "temporary_docker_container_removed": true,
+  "vector_count": 607
+}

@@ -1,0 +1,182 @@
+{
+  "checked_at_utc": "2026-10-20T19:41:05.582377+00:00",
+  "target_base_commit": "64436278c7294681bef48c2af62807883ad7776b",
+  "cleanup_source_commit": "feae539fd89e8f4a46c50596b2ff2de2245f194e",
+  "scope": "Fresh local cleanup checks in the integrated shared uv environment; existing source-only and regression tests.",
+  "runtime": {
+    "python": "3.12.14",
+    "dependencies": {
+      "pydantic": "2.14.1",
+      "chromadb": "1.5.9",
+      "fastapi": "0.143.2",
+      "google-genai": "2.31.0",
+      "dvc": "3.67.1"
+    }
+  },
+  "commands": [
+    {
+      "label": "Current cohort coverage",
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--offline",
+        "python",
+        "evaluation/verification/analyze_cohort.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 1.178,
+      "log": "evaluation/verification/evidence/coverage_check.txt",
+      "log_sha256": "4f1b8ea275b58cf91e04ebf320f96e9f0638f9e0da21acb98b9163e5fbfd859e"
+    },
+    {
+      "label": "Current V2 inputs",
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--offline",
+        "python",
+        "evaluation/verification/build_v2.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.163,
+      "log": "evaluation/verification/evidence/v2_input_check.txt",
+      "log_sha256": "b22de64432b3c7acdf3aa7d05c885a8dc89d83e96658957007d4e24efab7c47b"
+    },
+    {
+      "label": "CURRENT VERIFICATION: 10 tests",
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--offline",
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "evaluation/verification/tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.325,
+      "log": "evaluation/verification/evidence/verification_tests.txt",
+      "log_sha256": "6d4b33e30899c7967d1630ff855b15323e78b47a1cdd40c2176894ae147c3033",
+      "log_section": "CURRENT VERIFICATION: 10 tests"
+    },
+    {
+      "label": "ARCHIVED VERIFICATION: three checks and 15 preserved tests",
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--offline",
+        "python",
+        "evaluation/verification/check_history.py",
+        "--run-checks"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 3.302,
+      "log": "evaluation/verification/evidence/verification_tests.txt",
+      "log_sha256": "6d4b33e30899c7967d1630ff855b15323e78b47a1cdd40c2176894ae147c3033",
+      "log_section": "ARCHIVED VERIFICATION: three checks and 15 preserved tests"
+    },
+    {
+      "label": "RAG INTEGRATION REGRESSION: 67 existing tests",
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--offline",
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "services/rag_workflow/tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 32.397,
+      "log": "evaluation/verification/evidence/verification_tests.txt",
+      "log_sha256": "6d4b33e30899c7967d1630ff855b15323e78b47a1cdd40c2176894ae147c3033",
+      "log_section": "RAG INTEGRATION REGRESSION: 67 existing tests"
+    },
+    {
+      "label": "FRONTEND INTEGRATION REGRESSION: 5 existing tests",
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--offline",
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "services/frontend/tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 10.65,
+      "log": "evaluation/verification/evidence/verification_tests.txt",
+      "log_sha256": "6d4b33e30899c7967d1630ff855b15323e78b47a1cdd40c2176894ae147c3033",
+      "log_section": "FRONTEND INTEGRATION REGRESSION: 5 existing tests"
+    }
+  ],
+  "shared_uv_lock_check": {
+    "exit_code": 0,
+    "argv": [
+      "uv",
+      "lock",
+      "--check",
+      "--offline"
+    ],
+    "output": "Resolved 172 packages in 4ms\n"
+  },
+  "active_verification_tool_tests_passed": 10,
+  "archived_verification_tool_tests_passed": 15,
+  "patient_tests_passed": 6,
+  "rag_tests_passed": 67,
+  "frontend_tests_passed": 5,
+  "historical_tests_are_a_preserved_suite_not_additional_model_runs": true,
+  "patient_validation_record": {
+    "path": "services/patient_processing/evidence/patient_delivery_checks.json",
+    "sha256": "4ebeea5e1feebfa52a2b1b460b1bc7d27c47de92f1eca1a0aff96371c04ba786"
+  },
+  "v2_mode_A_responses": 2,
+  "v2_human_reference_confirmed": 10,
+  "v2_reference_status_counts": {
+    "MET": 3,
+    "NOT_MET": 1,
+    "UNKNOWN": 6
+  },
+  "model_label_agreements": 8,
+  "model_label_disagreements": 2,
+  "grounding_responses": 2,
+  "grounding_citation_source_checks_preserved": 24,
+  "model_calls_in_this_check": 0,
+  "clinical_accuracy_computed": false,
+  "docker_or_deployed_service_run": false,
+  "network_permission_enabled_for_local_http_test_execution": true,
+  "earlier_rag_attempt": {
+    "status": "INTERRUPTED_NOT_PASSED",
+    "last_test": "test_workflow.IntegrationTests.test_http_contract",
+    "duration_seconds": 221.789,
+    "log_section": "EARLIER RESTRICTED-SANDBOX ATTEMPT: interrupted, not counted as a passing run",
+    "diagnostic": "An isolated HTTP contract test and the full rerun passed with network permission. No repository implementation was changed.",
+    "original_capture_sha256": "2c62dc5f3b5ec10dd4c43587d5d7bf4b21d590ed732a13a7893afacc91714d82",
+    "log_format_note": "The unfinished final progress line is annotated [interrupted] for readability."
+  },
+  "publication_state": "VALIDATION_COMPLETE_USER_APPROVED_FOR_PUBLICATION",
+  "prior_validation_source_commit": "feae539fd89e8f4a46c50596b2ff2de2245f194e",
+  "note": "Passed unit/in-process tests do not resolve the recorded live citation failure or establish Docker deployment, clinical accuracy or clean model context.",
+  "publication_approval": {
+    "target_branch": "yixiao/infra",
+    "user_approved": true,
+    "recorded_at_utc": "2026-10-20T19:53:49.261666+00:00"
+  }
+}

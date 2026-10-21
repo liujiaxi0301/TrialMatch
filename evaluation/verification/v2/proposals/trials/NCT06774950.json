@@ -1,0 +1,79 @@
+{
+  "trial_record": {
+    "trial_id": "NCT06774950",
+    "brief_title": "Value-based Care in Type 2 Diabetes (Enhancing T2D Care)",
+    "official_title": "Améliorer La Prise En Soins Et La Qualité De Vie Des Patients Diabétiques De Type 2 (Alliance DT2)",
+    "overall_status": "NOT_YET_RECRUITING",
+    "conditions": [
+      "Diabetes Mellitus, Type 2"
+    ],
+    "keywords": [],
+    "mesh_terms": [
+      "Diabetes Mellitus, Type 2"
+    ],
+    "study_type": "INTERVENTIONAL",
+    "phases": [
+      "NA"
+    ],
+    "brief_summary": "The aim of this study is to obtain a better glycemic index score (decrease) by improving the care and quality of life of type 2 diabetic patients for a possible remission of diabetes.\n\nThis will be achieved through an intervention that includes a strategy for training primary care physicians and other healthcare professionals in patient therapeutic education (TPE), as well as group and/or individual TPE-related activities/tools made available to patients, funded and encouraged for individualized planning. Intervention follow-up will be carried out by means of quality-of-life questionnaires for patients who have undergone the new method, compared with patients who have received the usual care.",
+    "minimum_age": "40 Years",
+    "maximum_age": "65 Years",
+    "sex": "ALL",
+    "healthy_volunteers": false,
+    "eligibility_text": "Inclusion Criteria:\n\n* Patients with newly diagnosed type 2 diabetes (less than 10 years)\n* Age (between 40 and 65)\n\nExclusion Criteria:\n\n* Significant comorbidities linked to worsening diabetes (such as renal failure, previous myocardial infarction, retinopathy, signs or symptoms of severe diabetic neuropathy or diabetic foot ulcers), severe osteoarthritis or as judged by the attending physician.\n* Pregnant or breast-feeding women\n* Persons who are unable to give signed informed consent",
+    "locations": [],
+    "enrollment_count": 154,
+    "enrollment_type": "ESTIMATED",
+    "start_date": "2025-03-01",
+    "completion_date": "2027-03-01",
+    "last_update_date": "2025-01-14",
+    "source": "ClinicalTrials.gov API v2",
+    "snapshot_date": "2026-10-11"
+  },
+  "parsed_criteria": [
+    {
+      "trial_id": "NCT06774950",
+      "criterion_id": "NCT06774950_inc_001",
+      "criterion_type": "inclusion",
+      "criterion_text": "Patients with newly diagnosed type 2 diabetes (less than 10 years)",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT06774950",
+      "criterion_id": "NCT06774950_inc_002",
+      "criterion_type": "inclusion",
+      "criterion_text": "Age (between 40 and 65)",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT06774950",
+      "criterion_id": "NCT06774950_exc_001",
+      "criterion_type": "exclusion",
+      "criterion_text": "Significant comorbidities linked to worsening diabetes (such as renal failure, previous myocardial infarction, retinopathy, signs or symptoms of severe diabetic neuropathy or diabetic foot ulcers), severe osteoarthritis or as judged by the attending physician.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT06774950",
+      "criterion_id": "NCT06774950_exc_002",
+      "criterion_type": "exclusion",
+      "criterion_text": "Pregnant or breast-feeding women",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT06774950",
+      "criterion_id": "NCT06774950_exc_003",
+      "criterion_type": "exclusion",
+      "criterion_text": "Persons who are unable to give signed informed consent",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    }
+  ],
+  "audit": {
+    "all_raw_clause_text_preserved": true,
+    "limitations": "Preserves compound clinical exclusions and investigator discretion. Metadata is the repository snapshot, not live recruitment verification."
+  }
+}

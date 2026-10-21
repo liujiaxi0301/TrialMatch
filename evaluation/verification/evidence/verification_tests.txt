@@ -1,0 +1,256 @@
+## CURRENT VERIFICATION: 10 tests
+
+test_measurement_ties_preserved_and_issued_not_used_as_measurement (test_cohort_coverage.CohortCoverageTests.test_measurement_ties_preserved_and_issued_not_used_as_measurement) ... ok
+test_medication_definition_and_order_not_actual_administration (test_cohort_coverage.CohortCoverageTests.test_medication_definition_and_order_not_actual_administration) ... ok
+test_multiline_source_omission_rejects_candidate_trial (test_cohort_coverage.CohortCoverageTests.test_multiline_source_omission_rejects_candidate_trial) ... ok
+test_recorded_death_gate_and_missing_death_not_alive_claim (test_cohort_coverage.CohortCoverageTests.test_recorded_death_gate_and_missing_death_not_alive_claim) ... ok
+test_age_uses_explicit_assessment_date_and_birthday_boundary (test_v2.V2Tests.test_age_uses_explicit_assessment_date_and_birthday_boundary) ... ok
+test_complete_inputs_and_no_reference_leak_in_upload_kit (test_v2.V2Tests.test_complete_inputs_and_no_reference_leak_in_upload_kit) ... ok
+test_exclusion_met_is_conflicting_not_supported (test_v2.V2Tests.test_exclusion_met_is_conflicting_not_supported) ... ok
+test_failed_response_preserved_idempotently_and_not_scored (test_v2.V2Tests.test_failed_response_preserved_idempotently_and_not_scored) ... ok
+test_invented_trial_date_wrong_citation_and_final_decision_flagged (test_v2.V2Tests.test_invented_trial_date_wrong_citation_and_final_decision_flagged) ... ok
+test_omitted_clause_is_not_discarded_as_workflow_only (test_v2.V2Tests.test_omitted_clause_is_not_discarded_as_workflow_only) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.051s
+
+OK
+
+## ARCHIVED VERIFICATION: three checks and 15 preserved tests
+
+Verified exact pre-cleanup snapshot: 155 files.
+Checked 6 A/B input pairs; 30 source criteria; 60 reference rows; 22/30 round-one references confirmed.
+{
+  "patients": 25,
+  "reference_dates": [
+    "2021-11-30"
+  ],
+  "recorded_deceased_on_or_before_reference": 2,
+  "not_recorded_deceased_not_confirmed_alive": 23,
+  "exact_t2d_code_patients": 25,
+  "age_range_at_reference": [
+    27,
+    104
+  ],
+  "not_recorded_deceased_age_over_75_at_reference": 2,
+  "observation_patients": {
+    "hba1c": 25,
+    "bmi": 25,
+    "blood_pressure": 25,
+    "egfr": 24,
+    "ast": 5,
+    "alt": 5
+  },
+  "hba1c_within_90_days_before_reference_descriptive_only": 7,
+  "medication_patients": {
+    "requests": 25,
+    "definitions": 4,
+    "administrations": 4,
+    "dispenses": 0,
+    "statements": 0
+  },
+  "name_hit_patients_not_terminology_classification": {
+    "sglt2_name_hit": {
+      "requests": 0,
+      "definitions": 0,
+      "administrations": 0,
+      "dispenses": 0,
+      "statements": 0
+    },
+    "insulin_name_hit": {
+      "requests": 6,
+      "definitions": 0,
+      "administrations": 0,
+      "dispenses": 0,
+      "statements": 0
+    },
+    "metformin_name_hit": {
+      "requests": 14,
+      "definitions": 0,
+      "administrations": 0,
+      "dispenses": 0,
+      "statements": 0
+    }
+  }
+}
+V2: 2 full-patient inputs, 5 source clauses each, assessment_date=2021-11-30; 10/10 reference clauses human-confirmed.
+test_measurement_ties_preserved_and_issued_not_used_as_measurement (test_cohort_coverage.CohortCoverageTests.test_measurement_ties_preserved_and_issued_not_used_as_measurement) ... ok
+test_medication_definition_and_order_not_actual_administration (test_cohort_coverage.CohortCoverageTests.test_medication_definition_and_order_not_actual_administration) ... ok
+test_multiline_source_omission_rejects_candidate_trial (test_cohort_coverage.CohortCoverageTests.test_multiline_source_omission_rejects_candidate_trial) ... ok
+test_recorded_death_gate_and_missing_death_not_alive_claim (test_cohort_coverage.CohortCoverageTests.test_recorded_death_gate_and_missing_death_not_alive_claim) ... ok
+test_age_uses_explicit_assessment_date_and_birthday_boundary (test_v2.V2Tests.test_age_uses_explicit_assessment_date_and_birthday_boundary) ... ok
+test_complete_inputs_and_no_reference_leak_in_upload_kit (test_v2.V2Tests.test_complete_inputs_and_no_reference_leak_in_upload_kit) ... ok
+test_exclusion_met_is_conflicting_not_supported (test_v2.V2Tests.test_exclusion_met_is_conflicting_not_supported) ... ok
+test_failed_response_preserved_idempotently_and_not_scored (test_v2.V2Tests.test_failed_response_preserved_idempotently_and_not_scored) ... ok
+test_invented_trial_date_wrong_citation_and_final_decision_flagged (test_v2.V2Tests.test_invented_trial_date_wrong_citation_and_final_decision_flagged) ... ok
+test_omitted_clause_is_not_discarded_as_workflow_only (test_v2.V2Tests.test_omitted_clause_is_not_discarded_as_workflow_only) ... ok
+test_alignment_uses_text_not_web_id_or_order (test_verification.RecoveryTests.test_alignment_uses_text_not_web_id_or_order) ... ok
+test_invalid_json_is_preserved_and_run_id_cannot_replace_bytes (test_verification.RecoveryTests.test_invalid_json_is_preserved_and_run_id_cannot_replace_bytes) ... ok
+test_omission_invalid_fact_and_status_remain_visible (test_verification.RecoveryTests.test_omission_invalid_fact_and_status_remain_visible) ... ok
+test_recovered_bytes_fact_references_and_source_alignment (test_verification.RecoveryTests.test_recovered_bytes_fact_references_and_source_alignment) ... ok
+test_reference_check_accepts_human_edits_and_rejects_false_evidence (test_verification.RecoveryTests.test_reference_check_accepts_human_edits_and_rejects_false_evidence) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.804s
+
+OK
+Historical replay passed; working-tree files were not restored.
+
+## RAG INTEGRATION REGRESSION: 67 existing tests
+
+test_old_pointer_recovers_original_bytes_from_local_remote (test_dvc_snapshot.DvcSnapshotTests.test_old_pointer_recovers_original_bytes_from_local_remote) ... ok
+test_albumin_requires_supplied_range_and_preoperative_timing (test_evidence_rules.EvidenceRuleTests.test_albumin_requires_supplied_range_and_preoperative_timing) ... ok
+test_bmi_comparisons_boundary_and_wrong_units (test_evidence_rules.EvidenceRuleTests.test_bmi_comparisons_boundary_and_wrong_units) ... ok
+test_boolean_positive_history_conflicts_with_textual_negative (test_evidence_rules.EvidenceRuleTests.test_boolean_positive_history_conflicts_with_textual_negative) ... ok
+test_conflicting_positive_history_blocks_negative_result (test_evidence_rules.EvidenceRuleTests.test_conflicting_positive_history_blocks_negative_result) ... ok
+test_consent_explicit_not_just_alert_and_conflicts (test_evidence_rules.EvidenceRuleTests.test_consent_explicit_not_just_alert_and_conflicts) ... ok
+test_contradictory_pregnancy_results_do_not_pick_favorable (test_evidence_rules.EvidenceRuleTests.test_contradictory_pregnancy_results_do_not_pick_favorable) ... ok
+test_explicit_surgery_history_is_not_missing_documentation (test_evidence_rules.EvidenceRuleTests.test_explicit_surgery_history_is_not_missing_documentation) ... ok
+test_explicit_window_requires_dates_and_rejects_future_or_conflict (test_evidence_rules.EvidenceRuleTests.test_explicit_window_requires_dates_and_rejects_future_or_conflict) ... ok
+test_glucose_sample_type_and_units_not_inferred (test_evidence_rules.EvidenceRuleTests.test_glucose_sample_type_and_units_not_inferred) ... ok
+test_guard_rechecks_source_not_proposal_or_keyword (test_evidence_rules.EvidenceRuleTests.test_guard_rechecks_source_not_proposal_or_keyword) ... ok
+test_known_old_pregnancy_test_cannot_prove_status_at_snapshot (test_evidence_rules.EvidenceRuleTests.test_known_old_pregnancy_test_cannot_prove_status_at_snapshot) ... ok
+test_medication_calendar_boundary_orders_and_negation (test_evidence_rules.EvidenceRuleTests.test_medication_calendar_boundary_orders_and_negation) ... ok
+test_medication_time_computed_independently_of_class (test_evidence_rules.EvidenceRuleTests.test_medication_time_computed_independently_of_class) ... ok
+test_negative_history_window_coverage (test_evidence_rules.EvidenceRuleTests.test_negative_history_window_coverage) ... ok
+test_negative_pregnancy_text_and_predicate_specific_boolean (test_evidence_rules.EvidenceRuleTests.test_negative_pregnancy_text_and_predicate_specific_boolean) ... ok
+test_negative_subtype_does_not_prove_absence_of_broader_disease (test_evidence_rules.EvidenceRuleTests.test_negative_subtype_does_not_prove_absence_of_broader_disease) ... ok
+test_numeric_and_and_unsupported_mixed_logic (test_evidence_rules.EvidenceRuleTests.test_numeric_and_and_unsupported_mixed_logic) ... ok
+test_or_true_unknown_and_all_false (test_evidence_rules.EvidenceRuleTests.test_or_true_unknown_and_all_false) ... ok
+test_positive_history_supports_or_but_wide_positive_window_is_not_recent (test_evidence_rules.EvidenceRuleTests.test_positive_history_supports_or_but_wide_positive_window_is_not_recent) ... ok
+test_qualified_ulcer_negation_covers_both_alternatives (test_evidence_rules.EvidenceRuleTests.test_qualified_ulcer_negation_covers_both_alternatives) ... ok
+test_aliases_map_back_to_original_source_ids (test_evidence_support.EvidenceSupportTests.test_aliases_map_back_to_original_source_ids) ... ok
+test_grouped_explanation_citations_validate_each_identifier (test_evidence_support.EvidenceSupportTests.test_grouped_explanation_citations_validate_each_identifier) ... ok
+test_medication_order_is_not_proof_of_use (test_evidence_support.EvidenceSupportTests.test_medication_order_is_not_proof_of_use) ... ok
+test_real_context_is_bounded_and_t2d_code_is_preserved (test_evidence_support.EvidenceSupportTests.test_real_context_is_bounded_and_t2d_code_is_preserved) ... ok
+test_valid_id_does_not_make_absence_supported (test_evidence_support.EvidenceSupportTests.test_valid_id_does_not_make_absence_supported) ... ok
+test_english_tokenizer_and_retrieval_work_after_translation_removal (test_grounding_case.GroundingCaseTests.test_english_tokenizer_and_retrieval_work_after_translation_removal) ... ok
+test_fixture_preserves_missing_ranges_dates_and_qualified_history (test_grounding_case.GroundingCaseTests.test_fixture_preserves_missing_ranges_dates_and_qualified_history) ... ok
+test_model_failures_are_not_counted_as_grounded_abstention (test_grounding_case.GroundingCaseTests.test_model_failures_are_not_counted_as_grounded_abstention) ... ok
+test_offline_unknowns_are_not_counted_as_live_grounding_success (test_grounding_case.GroundingCaseTests.test_offline_unknowns_are_not_counted_as_live_grounding_success) ... ok
+test_original_claude_focus_claims_are_rejected_despite_valid_source_ids (test_grounding_case.GroundingCaseTests.test_original_claude_focus_claims_are_rejected_despite_valid_source_ids) ... ok
+test_cli_restore_status_export_require_no_cloud_credentials (test_index_versions.IndexVersionTests.test_cli_restore_status_export_require_no_cloud_credentials) ... ok
+test_corrupt_snapshot_is_rejected_before_collection_creation (test_index_versions.IndexVersionTests.test_corrupt_snapshot_is_rejected_before_collection_creation) ... ok
+test_http_readiness_manifest_is_separate_from_embedded_manifest (test_index_versions.IndexVersionTests.test_http_readiness_manifest_is_separate_from_embedded_manifest) ... ok
+test_incompatible_source_model_dimension_subset_and_chunker_rejected (test_index_versions.IndexVersionTests.test_incompatible_source_model_dimension_subset_and_chunker_rejected) ... ok
+test_interrupted_restore_can_resume_matching_partial_records (test_index_versions.IndexVersionTests.test_interrupted_restore_can_resume_matching_partial_records) ... ok
+test_invalid_dimensions_and_nonfinite_vectors_rejected (test_index_versions.IndexVersionTests.test_invalid_dimensions_and_nonfinite_vectors_rejected) ... ok
+test_legacy_manifest_upgrades_without_reembedding (test_index_versions.IndexVersionTests.test_legacy_manifest_upgrades_without_reembedding) ... ok
+test_matching_checksum_does_not_allow_duplicate_ids_or_foreign_source (test_index_versions.IndexVersionTests.test_matching_checksum_does_not_allow_duplicate_ids_or_foreign_source) ... ok
+test_ready_manifest_alone_does_not_populate_new_backend (test_index_versions.IndexVersionTests.test_ready_manifest_alone_does_not_populate_new_backend) ... ok
+test_repeated_build_is_immutable_and_needs_no_provider (test_index_versions.IndexVersionTests.test_repeated_build_is_immutable_and_needs_no_provider) ... ok
+test_same_count_source_tampering_is_detected (test_index_versions.IndexVersionTests.test_same_count_source_tampering_is_detected) ... ok
+test_same_count_vector_tampering_is_detected_and_not_overwritten (test_index_versions.IndexVersionTests.test_same_count_vector_tampering_is_detected_and_not_overwritten) ... ok
+test_two_versions_coexist_and_old_snapshot_can_be_restored_again (test_index_versions.IndexVersionTests.test_two_versions_coexist_and_old_snapshot_can_be_restored_again) ... ok
+test_vector_restore_query_and_deterministic_export (test_index_versions.IndexVersionTests.test_vector_restore_query_and_deterministic_export) ... ok
+test_wrong_distance_collection_is_rejected_before_build_or_restore (test_index_versions.IndexVersionTests.test_wrong_distance_collection_is_rejected_before_build_or_restore) ... ok
+test_actual_25_cohort_50_trials_and_source_ledger (test_workflow.IntegrationTests.test_actual_25_cohort_50_trials_and_source_ledger) ... ok
+test_changed_source_invalidates_manifest (test_workflow.IntegrationTests.test_changed_source_invalidates_manifest) ... ok
+test_http_contract (test_workflow.IntegrationTests.test_http_contract) ... ok
+test_index_version_does_not_mix_models (test_workflow.IntegrationTests.test_index_version_does_not_mix_models) ... ok
+test_inline_patient_and_id_contract (test_workflow.IntegrationTests.test_inline_patient_and_id_contract) ... ok
+test_live_provider_failure_structured (test_workflow.IntegrationTests.test_live_provider_failure_structured) ... ok
+test_real_chroma_persistence_upsert_and_model_version (test_workflow.IntegrationTests.test_real_chroma_persistence_upsert_and_model_version) ... Indexed 31/31 criterion fragments
+ok
+test_403_does_not_retry_or_become_mock (test_workflow.JudgeTests.test_403_does_not_retry_or_become_mock) ... ok
+test_hallucinated_patient_fact_rejected (test_workflow.JudgeTests.test_hallucinated_patient_fact_rejected) ... ok
+test_invalid_output_gets_only_one_repair (test_workflow.JudgeTests.test_invalid_output_gets_only_one_repair) ... ok
+test_age_and_exclusion_direction (test_workflow.RuleTests.test_age_and_exclusion_direction) ... ok
+test_bare_range_is_not_assumed_to_be_age (test_workflow.RuleTests.test_bare_range_is_not_assumed_to_be_age) ... ok
+test_cohort_flag_prevents_flattening (test_workflow.RuleTests.test_cohort_flag_prevents_flattening) ... ok
+test_complete_no_barrier_is_potential_only (test_workflow.RuleTests.test_complete_no_barrier_is_potential_only) ... ok
+test_compound_numeric_text_not_partially_evaluated (test_workflow.RuleTests.test_compound_numeric_text_not_partially_evaluated) ... ok
+test_future_inline_fact_rejected (test_workflow.RuleTests.test_future_inline_fact_rejected) ... ok
+test_hba1c_units_dates_ties (test_workflow.RuleTests.test_hba1c_units_dates_ties) ... ok
+test_missing_age_is_unknown (test_workflow.RuleTests.test_missing_age_is_unknown) ... ok
+test_missing_duplicate_and_foreign_criterion_rejected (test_workflow.RuleTests.test_missing_duplicate_and_foreign_criterion_rejected) ... ok
+test_unknown_never_averaged_away (test_workflow.RuleTests.test_unknown_never_averaged_away) ... ok
+test_wrong_patient_reference_rejected (test_workflow.RuleTests.test_wrong_patient_reference_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 67 tests in 27.650s
+
+OK
+
+## FRONTEND INTEGRATION REGRESSION: 5 existing tests
+
+test_actual_patient_and_static_app (test_application.ApplicationTests.test_actual_patient_and_static_app) ... ok
+test_chroma_context_and_persistence (test_application.ApplicationTests.test_chroma_context_and_persistence) ... Indexed 40/607 criterion fragments
+Indexed 80/607 criterion fragments
+Indexed 120/607 criterion fragments
+Indexed 160/607 criterion fragments
+Indexed 200/607 criterion fragments
+Indexed 240/607 criterion fragments
+Indexed 280/607 criterion fragments
+Indexed 320/607 criterion fragments
+Indexed 360/607 criterion fragments
+Indexed 400/607 criterion fragments
+Indexed 440/607 criterion fragments
+Indexed 480/607 criterion fragments
+Indexed 520/607 criterion fragments
+Indexed 560/607 criterion fragments
+Indexed 600/607 criterion fragments
+Indexed 607/607 criterion fragments
+ok
+test_hash_vectors_are_stable_and_normalized (test_application.ApplicationTests.test_hash_vectors_are_stable_and_normalized) ... ok
+test_invalid_input_has_no_mock_fallback (test_application.ApplicationTests.test_invalid_input_has_no_mock_fallback) ... ok
+test_real_offline_screen_and_evidence (test_application.ApplicationTests.test_real_offline_screen_and_evidence) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 7.546s
+
+OK
+
+## EARLIER RESTRICTED-SANDBOX ATTEMPT: interrupted, not counted as a passing run
+
+The first RAG suite stopped progressing at the in-process HTTP contract test and was terminated after 221.789 seconds. An isolated HTTP check then passed with network permission, followed by the complete rerun above. Repository code was unchanged.
+
+test_old_pointer_recovers_original_bytes_from_local_remote (test_dvc_snapshot.DvcSnapshotTests.test_old_pointer_recovers_original_bytes_from_local_remote) ... ok
+test_albumin_requires_supplied_range_and_preoperative_timing (test_evidence_rules.EvidenceRuleTests.test_albumin_requires_supplied_range_and_preoperative_timing) ... ok
+test_bmi_comparisons_boundary_and_wrong_units (test_evidence_rules.EvidenceRuleTests.test_bmi_comparisons_boundary_and_wrong_units) ... ok
+test_boolean_positive_history_conflicts_with_textual_negative (test_evidence_rules.EvidenceRuleTests.test_boolean_positive_history_conflicts_with_textual_negative) ... ok
+test_conflicting_positive_history_blocks_negative_result (test_evidence_rules.EvidenceRuleTests.test_conflicting_positive_history_blocks_negative_result) ... ok
+test_consent_explicit_not_just_alert_and_conflicts (test_evidence_rules.EvidenceRuleTests.test_consent_explicit_not_just_alert_and_conflicts) ... ok
+test_contradictory_pregnancy_results_do_not_pick_favorable (test_evidence_rules.EvidenceRuleTests.test_contradictory_pregnancy_results_do_not_pick_favorable) ... ok
+test_explicit_surgery_history_is_not_missing_documentation (test_evidence_rules.EvidenceRuleTests.test_explicit_surgery_history_is_not_missing_documentation) ... ok
+test_explicit_window_requires_dates_and_rejects_future_or_conflict (test_evidence_rules.EvidenceRuleTests.test_explicit_window_requires_dates_and_rejects_future_or_conflict) ... ok
+test_glucose_sample_type_and_units_not_inferred (test_evidence_rules.EvidenceRuleTests.test_glucose_sample_type_and_units_not_inferred) ... ok
+test_guard_rechecks_source_not_proposal_or_keyword (test_evidence_rules.EvidenceRuleTests.test_guard_rechecks_source_not_proposal_or_keyword) ... ok
+test_known_old_pregnancy_test_cannot_prove_status_at_snapshot (test_evidence_rules.EvidenceRuleTests.test_known_old_pregnancy_test_cannot_prove_status_at_snapshot) ... ok
+test_medication_calendar_boundary_orders_and_negation (test_evidence_rules.EvidenceRuleTests.test_medication_calendar_boundary_orders_and_negation) ... ok
+test_medication_time_computed_independently_of_class (test_evidence_rules.EvidenceRuleTests.test_medication_time_computed_independently_of_class) ... ok
+test_negative_history_window_coverage (test_evidence_rules.EvidenceRuleTests.test_negative_history_window_coverage) ... ok
+test_negative_pregnancy_text_and_predicate_specific_boolean (test_evidence_rules.EvidenceRuleTests.test_negative_pregnancy_text_and_predicate_specific_boolean) ... ok
+test_negative_subtype_does_not_prove_absence_of_broader_disease (test_evidence_rules.EvidenceRuleTests.test_negative_subtype_does_not_prove_absence_of_broader_disease) ... ok
+test_numeric_and_and_unsupported_mixed_logic (test_evidence_rules.EvidenceRuleTests.test_numeric_and_and_unsupported_mixed_logic) ... ok
+test_or_true_unknown_and_all_false (test_evidence_rules.EvidenceRuleTests.test_or_true_unknown_and_all_false) ... ok
+test_positive_history_supports_or_but_wide_positive_window_is_not_recent (test_evidence_rules.EvidenceRuleTests.test_positive_history_supports_or_but_wide_positive_window_is_not_recent) ... ok
+test_qualified_ulcer_negation_covers_both_alternatives (test_evidence_rules.EvidenceRuleTests.test_qualified_ulcer_negation_covers_both_alternatives) ... ok
+test_aliases_map_back_to_original_source_ids (test_evidence_support.EvidenceSupportTests.test_aliases_map_back_to_original_source_ids) ... ok
+test_grouped_explanation_citations_validate_each_identifier (test_evidence_support.EvidenceSupportTests.test_grouped_explanation_citations_validate_each_identifier) ... ok
+test_medication_order_is_not_proof_of_use (test_evidence_support.EvidenceSupportTests.test_medication_order_is_not_proof_of_use) ... ok
+test_real_context_is_bounded_and_t2d_code_is_preserved (test_evidence_support.EvidenceSupportTests.test_real_context_is_bounded_and_t2d_code_is_preserved) ... ok
+test_valid_id_does_not_make_absence_supported (test_evidence_support.EvidenceSupportTests.test_valid_id_does_not_make_absence_supported) ... ok
+test_english_tokenizer_and_retrieval_work_after_translation_removal (test_grounding_case.GroundingCaseTests.test_english_tokenizer_and_retrieval_work_after_translation_removal) ... ok
+test_fixture_preserves_missing_ranges_dates_and_qualified_history (test_grounding_case.GroundingCaseTests.test_fixture_preserves_missing_ranges_dates_and_qualified_history) ... ok
+test_model_failures_are_not_counted_as_grounded_abstention (test_grounding_case.GroundingCaseTests.test_model_failures_are_not_counted_as_grounded_abstention) ... ok
+test_offline_unknowns_are_not_counted_as_live_grounding_success (test_grounding_case.GroundingCaseTests.test_offline_unknowns_are_not_counted_as_live_grounding_success) ... ok
+test_original_claude_focus_claims_are_rejected_despite_valid_source_ids (test_grounding_case.GroundingCaseTests.test_original_claude_focus_claims_are_rejected_despite_valid_source_ids) ... ok
+test_cli_restore_status_export_require_no_cloud_credentials (test_index_versions.IndexVersionTests.test_cli_restore_status_export_require_no_cloud_credentials) ... ok
+test_corrupt_snapshot_is_rejected_before_collection_creation (test_index_versions.IndexVersionTests.test_corrupt_snapshot_is_rejected_before_collection_creation) ... ok
+test_http_readiness_manifest_is_separate_from_embedded_manifest (test_index_versions.IndexVersionTests.test_http_readiness_manifest_is_separate_from_embedded_manifest) ... ok
+test_incompatible_source_model_dimension_subset_and_chunker_rejected (test_index_versions.IndexVersionTests.test_incompatible_source_model_dimension_subset_and_chunker_rejected) ... ok
+test_interrupted_restore_can_resume_matching_partial_records (test_index_versions.IndexVersionTests.test_interrupted_restore_can_resume_matching_partial_records) ... ok
+test_invalid_dimensions_and_nonfinite_vectors_rejected (test_index_versions.IndexVersionTests.test_invalid_dimensions_and_nonfinite_vectors_rejected) ... ok
+test_legacy_manifest_upgrades_without_reembedding (test_index_versions.IndexVersionTests.test_legacy_manifest_upgrades_without_reembedding) ... ok
+test_matching_checksum_does_not_allow_duplicate_ids_or_foreign_source (test_index_versions.IndexVersionTests.test_matching_checksum_does_not_allow_duplicate_ids_or_foreign_source) ... ok
+test_ready_manifest_alone_does_not_populate_new_backend (test_index_versions.IndexVersionTests.test_ready_manifest_alone_does_not_populate_new_backend) ... ok
+test_repeated_build_is_immutable_and_needs_no_provider (test_index_versions.IndexVersionTests.test_repeated_build_is_immutable_and_needs_no_provider) ... ok
+test_same_count_source_tampering_is_detected (test_index_versions.IndexVersionTests.test_same_count_source_tampering_is_detected) ... ok
+test_same_count_vector_tampering_is_detected_and_not_overwritten (test_index_versions.IndexVersionTests.test_same_count_vector_tampering_is_detected_and_not_overwritten) ... ok
+test_two_versions_coexist_and_old_snapshot_can_be_restored_again (test_index_versions.IndexVersionTests.test_two_versions_coexist_and_old_snapshot_can_be_restored_again) ... ok
+test_vector_restore_query_and_deterministic_export (test_index_versions.IndexVersionTests.test_vector_restore_query_and_deterministic_export) ... ok
+test_wrong_distance_collection_is_rejected_before_build_or_restore (test_index_versions.IndexVersionTests.test_wrong_distance_collection_is_rejected_before_build_or_restore) ... ok
+test_actual_25_cohort_50_trials_and_source_ledger (test_workflow.IntegrationTests.test_actual_25_cohort_50_trials_and_source_ledger) ... ok
+test_changed_source_invalidates_manifest (test_workflow.IntegrationTests.test_changed_source_invalidates_manifest) ... ok
+test_http_contract (test_workflow.IntegrationTests.test_http_contract) ... [interrupted]

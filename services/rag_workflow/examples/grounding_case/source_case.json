@@ -1,0 +1,34 @@
+{
+  "case_id": "claude_synthetic_001",
+  "source_url": "https://claude.ai/share/2450b3ad-ebee-4f78-afa2-ca455eee2485",
+  "source_kind": "User-supplied Claude synthetic sanity-test case; not Synthea or a real patient",
+  "patient_id": "SYNTHETIC_001",
+  "trial_id": "NCT02390973",
+  "demographics_statement": "52-year-old female",
+  "statements": {
+    "diagnosis": "Type 2 diabetes diagnosed 6 years ago.",
+    "bmi": "BMI: 37.2 kg/m².",
+    "hba1c": "HbA1c: 7.8%.",
+    "fasting_glucose": "Fasting glucose: 8.1 mmol/L.",
+    "consent": "The patient is alert, understands the study information, and is able to provide informed consent.",
+    "pregnancy_test": "Pregnancy test is negative.",
+    "surgery_history": "No history of esophageal, gastric, or bariatric surgery.",
+    "ulcer_history": "No known history of gastric or duodenal ulcer.",
+    "albumin": "Serum albumin is 4.0 g/dL.",
+    "prednisone": "The patient took oral prednisone for an asthma exacerbation 2 weeks ago.",
+    "substance_history": "No history of drug use or alcohol abuse within the last 12 months.",
+    "ibd_history": "No known history of inflammatory bowel disease.",
+    "organ_disease_unknown": "The available record does not document whether the patient has severe renal, hepatic, cardiac, or pulmonary disease.",
+    "psychological_unknown": "The available record does not contain a formal psychological assessment.",
+    "gi_symptoms_unknown": "There is no information about unexplained intermittent vomiting, severe abdominal pain, chronic diarrhea, or chronic constipation."
+  },
+  "baseline_protocol_summary": "Assess the supplied trial criteria using only supplied patient information; missing documentation is not negative evidence; cite patient evidence. The baseline is not gold truth.",
+  "baseline_model_version": "Not available in the shared conversation",
+  "normalization_notes": [
+    "The fixture reference_date 2026-10-11 is a test-only anchor. It was not supplied as a patient date in the source.",
+    "All laboratory measurements remain undated. No reference ranges, diagnoses, normality flags or medication-class mappings are added.",
+    "The relative prednisone statement is preserved; no absolute administration date or treatment duration is invented.",
+    "No-known-history and missing-information statements remain qualified text, not definitive false Boolean diagnoses.",
+    "Resource types, fact IDs, labels and lab-code annotations are adapter metadata; source statements are retained in values."
+  ]
+}

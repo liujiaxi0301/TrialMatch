@@ -1,0 +1,18 @@
+{
+  "base_commit": "8eba4c0c560d1c58a2c390e63b70ed5bd7cf2470",
+  "python": "3.12.14",
+  "system": "Windows",
+  "mode": "offline",
+  "frontend_tests": {
+    "run": 5,
+    "passed": 5
+  },
+  "http_checks": 9,
+  "vector_count": 607,
+  "dependency_lock_check": "PASS",
+  "javascript_syntax": "PASS",
+  "compose_check": "YAML/build paths verified; not executed by Docker",
+  "docker_executed": false,
+  "new_cloud_model_calls": false,
+  "existing_tracked_files_changed": 0
+}
