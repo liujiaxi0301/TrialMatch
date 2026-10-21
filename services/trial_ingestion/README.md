@@ -22,10 +22,10 @@ parse_criteria.py
 data/processed/criteria.jsonl
 ```
 
-The complete pipeline can be run with a single command:
+The complete pipeline can be run from the repository root with:
 
 ```bash
-python3 services/trial_ingestion/scripts/run_pipeline.py
+uv run python services/trial_ingestion/scripts/run_pipeline.py
 ```
 
 ## Current Scope
@@ -44,6 +44,9 @@ ClinicalTrials.gov search results are treated as candidate studies. A separate T
 
 ```text
 trial_ingestion/
+├── .dvc/
+│   └── config
+├── .dvcignore
 ├── README.md
 ├── SCHEMA.md
 ├── scripts/
@@ -54,6 +57,8 @@ trial_ingestion/
 └── data/
     ├── raw/
     │   └── *.json
+    ├── raw.dvc
+    ├── raw_metadata.json
     └── processed/
         ├── trials.jsonl
         └── criteria.jsonl
@@ -64,7 +69,7 @@ trial_ingestion/
 From the repository root:
 
 ```bash
-python3 services/trial_ingestion/scripts/run_pipeline.py
+uv run python services/trial_ingestion/scripts/run_pipeline.py
 ```
 
 The pipeline runs three stages in sequence:
@@ -168,6 +173,35 @@ Ambiguous records:              82
 
 These counts represent the current ClinicalTrials.gov snapshot and may change as registry data are updated.
 
+## Data Versioning
+
+The raw ClinicalTrials.gov snapshot is versioned with DVC.
+
+The Git repository tracks:
+
+```text
+data/raw.dvc
+data/raw_metadata.json
+```
+
+The raw JSON files themselves are stored in the shared DVC remote rather than Git.
+
+To restore the versioned raw snapshot, run the following from `services/trial_ingestion`:
+
+```bash
+uv run dvc pull
+```
+
+The current DVC snapshot contains 1,385 raw trial JSON files.
+
+Provenance information, including the API source, query condition, recruitment statuses, retrieval date, DVC checksum, and snapshot size, is recorded in:
+
+```text
+data/raw_metadata.json
+```
+
+Running `fetch_trials.py` or the full pipeline retrieves a new live ClinicalTrials.gov snapshot and may therefore change the raw dataset. A new snapshot should be re-versioned with DVC before being shared.
+
 ## Downstream Handoff
 
 The retrieval/workflow module does not need to read the raw ClinicalTrials.gov files.
@@ -196,6 +230,8 @@ This module is responsible for:
 - ClinicalTrials.gov data collection
 - API pagination
 - raw data snapshots
+- DVC-based raw data versioning
+- data provenance metadata
 - trial normalization
 - T2D corpus selection
 - eligibility criterion parsing
