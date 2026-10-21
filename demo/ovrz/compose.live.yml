@@ -1,0 +1,11 @@
+# Explicit opt-in. Requires GCP credentials and a successful live build-index.
+# Preparation retains offline mode and the separate local-vector baseline.
+services:
+  rag-api:
+    environment:
+      TRIALMATCH_MODE: live
+      GCP_PROJECT: ${GCP_PROJECT:?Set GCP_PROJECT}
+      GCP_LOCATION: ${GCP_LOCATION:-global}
+      GOOGLE_APPLICATION_CREDENTIALS: /secrets/service-account.json
+    volumes:
+      - ${GOOGLE_APPLICATION_CREDENTIALS:?Set the absolute credential file path}:/secrets/service-account.json:ro
