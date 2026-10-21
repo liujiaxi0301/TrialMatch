@@ -35,7 +35,7 @@ The default offline mode uses the included processed data and requires no Google
 | `make up` | Build images, check the existing processed data, and start Chroma and the offline app. |
 | `make live` | Build images, download and restore the Gemini index, and start online screening. |
 | `make down` | Stop the containers and keep stored data. |
-| `make reproduce` | Reserved for raw snapshot reproduction; currently unavailable because the raw rebuild handoff is incomplete. Use `make up` for the submitted processed-snapshot demo. |
+| `make reproduce` | Download the fixed raw trials with DVC, rebuild and verify the processed files, and start the offline app. |
 
 Both modes use `docker-compose.yml`. Run `make up` to switch back to offline.
 Processed data stays under `services/`; generated results go to `artifacts/`.
@@ -59,18 +59,22 @@ for access and uploads. `make reproduce` uses the same container and credentials
 
 ## Data Reproduction
 
-The submitted runnable demo starts from committed processed snapshots. Its
-hashes and criterion parsing are checked by `python prepare_data.py`.
-Raw download-to-snapshot reproduction is **not currently runnable** in this
-branch: `rebuild_snapshot.py` and `raw_snapshot.json` are absent. The existing
-`raw_metadata.json` is a different file and is not a drop-in replacement.
-The guard intentionally stops rather than overwriting the verified snapshot.
+Set up the credentials above with access to the shared DVC storage, then run:
 
-`make reproduce` requires the raw snapshot's DVC pointer (`data/raw.dvc`),
-metadata (`data/raw_snapshot.json`) and rebuild script (`scripts/rebuild_snapshot.py`)
-under `services/trial_ingestion/`. Rebuilt files are checked against the demo
-manifest before replacing the processed data. The command stops if required
-files are missing or checksums do not match.
+```bash
+make reproduce
+```
+
+This restores the 1,385 raw trial JSON files tracked by `data/raw.dvc` and uses
+the existing trial normalization and criterion parsing functions to rebuild
+1,313 trials and 18,456 criteria. It uses `data/raw_metadata.json` for the raw
+snapshot information and preserves the processing date in the demo manifest
+(`2026-10-11`). It does not fetch a new ClinicalTrials.gov snapshot.
+
+Both rebuilt files must match the demo manifest's checksums before either
+processed file is replaced. The command then starts the offline app using
+the existing patient data. The reproduction record is saved to
+`artifacts/infra/raw_reproduction.json`. Gemini access is not needed for this command.
 
 ## Documentation
 

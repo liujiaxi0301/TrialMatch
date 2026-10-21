@@ -3,12 +3,9 @@
 import argparse
 import hashlib
 import json
-import shutil
-import subprocess
-import sys
 from pathlib import Path
-from tempfile import TemporaryDirectory
 
+from services.trial_ingestion.scripts.normalize_trial import normalize_trial, is_t2d_related
 from services.trial_ingestion.scripts.parse_criteria import parse_trial_criteria
 
 ROOT = Path(__file__).resolve().parent
@@ -16,34 +13,44 @@ OUTPUT = ROOT / "artifacts/infra"
 TRIAL_DATA = ROOT / "services/trial_ingestion/data/processed"
 PATIENTS = ROOT / "services/patient_processing/data/processed/batch25_patients.jsonl"
 MANIFEST = ROOT / "services/rag_workflow/examples/demo_manifest.json"
-REBUILD_SCRIPT = ROOT / "services/trial_ingestion/scripts/rebuild_snapshot.py"
-RAW_MANIFEST = ROOT / "services/trial_ingestion/data/raw_snapshot.json"
+RAW_DATA = ROOT / "services/trial_ingestion/data/raw"
+RAW_METADATA = ROOT / "services/trial_ingestion/data/raw_metadata.json"
 
 
 def rebuild_trials(manifest):
-    if not REBUILD_SCRIPT.is_file() or not RAW_MANIFEST.is_file():
+    metadata = json.loads(RAW_METADATA.read_text(encoding="utf-8"))
+    raw_files = sorted(RAW_DATA.glob("*.json"))
+    if len(raw_files) != metadata["raw_file_count"]:
         raise SystemExit(
-            "Raw snapshot handoff is incomplete: rebuild_snapshot.py and "
-            "data/raw_snapshot.json are required. See README.md under Data Reproduction."
+            "Raw trial count does not match raw_metadata.json. "
+            "Run make reproduce to restore the DVC snapshot."
         )
 
-    with TemporaryDirectory(prefix="trialmatch-trials-") as directory:
-        output = Path(directory)
-        subprocess.run(
-            [sys.executable, str(REBUILD_SCRIPT), "--output", str(output)],
-            check=True,
-        )
-        # Check both outputs before replacing either committed source file.
-        for name in ("trials", "criteria"):
-            source = output / f"{name}.jsonl"
-            digest = hashlib.sha256(source.read_bytes()).hexdigest()
-            if digest != manifest["source_sha256"][name]:
-                raise SystemExit(
-                    f"Rebuilt {name} does not match the demo manifest. "
-                    "Existing processed data was not changed."
-                )
-        for name in ("trials", "criteria"):
-            shutil.copyfile(output / f"{name}.jsonl", TRIAL_DATA / f"{name}.jsonl")
+    snapshot_date, = manifest["trial_snapshot_dates"]
+    trials = []
+    for source in raw_files:
+        trial = normalize_trial(json.loads(source.read_text(encoding="utf-8")))
+        if is_t2d_related(trial):
+            # Reproduce the recorded processing date, not today's date.
+            trial["snapshot_date"] = snapshot_date
+            trials.append(trial)
+    criteria = [criterion for trial in trials for criterion in parse_trial_criteria(trial)]
+    outputs = {
+        name: "".join(json.dumps(record) + "\n" for record in records).encode("utf-8")
+        for name, records in (("trials", trials), ("criteria", criteria))
+    }
+
+    # Check both outputs before replacing either committed source file.
+    for name, content in outputs.items():
+        if hashlib.sha256(content).hexdigest() != manifest["source_sha256"][name]:
+            raise SystemExit(
+                f"Rebuilt {name} does not match the demo manifest. "
+                "Existing processed data was not changed."
+            )
+    TRIAL_DATA.mkdir(parents=True, exist_ok=True)
+    for name, content in outputs.items():
+        (TRIAL_DATA / f"{name}.jsonl").write_bytes(content)
+    print(f"Rebuilt trial data from {len(raw_files)} raw records, dated {snapshot_date}.")
 
 
 def main():
@@ -80,9 +87,10 @@ def main():
     if args.from_raw:
         reproduction = {
             "raw_snapshot": {
-                "source": str(RAW_MANIFEST.relative_to(ROOT)),
-                "sha256": hashlib.sha256(RAW_MANIFEST.read_bytes()).hexdigest(),
+                "source": str(RAW_METADATA.relative_to(ROOT)),
+                "sha256": hashlib.sha256(RAW_METADATA.read_bytes()).hexdigest(),
             },
+            "trial_snapshot_dates": manifest["trial_snapshot_dates"],
             "outputs": versions,
         }
         (OUTPUT / "raw_reproduction.json").write_text(

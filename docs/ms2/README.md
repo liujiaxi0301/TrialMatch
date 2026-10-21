@@ -1,8 +1,9 @@
 # Milestone 2 — Orange Chicken / TrialMatch
 
-Submission branch: `milestone2`. Application and backend source tested from
-`799fd33785075d009afad57472e04ea0335662b0`; this delivery adds documentation and
-run evidence without changing application behavior.
+Submission branch: `milestone2`. The original evidence below uses application
+and backend source from `799fd33785075d009afad57472e04ea0335662b0`.
+Raw snapshot reproduction was connected after the submission deadline on
+2026-10-20 (US Eastern); it is not part of that original run evidence.
 
 ## Application mock-up
 
@@ -51,9 +52,9 @@ Generated artifacts are normally ignored; the small evidence set here is deliber
   successful integrated Docker execution; screenshots of that run remain to be
   added. Historical module Docker/Gemini evidence is under
   `services/rag_workflow/examples/`. The local evidence above is a separate run.
-- Raw snapshot reconstruction (`make reproduce`) is unavailable because the raw
-  rebuild handoff is incomplete. The working demo starts from hash-checked,
-  committed processed snapshots. See root README.
+- `make reproduce` restores the DVC raw snapshot and rebuilds the processed
+  trials and criteria with the existing ingestion functions. Both output
+  checksums must match the fixed demo manifest. See root README.
 - Final team presentation slides are prepared separately from this repository.
 - Repository owner must confirm the required `AC215_<GroupName>` name and
   `ac215harvard` collaborator access; the current contributor cannot administer these.
