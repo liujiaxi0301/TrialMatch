@@ -1,16 +1,19 @@
 # Evidence and scope
 
-`frontend-tests.txt`, `pipeline/`, and `http/` record execution against this
-additive checkout. Tests use the already-installed locked dependency runtime.
-Teammates' original tests and code have not been edited.
+`frontend-tests.txt`, `pipeline/`, and `http/` preserve the original frontend
+delivery's local execution records. Tests used the already-installed locked
+dependency runtime. These are historical per-session records, not a summary
+of all subsequent team validation.
 
-The two UI screenshots were captured from the earlier local integrated demo.
-The same frontend source is retained here. They illustrate the UI, while the
-new logs and artifacts independently verify this checkout.
+The two UI screenshots show the earlier local integrated demo. The current V2
+screenshots and mock-up are linked from [the MS2 documentation](../../ms2/README.md).
 
-This validation is Windows, Python 3.12.14, local persistent Chroma and offline
-screening. Docker execution and new cloud calls have not been performed.
-Do not infer either from successful local tests.
+This historical session used Windows, Python 3.12.14, local persistent Chroma
+and offline screening. Its `verification.json` fields `docker_executed: false`
+and `new_cloud_model_calls: false` apply only to that local session.
+The team separately confirms that the integrated Docker workflow ran successfully;
+screenshots of that run were not retained. Historical module Docker/Gemini
+verification records are in `services/rag_workflow/examples/` at the repository root.
 
 Run IDs and timestamps naturally differ between individual requests.
 The source hashes identify the fixed data.

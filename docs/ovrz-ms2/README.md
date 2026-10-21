@@ -80,9 +80,11 @@ docker compose -f docker-compose.yml down
 `demo/ovrz/verify-container.ps1` captures the actual container logs and HTTP
 input/output. Stop the existing local service before using port 8080 for Docker.
 
-The original frontend delivery was verified without Docker. Shared Docker
-commands are in [README.md](../../README.md); local run evidence
-is saved under `artifacts/infra/`.
+The original frontend evidence records a local Python validation session.
+The team separately confirms successful integrated Docker execution; screenshots
+of that run were not retained. Shared Docker commands are in
+[README.md](../../README.md); current submission evidence and its execution scope
+are described in [the MS2 documentation](../ms2/README.md).
 
 ## What to demonstrate
 

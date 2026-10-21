@@ -23,7 +23,10 @@ For containers, install/start Docker and run `make up` from the root.
 
 ## Evidence captured on 2026-10-20 (US Eastern)
 
-This is a **local Windows offline run**, not a new Docker or Gemini run.
+The evidence in this directory records a **local Windows offline run**.
+The team separately confirms that the integrated Docker workflow ran successfully;
+screenshots of that Docker run were not retained. The screenshots and logs below
+document the local Python session, and no new Gemini calls were made in this session.
 Preparation validates 1,313 trials and 18,456 criteria, builds/verifies
 607 lexical-vector Chroma fragments, retrieves five chunks and runs screening.
 The screening workflow uses BM25 plus deterministic rules; no LLM is called.
@@ -44,10 +47,10 @@ Generated artifacts are normally ignored; the small evidence set here is deliber
 
 ## Scope and outstanding items
 
-- Root Dockerfile, Compose, pyproject and uv.lock are included. Historical module
-  Docker/Gemini evidence is under `services/rag_workflow/examples/`. A fresh
-  integrated Docker run is still required to verify the complete container stack;
-  Docker is not installed on the Windows machine used for this capture.
+- Root Dockerfile, Compose, pyproject and uv.lock are included. The team confirms
+  successful integrated Docker execution; screenshots of that run remain to be
+  added. Historical module Docker/Gemini evidence is under
+  `services/rag_workflow/examples/`. The local evidence above is a separate run.
 - Raw snapshot reconstruction (`make reproduce`) is unavailable because the raw
   rebuild handoff is incomplete. The working demo starts from hash-checked,
   committed processed snapshots. See root README.
