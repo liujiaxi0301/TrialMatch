@@ -21,6 +21,9 @@ https://github.com/liujiaxi0301/TrialMatch.git`), install Python 3.12 and uv.
 Run `demo/ovrz/run-local.ps1` on Windows or `sh demo/ovrz/run-local.sh` on macOS/Linux.
 Open http://127.0.0.1:8080. The Windows launcher accepts `-Port 8082`.
 For containers, install/start Docker and run `make up` from the root.
+The current Compose setup has trial processing, Chroma and the backend.
+It does not include the separate local vector preparation used in the
+historical evidence below.
 
 ## Evidence captured on 2026-10-20 (US Eastern)
 
@@ -48,7 +51,7 @@ Generated artifacts are normally ignored; the small evidence set here is deliber
 
 ## Scope and outstanding items
 
-- Root Dockerfile, Compose, pyproject and uv.lock are included. The team confirms
+- Service Dockerfiles under `docker/`, Compose, pyproject and uv.lock are included. The team confirms
   successful integrated Docker execution; screenshots of that run remain to be
   added. Historical module Docker/Gemini evidence is under
   `services/rag_workflow/examples/`. The local evidence above is a separate run.

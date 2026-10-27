@@ -1,37 +1,24 @@
 services:
   trial-processing:
-    build: .
-    command: uv run --frozen python prepare_data.py
+    build:
+      context: .
+      dockerfile: docker/trial-processing.Dockerfile
     environment:
       GOOGLE_APPLICATION_CREDENTIALS: /secrets/google-credentials.json
     volumes:
-      - .:/app
+      - ./services/trial_ingestion/data:/app/services/trial_ingestion/data
+      - ./services/trial_ingestion/.dvc:/app/services/trial_ingestion/.dvc
+      - ./services/rag_workflow/.dvc:/app/services/rag_workflow/.dvc
+      - ./services/rag_workflow/index_snapshots:/app/services/rag_workflow/index_snapshots
+      - ./services/rag_workflow/examples/demo_manifest.json:/app/services/rag_workflow/examples/demo_manifest.json:ro
+      - ./services/patient_processing/data/processed:/app/services/patient_processing/data/processed:ro
+      - ./artifacts:/app/artifacts
       - ./secrets:/secrets:ro
 
-  prepare:
-    build: .
-    command: uv run --frozen python -m services.frontend.prepare
-    environment:
-      TRIALMATCH_MODE: offline
-      TRIALMATCH_TRIALS: services/trial_ingestion/data/processed/trials.jsonl
-      TRIALMATCH_CRITERIA: services/trial_ingestion/data/processed/criteria.jsonl
-      TRIALMATCH_PATIENTS: services/patient_processing/data/processed/batch25_patients.jsonl
-      TRIALMATCH_MANIFEST: services/rag_workflow/examples/demo_manifest.json
-      TRIALMATCH_ARTIFACTS: artifacts/infra/rag_workflow
-      CHROMADB_HOST: rag-chromadb
-      CHROMADB_PORT: "8000"
-    volumes:
-      - .:/app:ro
-      - ./artifacts:/app/artifacts
-    depends_on:
-      trial-processing:
-        condition: service_completed_successfully
-      rag-chromadb:
-        condition: service_started
-
   rag-api:
-    build: .
-    command: uv run --frozen python -m uvicorn services.frontend.app:app --host 0.0.0.0 --port 8080
+    build:
+      context: .
+      dockerfile: docker/rag-api.Dockerfile
     environment:
       TRIALMATCH_MODE: ${TRIALMATCH_MODE:-offline}
       GCP_PROJECT: ${GCP_PROJECT:-}
@@ -51,22 +38,34 @@ services:
     ports:
       - "127.0.0.1:8080:8080"
     volumes:
-      - .:/app:ro
+      - ./services/trial_ingestion/data/processed:/app/services/trial_ingestion/data/processed:ro
+      - ./services/patient_processing/data/processed:/app/services/patient_processing/data/processed:ro
+      - ./services/rag_workflow/examples/demo_manifest.json:/app/services/rag_workflow/examples/demo_manifest.json:ro
+      - ./services/rag_workflow/index_snapshots:/app/services/rag_workflow/index_snapshots:ro
       - ./artifacts:/app/artifacts
       - ./secrets:/secrets:ro
     depends_on:
-      prepare:
+      trial-processing:
         condition: service_completed_successfully
+      rag-chromadb:
+        condition: service_healthy
     healthcheck:
-      test: [CMD, python, -c, "import json, os, urllib.request; data = json.load(urllib.request.urlopen('http://127.0.0.1:8080/health', timeout=5)); assert data['mode'] == os.environ['TRIALMATCH_MODE']"]
+      test:
+        - CMD
+        - python
+        - -c
+        - >-
+          import json, os, urllib.request;
+          data = json.load(urllib.request.urlopen('http://127.0.0.1:8080/health', timeout=3));
+          assert data['mode'] == os.environ['TRIALMATCH_MODE']
       interval: 5s
-      timeout: 5s
+      timeout: 10s
       retries: 18
 
   rag-chromadb:
-    image: chromadb/chroma:1.5.9
-    environment:
-      ANONYMIZED_TELEMETRY: "False"
+    build:
+      context: .
+      dockerfile: docker/chromadb.Dockerfile
     volumes:
       - rag-chroma-data:/data
 

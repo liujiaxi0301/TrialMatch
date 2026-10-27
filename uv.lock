@@ -2287,37 +2287,56 @@ wheels = [
 name = "trialmatch-dev"
 version = "0.1.0"
 source = { virtual = "." }
-dependencies = [
+default-groups = ["api", "dev", "trial"]
+
+[package.dev-dependencies]
+api = [
     { name = "chromadb" },
-    { name = "dvc", extra = ["gs"] },
     { name = "fastapi" },
     { name = "google-genai" },
     { name = "pydantic" },
-    { name = "requests" },
     { name = "uvicorn" },
 ]
-
-[package.dev-dependencies]
+chroma = [
+    { name = "chromadb" },
+]
 dev = [
     { name = "httpx" },
     { name = "ruff" },
 ]
+rag = [
+    { name = "chromadb" },
+    { name = "google-genai" },
+    { name = "pydantic" },
+]
+trial = [
+    { name = "dvc", extra = ["gs"] },
+    { name = "requests" },
+]
 
 [package.metadata]
-requires-dist = [
+
+[package.metadata.requires-dev]
+api = [
     { name = "chromadb", specifier = "==1.5.9" },
-    { name = "dvc", extras = ["gs"], specifier = "==3.67.1" },
     { name = "fastapi", specifier = "==0.143.2" },
     { name = "google-genai", specifier = "==2.31.0" },
     { name = "pydantic", specifier = "==2.14.1" },
-    { name = "requests", specifier = "==2.34.2" },
     { name = "uvicorn", specifier = "==0.54.0" },
 ]
-
-[package.metadata.requires-dev]
+chroma = [{ name = "chromadb", specifier = "==1.5.9" }]
 dev = [
     { name = "httpx", specifier = ">=0.28,<1" },
     { name = "ruff", specifier = ">=0.11,<1" },
+]
+rag = [
+    { name = "chromadb", specifier = "==1.5.9" },
+    { name = "google-genai", specifier = "==2.31.0" },
+    { name = "pydantic", specifier = "==2.14.1" },
+]
+trial = [
+    { name = "dvc", extras = ["gs"], specifier = "==3.67.1" },
+    { name = "requests", specifier = "==2.34.2" },
 ]
 
 [[package]]

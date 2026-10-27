@@ -1,7 +1,7 @@
 .PHONY: up live down reproduce
 
 up:
-	TRIALMATCH_MODE=offline docker compose up --build --wait --wait-timeout 180
+	TRIALMATCH_MODE=offline docker compose up --build --remove-orphans --wait --wait-timeout 180
 
 live:
 	docker compose run --build --rm --no-deps rag-api python -c \
@@ -12,15 +12,15 @@ live:
 	docker compose exec -T rag-api python -m services.rag_workflow.cli restore-index \
 		--input services/rag_workflow/index_snapshots/current.json
 	docker compose exec -T rag-api python -m services.rag_workflow.cli index-status
-	TRIALMATCH_MODE=live docker compose up --wait --wait-timeout 180
+	TRIALMATCH_MODE=live docker compose up --remove-orphans --wait --wait-timeout 180
 
 down:
-	docker compose down
+	docker compose down --remove-orphans
 
 reproduce:
 	@test -f services/trial_ingestion/data/raw.dvc || \
 		(echo "Missing services/trial_ingestion/data/raw.dvc. See README.md under Data Reproduction."; exit 1)
 	docker compose run --build --rm trial-processing \
 		dvc --cd services/trial_ingestion pull data/raw.dvc
-	docker compose run --build --rm trial-processing uv run --frozen python prepare_data.py --from-raw
+	docker compose run --build --rm trial-processing python prepare_data.py --from-raw
 	$(MAKE) up

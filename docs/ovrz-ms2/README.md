@@ -59,26 +59,37 @@ From the repository root, with Docker Engine running:
 docker compose -f docker-compose.yml up --build --wait --wait-timeout 300
 ```
 
-The shared Compose project validates the trial and patient snapshots, starts
-Chroma, runs preparation, then starts the app/API. Data is read directly from `services/`.
-Preparation builds/verifies 607 criterion vectors, retrieves context and saves
-a real offline screening response.
+The shared Compose project has three services: trial processing, Chroma and
+the app/API. It validates the trial and patient snapshots before starting the
+app, then checks API and Chroma readiness. Data is read directly from `services/`.
+Default startup does not build the separate local vector demo index.
 
-Python services use the root Dockerfile, `pyproject.toml` and `uv.lock`.
-Chroma uses its pinned upstream image and a persistent named volume. Outputs
+All three services use separate Dockerfiles under `docker/`, with dependency groups
+from the root `pyproject.toml` and `uv.lock`.
+The Chroma image installs the locked server version and uses a persistent named volume. Outputs
 are saved under `artifacts/infra/`. Only the application port is exposed,
 on loopback.
 
 ```bash
 docker compose -f docker-compose.yml ps -a
 docker compose -f docker-compose.yml logs --no-color
-docker compose -f docker-compose.yml exec -T rag-api python demo/ovrz/verify_http.py
 docker compose -f docker-compose.yml down
 ```
 
-`down` preserves volumes. The Windows script
-`demo/ovrz/verify-container.ps1` captures the actual container logs and HTTP
-input/output. Stop the existing local service before using port 8080 for Docker.
+`down` preserves volumes. Stop the existing local service before using port
+8080 for Docker.
+
+The original HTTP verification also checks the optional `/retrieve` vector
+demo. With the app running, build that demo index before using those checks:
+
+```bash
+docker compose exec -T rag-api python -c "from services.frontend.vector_demo import LocalVectorDemo; LocalVectorDemo().build()"
+docker compose exec -T rag-api python demo/ovrz/verify_http.py
+```
+
+The same preparation is needed before using `demo/ovrz/verify-container.ps1`,
+which captures container logs and HTTP input/output. These optional checks
+do not change the default BM25 screening workflow.
 
 The original frontend evidence records a local Python validation session.
 The team separately confirms successful integrated Docker execution; screenshots
@@ -93,7 +104,8 @@ are described in [the MS2 documentation](../ms2/README.md).
 3. Run screening and inspect the returned trial IDs and source links.
 4. Expand criteria to review decisions, evidence and missing information.
 5. Open/download the actual response JSON.
-6. Use `/docs` to call `/retrieve` and inspect Chroma context and provenance.
+6. Optionally prepare the local vector demo above, then use `/docs` to call
+   `/retrieve` and inspect Chroma context and provenance.
    V2 intentionally removes the old Inspect vector retrieval button.
 
 The frontend calls HTTP endpoints; it does not substitute mock results when
@@ -148,7 +160,7 @@ It does not download today's trial registry on each run. Collection and
 preprocessing are documented in the unchanged
 [trial module](../../services/trial_ingestion/README.md) and
 [patient module](../../services/patient_processing/README.md).
-Those scripts remain in the image. The team should explain the full
+Trial processing scripts are in their own image. The team should explain the full
 collection-to-retrieval process and the snapshot boundary in the presentation.
 
 ## Verification and handoff

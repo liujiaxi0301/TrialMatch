@@ -1,6 +1,6 @@
 # ChromaDB index versioning (MS2)
 
-This is a logical snapshot workflow for Part 3. Git records the code, dependency lockfile, source data, snapshot summary and DVC pointer. DVC stores the exported documents, metadata and vectors. Chroma serves a restored collection. DVC runs in the shared Python image through the `trial-processing` service.
+This is a logical snapshot workflow for Part 3. Git records the code, dependency lockfile, source data, snapshot summary and DVC pointer. DVC stores the exported documents, metadata and vectors. Chroma serves a restored collection. DVC runs in the `trial-processing` image.
 
 The current local snapshot contains **607 vectors, 256 dimensions, 50 trials** from the existing Gemini index. Export and restore do not call GCP or re-embed text. The snapshot contains public trial criteria and vectors, with no patient records, credentials or model-generated patient explanations. Patient files remain under the existing Git workflow; this change does not migrate Parts 1/2 to DVC.
 
@@ -12,7 +12,7 @@ The current local snapshot contains **607 vectors, 256 dimensions, 50 trials** f
 | Logical index identity | Trial/criterion file SHA-256 hashes, selected trial IDs, embedding model, dimension, chunker revision |
 | Exact snapshot artifact | Documents, metadata and stored vectors; DVC file checksum and a SHA-256 summary |
 | Runtime database | A separate `trialmatch-<identity-hash>` collection for each identity; backend-specific readiness manifest and exact record digest |
-| Database software | Chroma version recorded in the snapshot; client lockfile and Compose image pinned independently |
+| Database software | Chroma version recorded in the snapshot; client and server use the version pinned in the root lockfile |
 
 Changing data, subset, model, dimension or chunker revision creates another collection. A completed collection is reused after validation, rather than overwritten by `build-index`. Earlier collections are retained. `index-status` and live retrieval check the IDs, source text, metadata, vector dimensions and record checksum, so changing vectors without changing their count is detected.
 
@@ -22,7 +22,7 @@ Runtime readiness files for HTTP Chroma are namespaced by host/port under `artif
 
 Chroma can introduce float32 rounding during import. The snapshot file is checked exactly. Restored IDs/text/metadata must match exactly; vectors must match within absolute tolerance `1e-7` and relative tolerance `1e-6`. The restored database then receives its own exact record checksum, linked to the source snapshot's record checksum. Re-exporting an unchanged database is deterministic; exports from different backends can differ slightly in vector bytes. ANN index files and tie ordering are not promised to be byte-identical across platforms or database versions.
 
-## 1. Build the shared environment
+## 1. Build the data-processing environment
 
 Run commands from the TrialMatch repository root:
 
@@ -30,7 +30,7 @@ Run commands from the TrialMatch repository root:
 docker compose build trial-processing
 ```
 
-DVC and its Google Cloud Storage adapter are installed in the shared Docker image. The DVC project is isolated in `services/rag_workflow/.dvc/` using DVC's subdirectory-project support; no repository-wide DVC migration is required. See [DVC initialization](https://dvc.org/doc/command-reference/init). The local Python CLI examples below are for development; use `make live` for the complete container workflow.
+DVC and its Google Cloud Storage adapter are installed in the data-processing image. The DVC project is isolated in `services/rag_workflow/.dvc/` using DVC's subdirectory-project support; no repository-wide DVC migration is required. The container uses `core.no_scm` to work with the mounted DVC pointers and data without mounting Git history. Commit pointer changes with Git on the host. See [DVC initialization](https://dvc.org/doc/command-reference/init). The local Python CLI examples below are for development; use `make live` for the complete container workflow.
 
 ## 2. Verify the current index
 

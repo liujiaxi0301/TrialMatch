@@ -21,6 +21,23 @@ screening barriers and missing information.
 Shared environment: Python 3.12, uv, DVC and Docker Compose.
 Python dependencies and DVC run inside Docker; no local Python or uv is needed.
 
+All three services have their own Dockerfile under `docker/`. Package versions
+share one `uv.lock`; each image installs only its dependency group.
+
+| Service | Dockerfile | Image contents |
+|---|---|---|
+| `trial-processing` | `docker/trial-processing.Dockerfile` | Trial processing scripts and DVC for snapshot downloads. |
+| `rag-api` | `docker/rag-api.Dockerfile` | Backend, RAG workflow and web page. |
+| `rag-chromadb` | `docker/chromadb.Dockerfile` | Chroma 1.5.9 server with a health check and data directory at `/data`. |
+
+Compose mounts data, output folders and credentials, not the whole repository.
+Compose waits for trial processing to finish and Chroma to be healthy before
+starting the app. Index import and retrieval code belong to the backend image.
+Chroma stores vectors in the `rag-chroma-data` volume mounted at `/data`.
+
+Offline screening uses BM25 and needs no vector index. Online screening uses
+the saved Gemini index restored by `make live`.
+
 Install Docker and make, start Docker, and run from the repository root:
 
 ```bash
@@ -39,6 +56,16 @@ The default offline mode uses the included processed data and requires no Google
 
 Both modes use `docker-compose.yml`. Run `make up` to switch back to offline.
 Processed data stays under `services/`; generated results go to `artifacts/`.
+
+After editing only the app or web page, update only that service:
+
+```bash
+docker compose up -d --build --no-deps rag-api
+```
+
+Prefix that command with `TRIALMATCH_MODE=live` to keep online mode.
+Changing RAG code only requires rebuilding `rag-api`. Changing the shared
+package lock can rebuild dependencies in more than one image.
 
 ## Online Screening
 
