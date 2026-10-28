@@ -15,6 +15,7 @@ RUN uv sync --frozen --only-group api
 RUN useradd --create-home --uid 1000 app \
     && mkdir -p /app/artifacts \
     && chown -R app:app /app /.venv /tmp/uv-cache
+COPY --chown=app:app cloud ./cloud
 COPY --chown=app:app services/rag_workflow/*.py ./services/rag_workflow/
 COPY --chown=app:app services/rag_workflow/prompts/ ./services/rag_workflow/prompts/
 COPY --chown=app:app services/frontend/__init__.py services/frontend/app.py services/frontend/vector_demo.py ./services/frontend/

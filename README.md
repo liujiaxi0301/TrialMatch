@@ -1,7 +1,6 @@
 # TrialMatch
 
-Team: **Orange Chicken**. Submission branch: **milestone2**.
-See [MS2 submission evidence and remaining limitations](docs/ms2/README.md).
+Team: **Orange Chicken**.
 
 TrialMatch uses synthetic patient records to retrieve type 2 diabetes clinical
 trials and review eligibility criteria. Results include supporting evidence,
@@ -107,3 +106,95 @@ the existing patient data. The reproduction record is saved to
 
 - [RAG workflow](services/rag_workflow/README.md): retrieval, criterion assessment and API format.
 - [Index versioning](services/rag_workflow/INDEX_VERSIONING.md): DVC storage and Chroma snapshots.
+
+## Cloud Setup (MS3)
+
+- [Cloud app](https://trialmatch-15733748057.us-east1.run.app) (authorized Google login required).
+- [Successful data pipeline](https://console.cloud.google.com/vertex-ai/locations/us-east1/pipelines/runs/trialmatch-data-pipeline-20261028052840?project=trialmatch-ac215-yixiao).
+
+The app uses Cloud Run. Chroma runs on a separate VM with a persistent disk
+mounted at `/data` inside its container. Only the TrialMatch subnet can reach
+Chroma. Team members sign in with Google through Identity-Aware Proxy (IAP).
+Cloud services use attached service accounts; no login JSON is uploaded.
+The five team Google accounts have access. Open the cloud app and select the
+approved account; no local Docker setup or credentials file is needed to use it.
+
+Vertex AI Pipelines has three steps:
+
+1. Download the fixed raw trial snapshot with DVC.
+2. Rebuild trial and criterion files using the same processing code as the local demo.
+3. Verify file checksums, the vector snapshot, and one offline screening request.
+
+Each step runs in `docker/workflow.Dockerfile` and passes its output through GCS.
+The app loads the validated release and restores its saved vectors into Chroma.
+This pipeline checks data reproduction and application behavior. Model training
+and clinical benchmark evaluation are separate work.
+
+Cloud configuration is in `cloud/config.env`. To deploy, install the Google
+Cloud CLI and uv, then sign in:
+
+```bash
+gcloud auth login
+gcloud auth application-default login
+bash cloud/setup.sh
+```
+
+Use `make live` once to download the fixed index snapshot if it is missing.
+Then build versioned images and deploy:
+
+```bash
+bash cloud/deploy.sh build
+bash cloud/deploy.sh publish
+bash cloud/deploy.sh database
+bash cloud/deploy.sh pipeline
+bash cloud/deploy.sh app
+```
+
+The pipeline command waits for success and saves its job name, validation report,
+and output release URI under `artifacts/cloud/`. The app command requires that
+validated release. Cloud Build stores the three cloud images (API, Chroma, and
+workflow) in Artifact Registry. Local Compose still uses the four Make commands above.
+
+For the first deployment, open the Cloud Run service's Security tab, enable IAP,
+and grant the team the IAP-secured Web App User role. For Gmail accounts, configure
+an External OAuth consent screen, add the team as test users, and use IAP's
+Auto Generate Credentials option under Custom OAuth. Keep unauthenticated access
+disabled. This is already configured in the TrialMatch project.
+Cloud Logging contains app startup logs and pipeline task logs.
+
+The Chroma VM stays on and incurs charges even when nobody opens the app.
+When the demo is not needed, pause it with:
+
+```bash
+gcloud compute instances stop trialmatch-chroma --zone=us-east1-b --project=trialmatch-ac215-yixiao
+```
+
+Use `instances start` with the same options before the next demo. Its persistent
+disk keeps the vectors. Disk and storage charges continue while the VM is off.
+
+### Monthly Budget
+
+TrialMatch has a $5 monthly budget with email alerts at 50%, 80%, and 100%.
+Budget notifications call a private shutdown handler in `cloud/budget/`.
+When reported monthly costs reach $5, it sets the `trialmatch` Cloud Run service
+to zero instances and stops the `trialmatch-chroma` VM. Disks, buckets, and data
+are kept. Failed actions are retried. The handler never restarts the demo.
+
+This is not a strict spending cap: billing notifications can be delayed, and
+stored data still costs money. Direct Gemini calls, builds, or pipeline jobs
+started outside the demo are not blocked by this handler.
+
+The handler is already deployed. To install or update it as the project owner:
+
+```bash
+bash cloud/budget/deploy.sh
+```
+
+After reviewing the budget, manually resume the demo with:
+
+```bash
+gcloud compute instances start trialmatch-chroma --zone=us-east1-b --project=trialmatch-ac215-yixiao
+gcloud run services update trialmatch --scaling=auto --region=us-east1 --project=trialmatch-ac215-yixiao
+```
+
+If the current month is still over $5, the next budget notification stops it again.

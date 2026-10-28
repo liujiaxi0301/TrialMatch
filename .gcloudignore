@@ -1,0 +1,14 @@
+.git
+.venv
+**/.venv
+**/__pycache__
+**/.env
+**/.env.*
+**/secrets
+**/*credentials*.json
+artifacts
+**/.ruff_cache
+**/.dvc/cache
+services/trial_ingestion/data/raw
+services/rag_workflow/index_snapshots/current.json
+services/rag_workflow/index_snapshots/current.manifest.json
