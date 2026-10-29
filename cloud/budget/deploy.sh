@@ -46,7 +46,7 @@ gcloud iam service-accounts add-iam-policy-binding "$PUSH" --project="$GCP_PROJE
 VERSION=$(python3 - <<'PY'
 import hashlib, pathlib
 h = hashlib.sha256()
-for name in ('main.py', 'requirements.txt', 'Dockerfile'):
+for name in ('main.py', 'pyproject.toml', 'uv.lock', 'Dockerfile'):
     h.update(pathlib.Path('cloud/budget', name).read_bytes())
 print(h.hexdigest()[:16])
 PY

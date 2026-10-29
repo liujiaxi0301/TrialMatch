@@ -167,10 +167,10 @@ HTTP behavior: invalid requests or patient records return 422; unknown patient I
 | `tests/test_evidence_support.py` | Regressions from live smoke testing: missing data is not negative evidence, prescriptions do not establish drug use, short-reference mapping, and context budgets |
 | `tests/test_index_versions.py` | Snapshot restore, version isolation, source/checksum tampering, conflict preservation, legacy migration and credential-free CLI checks |
 | `tests/test_dvc_snapshot.py` | Optional DVC/Git historical-pointer recovery test with a disposable local remote |
-| Root `pyproject.toml`, `uv.lock` | Locked dependency groups for trial processing, RAG, API and development |
+| Root `pyproject.toml`, `uv.lock` | Optional shared environment for local Python commands; not used by container builds |
 | Root `.env.example`, `.env` | Committable configuration template / Git-ignored local configuration |
 | `.gitignore` | Excludes local configuration, the virtual environment, and caches |
-| Root `docker/` | Three service Dockerfiles with separate dependency groups and startup commands |
+| Root `docker/` | Separate service directories, each with its own Dockerfile, pyproject.toml and uv.lock |
 | Root `docker-compose.yml` | Data preparation, offline/live app/API and persistent Chroma |
 | `README.md` | Setup, file descriptions, and team handoff instructions |
 | `INDEX_VERSIONING.md` | DVC and Chroma versioning tutorial, precision limits, restoration and shared-storage handoff |
@@ -267,7 +267,7 @@ The [case file guide](examples/grounding_case/README.md) links original inputs, 
 
 **Part 4 (infrastructure/integration):**
 
-1. Maintain the root `pyproject.toml`, `uv.lock`, service Dockerfiles under `docker/`, `docker-compose.yml` and `.env.example`.
+1. Maintain each service's Dockerfile, `pyproject.toml` and `uv.lock` under `docker/`, plus `docker-compose.yml` and `.env.example`. The root dependency files support optional local Python commands.
 2. Agree on API port 8080, Chroma host/port, read-only inputs from both data modules, persistent artifacts, and credential mounts.
 3. Use the root Compose/Makefile. The existing CLI provides `build-index`, `index-status`, `export-index`, `restore-index` and `screen` inside `rag-api`. Export to `artifacts/`, since the mounted source snapshots are read-only.
 4. Follow [INDEX_VERSIONING.md](INDEX_VERSIONING.md): agree on shared DVC storage, grant object access, publish/pull the snapshot separately from Git, and restore into the target Chroma service. DVC runs in the `trial-processing` image.

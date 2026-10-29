@@ -20,16 +20,18 @@ screening barriers and missing information.
 Shared environment: Python 3.12, uv, DVC and Docker Compose.
 Python dependencies and DVC run inside Docker; no local Python or uv is needed.
 
-All three services have their own Dockerfile under `docker/`. Package versions
-share one `uv.lock`; each image installs only its dependency group.
+Each service has its own `Dockerfile`, `pyproject.toml` and `uv.lock`.
+Images install only that service's locked dependencies.
 
-| Service | Dockerfile | Image contents |
+| Service | Build directory | Image contents |
 |---|---|---|
-| `trial-processing` | `docker/trial-processing.Dockerfile` | Trial processing scripts and DVC for snapshot downloads. |
-| `rag-api` | `docker/rag-api.Dockerfile` | Backend, RAG workflow and web page. |
-| `rag-chromadb` | `docker/chromadb.Dockerfile` | Chroma 1.5.9 server with a health check and data directory at `/data`. |
+| `trial-processing` | `docker/trial-processing/` | Trial processing scripts and DVC for snapshot downloads. |
+| `rag-api` | `docker/rag-api/` | Backend, RAG workflow, web page and cloud startup code. |
+| `rag-chromadb` | `docker/chromadb/` | Chroma 1.5.9 server with a health check and data directory at `/data`. |
 
-Compose mounts data, output folders and credentials, not the whole repository.
+Local Compose mounts the trial scripts and backend source read-only, plus data,
+output folders and credentials. The backend reloads when Python code changes;
+refresh the browser after editing the web page.
 Compose waits for trial processing to finish and Chroma to be healthy before
 starting the app. Index import and retrieval code belong to the backend image.
 Chroma stores vectors in the `rag-chroma-data` volume mounted at `/data`.
@@ -56,15 +58,18 @@ The default offline mode uses the included processed data and requires no Google
 Both modes use `docker-compose.yml`. Run `make up` to switch back to offline.
 Processed data stays under `services/`; generated results go to `artifacts/`.
 
-After editing only the app or web page, update only that service:
+After changing backend dependencies, update its lock and rebuild that service:
 
 ```bash
+uv lock --project docker/rag-api
 docker compose up -d --build --no-deps rag-api
 ```
 
-Prefix that command with `TRIALMATCH_MODE=live` to keep online mode.
-Changing RAG code only requires rebuilding `rag-api`. Changing the shared
-package lock can rebuild dependencies in more than one image.
+Prefix the Docker command with `TRIALMATCH_MODE=live` to keep online mode.
+Use the corresponding build directory for another service. Trial scripts are
+read on the next processing invocation, such as `make reproduce`.
+The root `pyproject.toml` and `uv.lock` support the original local Python tools;
+container builds do not use them.
 
 ## Online Screening
 
@@ -125,7 +130,9 @@ Vertex AI Pipelines has three steps:
 2. Rebuild trial and criterion files using the same processing code as the local demo.
 3. Verify file checksums, the vector snapshot, and one offline screening request.
 
-Each step runs in `docker/workflow.Dockerfile` and passes its output through GCS.
+Each step uses the image in `docker/workflow/`, with its own dependency files,
+and passes its output through GCS. Cloud images contain code and do not use
+local source mounts or automatic reload.
 The app loads the validated release and restores its saved vectors into Chroma.
 This pipeline checks data reproduction and application behavior. Model training
 and clinical benchmark evaluation are separate work.
@@ -176,6 +183,7 @@ disk keeps the vectors. Disk and storage charges continue while the VM is off.
 
 TrialMatch has a $5 monthly budget with email alerts at 50%, 80%, and 100%.
 Budget notifications call a private shutdown handler in `cloud/budget/`.
+That service also has its own Dockerfile, pyproject and lock file.
 When reported monthly costs reach $5, it sets the `trialmatch` Cloud Run service
 to zero instances and stops the `trialmatch-chroma` VM. Disks, buckets, and data
 are kept. Failed actions are retried. The handler never restarts the demo.

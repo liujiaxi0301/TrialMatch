@@ -1,0 +1,11 @@
+[project]
+name = "trialmatch-trial-processing"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "requests==2.34.2",
+    "dvc[gs]==3.67.1",
+]
+
+[tool.uv]
+package = false

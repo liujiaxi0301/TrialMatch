@@ -9,8 +9,8 @@ ENV OPENSSL_armcap=0
 ENV ANONYMIZED_TELEMETRY=False
 
 RUN pip install --no-cache-dir uv==0.13.1
-COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --only-group chroma
+COPY docker/chromadb/pyproject.toml docker/chromadb/uv.lock ./
+RUN uv sync --frozen --no-dev --no-cache
 RUN mkdir -p /data
 
 EXPOSE 8000

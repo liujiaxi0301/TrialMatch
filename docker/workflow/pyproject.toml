@@ -1,0 +1,17 @@
+[project]
+name = "trialmatch-workflow"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "requests==2.34.2",
+    "dvc[gs]==3.67.1",
+    "chromadb==1.5.9",
+    "pydantic==2.14.1",
+    "google-genai==2.31.0",
+    "google-cloud-storage>=3,<4",
+    "kfp>=2.14,<3",
+    "google-cloud-aiplatform>=1.120,<2",
+]
+
+[tool.uv]
+package = false

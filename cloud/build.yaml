@@ -1,10 +1,10 @@
 steps:
   - name: gcr.io/cloud-builders/docker
-    args: [build, -f, docker/rag-api.Dockerfile, -t, '${_REGISTRY}/api:${_VERSION}', .]
+    args: [build, -f, docker/rag-api/Dockerfile, -t, '${_REGISTRY}/api:${_VERSION}', .]
   - name: gcr.io/cloud-builders/docker
-    args: [build, -f, docker/chromadb.Dockerfile, -t, '${_REGISTRY}/chroma:${_VERSION}', .]
+    args: [build, -f, docker/chromadb/Dockerfile, -t, '${_REGISTRY}/chroma:${_VERSION}', .]
   - name: gcr.io/cloud-builders/docker
-    args: [build, -f, docker/workflow.Dockerfile, -t, '${_REGISTRY}/workflow:${_VERSION}', .]
+    args: [build, -f, docker/workflow/Dockerfile, -t, '${_REGISTRY}/workflow:${_VERSION}', .]
 images:
   - '${_REGISTRY}/api:${_VERSION}'
   - '${_REGISTRY}/chroma:${_VERSION}'

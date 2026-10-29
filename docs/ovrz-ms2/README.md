@@ -64,8 +64,8 @@ the app/API. It validates the trial and patient snapshots before starting the
 app, then checks API and Chroma readiness. Data is read directly from `services/`.
 Default startup does not build the separate local vector demo index.
 
-All three services use separate Dockerfiles under `docker/`, with dependency groups
-from the root `pyproject.toml` and `uv.lock`.
+All three services use separate build directories under `docker/`, each with
+its own `Dockerfile`, `pyproject.toml` and `uv.lock`.
 The Chroma image installs the locked server version and uses a persistent named volume. Outputs
 are saved under `artifacts/infra/`. Only the application port is exposed,
 on loopback.

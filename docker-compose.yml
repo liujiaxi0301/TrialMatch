@@ -2,10 +2,12 @@ services:
   trial-processing:
     build:
       context: .
-      dockerfile: docker/trial-processing.Dockerfile
+      dockerfile: docker/trial-processing/Dockerfile
     environment:
       GOOGLE_APPLICATION_CREDENTIALS: /secrets/google-credentials.json
     volumes:
+      - ./prepare_data.py:/app/prepare_data.py:ro
+      - ./services/trial_ingestion/scripts:/app/services/trial_ingestion/scripts:ro
       - ./services/trial_ingestion/data:/app/services/trial_ingestion/data
       - ./services/trial_ingestion/.dvc:/app/services/trial_ingestion/.dvc
       - ./services/rag_workflow/.dvc:/app/services/rag_workflow/.dvc
@@ -18,7 +20,21 @@ services:
   rag-api:
     build:
       context: .
-      dockerfile: docker/rag-api.Dockerfile
+      dockerfile: docker/rag-api/Dockerfile
+    command:
+      - python
+      - -m
+      - uvicorn
+      - services.frontend.app:app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8080"
+      - --reload
+      - --reload-dir
+      - /app/services/rag_workflow
+      - --reload-dir
+      - /app/services/frontend
     environment:
       TRIALMATCH_MODE: ${TRIALMATCH_MODE:-offline}
       GCP_PROJECT: ${GCP_PROJECT:-}
@@ -38,10 +54,10 @@ services:
     ports:
       - "127.0.0.1:8080:8080"
     volumes:
+      - ./services/rag_workflow:/app/services/rag_workflow:ro
+      - ./services/frontend:/app/services/frontend:ro
       - ./services/trial_ingestion/data/processed:/app/services/trial_ingestion/data/processed:ro
       - ./services/patient_processing/data/processed:/app/services/patient_processing/data/processed:ro
-      - ./services/rag_workflow/examples/demo_manifest.json:/app/services/rag_workflow/examples/demo_manifest.json:ro
-      - ./services/rag_workflow/index_snapshots:/app/services/rag_workflow/index_snapshots:ro
       - ./artifacts:/app/artifacts
       - ./secrets:/secrets:ro
     depends_on:
@@ -65,7 +81,7 @@ services:
   rag-chromadb:
     build:
       context: .
-      dockerfile: docker/chromadb.Dockerfile
+      dockerfile: docker/chromadb/Dockerfile
     volumes:
       - rag-chroma-data:/data
 

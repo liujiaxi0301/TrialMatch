@@ -9,12 +9,12 @@ ENV UV_CACHE_DIR=/tmp/uv-cache
 ENV OPENSSL_armcap=0
 
 RUN pip install --no-cache-dir uv==0.13.1
-COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --only-group trial
+COPY docker/trial-processing/pyproject.toml docker/trial-processing/uv.lock ./
+RUN uv sync --frozen --no-dev --no-cache
 
 RUN useradd --create-home --uid 1000 app \
-    && mkdir -p /app/artifacts \
-    && chown -R app:app /app /.venv /tmp/uv-cache
+    && mkdir -p /app/artifacts /tmp/uv-cache \
+    && chown -R app:app /app /tmp/uv-cache
 COPY --chown=app:app services/trial_ingestion/scripts/*.py ./services/trial_ingestion/scripts/
 COPY --chown=app:app prepare_data.py ./
 
