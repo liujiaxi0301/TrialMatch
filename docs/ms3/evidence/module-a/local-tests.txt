@@ -1,0 +1,23 @@
+test_compile_only_has_data_dependencies_and_no_cloud_calls (test_pipeline.PipelineTests.test_compile_only_has_data_dependencies_and_no_cloud_calls) ... ok
+test_failed_job_invalidates_previous_success (test_pipeline.PipelineTests.test_failed_job_invalidates_previous_success) ... ok
+test_failed_report_does_not_publish_deployable_release (test_pipeline.PipelineTests.test_failed_report_does_not_publish_deployable_release) ... ok
+test_failed_submission_invalidates_previous_success (test_pipeline.PipelineTests.test_failed_submission_invalidates_previous_success) ... ok
+test_foreign_report_release_is_rejected (test_pipeline.PipelineTests.test_foreign_report_release_is_rejected) ... ok
+test_success_writes_current_release_and_uses_expected_runtime_config (test_pipeline.PipelineTests.test_success_writes_current_release_and_uses_expected_runtime_config) ... ok
+test_command_propagates_nonzero_exit (test_tasks.ReleaseFailureTests.test_command_propagates_nonzero_exit) ... ok
+test_corrupt_raw_archive_stops_before_rebuild (test_tasks.ReleaseFailureTests.test_corrupt_raw_archive_stops_before_rebuild) ... ok
+test_hash_mismatch_stops_before_dvc (test_tasks.ReleaseFailureTests.test_hash_mismatch_stops_before_dvc) ... ok
+test_invalid_manifest_schema_stops_before_download (test_tasks.ReleaseFailureTests.test_invalid_manifest_schema_stops_before_download) ... ok
+test_missing_remote_file_stops_before_dvc (test_tasks.ReleaseFailureTests.test_missing_remote_file_stops_before_dvc) ... ok
+test_validation_subprocess_failure_does_not_write_success (test_tasks.ReleaseFailureTests.test_validation_subprocess_failure_does_not_write_success) ... ok
+test_wrong_raw_file_count_stops_before_publishing (test_tasks.ReleaseFailureTests.test_wrong_raw_file_count_stops_before_publishing) ... ok
+test_corrupt_snapshot_checksum_is_rejected (test_tasks.SnapshotValidationTests.test_corrupt_snapshot_checksum_is_rejected) ... ok
+test_foreign_source_snapshot_is_rejected_even_with_valid_internal_checksum (test_tasks.SnapshotValidationTests.test_foreign_source_snapshot_is_rejected_even_with_valid_internal_checksum) ... ok
+test_invalid_patient_schema_stops_before_success_report (test_tasks.SnapshotValidationTests.test_invalid_patient_schema_stops_before_success_report) ... ok
+test_matching_snapshot_and_offline_screening_pass (test_tasks.SnapshotValidationTests.test_matching_snapshot_and_offline_screening_pass) ... ok
+test_wrong_vector_dimension_is_rejected_even_with_valid_checksum (test_tasks.SnapshotValidationTests.test_wrong_vector_dimension_is_rejected_even_with_valid_checksum) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 4.593s
+
+OK

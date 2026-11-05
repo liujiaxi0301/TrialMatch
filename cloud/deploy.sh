@@ -7,7 +7,18 @@ source cloud/config.env
 set +a
 mkdir -p artifacts/cloud
 action=${1:-help}
+if [[ "$action" == build || "$action" == pipeline ]]; then
+  # Clear deployment permission before target/dependency checks can fail.
+  rm -f artifacts/cloud/validated_deployment.json artifacts/cloud/validated_release.txt \
+    artifacts/cloud/validation.json artifacts/cloud/pipeline_job.txt
+fi
 if [[ "$action" == build ]]; then
+  # A failed rebuild must not leave the previous build selected for publication.
+  rm -f artifacts/cloud/image_version.txt artifacts/cloud/release_target.json
+  BUILD_RESULT=$(mktemp artifacts/cloud/build-result.XXXXXX)
+  BUILD_INPUTS="$BUILD_RESULT.inputs.json"
+  trap 'rm -f "$BUILD_RESULT" "$BUILD_INPUTS"' EXIT
+  python3 -m cloud.release capture-inputs --input-manifest="$BUILD_INPUTS"
   VERSION=$(python3 - <<'PY'
 import hashlib, pathlib, subprocess
 h = hashlib.sha256()
@@ -21,7 +32,10 @@ PY
   gcloud builds submit . --project="$GCP_PROJECT" --region="$GCP_REGION" --config=cloud/build.yaml \
     --substitutions="_REGISTRY=$REGISTRY,_VERSION=$VERSION" \
     --gcs-source-staging-dir="gs://$GCS_BUCKET/builds/source" \
-    --service-account="projects/$GCP_PROJECT/serviceAccounts/trialmatch-build@$GCP_PROJECT.iam.gserviceaccount.com"
+    --service-account="projects/$GCP_PROJECT/serviceAccounts/trialmatch-build@$GCP_PROJECT.iam.gserviceaccount.com" \
+    --suppress-logs --format=json > "$BUILD_RESULT"
+  python3 -m cloud.release record --build-result="$BUILD_RESULT" --version="$VERSION" \
+    --registry="$REGISTRY" --bucket="$GCS_BUCKET" --input-manifest="$BUILD_INPUTS"
   printf '%s\n' "$VERSION" > artifacts/cloud/image_version.txt
   exit
 fi
@@ -30,13 +44,20 @@ if [[ "$action" == help ]]; then
   exit
 fi
 VERSION=$(cat artifacts/cloud/image_version.txt)
-RELEASE="gs://$GCS_BUCKET/releases/$VERSION/release.json"
+if [[ "$action" == publish || "$action" == pipeline ]]; then
+  # Read the same saved build result for both actions; never resolve a mutable tag here.
+  TARGET=$(python3 -m cloud.release resolve --version="$VERSION" \
+    --registry="$REGISTRY" --bucket="$GCS_BUCKET")
+  IFS=$'\t' read -r WORKFLOW_IMAGE RELEASE <<< "$TARGET"
+fi
 case "$action" in
   publish)
     uv run --group cloud python -m cloud.tasks publish --output="${RELEASE%/release.json}" \
-      --image="$REGISTRY/workflow:$VERSION"
+      --image="$WORKFLOW_IMAGE" --release-target=artifacts/cloud/release_target.json
     ;;
   database)
+    IMAGE_TAG=$(python3 -m cloud.release image-tag --version="$VERSION" \
+      --registry="$REGISTRY" --bucket="$GCS_BUCKET")
     if ! gcloud compute disks describe chroma-data --zone="$GCP_ZONE" --project="$GCP_PROJECT" >/dev/null 2>&1; then
       gcloud compute disks create chroma-data --size=10GB --type=pd-standard --zone="$GCP_ZONE" --project="$GCP_PROJECT"
     fi
@@ -47,19 +68,22 @@ case "$action" in
         --disk=name=chroma-data,device-name=chroma-data,auto-delete=no \
         --network="$NETWORK" --subnet="$SUBNET" --private-network-ip="$CHROMA_IP" \
         --tags=trialmatch-chroma --service-account="trialmatch-chroma@$GCP_PROJECT.iam.gserviceaccount.com" \
-        --scopes=cloud-platform --metadata="chroma-image=$REGISTRY/chroma:$VERSION" \
+        --scopes=cloud-platform --metadata="chroma-image=$REGISTRY/chroma:$IMAGE_TAG" \
         --metadata-from-file=startup-script=cloud/chroma-startup.sh
     fi
     ;;
   pipeline)
     uv run --group cloud python -m cloud.pipeline --project="$GCP_PROJECT" --region="$GCP_REGION" \
-      --bucket="$GCS_BUCKET" --image="$REGISTRY/workflow:$VERSION" --release="$RELEASE"
+      --bucket="$GCS_BUCKET" --image="$WORKFLOW_IMAGE" --release="$RELEASE" \
+      --release-target=artifacts/cloud/release_target.json
     ;;
   app)
-    RELEASE=$(cat artifacts/cloud/validated_release.txt)
+    TARGET=$(python3 -m cloud.release deployment --version="$VERSION" \
+      --registry="$REGISTRY" --bucket="$GCS_BUCKET" --project="$GCP_PROJECT" --region="$GCP_REGION")
+    IFS=$'\t' read -r API_IMAGE RELEASE <<< "$TARGET"
     # Deploy privately first. Enable browser login with IAP in the Cloud Run console.
     gcloud run deploy "$SERVICE" --project="$GCP_PROJECT" --region="$GCP_REGION" \
-      --image="$REGISTRY/api:$VERSION" --command=python --args=-m,cloud.tasks,serve \
+      --image="$API_IMAGE" --command=python --args=-m,cloud.tasks,serve \
       --service-account="trialmatch-api@$GCP_PROJECT.iam.gserviceaccount.com" \
       --network="$NETWORK" --subnet="$SUBNET" --vpc-egress=private-ranges-only \
       --no-allow-unauthenticated --min-instances=0 --max-instances=1 --max=1 \

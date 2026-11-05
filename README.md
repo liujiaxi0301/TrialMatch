@@ -137,6 +137,13 @@ The app loads the validated release and restores its saved vectors into Chroma.
 This pipeline checks data reproduction and application behavior. Model training
 and clinical benchmark evaluation are separate work.
 
+Pipeline regression checks use the workflow's locked dependencies to validate
+the committed data, compile the DAG, and exercise release validation and failure
+handling. The [Pipeline checks workflow](.github/workflows/pipeline-checks.yml)
+runs on pull requests and MS3 branch pushes, without GCP credentials.
+See [Module A checks](docs/ms3/module-a-checks.md) for local commands, the
+reliability changes, and the scope of the verification.
+
 Cloud configuration is in `cloud/config.env`. To deploy, install the Google
 Cloud CLI and uv, then sign in:
 
@@ -157,9 +164,45 @@ bash cloud/deploy.sh pipeline
 bash cloud/deploy.sh app
 ```
 
+Before Cloud Build starts, the build command hashes all seven publication inputs,
+including the Git-ignored `index_snapshots/current.json`. These files must already
+exist. It checks them again after the build; missing or changed inputs prevent the
+new build from being selected for publication. It saves the hashes, a combined
+data fingerprint, the Cloud Build ID, image tag and workflow/API image digests in
+`artifacts/cloud/release_target.json` (schema 4).
+
+All three images use `<source-version>-<Cloud-Build-ID>` tags. Cloud Build supplies
+the unique ID, so rebuilding the same source does not reassign an existing tag
+in the repository configured with `--immutable-tags`. The source version remains
+separate in the record and `image_version.txt`. Pipeline and API execution use
+the recorded digests. First-time Chroma VM creation uses the recorded build tag;
+the `database` command leaves an existing VM unchanged.
+
+`publish` copies every input to temporary storage and checks those copies against
+the build record before contacting GCS. It uploads those same checked copies.
+If data changed after the build, restore the original data or rebuild with the
+intended data. The workflow image is pinned by digest and the input release is at
+`gs://<bucket>/releases/<source-version>/<workflow-digest-hex>/<data-fingerprint>/release.json`.
+Different workflow image contents or data get a different address; identical
+source, image and data can be republished. Existing releases are never overwritten.
+The bound pipeline also checks the input manifest's image and hashes against the
+record before submitting a job. The task containers verify the downloaded bytes.
+
+If upgrading from an older checkout or a schema-1/2/3 build record, run `build`
+first. Missing or inconsistent records stop publication/submission. The GCS
+`release.json` format remains schema 1. Preserve records with run evidence before
+rebuilding, and run these commands serially in a checkout.
+
 The pipeline command waits for success and saves its job name, validation report,
-and output release URI under `artifacts/cloud/`. The app command requires that
-validated release. Cloud Build stores the three cloud images (API, Chroma, and
+and output release URI under `artifacts/cloud/`. It also atomically writes
+`validated_deployment.json`, binding the selected build to that successful run.
+`app` requires this record to match the current build, project and region, then
+deploys its exact API image digest with the validated output release. Starting
+a new build or pipeline clears prior deployment permission; preserve evidence
+before rerunning. The direct pipeline CLI without `--release-target` still
+produces data-validation evidence, but does not authorize `app` deployment.
+Deployment binding does not replace the deployed API's functional tests.
+Cloud Build stores the three cloud images (API, Chroma, and
 workflow) in Artifact Registry. Local Compose still uses the four Make commands above.
 
 For the first deployment, open the Cloud Run service's Security tab, enable IAP,
