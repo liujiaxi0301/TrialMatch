@@ -1,0 +1,459 @@
+{
+  "request": {
+    "additionalProperties": false,
+    "properties": {
+      "patient_id": {
+        "anyOf": [
+          {
+            "maxLength": 250,
+            "minLength": 1,
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Patient Id"
+      },
+      "patient": {
+        "anyOf": [
+          {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Patient"
+      },
+      "question": {
+        "maxLength": 2000,
+        "minLength": 1,
+        "title": "Question",
+        "type": "string"
+      },
+      "top_k": {
+        "default": 3,
+        "maximum": 5,
+        "minimum": 1,
+        "title": "Top K",
+        "type": "integer"
+      }
+    },
+    "required": [
+      "question"
+    ],
+    "title": "ScreenRequest",
+    "type": "object"
+  },
+  "response": {
+    "$defs": {
+      "Coverage": {
+        "additionalProperties": false,
+        "properties": {
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          },
+          "completed": {
+            "title": "Completed",
+            "type": "integer"
+          },
+          "known": {
+            "title": "Known",
+            "type": "integer"
+          },
+          "unknown": {
+            "title": "Unknown",
+            "type": "integer"
+          },
+          "screening_barriers": {
+            "title": "Screening Barriers",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total",
+          "completed",
+          "known",
+          "unknown",
+          "screening_barriers"
+        ],
+        "title": "Coverage",
+        "type": "object"
+      },
+      "CriterionAssessment": {
+        "additionalProperties": false,
+        "properties": {
+          "criterion_id": {
+            "title": "Criterion Id",
+            "type": "string"
+          },
+          "criterion_type": {
+            "title": "Criterion Type",
+            "type": "string"
+          },
+          "criterion_text": {
+            "title": "Criterion Text",
+            "type": "string"
+          },
+          "decision": {
+            "$ref": "#/$defs/Decision"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "evidence_fact_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Evidence Fact Ids",
+            "type": "array"
+          },
+          "context_fact_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Context Fact Ids",
+            "type": "array"
+          },
+          "missing_information": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Missing Information",
+            "type": "array"
+          },
+          "method": {
+            "default": "abstain",
+            "title": "Method",
+            "type": "string"
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Error Code"
+          },
+          "model_decision": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Decision"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "validation_warnings": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Validation Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "criterion_id",
+          "criterion_type",
+          "criterion_text",
+          "decision",
+          "reason"
+        ],
+        "title": "CriterionAssessment",
+        "type": "object"
+      },
+      "Decision": {
+        "enum": [
+          "MET",
+          "NOT_MET",
+          "UNKNOWN"
+        ],
+        "title": "Decision",
+        "type": "string"
+      },
+      "ErrorDetail": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "criterion_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Criterion Id"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ErrorDetail",
+        "type": "object"
+      },
+      "ScreeningStatus": {
+        "enum": [
+          "SCREENING_BARRIER",
+          "NEEDS_MORE_INFORMATION",
+          "POTENTIAL_MATCH_FOR_REVIEW"
+        ],
+        "title": "ScreeningStatus",
+        "type": "string"
+      },
+      "TrialResult": {
+        "additionalProperties": false,
+        "properties": {
+          "trial_id": {
+            "title": "Trial Id",
+            "type": "string"
+          },
+          "brief_title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Brief Title"
+          },
+          "recruitment_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recruitment Status"
+          },
+          "screening_status": {
+            "$ref": "#/$defs/ScreeningStatus"
+          },
+          "match_score": {
+            "anyOf": [
+              {
+                "maximum": 100,
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Match Score"
+          },
+          "score_type": {
+            "default": "criterion_satisfaction_v0",
+            "title": "Score Type",
+            "type": "string"
+          },
+          "eligibility_probability": {
+            "default": null,
+            "title": "Eligibility Probability",
+            "type": "null"
+          },
+          "retrieval": {
+            "additionalProperties": true,
+            "title": "Retrieval",
+            "type": "object"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "question_response": {
+            "title": "Question Response",
+            "type": "string"
+          },
+          "assessment_coverage": {
+            "$ref": "#/$defs/Coverage"
+          },
+          "criteria_assessments": {
+            "items": {
+              "$ref": "#/$defs/CriterionAssessment"
+            },
+            "title": "Criteria Assessments",
+            "type": "array"
+          },
+          "evidence": {
+            "additionalProperties": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Evidence",
+            "type": "object"
+          },
+          "missing_information": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Missing Information",
+            "type": "array"
+          },
+          "screening_concerns": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Screening Concerns",
+            "type": "array"
+          },
+          "review_required": {
+            "default": true,
+            "title": "Review Required",
+            "type": "boolean"
+          },
+          "source_url": {
+            "title": "Source Url",
+            "type": "string"
+          },
+          "trial_snapshot_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Trial Snapshot Date"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "trial_id",
+          "brief_title",
+          "recruitment_status",
+          "screening_status",
+          "retrieval",
+          "summary",
+          "question_response",
+          "assessment_coverage",
+          "criteria_assessments",
+          "evidence",
+          "missing_information",
+          "screening_concerns",
+          "source_url",
+          "trial_snapshot_date"
+        ],
+        "title": "TrialResult",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "default": "0.1",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "run_id": {
+        "title": "Run Id",
+        "type": "string"
+      },
+      "patient_id": {
+        "title": "Patient Id",
+        "type": "string"
+      },
+      "question": {
+        "title": "Question",
+        "type": "string"
+      },
+      "patient_reference_date": {
+        "title": "Patient Reference Date",
+        "type": "string"
+      },
+      "mode": {
+        "title": "Mode",
+        "type": "string"
+      },
+      "result_status": {
+        "title": "Result Status",
+        "type": "string"
+      },
+      "answer": {
+        "title": "Answer",
+        "type": "string"
+      },
+      "candidate_trials": {
+        "items": {
+          "$ref": "#/$defs/TrialResult"
+        },
+        "title": "Candidate Trials",
+        "type": "array"
+      },
+      "warnings": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Warnings",
+        "type": "array"
+      },
+      "errors": {
+        "items": {
+          "$ref": "#/$defs/ErrorDetail"
+        },
+        "title": "Errors",
+        "type": "array"
+      },
+      "provenance": {
+        "additionalProperties": true,
+        "title": "Provenance",
+        "type": "object"
+      },
+      "metrics": {
+        "additionalProperties": true,
+        "title": "Metrics",
+        "type": "object"
+      }
+    },
+    "required": [
+      "run_id",
+      "patient_id",
+      "question",
+      "patient_reference_date",
+      "mode",
+      "result_status",
+      "answer",
+      "candidate_trials",
+      "warnings",
+      "errors",
+      "provenance",
+      "metrics"
+    ],
+    "title": "ScreenResponse",
+    "type": "object"
+  }
+}

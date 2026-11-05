@@ -1,0 +1,33 @@
+{
+  "scope": "Descriptive evidence presence in the fixed 25-patient source file; not timeliness, adherence, clinical negatives, eligibility or confirmed living status.",
+  "cohort_sha256": "33ac165b9be7c564207325ae951d40b9cfdc3b72f8fb2f56e3e58193894331a1",
+  "patients": 25,
+  "reference_dates": [
+    "2021-11-30"
+  ],
+  "exact_loinc_codes": {
+    "hba1c": "4548-4",
+    "bmi": "39156-5",
+    "blood_pressure": "85354-9",
+    "egfr": "33914-3",
+    "ast": "1920-8",
+    "alt": "1742-6"
+  },
+  "observation_patients": {
+    "hba1c": 25,
+    "bmi": 25,
+    "blood_pressure": 25,
+    "egfr": 24,
+    "ast": 5,
+    "alt": 5
+  },
+  "medication_record_patients": {
+    "requests": 25,
+    "administrations": 4,
+    "dispenses": 0,
+    "statements": 0
+  },
+  "recorded_deceased_on_or_before_cutoff": 2,
+  "no_recorded_death_by_cutoff_not_confirmed_alive": 23,
+  "method": "Any retained Observation with the exact LOINC system/code; any retained medication record in each separate evidence array. No recency or normality inferred."
+}

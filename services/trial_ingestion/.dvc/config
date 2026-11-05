@@ -1,0 +1,4 @@
+[core]
+    remote = team
+['remote "team"']
+    url = gs://trialmatch-ac215-yixiao-dvc/dvc

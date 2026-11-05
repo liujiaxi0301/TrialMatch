@@ -1,0 +1,533 @@
+{
+  "artifacts_directory": "artifacts/rag_workflow/grounding_case_guard_revision",
+  "automated_checks": {
+    "ruff": "PASS",
+    "tests_passed": 67,
+    "tests_total": 67
+  },
+  "criterion_comparison": [
+    {
+      "after": "MET",
+      "before": "UNKNOWN",
+      "criterion_id": "NCT02390973_inc_001",
+      "criterion_text": "BMI ≥ 35",
+      "evidence_fact_ids": [
+        "fixture:claude_synthetic_001#bmi"
+      ],
+      "method": "rule",
+      "reason": "Verified BMI 37.2 kg/m2 against the supplied threshold; source is undated; no recency is asserted or required by this statement.",
+      "validation_warnings": [
+        "UNDATED_MEASUREMENT_NO_RECENCY_CLAIM"
+      ]
+    },
+    {
+      "after": "MET",
+      "before": "MET",
+      "criterion_id": "NCT02390973_inc_002",
+      "criterion_text": "type 2 diabetes",
+      "evidence_fact_ids": [
+        "fixture:claude_synthetic_001#diagnosis"
+      ],
+      "method": "llm",
+      "reason": "The patient has a documented diagnosis of type 2 diabetes.",
+      "validation_warnings": []
+    },
+    {
+      "after": "MET",
+      "before": "UNKNOWN",
+      "criterion_id": "NCT02390973_inc_003",
+      "criterion_text": "HbA1c ≥ 6,5 % or fasting glycemia ≥7mmol/l or non-fasting glycemia ≥11mmol/l",
+      "evidence_fact_ids": [
+        "fixture:claude_synthetic_001#hba1c",
+        "fixture:claude_synthetic_001#fasting_glucose"
+      ],
+      "method": "rule",
+      "reason": "OR evaluated with three-valued logic: Verified HbA1c 7.8 % against the supplied threshold; source is undated; no recency is asserted or required by this statement.; Verified fasting glycemia 8.1 mmol/l against the supplied threshold; source is undated; no recency is asserted or required by this statement.; No usable non-fasting glycemia measurement with matching units.",
+      "validation_warnings": [
+        "UNDATED_MEASUREMENT_NO_RECENCY_CLAIM"
+      ]
+    },
+    {
+      "after": "MET",
+      "before": "UNKNOWN",
+      "criterion_id": "NCT02390973_inc_004",
+      "criterion_text": "able to consent",
+      "evidence_fact_ids": [
+        "fixture:claude_synthetic_001#consent"
+      ],
+      "method": "rule",
+      "reason": "An explicit source statement documents consent capacity; alertness alone was not used.",
+      "validation_warnings": []
+    },
+    {
+      "after": "NOT_MET",
+      "before": "UNKNOWN",
+      "criterion_id": "NCT02390973_exc_001",
+      "criterion_text": "pregnancy",
+      "evidence_fact_ids": [
+        "fixture:claude_synthetic_001#pregnancy_test"
+      ],
+      "method": "rule",
+      "reason": "The source explicitly reports a negative pregnancy test; this describes the supplied record, not a new/current clinical test.",
+      "validation_warnings": [
+        "PREGNANCY_TEST_TIMING_REQUIRES_CLINICAL_REVIEW"
+      ]
+    },
+    {
+      "after": "NOT_MET",
+      "before": "UNKNOWN",
+      "criterion_id": "NCT02390973_exc_002",
+      "criterion_text": "past esophageal, gastric or bariatric surgery",
+      "evidence_fact_ids": [
+        "fixture:claude_synthetic_001#surgery_history"
+      ],
+      "method": "rule",
+      "reason": "Source explicitly denies all required histories.",
+      "validation_warnings": []
+    },
+    {
+      "after": "UNKNOWN",
+      "before": "UNKNOWN",
+      "criterion_id": "NCT02390973_exc_003",
+      "criterion_text": "irritable bowel, unexplained intermittent vomiting, severe abdominal pain, chronic diarrhea or constipation",
+      "evidence_fact_ids": [
+        "fixture:claude_synthetic_001#gi_symptoms_unknown"
+      ],
+      "method": "llm",
+      "reason": "The patient record explicitly states that there is no information regarding unexplained intermittent vomiting, severe abdominal pain, chronic diarrhea, or chronic constipation.",
+      "validation_warnings": []
+    },
+    {
+      "after": "NOT_MET",
+      "before": "UNKNOWN",
+      "criterion_id": "NCT02390973_exc_004",
+      "criterion_text": "history of gastric or duodenal ulcers",
+      "evidence_fact_ids": [
+        "fixture:claude_synthetic_001#ulcer_history"
+      ],
+      "method": "rule",
+      "reason": "Source explicitly denies all required histories. The source says 'no known history'; that qualifier is retained.",
+      "validation_warnings": [
+        "SOURCE_SAYS_NO_KNOWN_HISTORY"
+      ]
+    },
+    {
+      "after": "UNKNOWN",
+      "before": "UNKNOWN",
+      "criterion_id": "NCT02390973_exc_005",
+      "criterion_text": "pre-operatory hypoalbuminemy",
+      "evidence_fact_ids": [
+        "fixture:claude_synthetic_001#albumin"
+      ],
+      "method": "abstain",
+      "reason": "Pre-operative albumin interpretation/timing and a source-provided reference range or explicit diagnosis are insufficient. No normal range is invented.",
+      "validation_warnings": [
+        "ALBUMIN_RANGE_OR_PREOPERATIVE_TIMING_MISSING"
+      ]
+    },
+    {
+      "after": "UNKNOWN",
+      "before": "UNKNOWN",
+      "criterion_id": "NCT02390973_exc_006",
+      "criterion_text": "history of renal, hepatic, cardiac or pulmonary severe disease",
+      "evidence_fact_ids": [
+        "fixture:claude_synthetic_001#organ_disease_unknown"
+      ],
+      "method": "llm",
+      "reason": "The patient record states that it is undocumented whether the patient has a history of severe renal, hepatic, cardiac, or pulmonary disease.",
+      "validation_warnings": []
+    },
+    {
+      "after": "UNKNOWN",
+      "before": "UNKNOWN",
+      "criterion_id": "NCT02390973_exc_007",
+      "criterion_text": "taken of corticosteroid in the last month",
+      "evidence_fact_ids": [
+        "fixture:claude_synthetic_001#prednisone"
+      ],
+      "method": "abstain",
+      "reason": "Use date derived/recorded as 2026-09-27, relative to the supplied reference 2026-10-11, is inside [2026-09-11, 2026-10-11]. Time-window check passed, but a source-provided corticosteroid classification is missing.",
+      "validation_warnings": [
+        "MEDICATION_CLASS_NOT_SUPPLIED"
+      ]
+    },
+    {
+      "after": "UNKNOWN",
+      "before": "UNKNOWN",
+      "criterion_id": "NCT02390973_exc_008",
+      "criterion_text": "evidence of psycological problem that may affect the capacity to understand the project and to comply with the medical recommandations",
+      "evidence_fact_ids": [
+        "fixture:claude_synthetic_001#consent"
+      ],
+      "method": "llm_abstain",
+      "reason": "The supplied evidence does not verify the complete criterion: UNSUPPORTED_COMPOSITE_OR_SUBJECTIVE_EXPRESSION.",
+      "validation_warnings": [
+        "UNSUPPORTED_COMPOSITE_OR_SUBJECTIVE_EXPRESSION"
+      ]
+    },
+    {
+      "after": "NOT_MET",
+      "before": "UNKNOWN",
+      "criterion_id": "NCT02390973_exc_009",
+      "criterion_text": "history of drug use or alcool abuse in the last 12 months",
+      "evidence_fact_ids": [
+        "fixture:claude_synthetic_001#substance_history"
+      ],
+      "method": "rule",
+      "reason": "Source explicitly denies all required histories within the requested window.",
+      "validation_warnings": []
+    },
+    {
+      "after": "UNKNOWN",
+      "before": "UNKNOWN",
+      "criterion_id": "NCT02390973_exc_010",
+      "criterion_text": "history of gastro-intestinal inflammatory diseases",
+      "evidence_fact_ids": [],
+      "method": "abstain",
+      "reason": "Explicit negative history does not cover every required condition and time window; missing: gastrointestinal inflammatory disease",
+      "validation_warnings": [
+        "NEGATIVE_SCOPE_OR_WINDOW_INCOMPLETE"
+      ]
+    }
+  ],
+  "fixed_trial_after": {
+    "coverage": {
+      "completed": 11,
+      "known": 8,
+      "screening_barriers": 0,
+      "total": 14,
+      "unknown": 6
+    },
+    "match_score": 57.1,
+    "metrics": {
+      "cache_hits": 0,
+      "embedding_requests": 0,
+      "generation_requests": 1,
+      "output_tokens": 453,
+      "prompt_tokens": 7682
+    },
+    "screening_status": "NEEDS_MORE_INFORMATION"
+  },
+  "fixed_trial_before": {
+    "coverage": {
+      "completed": 14,
+      "known": 1,
+      "screening_barriers": 0,
+      "total": 14,
+      "unknown": 13
+    },
+    "match_score": 7.1
+  },
+  "fixed_trial_checks": {
+    "citation_ids_valid": true,
+    "decision_counts": {
+      "MET": 4,
+      "NOT_MET": 4,
+      "UNKNOWN": 6
+    },
+    "error_codes": [],
+    "focus_checks": [
+      {
+        "actual_decision": "UNKNOWN",
+        "claude_baseline_decision": "NOT_MET",
+        "criterion_id": "NCT02390973_exc_005",
+        "evidence_fact_ids": [
+          "fixture:claude_synthetic_001#albumin"
+        ],
+        "expected_closed_context_decision": "UNKNOWN",
+        "method": "abstain",
+        "passed": true,
+        "raw_model_proposal_before_guard": null,
+        "reason": "Pre-operative albumin interpretation/timing and a source-provided reference range or explicit diagnosis are insufficient. No normal range is invented.",
+        "validation_warnings": [
+          "ALBUMIN_RANGE_OR_PREOPERATIVE_TIMING_MISSING"
+        ]
+      },
+      {
+        "actual_decision": "UNKNOWN",
+        "claude_baseline_decision": "MET",
+        "criterion_id": "NCT02390973_exc_007",
+        "evidence_fact_ids": [
+          "fixture:claude_synthetic_001#prednisone"
+        ],
+        "expected_closed_context_decision": "UNKNOWN",
+        "method": "abstain",
+        "passed": true,
+        "raw_model_proposal_before_guard": null,
+        "reason": "Use date derived/recorded as 2026-09-27, relative to the supplied reference 2026-10-11, is inside [2026-09-11, 2026-10-11]. Time-window check passed, but a source-provided corticosteroid classification is missing.",
+        "validation_warnings": [
+          "MEDICATION_CLASS_NOT_SUPPLIED"
+        ]
+      },
+      {
+        "actual_decision": "UNKNOWN",
+        "claude_baseline_decision": "NOT_MET",
+        "criterion_id": "NCT02390973_exc_010",
+        "evidence_fact_ids": [],
+        "expected_closed_context_decision": "UNKNOWN",
+        "method": "abstain",
+        "passed": true,
+        "raw_model_proposal_before_guard": null,
+        "reason": "Explicit negative history does not cover every required condition and time window; missing: gastrointestinal inflammatory disease",
+        "validation_warnings": [
+          "NEGATIVE_SCOPE_OR_WINDOW_INCOMPLETE"
+        ]
+      }
+    ],
+    "grounding_focus_passed": true,
+    "interpretation": "Evaluate guarded outputs separately from raw model behavior. UNKNOWN-only output does not establish a useful or accurate model. Positive controls quantify abstention.",
+    "positive_controls": [
+      {
+        "actual": "MET",
+        "criterion_id": "NCT02390973_inc_001",
+        "expected": "MET"
+      },
+      {
+        "actual": "MET",
+        "criterion_id": "NCT02390973_inc_002",
+        "expected": "MET"
+      },
+      {
+        "actual": "MET",
+        "criterion_id": "NCT02390973_inc_003",
+        "expected": "MET"
+      },
+      {
+        "actual": "MET",
+        "criterion_id": "NCT02390973_inc_004",
+        "expected": "MET"
+      }
+    ],
+    "positive_controls_met": 4,
+    "positive_controls_total": 4
+  },
+  "full_rag": {
+    "candidate_trial_ids": [
+      "NCT04284943",
+      "NCT03827382",
+      "NCT03821636"
+    ],
+    "errors": [
+      {
+        "code": "INVALID_LLM_OUTPUT",
+        "criterion_id": "NCT04284943_exc_011",
+        "message": "Model assessment unavailable or invalid; human review required."
+      },
+      {
+        "code": "INVALID_LLM_OUTPUT",
+        "criterion_id": "NCT04284943_exc_012",
+        "message": "Model assessment unavailable or invalid; human review required."
+      },
+      {
+        "code": "INVALID_LLM_OUTPUT",
+        "criterion_id": "NCT04284943_exc_013",
+        "message": "Model assessment unavailable or invalid; human review required."
+      },
+      {
+        "code": "INVALID_LLM_OUTPUT",
+        "criterion_id": "NCT04284943_exc_014",
+        "message": "Model assessment unavailable or invalid; human review required."
+      },
+      {
+        "code": "INVALID_LLM_OUTPUT",
+        "criterion_id": "NCT04284943_exc_015",
+        "message": "Model assessment unavailable or invalid; human review required."
+      },
+      {
+        "code": "INVALID_LLM_OUTPUT",
+        "criterion_id": "NCT04284943_exc_016",
+        "message": "Model assessment unavailable or invalid; human review required."
+      }
+    ],
+    "metrics": {
+      "cache_hits": 3,
+      "candidate_count": 3,
+      "corpus_trial_count": 50,
+      "embedding_requests": 0,
+      "generation_requests": 9,
+      "latency_seconds": 20.975,
+      "output_tokens": 5269,
+      "prompt_tokens": 24733
+    },
+    "result_status": "PARTIAL",
+    "target_trial_retrieved": false
+  },
+  "notes": [
+    "No albumin reference range or prednisone class was inserted into the source fixture.",
+    "Relative medication dates use the declared fixture reference 2026-10-11, not today.",
+    "Numeric checks accept undated observations only when the criterion has no explicit recency requirement; they do not establish current clinical status.",
+    "Qualified negative history remains qualified; source date/window and category coverage are checked.",
+    "The target trial remains outside the normal top three; the separate full run is PARTIAL.",
+    "A full disease ontology or general natural-language clinical logic parser is not implemented."
+  ],
+  "recorded_date": "2026-10-19",
+  "same_captured_model_response_replay": {
+    "results": [
+      {
+        "criterion_id": "NCT02390973_inc_001",
+        "evidence_fact_ids": [
+          "fixture:claude_synthetic_001#bmi"
+        ],
+        "old_guarded_decision": "UNKNOWN",
+        "reason": "Verified BMI 37.2 kg/m2 against the supplied threshold; source is undated; no recency is asserted or required by this statement.",
+        "revised_guard_decision": "MET",
+        "same_gemini_proposal": "MET",
+        "warnings": [
+          "UNDATED_MEASUREMENT_NO_RECENCY_CLAIM"
+        ]
+      },
+      {
+        "criterion_id": "NCT02390973_inc_002",
+        "evidence_fact_ids": [
+          "fixture:claude_synthetic_001#diagnosis"
+        ],
+        "old_guarded_decision": "MET",
+        "reason": "The patient has a documented history of type 2 diabetes.",
+        "revised_guard_decision": "MET",
+        "same_gemini_proposal": "MET",
+        "warnings": []
+      },
+      {
+        "criterion_id": "NCT02390973_inc_003",
+        "evidence_fact_ids": [
+          "fixture:claude_synthetic_001#hba1c",
+          "fixture:claude_synthetic_001#fasting_glucose"
+        ],
+        "old_guarded_decision": "UNKNOWN",
+        "reason": "OR evaluated with three-valued logic: Verified HbA1c 7.8 % against the supplied threshold; source is undated; no recency is asserted or required by this statement.; Verified fasting glycemia 8.1 mmol/l against the supplied threshold; source is undated; no recency is asserted or required by this statement.; No usable non-fasting glycemia measurement with matching units.",
+        "revised_guard_decision": "MET",
+        "same_gemini_proposal": "MET",
+        "warnings": [
+          "UNDATED_MEASUREMENT_NO_RECENCY_CLAIM"
+        ]
+      },
+      {
+        "criterion_id": "NCT02390973_inc_004",
+        "evidence_fact_ids": [
+          "fixture:claude_synthetic_001#consent"
+        ],
+        "old_guarded_decision": "UNKNOWN",
+        "reason": "An explicit source statement documents consent capacity; alertness alone was not used.",
+        "revised_guard_decision": "MET",
+        "same_gemini_proposal": "MET",
+        "warnings": []
+      },
+      {
+        "criterion_id": "NCT02390973_exc_001",
+        "evidence_fact_ids": [
+          "fixture:claude_synthetic_001#pregnancy_test"
+        ],
+        "old_guarded_decision": "UNKNOWN",
+        "reason": "The source explicitly reports a negative pregnancy test; this describes the supplied record, not a new/current clinical test.",
+        "revised_guard_decision": "NOT_MET",
+        "same_gemini_proposal": "NOT_MET",
+        "warnings": [
+          "PREGNANCY_TEST_TIMING_REQUIRES_CLINICAL_REVIEW"
+        ]
+      },
+      {
+        "criterion_id": "NCT02390973_exc_002",
+        "evidence_fact_ids": [
+          "fixture:claude_synthetic_001#surgery_history"
+        ],
+        "old_guarded_decision": "UNKNOWN",
+        "reason": "Source explicitly denies all required histories.",
+        "revised_guard_decision": "NOT_MET",
+        "same_gemini_proposal": "NOT_MET",
+        "warnings": []
+      },
+      {
+        "criterion_id": "NCT02390973_exc_003",
+        "evidence_fact_ids": [],
+        "old_guarded_decision": "UNKNOWN",
+        "reason": "The patient's record does not contain information regarding the presence or absence of irritable bowel, unexplained intermittent vomiting, severe abdominal pain, or chronic diarrhea/constipation.",
+        "revised_guard_decision": "UNKNOWN",
+        "same_gemini_proposal": "UNKNOWN",
+        "warnings": []
+      },
+      {
+        "criterion_id": "NCT02390973_exc_004",
+        "evidence_fact_ids": [
+          "fixture:claude_synthetic_001#ulcer_history"
+        ],
+        "old_guarded_decision": "UNKNOWN",
+        "reason": "Source explicitly denies all required histories. The source says 'no known history'; that qualifier is retained.",
+        "revised_guard_decision": "NOT_MET",
+        "same_gemini_proposal": "NOT_MET",
+        "warnings": [
+          "SOURCE_SAYS_NO_KNOWN_HISTORY"
+        ]
+      },
+      {
+        "criterion_id": "NCT02390973_exc_005",
+        "evidence_fact_ids": [
+          "fixture:claude_synthetic_001#albumin"
+        ],
+        "old_guarded_decision": "UNKNOWN",
+        "reason": "Pre-operative albumin interpretation/timing and a source-provided reference range or explicit diagnosis are insufficient. No normal range is invented.",
+        "revised_guard_decision": "UNKNOWN",
+        "same_gemini_proposal": "NOT_MET",
+        "warnings": [
+          "ALBUMIN_RANGE_OR_PREOPERATIVE_TIMING_MISSING"
+        ]
+      },
+      {
+        "criterion_id": "NCT02390973_exc_006",
+        "evidence_fact_ids": [],
+        "old_guarded_decision": "UNKNOWN",
+        "reason": "The patient's record does not document whether the patient has a history of severe renal, hepatic, cardiac, or pulmonary disease.",
+        "revised_guard_decision": "UNKNOWN",
+        "same_gemini_proposal": "UNKNOWN",
+        "warnings": []
+      },
+      {
+        "criterion_id": "NCT02390973_exc_007",
+        "evidence_fact_ids": [
+          "fixture:claude_synthetic_001#prednisone"
+        ],
+        "old_guarded_decision": "UNKNOWN",
+        "reason": "Use date derived/recorded as 2026-09-27, relative to the supplied reference 2026-10-11, is inside [2026-09-11, 2026-10-11]. Time-window check passed, but a source-provided corticosteroid classification is missing.",
+        "revised_guard_decision": "UNKNOWN",
+        "same_gemini_proposal": "MET",
+        "warnings": [
+          "MEDICATION_CLASS_NOT_SUPPLIED"
+        ]
+      },
+      {
+        "criterion_id": "NCT02390973_exc_008",
+        "evidence_fact_ids": [
+          "fixture:claude_synthetic_001#consent"
+        ],
+        "old_guarded_decision": "UNKNOWN",
+        "reason": "While the patient is able to provide informed consent, there is no formal psychological assessment in the record to rule out problems that might affect compliance with medical recommendations.",
+        "revised_guard_decision": "UNKNOWN",
+        "same_gemini_proposal": "UNKNOWN",
+        "warnings": []
+      },
+      {
+        "criterion_id": "NCT02390973_exc_009",
+        "evidence_fact_ids": [
+          "fixture:claude_synthetic_001#substance_history"
+        ],
+        "old_guarded_decision": "UNKNOWN",
+        "reason": "Source explicitly denies all required histories within the requested window.",
+        "revised_guard_decision": "NOT_MET",
+        "same_gemini_proposal": "NOT_MET",
+        "warnings": []
+      },
+      {
+        "criterion_id": "NCT02390973_exc_010",
+        "evidence_fact_ids": [],
+        "old_guarded_decision": "UNKNOWN",
+        "reason": "Explicit negative history does not cover every required condition and time window; missing: gastrointestinal inflammatory disease",
+        "revised_guard_decision": "UNKNOWN",
+        "same_gemini_proposal": "NOT_MET",
+        "warnings": [
+          "NEGATIVE_SCOPE_OR_WINDOW_INCOMPLETE"
+        ]
+      }
+    ],
+    "source": "Existing real Gemini responses, revalidated; no new model requests for this comparison"
+  },
+  "scope": "Evidence-checked guard revision on the same unmodified synthetic fixture; not clinical validation"
+}

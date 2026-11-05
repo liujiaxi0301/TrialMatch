@@ -1,0 +1,10 @@
+Saved 4 patients to /tmp/trialmatch-infra-patient-dbwi2tct/patients.jsonl
+Saved coverage report to /tmp/trialmatch-infra-patient-dbwi2tct/coverage_report.json
+conditions: 87
+observations: 397
+procedures: 112
+medication requests: 18
+medication definitions: 2
+medication dispenses: 0
+medication administrations: 2
+medication statements: 0

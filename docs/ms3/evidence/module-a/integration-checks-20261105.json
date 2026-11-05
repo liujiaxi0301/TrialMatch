@@ -1,0 +1,51 @@
+{
+  "date": "2026-11-05",
+  "checked_at": "2026-11-05T19:27:45.912065+00:00",
+  "scope": "Core reliability, release identity including data fingerprints and unique build tags in an immutable registry, build/validation/API deployment binding, input-data hash guard, and CI. Local execution with cloud calls simulated; hosted CI and actual cloud build/pipeline/deployment have not run.",
+  "base_commit": "e96a928f5a795c84e6e647c0670691b74805e748",
+  "uv_version": "0.13.1",
+  "results": [
+    {
+      "name": "Install the workflow's locked dependencies",
+      "command": "uv sync --project docker/workflow --locked --no-dev --python 3.12",
+      "exit_code": 0,
+      "seconds": 0.039,
+      "output": "Resolved 177 packages in 1ms\nChecked 174 packages in 1ms\n"
+    },
+    {
+      "name": "Lint pipeline code and tests",
+      "command": "uv tool run ruff==0.17.1 check cloud/pipeline.py cloud/tasks.py cloud/release.py cloud/tests",
+      "exit_code": 0,
+      "seconds": 0.042,
+      "output": "All checks passed!\n"
+    },
+    {
+      "name": "Check deployment script syntax",
+      "command": "bash -n cloud/deploy.sh cloud/setup.sh",
+      "exit_code": 0,
+      "seconds": 0.003,
+      "output": ""
+    },
+    {
+      "name": "Validate the committed data snapshot",
+      "command": "docker/workflow/.venv/bin/python prepare_data.py",
+      "exit_code": 0,
+      "seconds": 0.24,
+      "output": "Validated 1313 trials and 18456 criteria.\nSaved data versions to /workspace/TrialMatch/artifacts/infra/data_versions.json\nThe app reads source data directly from services/.\n"
+    },
+    {
+      "name": "Run pipeline regression tests",
+      "command": "docker/workflow/.venv/bin/python -m unittest discover -s cloud/tests -v",
+      "exit_code": 0,
+      "seconds": 12.074,
+      "output": "test_changed_or_missing_input_stops_before_any_storage_call (test_data_hashes.CheckedPublicationTests.test_changed_or_missing_input_stops_before_any_storage_call) ... ok\ntest_mismatched_image_address_or_fingerprint_cannot_publish (test_data_hashes.CheckedPublicationTests.test_mismatched_image_address_or_fingerprint_cannot_publish) ... ok\ntest_new_data_gets_distinct_release_even_with_same_source_and_image (test_data_hashes.CheckedPublicationTests.test_new_data_gets_distinct_release_even_with_same_source_and_image) ... ok\ntest_unchanged_inputs_publish_and_republish_identically (test_data_hashes.CheckedPublicationTests.test_unchanged_inputs_publish_and_republish_identically) ... ok\ntest_upload_uses_checked_copy_when_original_changes_during_upload (test_data_hashes.CheckedPublicationTests.test_upload_uses_checked_copy_when_original_changes_during_upload) ... ok\ntest_all_seven_inputs_and_ignored_index_affect_fingerprint (test_data_hashes.InputHashTests.test_all_seven_inputs_and_ignored_index_affect_fingerprint) ... ok\ntest_missing_files_and_incomplete_or_invalid_hash_records_fail (test_data_hashes.InputHashTests.test_missing_files_and_incomplete_or_invalid_hash_records_fail) ... ok\ntest_bound_success_records_the_build_and_verified_output (test_pipeline.PipelineTests.test_bound_success_records_the_build_and_verified_output) ... ok\ntest_build_changed_during_run_cannot_authorize_deployment (test_pipeline.PipelineTests.test_build_changed_during_run_cannot_authorize_deployment) ... ok\ntest_cloud_manifest_must_match_bound_data_before_submission (test_pipeline.PipelineTests.test_cloud_manifest_must_match_bound_data_before_submission) ... ok\ntest_compile_only_has_data_dependencies_and_no_cloud_calls (test_pipeline.PipelineTests.test_compile_only_has_data_dependencies_and_no_cloud_calls) ... ok\ntest_failed_job_invalidates_previous_success (test_pipeline.PipelineTests.test_failed_job_invalidates_previous_success) ... ok\ntest_failed_report_does_not_publish_deployable_release (test_pipeline.PipelineTests.test_failed_report_does_not_publish_deployable_release) ... ok\ntest_failed_submission_invalidates_previous_success (test_pipeline.PipelineTests.test_failed_submission_invalidates_previous_success) ... ok\ntest_foreign_report_release_is_rejected (test_pipeline.PipelineTests.test_foreign_report_release_is_rejected) ... ok\ntest_mismatched_build_inputs_stop_before_submission (test_pipeline.PipelineTests.test_mismatched_build_inputs_stop_before_submission) ... ok\ntest_success_writes_current_release_and_uses_expected_runtime_config (test_pipeline.PipelineTests.test_success_writes_current_release_and_uses_expected_runtime_config) ... ok\ntest_wait_exception_cannot_leave_deployment_permission (test_pipeline.PipelineTests.test_wait_exception_cannot_leave_deployment_permission) ... ok\ntest_app_rejects_incomplete_failed_or_mismatched_validation (test_release.DeployReleaseTests.test_app_rejects_incomplete_failed_or_mismatched_validation) ... ok\ntest_app_uses_validated_api_digest_and_output_release (test_release.DeployReleaseTests.test_app_uses_validated_api_digest_and_output_release) ... ok\ntest_database_creation_uses_the_selected_build_tag (test_release.DeployReleaseTests.test_database_creation_uses_the_selected_build_tag) ... ok\ntest_database_does_not_update_an_existing_vm (test_release.DeployReleaseTests.test_database_does_not_update_an_existing_vm) ... ok\ntest_failed_or_unusable_build_cannot_reuse_previous_selection (test_release.DeployReleaseTests.test_failed_or_unusable_build_cannot_reuse_previous_selection) ... ok\ntest_inputs_changed_during_build_cannot_activate_new_target (test_release.DeployReleaseTests.test_inputs_changed_during_build_cannot_activate_new_target) ... ok\ntest_missing_build_input_stops_before_cloud_build (test_release.DeployReleaseTests.test_missing_build_input_stops_before_cloud_build) ... ok\ntest_missing_or_stale_target_blocks_publication_and_submission (test_release.DeployReleaseTests.test_missing_or_stale_target_blocks_publication_and_submission) ... ok\ntest_pipeline_target_failure_clears_previous_deployment_permission (test_release.DeployReleaseTests.test_pipeline_target_failure_clears_previous_deployment_permission) ... ok\ntest_rebuild_blocks_old_validation_even_with_same_source_version (test_release.DeployReleaseTests.test_rebuild_blocks_old_validation_even_with_same_source_version) ... ok\ntest_rebuild_uses_unique_tags_in_immutable_registry_and_pins_consumers (test_release.DeployReleaseTests.test_rebuild_uses_unique_tags_in_immutable_registry_and_pins_consumers) ... ok\ntest_rebuilding_only_ignored_data_selects_a_new_release (test_release.DeployReleaseTests.test_rebuilding_only_ignored_data_selects_a_new_release) ... ok\ntest_build_requires_success_and_exact_workflow_digest (test_release.ReleaseIdentityTests.test_build_requires_success_and_exact_workflow_digest) ... ok\ntest_rebuild_and_republish_preserve_existing_releases (test_release.ReleaseIdentityTests.test_rebuild_and_republish_preserve_existing_releases) ... ok\ntest_saved_target_rejects_changed_configuration_or_content (test_release.ReleaseIdentityTests.test_saved_target_rejects_changed_configuration_or_content) ... ok\ntest_command_propagates_nonzero_exit (test_tasks.ReleaseFailureTests.test_command_propagates_nonzero_exit) ... ok\ntest_corrupt_raw_archive_stops_before_rebuild (test_tasks.ReleaseFailureTests.test_corrupt_raw_archive_stops_before_rebuild) ... ok\ntest_hash_mismatch_stops_before_dvc (test_tasks.ReleaseFailureTests.test_hash_mismatch_stops_before_dvc) ... ok\ntest_invalid_manifest_schema_stops_before_download (test_tasks.ReleaseFailureTests.test_invalid_manifest_schema_stops_before_download) ... ok\ntest_missing_remote_file_stops_before_dvc (test_tasks.ReleaseFailureTests.test_missing_remote_file_stops_before_dvc) ... ok\ntest_validation_subprocess_failure_does_not_write_success (test_tasks.ReleaseFailureTests.test_validation_subprocess_failure_does_not_write_success) ... ok\ntest_wrong_raw_file_count_stops_before_publishing (test_tasks.ReleaseFailureTests.test_wrong_raw_file_count_stops_before_publishing) ... ok\ntest_corrupt_snapshot_checksum_is_rejected (test_tasks.SnapshotValidationTests.test_corrupt_snapshot_checksum_is_rejected) ... ok\ntest_foreign_source_snapshot_is_rejected_even_with_valid_internal_checksum (test_tasks.SnapshotValidationTests.test_foreign_source_snapshot_is_rejected_even_with_valid_internal_checksum) ... ok\ntest_invalid_patient_schema_stops_before_success_report (test_tasks.SnapshotValidationTests.test_invalid_patient_schema_stops_before_success_report) ... ok\ntest_matching_snapshot_and_offline_screening_pass (test_tasks.SnapshotValidationTests.test_matching_snapshot_and_offline_screening_pass) ... ok\ntest_wrong_vector_dimension_is_rejected_even_with_valid_checksum (test_tasks.SnapshotValidationTests.test_wrong_vector_dimension_is_rejected_even_with_valid_checksum) ... ok\n\n----------------------------------------------------------------------\nRan 45 tests in 9.597s\n\nOK\n"
+    },
+    {
+      "name": "Compile the pipeline without submitting a cloud job",
+      "command": "docker/workflow/.venv/bin/python -m cloud.pipeline --project=trialmatch-ci --region=us-east1 --bucket=trialmatch-ci-data --image=example/workflow:ci --release=gs://trialmatch-ci-data/releases/fixed/release.json --compile-only",
+      "exit_code": 0,
+      "seconds": 1.979,
+      "output": ""
+    }
+  ]
+}

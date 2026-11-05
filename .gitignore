@@ -221,3 +221,9 @@ __marimo__/
 
 # TrialMatch generated raw ClinicalTrials.gov data
 services/trial_ingestion/data/raw/*.json
+
+# Part 3 local state and credentials; examples are committed separately.
+artifacts/
+secrets/
+**/*service-account*.json
+**/*credentials*.json

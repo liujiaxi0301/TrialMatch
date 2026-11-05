@@ -1,0 +1,26 @@
+test_actual_patient_and_static_app (test_application.ApplicationTests.test_actual_patient_and_static_app) ... ok
+test_chroma_context_and_persistence (test_application.ApplicationTests.test_chroma_context_and_persistence) ... Indexed 40/607 criterion fragments
+Indexed 80/607 criterion fragments
+Indexed 120/607 criterion fragments
+Indexed 160/607 criterion fragments
+Indexed 200/607 criterion fragments
+Indexed 240/607 criterion fragments
+Indexed 280/607 criterion fragments
+Indexed 320/607 criterion fragments
+Indexed 360/607 criterion fragments
+Indexed 400/607 criterion fragments
+Indexed 440/607 criterion fragments
+Indexed 480/607 criterion fragments
+Indexed 520/607 criterion fragments
+Indexed 560/607 criterion fragments
+Indexed 600/607 criterion fragments
+Indexed 607/607 criterion fragments
+ok
+test_hash_vectors_are_stable_and_normalized (test_application.ApplicationTests.test_hash_vectors_are_stable_and_normalized) ... ok
+test_invalid_input_has_no_mock_fallback (test_application.ApplicationTests.test_invalid_input_has_no_mock_fallback) ... ok
+test_real_offline_screen_and_evidence (test_application.ApplicationTests.test_real_offline_screen_and_evidence) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 9.629s
+
+OK

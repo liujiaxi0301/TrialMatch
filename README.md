@@ -1,2 +1,251 @@
 # TrialMatch
-Explainable clinical trial eligibility screening
+
+Team: **Orange Chicken**.
+
+TrialMatch uses synthetic patient records to retrieve type 2 diabetes clinical
+trials and review eligibility criteria. Results include supporting evidence,
+screening barriers and missing information.
+
+## Modules
+
+| Module | Purpose |
+|---|---|
+| `services/trial_ingestion/` | Collect ClinicalTrials.gov records and parse eligibility criteria. |
+| `services/patient_processing/` | Convert Synthea FHIR records into patient facts. |
+| `services/rag_workflow/` | Retrieve candidate trials and assess criteria using patient evidence. |
+| `services/frontend/` | Provide the patient selection interface, results and API. |
+
+## Quick Start
+
+Shared environment: Python 3.12, uv, DVC and Docker Compose.
+Python dependencies and DVC run inside Docker; no local Python or uv is needed.
+
+Each service has its own `Dockerfile`, `pyproject.toml` and `uv.lock`.
+Images install only that service's locked dependencies.
+
+| Service | Build directory | Image contents |
+|---|---|---|
+| `trial-processing` | `docker/trial-processing/` | Trial processing scripts and DVC for snapshot downloads. |
+| `rag-api` | `docker/rag-api/` | Backend, RAG workflow, web page and cloud startup code. |
+| `rag-chromadb` | `docker/chromadb/` | Chroma 1.5.9 server with a health check and data directory at `/data`. |
+
+Local Compose mounts the trial scripts and backend source read-only, plus data,
+output folders and credentials. The backend reloads when Python code changes;
+refresh the browser after editing the web page.
+Compose waits for trial processing to finish and Chroma to be healthy before
+starting the app. Index import and retrieval code belong to the backend image.
+Chroma stores vectors in the `rag-chroma-data` volume mounted at `/data`.
+
+Offline screening uses BM25 and needs no vector index. Online screening uses
+the saved Gemini index restored by `make live`.
+
+Install Docker and make, start Docker, and run from the repository root:
+
+```bash
+make up
+```
+
+Open http://localhost:8080, select a patient and run screening.
+The default offline mode uses the included processed data and requires no Google credentials.
+
+| Command | Purpose |
+|---|---|
+| `make up` | Build images, check the existing processed data, and start Chroma and the offline app. |
+| `make live` | Build images, download and restore the Gemini index, and start online screening. |
+| `make down` | Stop the containers and keep stored data. |
+| `make reproduce` | Download the fixed raw trials with DVC, rebuild and verify the processed files, and start the offline app. |
+
+Both modes use `docker-compose.yml`. Run `make up` to switch back to offline.
+Processed data stays under `services/`; generated results go to `artifacts/`.
+
+After changing backend dependencies, update its lock and rebuild that service:
+
+```bash
+uv lock --project docker/rag-api
+docker compose up -d --build --no-deps rag-api
+```
+
+Prefix the Docker command with `TRIALMATCH_MODE=live` to keep online mode.
+Use the corresponding build directory for another service. Trial scripts are
+read on the next processing invocation, such as `make reproduce`.
+The root `pyproject.toml` and `uv.lock` support the original local Python tools;
+container builds do not use them.
+
+## Online Screening
+
+Install the Google Cloud CLI and sign in with `gcloud auth application-default login`.
+Create `secrets/` and copy the credentials file printed by the command to `secrets/google-credentials.json`.
+Copy `.env.example` to `.env` and set `GCP_PROJECT`.
+Compose mounts the same credentials file for DVC and Gemini.
+The account needs access to the shared DVC storage and the project's Gemini service.
+The project needs billing and `aiplatform.googleapis.com` enabled.
+
+```bash
+make live
+```
+
+Credentials and `.env` stay out of Git. `make up` does not need them.
+See [shared storage](services/rag_workflow/INDEX_VERSIONING.md#5-shared-storage)
+for access and uploads. `make reproduce` uses the same container and credentials for DVC.
+
+## Data Reproduction
+
+Set up the credentials above with access to the shared DVC storage, then run:
+
+```bash
+make reproduce
+```
+
+This restores the 1,385 raw trial JSON files tracked by `data/raw.dvc` and uses
+the existing trial normalization and criterion parsing functions to rebuild
+1,313 trials and 18,456 criteria. It uses `data/raw_metadata.json` for the raw
+snapshot information and preserves the processing date in the demo manifest
+(`2026-10-11`). It does not fetch a new ClinicalTrials.gov snapshot.
+
+Both rebuilt files must match the demo manifest's checksums before either
+processed file is replaced. The command then starts the offline app using
+the existing patient data. The reproduction record is saved to
+`artifacts/infra/raw_reproduction.json`. Gemini access is not needed for this command.
+
+## Documentation
+
+- [RAG workflow](services/rag_workflow/README.md): retrieval, criterion assessment and API format.
+- [Index versioning](services/rag_workflow/INDEX_VERSIONING.md): DVC storage and Chroma snapshots.
+
+## Cloud Setup (MS3)
+
+- [Cloud app](https://trialmatch-15733748057.us-east1.run.app) (authorized Google login required).
+- [Successful data pipeline](https://console.cloud.google.com/vertex-ai/locations/us-east1/pipelines/runs/trialmatch-data-pipeline-20261028052840?project=trialmatch-ac215-yixiao).
+
+The app uses Cloud Run. Chroma runs on a separate VM with a persistent disk
+mounted at `/data` inside its container. Only the TrialMatch subnet can reach
+Chroma. Team members sign in with Google through Identity-Aware Proxy (IAP).
+Cloud services use attached service accounts; no login JSON is uploaded.
+The five team Google accounts have access. Open the cloud app and select the
+approved account; no local Docker setup or credentials file is needed to use it.
+
+Vertex AI Pipelines has three steps:
+
+1. Download the fixed raw trial snapshot with DVC.
+2. Rebuild trial and criterion files using the same processing code as the local demo.
+3. Verify file checksums, the vector snapshot, and one offline screening request.
+
+Each step uses the image in `docker/workflow/`, with its own dependency files,
+and passes its output through GCS. Cloud images contain code and do not use
+local source mounts or automatic reload.
+The app loads the validated release and restores its saved vectors into Chroma.
+This pipeline checks data reproduction and application behavior. Model training
+and clinical benchmark evaluation are separate work.
+
+Pipeline regression checks use the workflow's locked dependencies to validate
+the committed data, compile the DAG, and exercise release validation and failure
+handling. The [Pipeline checks workflow](.github/workflows/pipeline-checks.yml)
+runs on pull requests and MS3 branch pushes, without GCP credentials.
+See [Module A checks](docs/ms3/module-a-checks.md) for local commands, the
+reliability changes, and the scope of the verification.
+
+Cloud configuration is in `cloud/config.env`. To deploy, install the Google
+Cloud CLI and uv, then sign in:
+
+```bash
+gcloud auth login
+gcloud auth application-default login
+bash cloud/setup.sh
+```
+
+Use `make live` once to download the fixed index snapshot if it is missing.
+Then build versioned images and deploy:
+
+```bash
+bash cloud/deploy.sh build
+bash cloud/deploy.sh publish
+bash cloud/deploy.sh database
+bash cloud/deploy.sh pipeline
+bash cloud/deploy.sh app
+```
+
+Before Cloud Build starts, the build command hashes all seven publication inputs,
+including the Git-ignored `index_snapshots/current.json`. These files must already
+exist. It checks them again after the build; missing or changed inputs prevent the
+new build from being selected for publication. It saves the hashes, a combined
+data fingerprint, the Cloud Build ID, image tag and workflow/API image digests in
+`artifacts/cloud/release_target.json` (schema 4).
+
+All three images use `<source-version>-<Cloud-Build-ID>` tags. Cloud Build supplies
+the unique ID, so rebuilding the same source does not reassign an existing tag
+in the repository configured with `--immutable-tags`. The source version remains
+separate in the record and `image_version.txt`. Pipeline and API execution use
+the recorded digests. First-time Chroma VM creation uses the recorded build tag;
+the `database` command leaves an existing VM unchanged.
+
+`publish` copies every input to temporary storage and checks those copies against
+the build record before contacting GCS. It uploads those same checked copies.
+If data changed after the build, restore the original data or rebuild with the
+intended data. The workflow image is pinned by digest and the input release is at
+`gs://<bucket>/releases/<source-version>/<workflow-digest-hex>/<data-fingerprint>/release.json`.
+Different workflow image contents or data get a different address; identical
+source, image and data can be republished. Existing releases are never overwritten.
+The bound pipeline also checks the input manifest's image and hashes against the
+record before submitting a job. The task containers verify the downloaded bytes.
+
+If upgrading from an older checkout or a schema-1/2/3 build record, run `build`
+first. Missing or inconsistent records stop publication/submission. The GCS
+`release.json` format remains schema 1. Preserve records with run evidence before
+rebuilding, and run these commands serially in a checkout.
+
+The pipeline command waits for success and saves its job name, validation report,
+and output release URI under `artifacts/cloud/`. It also atomically writes
+`validated_deployment.json`, binding the selected build to that successful run.
+`app` requires this record to match the current build, project and region, then
+deploys its exact API image digest with the validated output release. Starting
+a new build or pipeline clears prior deployment permission; preserve evidence
+before rerunning. The direct pipeline CLI without `--release-target` still
+produces data-validation evidence, but does not authorize `app` deployment.
+Deployment binding does not replace the deployed API's functional tests.
+Cloud Build stores the three cloud images (API, Chroma, and
+workflow) in Artifact Registry. Local Compose still uses the four Make commands above.
+
+For the first deployment, open the Cloud Run service's Security tab, enable IAP,
+and grant the team the IAP-secured Web App User role. For Gmail accounts, configure
+an External OAuth consent screen, add the team as test users, and use IAP's
+Auto Generate Credentials option under Custom OAuth. Keep unauthenticated access
+disabled. This is already configured in the TrialMatch project.
+Cloud Logging contains app startup logs and pipeline task logs.
+
+The Chroma VM stays on and incurs charges even when nobody opens the app.
+When the demo is not needed, pause it with:
+
+```bash
+gcloud compute instances stop trialmatch-chroma --zone=us-east1-b --project=trialmatch-ac215-yixiao
+```
+
+Use `instances start` with the same options before the next demo. Its persistent
+disk keeps the vectors. Disk and storage charges continue while the VM is off.
+
+### Monthly Budget
+
+TrialMatch has a $5 monthly budget with email alerts at 50%, 80%, and 100%.
+Budget notifications call a private shutdown handler in `cloud/budget/`.
+That service also has its own Dockerfile, pyproject and lock file.
+When reported monthly costs reach $5, it sets the `trialmatch` Cloud Run service
+to zero instances and stops the `trialmatch-chroma` VM. Disks, buckets, and data
+are kept. Failed actions are retried. The handler never restarts the demo.
+
+This is not a strict spending cap: billing notifications can be delayed, and
+stored data still costs money. Direct Gemini calls, builds, or pipeline jobs
+started outside the demo are not blocked by this handler.
+
+The handler is already deployed. To install or update it as the project owner:
+
+```bash
+bash cloud/budget/deploy.sh
+```
+
+After reviewing the budget, manually resume the demo with:
+
+```bash
+gcloud compute instances start trialmatch-chroma --zone=us-east1-b --project=trialmatch-ac215-yixiao
+gcloud run services update trialmatch --scaling=auto --region=us-east1 --project=trialmatch-ac215-yixiao
+```
+
+If the current month is still over $5, the next budget notification stops it again.

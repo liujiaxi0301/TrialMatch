@@ -1,0 +1,286 @@
+{
+  "schema_version": "0.3",
+  "patient_id": "SYNTHETIC_001",
+  "reference_date": "2026-10-11",
+  "demographics": {
+    "fact_id": "fixture:claude_synthetic_001#demographics",
+    "resource_type": "Patient",
+    "source_file": "services/rag_workflow/examples/grounding_case/source_case.json",
+    "source_resource_id": "demographics",
+    "age_years_at_reference": 52,
+    "gender": "female"
+  },
+  "conditions": [
+    {
+      "fact_id": "fixture:claude_synthetic_001#diagnosis",
+      "resource_type": "Condition",
+      "source_file": "services/rag_workflow/examples/grounding_case/source_case.json",
+      "source_resource_id": "diagnosis",
+      "code": {
+        "text": "Type 2 diabetes diagnosed 6 years ago",
+        "coding": []
+      },
+      "value": {
+        "type": "String",
+        "data": "Type 2 diabetes diagnosed 6 years ago."
+      },
+      "event_time_certainty": "Source statement has no absolute event date"
+    }
+  ],
+  "observations": [
+    {
+      "fact_id": "fixture:claude_synthetic_001#bmi",
+      "resource_type": "Observation",
+      "source_file": "services/rag_workflow/examples/grounding_case/source_case.json",
+      "source_resource_id": "bmi",
+      "code": {
+        "text": "BMI",
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "39156-5",
+            "display": "BMI"
+          }
+        ]
+      },
+      "value": {
+        "type": "Quantity",
+        "data": {
+          "value": 37.2,
+          "unit": "kg/m²"
+        }
+      },
+      "event_time_certainty": "Source statement has no absolute event date"
+    },
+    {
+      "fact_id": "fixture:claude_synthetic_001#hba1c",
+      "resource_type": "Observation",
+      "source_file": "services/rag_workflow/examples/grounding_case/source_case.json",
+      "source_resource_id": "hba1c",
+      "code": {
+        "text": "HbA1c",
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "4548-4",
+            "display": "HbA1c"
+          }
+        ]
+      },
+      "value": {
+        "type": "Quantity",
+        "data": {
+          "value": 7.8,
+          "unit": "%"
+        }
+      },
+      "event_time_certainty": "Source statement has no absolute event date"
+    },
+    {
+      "fact_id": "fixture:claude_synthetic_001#fasting_glucose",
+      "resource_type": "Observation",
+      "source_file": "services/rag_workflow/examples/grounding_case/source_case.json",
+      "source_resource_id": "fasting_glucose",
+      "code": {
+        "text": "Fasting glucose",
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "1558-6",
+            "display": "Fasting glucose"
+          }
+        ]
+      },
+      "value": {
+        "type": "Quantity",
+        "data": {
+          "value": 8.1,
+          "unit": "mmol/L"
+        }
+      },
+      "event_time_certainty": "Source statement has no absolute event date"
+    },
+    {
+      "fact_id": "fixture:claude_synthetic_001#consent",
+      "resource_type": "Observation",
+      "source_file": "services/rag_workflow/examples/grounding_case/source_case.json",
+      "source_resource_id": "consent",
+      "code": {
+        "text": "Ability to provide informed consent",
+        "coding": []
+      },
+      "value": {
+        "type": "String",
+        "data": "The patient is alert, understands the study information, and is able to provide informed consent."
+      },
+      "event_time_certainty": "Source statement has no absolute event date"
+    },
+    {
+      "fact_id": "fixture:claude_synthetic_001#pregnancy_test",
+      "resource_type": "Observation",
+      "source_file": "services/rag_workflow/examples/grounding_case/source_case.json",
+      "source_resource_id": "pregnancy_test",
+      "code": {
+        "text": "Pregnancy test",
+        "coding": []
+      },
+      "value": {
+        "type": "String",
+        "data": "Pregnancy test is negative."
+      },
+      "event_time_certainty": "Source statement has no absolute event date"
+    },
+    {
+      "fact_id": "fixture:claude_synthetic_001#surgery_history",
+      "resource_type": "Observation",
+      "source_file": "services/rag_workflow/examples/grounding_case/source_case.json",
+      "source_resource_id": "surgery_history",
+      "code": {
+        "text": "History of esophageal, gastric or bariatric surgery",
+        "coding": []
+      },
+      "value": {
+        "type": "String",
+        "data": "No history of esophageal, gastric, or bariatric surgery."
+      },
+      "event_time_certainty": "Source statement has no absolute event date"
+    },
+    {
+      "fact_id": "fixture:claude_synthetic_001#ulcer_history",
+      "resource_type": "Observation",
+      "source_file": "services/rag_workflow/examples/grounding_case/source_case.json",
+      "source_resource_id": "ulcer_history",
+      "code": {
+        "text": "Known history of gastric or duodenal ulcer",
+        "coding": []
+      },
+      "value": {
+        "type": "String",
+        "data": "No known history of gastric or duodenal ulcer."
+      },
+      "event_time_certainty": "Source statement has no absolute event date"
+    },
+    {
+      "fact_id": "fixture:claude_synthetic_001#albumin",
+      "resource_type": "Observation",
+      "source_file": "services/rag_workflow/examples/grounding_case/source_case.json",
+      "source_resource_id": "albumin",
+      "code": {
+        "text": "Serum albumin",
+        "coding": []
+      },
+      "value": {
+        "type": "Quantity",
+        "data": {
+          "value": 4.0,
+          "unit": "g/dL"
+        }
+      },
+      "event_time_certainty": "Source statement has no absolute event date"
+    },
+    {
+      "fact_id": "fixture:claude_synthetic_001#substance_history",
+      "resource_type": "Observation",
+      "source_file": "services/rag_workflow/examples/grounding_case/source_case.json",
+      "source_resource_id": "substance_history",
+      "code": {
+        "text": "Drug use or alcohol abuse within last 12 months",
+        "coding": []
+      },
+      "value": {
+        "type": "String",
+        "data": "No history of drug use or alcohol abuse within the last 12 months."
+      },
+      "event_time_certainty": "Source statement has no absolute event date"
+    },
+    {
+      "fact_id": "fixture:claude_synthetic_001#ibd_history",
+      "resource_type": "Observation",
+      "source_file": "services/rag_workflow/examples/grounding_case/source_case.json",
+      "source_resource_id": "ibd_history",
+      "code": {
+        "text": "Known history of inflammatory bowel disease",
+        "coding": []
+      },
+      "value": {
+        "type": "String",
+        "data": "No known history of inflammatory bowel disease."
+      },
+      "event_time_certainty": "Source statement has no absolute event date"
+    },
+    {
+      "fact_id": "fixture:claude_synthetic_001#organ_disease_unknown",
+      "resource_type": "Observation",
+      "source_file": "services/rag_workflow/examples/grounding_case/source_case.json",
+      "source_resource_id": "organ_disease_unknown",
+      "code": {
+        "text": "Severe renal hepatic cardiac pulmonary disease: undocumented",
+        "coding": []
+      },
+      "value": {
+        "type": "String",
+        "data": "The available record does not document whether the patient has severe renal, hepatic, cardiac, or pulmonary disease."
+      },
+      "event_time_certainty": "Source statement has no absolute event date"
+    },
+    {
+      "fact_id": "fixture:claude_synthetic_001#psychological_unknown",
+      "resource_type": "Observation",
+      "source_file": "services/rag_workflow/examples/grounding_case/source_case.json",
+      "source_resource_id": "psychological_unknown",
+      "code": {
+        "text": "Formal psychological assessment: undocumented",
+        "coding": []
+      },
+      "value": {
+        "type": "String",
+        "data": "The available record does not contain a formal psychological assessment."
+      },
+      "event_time_certainty": "Source statement has no absolute event date"
+    },
+    {
+      "fact_id": "fixture:claude_synthetic_001#gi_symptoms_unknown",
+      "resource_type": "Observation",
+      "source_file": "services/rag_workflow/examples/grounding_case/source_case.json",
+      "source_resource_id": "gi_symptoms_unknown",
+      "code": {
+        "text": "Vomiting abdominal pain diarrhea constipation: undocumented",
+        "coding": []
+      },
+      "value": {
+        "type": "String",
+        "data": "There is no information about unexplained intermittent vomiting, severe abdominal pain, chronic diarrhea, or chronic constipation."
+      },
+      "event_time_certainty": "Source statement has no absolute event date"
+    }
+  ],
+  "procedures": [],
+  "medications": {
+    "requests": [],
+    "definitions": [],
+    "dispenses": [],
+    "administrations": [],
+    "statements": [
+      {
+        "fact_id": "fixture:claude_synthetic_001#prednisone",
+        "resource_type": "MedicationStatement",
+        "source_file": "services/rag_workflow/examples/grounding_case/source_case.json",
+        "source_resource_id": "prednisone",
+        "code": {
+          "text": "The patient took oral prednisone for an asthma exacerbation 2 weeks ago.",
+          "coding": []
+        },
+        "value": {
+          "type": "String",
+          "data": "The patient took oral prednisone for an asthma exacerbation 2 weeks ago."
+        },
+        "event_time_certainty": "Source statement has no absolute event date"
+      }
+    ]
+  },
+  "warnings": [
+    "HANDWRITTEN_SYNTHETIC_FIXTURE: adapted from user-provided Claude case; not an official Synthea record.",
+    "FIXTURE_REFERENCE_DATE: 2026-10-11 is a declared test-only anchor, not a source patient date.",
+    "UNDATED_EVIDENCE: laboratory dates, pre-operative albumin timing and an absolute prednisone date are not supplied."
+  ]
+}

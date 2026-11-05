@@ -1,0 +1,21 @@
+{
+  "selected_trial_id": "NCT06774950",
+  "selected_all_raw_text_preserved": true,
+  "selected_source_sha256": {
+    "services/trial_ingestion/data/processed/trials.jsonl": "1678d523a1246319d4ae5ba8d2dd5d4ab1359746ad71fb7feee67b20bb07edd6",
+    "services/trial_ingestion/data/processed/criteria.jsonl": "f7701a9979eb105219407c553703752879f6a2c55fb8736240c8e7bddc96de59"
+  },
+  "rejected_candidate": {
+    "trial_id": "NCT07376655",
+    "all_raw_text_preserved": false,
+    "reason": "Stored parsed inclusion clause omits BMI continuation lines from source eligibility_text. Not selected; ingestion module not modified."
+  },
+  "case_selection_rationale": "Two source patients with manageable full inputs provide opposite age comparisons against one complete trial. This tests preliminary reasoning, not retrieval breadth or real enrollment eligibility.",
+  "limitations": [
+    "Age interval inclusivity is not specified in text; chosen ages 43 and 27 avoid boundary ambiguity.",
+    "Assessment date is proposed, not selected; no actual consent/screening/V1 date is substituted.",
+    "Trial snapshot is 2026-10-11 and NOT_YET_RECRUITING; 2021 scenario does not establish historical or current availability.",
+    "Full inputs retain source cohort provenance and all facts; context capacity must be checked before model runs.",
+    "T2D duration and clinical exclusions require further source-linked review, not automatic gold labels."
+  ]
+}

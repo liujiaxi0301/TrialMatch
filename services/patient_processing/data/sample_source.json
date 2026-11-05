@@ -1,0 +1,14 @@
+{
+  "source_repository": "https://github.com/synthetichealth/synthea-sample-data",
+  "source_commit": "9959d9178ea28f4ec10f17ee238b6fabe6eb0de5",
+  "archive_url": "https://raw.githubusercontent.com/synthetichealth/synthea-sample-data/9959d9178ea28f4ec10f17ee238b6fabe6eb0de5/downloads/synthea_sample_data_fhir_r4_nov2021.zip",
+  "archive_label": "FHIR R4, November 2021",
+  "archive_sha256": "6d3c5433bcae4791bc5c30469d1445b430fb4894d5c13bda15fee0584bbd7778",
+  "generator_identifier_from_patient_narrative": "master-branch-latest-7-gcc27279b",
+  "selected_files": {
+    "Anthony633_Wehner319_80534c6c-b12d-caa5-42de-b179fd7f9695.json": "c4f6603a075a669f2ee1ef39b449a78d6f9b0b64e3f40302f44fb5f04f3a7d77",
+    "Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json": "726f05437a3cc85418f6037d1521e510b968ac1fc1f31667df5a7f1865b3f4c1",
+    "Sal878_Hoppe518_aade3c61-92bd-d079-9d28-0b2b7fde0fbb.json": "2e56ddbf38161e1578a33e7ec36224361c4abc20198e6911a3edccadeeb529c5",
+    "Shakira391_Haag279_bf113937-f532-94bb-66e1-9c7111f68207.json": "77270f7156b0638fdf33d4de237f2128ca1466eaba51a88cc8b18d98c628dbaa"
+  }
+}
