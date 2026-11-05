@@ -11,8 +11,8 @@ and CI. After review, the broader automatic build/run provenance experiment was
 withdrawn. Xuyang then requested the targeted release-identity correction and
 the build/validation/deployment binding, input-data hash guard and unique build
 tags described below. Xuyang approved committing and publishing these changes to
-the personal branch on 2026-11-05. The evidence below records local verification;
-GitHub Actions and GCP execution are separate checks.
+the personal branch on 2026-11-05. The evidence below distinguishes local checks,
+successful GitHub Actions execution and the subsequent real data-pipeline run.
 
 ## Results
 
@@ -24,7 +24,8 @@ GitHub Actions and GCP execution are separate checks.
 | Processed data | `prepare_data.py` passed for 1,313 trials and 18,456 criteria; the trial, criterion and patient files match their fixed SHA256 values. |
 | Failure and compatibility tests | All 45 tests passed: the previous 43 tests with stronger build-result and immutable-tag checks, plus 2 Chroma deployment-script tests, using the workflow service dependencies. GCS, Vertex, Cloud Build, Compute Engine and Cloud Run calls are simulated; snapshot compatibility uses real embedded Chroma and synthetic test vectors. |
 | Static checks | Ruff 0.17.1, actionlint 1.7.7, and Git whitespace checks passed. |
-| CI configuration | Added `.github/workflows/pipeline-checks.yml`. All six shell steps passed locally. GitHub-hosted execution is pending a push and is not claimed by these results. |
+| GitHub Actions | [Run 42100990939](https://github.com/liujiaxi0301/TrialMatch/actions/runs/42100990939) succeeded at `a8f1386`, including all 45 tests. See the [record](evidence/module-a/github-actions-42100990939.json). |
+| Real data pipeline | Cloud Shell evidence records successful build, publication and Vertex execution at `a8f1386`, with exit code 0. [Evidence and local audit](evidence/module-a/gcp-20261105/README.md) bind the code, build, image, data and output. No negative-input cloud case, training, clinical benchmark or new API deployment is included. |
 
 The existing data pipeline remains a reproduction and functional-validation
 workflow. These results do not demonstrate training or a clinical benchmark.
@@ -57,8 +58,8 @@ Validation now restores the snapshot into a disposable embedded Chroma store
 using the existing `VectorIndex.restore` checks. This validates source/configuration
 identity, IDs, text, metadata, dimensions and restored records before reporting
 success. The temporary store is separate from the deployed Chroma server and
-requires no Gemini calls. It adds a local restore to the validation task; the
-updated workflow image still needs to be built and verified on Vertex.
+requires no Gemini calls. It adds a local restore to the validation task. The
+updated workflow image completed this step in the 2026-11-05 real data-pipeline run.
 
 The initial regression run reproduced six failing assertions across stale
 success markers, a report referencing another output, and incompatible snapshots.
@@ -119,8 +120,10 @@ with illustrative inputs. The tests use synthetic vectors and mock cloud calls;
 they exercise the real local snapshot restore and offline screening code.
 
 The workflow passed actionlint and its shell steps were executed locally.
-An actual GitHub Actions run will provide separate evidence after the approved
-changes are pushed. These checks do not build a Docker image or submit a Vertex job.
+The approved changes were published as `a8f1386`; GitHub Actions run
+`42100990939` then succeeded, including 45 tests. Its
+[execution record](evidence/module-a/github-actions-42100990939.json) is separate
+from the later GCP evidence. CI does not build an image or submit a Vertex job.
 
 ## Release identity correction
 
@@ -281,8 +284,9 @@ enforce a simulated immutable registry. Two builds of identical source with
 different API, workflow and Chroma digests receive distinct tags, and all earlier
 tag mappings remain unchanged. Additional checks cover exact build-result tags,
 stale target rejection, Chroma creation with an existing published tag, and
-skipping an existing VM. These are local simulations; actual Cloud Build
-substitution and registry pushes remain part of the GCP verification run.
+skipping an existing VM. These tests are local simulations. The subsequent real
+Cloud Build succeeded with a source-version-plus-build-ID tag. A second real
+build of identical source was not included in that verification.
 
 ## Scope after review
 
@@ -291,19 +295,28 @@ release-identity, unique build tags, deployment-binding and input-data hash fixe
 documentation. The build/validation records supply and check deployment inputs; the
 broader automatic build/run audit manifests remain deferred.
 
-The data-change and immutable-tag findings are fixed in local tests. Actual
-Cloud Build, Vertex and API execution of these changes remains to be verified.
+The data-change and immutable-tag findings are fixed in local tests. Current-code
+Cloud Build, publication and a successful Vertex data run are now supported by
+the uploaded evidence. Negative-input cloud behavior and actual API deployment
+remain separate verification work.
 
-## Still to verify in GCP
+## Real GCP success run and remaining checks
 
-No cloud job, DVC download, image build/upload or deployment was performed in
-this integration check. The user previously provided the successful 2026-10-28
-run's console screenshots, reports, image details and build source archive for
-handoff verification. Those records cover Yixiao's earlier build, rather than
-the newer container configuration or these reliability fixes.
+The original local integration check made no cloud calls. Yixiao's 2026-10-28
+successful run remains the earlier team baseline. Xuyang subsequently ran the
+reviewed `a8f138630dd5aa8ff4ff4d6844a76f5a4c473170` code in Cloud Shell:
 
-After building the updated workflow image, verify actual bucket/IAM access,
-a complete run with the stored Gemini snapshot, and upstream-failure behavior
-on Vertex using a separate invalid-input release. Record job IDs, logs and
-outputs separately from these local tests. Training/evaluation integration with
-B and C remains a later step.
+- Build: `55298693-4647-4890-b5eb-bf0a22f2fae0`.
+- Pipeline: `trialmatch-data-pipeline-20261105205047`, in `us-east1`.
+- Validation: `PASSED`; 1,313 trials, 25 patients, 18,456 criteria, 607 vectors;
+  offline screening `OK`; capture script exit code `0`.
+
+The [uploaded evidence and audit](evidence/module-a/gcp-20261105/README.md) agree
+on the commit, build, immutable workflow image, seven inputs, data fingerprint,
+pipeline job and processed output. A fresh local compilation matches the uploaded
+YAML. This review used the supplied files, not an independent GCP API re-query.
+
+Still collect the runtime graph screenshot and exercise upstream-failure behavior
+on Vertex using a separate invalid-input release. Actual API deployment belongs
+to D/E's deployment verification. The agreed B/C training/evaluation integration
+remains outstanding; the offline smoke check does not replace it.

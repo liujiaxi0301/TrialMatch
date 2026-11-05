@@ -1,0 +1,153 @@
+# PIPELINE DEFINITION
+# Name: trialmatch-data-pipeline
+# Inputs:
+#    release: str
+components:
+  comp-fetch-raw:
+    executorLabel: exec-fetch-raw
+    inputDefinitions:
+      parameters:
+        release:
+          parameterType: STRING
+    outputDefinitions:
+      artifacts:
+        raw:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+  comp-process-trials:
+    executorLabel: exec-process-trials
+    inputDefinitions:
+      artifacts:
+        raw:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+    outputDefinitions:
+      artifacts:
+        processed:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+  comp-validate-data:
+    executorLabel: exec-validate-data
+    inputDefinitions:
+      artifacts:
+        processed:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+    outputDefinitions:
+      artifacts:
+        report:
+          artifactType:
+            schemaTitle: system.Artifact
+            schemaVersion: 0.0.1
+deploymentSpec:
+  executors:
+    exec-fetch-raw:
+      container:
+        args:
+        - fetch
+        - --source
+        - '{{$.inputs.parameters[''release'']}}'
+        - --output
+        - '{{$.outputs.artifacts[''raw''].uri}}'
+        command:
+        - python
+        - -m
+        - cloud.tasks
+        image: us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:5d5078d427720f231a79228edd0011a4d7f330086014db2c4211b92d948930ae
+        resources:
+          cpuLimit: 1.0
+          memoryLimit: 2.147483648
+          resourceCpuLimit: '1'
+          resourceMemoryLimit: 2Gi
+    exec-process-trials:
+      container:
+        args:
+        - process
+        - --source
+        - '{{$.inputs.artifacts[''raw''].uri}}'
+        - --output
+        - '{{$.outputs.artifacts[''processed''].uri}}'
+        command:
+        - python
+        - -m
+        - cloud.tasks
+        image: us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:5d5078d427720f231a79228edd0011a4d7f330086014db2c4211b92d948930ae
+        resources:
+          cpuLimit: 1.0
+          memoryLimit: 2.147483648
+          resourceCpuLimit: '1'
+          resourceMemoryLimit: 2Gi
+    exec-validate-data:
+      container:
+        args:
+        - validate
+        - --source
+        - '{{$.inputs.artifacts[''processed''].uri}}'
+        - --output
+        - '{{$.outputs.artifacts[''report''].uri}}'
+        command:
+        - python
+        - -m
+        - cloud.tasks
+        image: us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:5d5078d427720f231a79228edd0011a4d7f330086014db2c4211b92d948930ae
+        resources:
+          cpuLimit: 1.0
+          memoryLimit: 2.147483648
+          resourceCpuLimit: '1'
+          resourceMemoryLimit: 2Gi
+pipelineInfo:
+  name: trialmatch-data-pipeline
+root:
+  dag:
+    tasks:
+      fetch-raw:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-fetch-raw
+        inputs:
+          parameters:
+            release:
+              componentInputParameter: release
+        taskInfo:
+          name: fetch-raw
+      process-trials:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-process-trials
+        dependentTasks:
+        - fetch-raw
+        inputs:
+          artifacts:
+            raw:
+              taskOutputArtifact:
+                outputArtifactKey: raw
+                producerTask: fetch-raw
+        taskInfo:
+          name: process-trials
+      validate-data:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-validate-data
+        dependentTasks:
+        - process-trials
+        inputs:
+          artifacts:
+            processed:
+              taskOutputArtifact:
+                outputArtifactKey: processed
+                producerTask: process-trials
+        taskInfo:
+          name: validate-data
+  inputDefinitions:
+    parameters:
+      release:
+        parameterType: STRING
+schemaVersion: 2.1.0
+sdkVersion: kfp-2.16.1

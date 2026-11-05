@@ -1,6 +1,7 @@
 # Module A: baseline and integration plan
 
-Status: Module A reliability changes integrated locally on 2026-11-05. B/C
+Status: Module A reliability changes published and their successful data-pipeline
+cloud run reviewed on 2026-11-05. B/C
 interfaces below remain proposals for team review, not implemented commands or
 agreed contracts.
 
@@ -8,8 +9,9 @@ Local compilation, configuration and failure checks are now recorded in
 [module-a-checks.md](module-a-checks.md), including the original 18 core regression
 tests, six release-identity tests, eight deployment-binding tests, eleven
 input-data guard tests and two Chroma deployment-script tests (45 total).
-Build tests now also enforce immutable tags using the real Cloud Build YAML. Cloud
-re-verification and B/C integration remain pending.
+Build tests now also enforce immutable tags using the real Cloud Build YAML.
+GitHub Actions and a real data-pipeline success run passed at `a8f1386`.
+Negative-input cloud verification and B/C integration remain pending.
 
 ## Current integration (2026-11-05)
 
@@ -18,10 +20,12 @@ re-verification and B/C integration remain pending.
 - The stale-success-marker, report/release binding and snapshot-compatibility
   fixes are preserved. The 18 core regression tests use `docker/workflow/uv.lock`.
 - A GitHub Actions workflow runs data validation, regression tests, static checks
-  and compilation without cloud credentials. Its commands passed locally;
-  execution on GitHub is pending the approved push.
-- The original pipeline implementation and successful cloud run belong to Yixiao's
-  existing work. The current Module A contribution is reliability, tests and CI.
+  and compilation without cloud credentials. Its commands passed locally and in
+  [GitHub Actions run 42100990939](https://github.com/liujiaxi0301/TrialMatch/actions/runs/42100990939),
+  including all 45 regression tests.
+- The original pipeline implementation and 2026-10-28 cloud run belong to Yixiao's
+  existing work. The current Module A contribution adds reliability, tests, CI
+  and verification of those changes in the 2026-11-05 data-pipeline run.
 - After review, the user selected only the core reliability changes and CI.
   The broader automatic build/run provenance feature remains deferred.
 - The user subsequently requested the focused release-identity correction:
@@ -43,9 +47,14 @@ re-verification and B/C integration remain pending.
   for all three image tags and stores the tag in the schema-4 target. Pipeline/API
   consumers remain pinned by digest; first-time Chroma VM creation uses the saved
   tag. Existing VMs are left unchanged. Tests now model immutable registry tags.
-- The new cloud verification run remains pending. Xuyang approved committing and
-  publishing the reviewed changes to the personal branch on 2026-11-05; GitHub
-  Actions verification follows publication.
+- Xuyang approved publication of the reviewed changes to the personal branch as
+  `a8f138630dd5aa8ff4ff4d6844a76f5a4c473170`. GitHub Actions succeeded, then Xuyang
+  ran `build -> publish -> pipeline` in Cloud Shell. The
+  [evidence review](evidence/module-a/gcp-20261105/README.md) found consistent
+  records for build `55298693-4647-4890-b5eb-bf0a22f2fae0` and successful pipeline
+  `trialmatch-data-pipeline-20261105205047`. This covers the current data workflow;
+  a runtime graph screenshot, negative-input cloud verification and B/C integration
+  remain outstanding.
 
 ## Baseline inspected on 2026-10-29
 
