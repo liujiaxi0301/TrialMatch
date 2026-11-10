@@ -8,6 +8,12 @@
 The image must be pinned by digest. The W&B key is never passed here: the job reads it
 from Secret Manager at run time with its own service account, so it appears in neither
 the job spec nor the logs. Exits non-zero unless the job reaches JOB_STATE_SUCCEEDED.
+
+Without GPU quota the same job runs on CPU: pass `--accelerator-count 0` with a larger
+`--machine-type` and `--max-run-seconds`, and usually a smaller configuration, e.g.
+
+      --accelerator-count 0 --machine-type n1-standard-16 --max-run-seconds 21600 \
+      --epochs 1 --batch-size 8 --max-negatives 2 --max-length 128
 """
 
 import argparse
@@ -34,7 +40,8 @@ def worker_pool(args, output: str, commit: str) -> list[dict]:
     command_args = ["--pairs", *args.pairs, "--output", output,
                     "--epochs", str(args.epochs), "--batch-size", str(args.batch_size),
                     "--lr", str(args.lr), "--temperature", str(args.temperature),
-                    "--max-length", str(args.max_length), "--seed", str(args.seed),
+                    "--max-length", str(args.max_length),
+                    "--max-negatives", str(args.max_negatives), "--seed", str(args.seed),
                     "--wandb-project", args.wandb_project, "--run-name", args.run_id,
                     "--image-uri", args.image]
     if args.wandb_entity:
@@ -44,10 +51,14 @@ def worker_pool(args, output: str, commit: str) -> list[dict]:
                          f"projects/{args.project}/secrets/{args.wandb_secret}/versions/latest"]
     if args.source_release:
         command_args += ["--source-release", args.source_release]
+    if args.no_amp:
+        command_args.append("--no-amp")
+    machine = {"machine_type": args.machine_type}
+    if args.accelerator_count:  # Vertex rejects an accelerator type with a count of zero.
+        machine.update(accelerator_type=args.accelerator_type,
+                       accelerator_count=args.accelerator_count)
     return [{
-        "machine_spec": {"machine_type": args.machine_type,
-                         "accelerator_type": args.accelerator_type,
-                         "accelerator_count": args.accelerator_count},
+        "machine_spec": machine,
         "replica_count": 1,
         "container_spec": {"image_uri": args.image, "command": ["python", "-m", "cloud.train"],
                            "args": command_args,
@@ -112,7 +123,8 @@ def parse_args(argv=None):
     parser.add_argument("--service-account", default="")
     parser.add_argument("--machine-type", default="n1-standard-4")
     parser.add_argument("--accelerator-type", default="NVIDIA_TESLA_T4")
-    parser.add_argument("--accelerator-count", type=int, default=1)
+    parser.add_argument("--accelerator-count", type=int, default=1,
+                        help="0 runs the job on CPU only, for projects without GPU quota")
     parser.add_argument("--max-run-seconds", type=int, default=5400,
                         help="Vertex cancels the job after this long; bounds the GPU spend")
     parser.add_argument("--epochs", type=int, default=3)
@@ -120,6 +132,8 @@ def parse_args(argv=None):
     parser.add_argument("--lr", type=float, default=2e-5)
     parser.add_argument("--temperature", type=float, default=0.05)
     parser.add_argument("--max-length", type=int, default=256)
+    parser.add_argument("--max-negatives", type=int, default=4)
+    parser.add_argument("--no-amp", action="store_true", help="Disable CUDA mixed precision")
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--wandb-project", default="trialmatch-ms3")
     parser.add_argument("--wandb-entity", default="")
@@ -135,6 +149,8 @@ def parse_args(argv=None):
         parser.error("--run-id must be lowercase letters, digits and dashes")
     if not all(uri.startswith("gs://") for uri in args.pairs):
         parser.error("--pairs must be gs:// URIs; the job cannot read this workstation")
+    if args.accelerator_count < 0:
+        parser.error("--accelerator-count cannot be negative")
     if not args.project or not args.bucket:
         parser.error("--project and --bucket are required")
     args.service_account = (args.service_account
