@@ -22,6 +22,19 @@ def encoder_identity(settings) -> dict:
     }
 
 
+def masked_mean_l2(hidden, attention_mask):
+    """Attention-mask mean over every token, special tokens included, then L2.
+
+    The single definition of BioClinical pooling: `cloud.train` optimizes through this
+    same function, so a fine-tuned checkpoint is pooled exactly as it is served.
+    """
+    import torch
+
+    mask = attention_mask.unsqueeze(-1).to(hidden.dtype)
+    pooled = (hidden * mask).sum(1) / mask.sum(1).clamp(min=1)
+    return torch.nn.functional.normalize(pooled, p=2, dim=1)
+
+
 def create_embedding_provider(settings, gemini=None):
     settings.validate()
     if settings.embedding_provider == "gemini":
@@ -123,9 +136,7 @@ class BioClinicalProvider:
                 batch = {key: value.to(self.device) for key, value in batch.items()}
                 with torch.inference_mode():
                     hidden = self.model(**batch).last_hidden_state.float()
-                    mask = batch["attention_mask"].unsqueeze(-1).to(hidden.dtype)
-                    pooled = (hidden * mask).sum(1) / mask.sum(1).clamp(min=1)
-                    result = torch.nn.functional.normalize(pooled, p=2, dim=1)
+                    result = masked_mean_l2(hidden, batch["attention_mask"])
                     if not torch.isfinite(result).all() or (result.norm(dim=1) < 0.99).any():
                         raise ProviderError(
                             "INVALID_EMBEDDING", "Nonfinite or empty encoder output."
