@@ -149,11 +149,16 @@ Design requirements:
       same validation pairs, measured by the same code path. If it does not, report
       that honestly and keep the run — a negative result with a correct method is a
       valid MS3 deliverable; a fabricated improvement is not.
-- [ ] A pooling-equivalence test passes against `BioClinicalProvider`.
-- [ ] The leakage assertion is exercised by a test that feeds it a demo trial and
+- [x] A pooling-equivalence test passes against `BioClinicalProvider`.
+- [x] The leakage assertion is exercised by a test that feeds it a demo trial and
       expects failure.
-- [ ] `training_manifest.json` contains every field module A asked for.
-- [ ] `ruff check cloud/train.py` is clean.
+- [x] `training_manifest.json` contains every field module A asked for.
+- [x] `ruff check cloud/train.py` is clean.
+
+**Status 2026-11-10.** `cloud/train.py` and `cloud/tests/test_train.py` are in. Training
+pools through `masked_mean_l2`, now the provider's single pooling definition. A local
+200-pair, one-epoch smoke run on MPS completed and wrote a manifest (W&B offline). The
+first two boxes stay open until the Vertex run puts a curve in W&B.
 
 ### B2 — `docker/trainer/`: the training image
 
@@ -172,10 +177,20 @@ Design requirements:
 
 **Acceptance criteria**
 
-- [ ] `docker build -f docker/trainer/Dockerfile .` succeeds locally or in Cloud Build.
-- [ ] `docker run <image> python -m cloud.train --help` prints usage.
-- [ ] `docker/workflow/pyproject.toml` is unchanged — no torch leaked into it.
-- [ ] The image is referenced by digest, never by a mutable tag, wherever it is consumed.
+- [x] `docker build -f docker/trainer/Dockerfile .` succeeds locally or in Cloud Build.
+- [x] `docker run <image> python -m cloud.train --help` prints usage.
+- [x] `docker/workflow/pyproject.toml` is unchanged — no torch leaked into it.
+- [x] The image is referenced by digest, never by a mutable tag, wherever it is consumed.
+
+**Status 2026-11-10.** Built locally for linux/amd64 on
+`pytorch-gpu.2-4.py310@sha256:db53e742…` (PyTorch 2.4 is the newest PyTorch GPU base
+Vertex publishes; Python 3.10, so the trainer has its own lock). A tiny end-to-end
+training run completed inside the container on CPU. Three things differ from the
+sketch above: NumPy is held below 2 because the base's SciPy is built against 1.x; the
+base's `ENTRYPOINT` is cleared so `docker run <image> python -m …` works; and
+`cloud/tests/test_release.py` needed its fake registry taught about a fourth image.
+The `cloud/build.yaml` step is committed locally and **not pushed** pending the
+infrastructure owner. Note the 32 GB image and the shared `timeout: 1200s`.
 
 ### B3 — One Vertex AI training run, with evidence
 
@@ -210,12 +225,21 @@ plan is explicit that a placeholder task does not count as integration.
 
 **Acceptance criteria**
 
-- [ ] `python -m cloud.pipeline --compile-only …` produces a spec containing four tasks
+- [x] `python -m cloud.pipeline --compile-only …` produces a spec containing four tasks
       with the training task's inputs wired to the validated release.
-- [ ] `cloud/tests/` still passes in full (45 tests at last count), plus a new test
+- [x] `cloud/tests/` still passes in full (45 tests at last count), plus a new test
       asserting the fourth task appears with the right dependency.
 - [ ] The existing `pipeline-checks.yml` workflow stays green.
 - [ ] Reviewed with module A's owner before merging.
+
+**Status 2026-11-10.** The task is added only when `--trainer-image` (digest-pinned) is
+passed, so the three data tasks compile exactly as before and the existing tests are
+untouched. It reads `validate_data`'s report, rebuilds the corpus-derived pairs from
+the checksummed release that report names, and the submitter rejects a training
+manifest whose `source_release_uri` is not this run's release. 61 tests pass. Not yet
+run on Vertex, not yet reviewed by module A's owner, **not pushed**. One coupling to
+decide in review: a failed training task fails the whole pipeline run, so the data
+release would not be marked validated either.
 
 ### B5 — Re-evaluate and hand back to the evaluation owner
 
@@ -226,7 +250,7 @@ with the new method configuration and the additional labelling load.
 
 **Acceptance criteria**
 
-- [ ] The fine-tuned collection identity differs from the frozen one, so the two sets of
+- [x] The fine-tuned collection identity differs from the frozen one, so the two sets of
       vectors cannot be mixed.
 - [ ] Every returned trial ID is inside the 50-trial universe; the runner already fails
       otherwise.
