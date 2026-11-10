@@ -72,11 +72,12 @@ def create_app(settings=None):
 
     @app.get("/", include_in_schema=False)
     def home():
-        return FileResponse(STATIC / "index.html")
+        # Check the IAP session on page load instead of reusing cached HTML.
+        return FileResponse(STATIC / "index.html", headers={"Cache-Control": "no-store"})
 
     @app.get("/en.html", include_in_schema=False)
     def english_alias():
-        return FileResponse(STATIC / "index.html")
+        return FileResponse(STATIC / "index.html", headers={"Cache-Control": "no-store"})
 
     app.mount("/assets", StaticFiles(directory=STATIC), name="assets")
     return app
