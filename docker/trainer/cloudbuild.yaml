@@ -1,0 +1,10 @@
+# Builds only the trainer image, so a training run does not depend on rebuilding the
+# other three. Same immutable tag pattern as cloud/build.yaml.
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args: [build, -f, docker/trainer/Dockerfile, --build-arg, 'SOURCE_VERSION=${_VERSION}', -t, '${_REGISTRY}/trainer:${_VERSION}-${BUILD_ID}', .]
+images:
+  - '${_REGISTRY}/trainer:${_VERSION}-${BUILD_ID}'
+options:
+  logging: CLOUD_LOGGING_ONLY
+timeout: 2400s

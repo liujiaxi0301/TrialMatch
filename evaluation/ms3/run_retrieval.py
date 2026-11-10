@@ -28,6 +28,27 @@ STORES = Path(os.environ.get("MS3_STORES", ROOT / "artifacts/embedding_eval"))
 SNAPSHOTS = {"bioclinical": ROOT / "artifacts/embedding_eval/bioclinical.snapshot.json"}
 
 
+def build_finetuned_index(store, manifest, checkpoint, sha256):
+    """Embed the 50-trial universe with a fine-tuned checkpoint into its own store.
+
+    The checkpoint digest is part of the encoder identity, so this collection has a
+    different name from the frozen one and the two sets of vectors cannot be mixed.
+    """
+    settings = replace(
+        Settings(), artifacts=STORES / f"finetuned-{sha256[:12]}", chroma_host="", mode="live",
+        embedding_provider="bioclinical", embedding_model=BIO_MODEL,
+        embedding_revision=BIO_REVISION, dimension=768,
+        embedding_checkpoint=checkpoint, embedding_checkpoint_sha256=sha256,
+        embedding_device=os.environ.get("EMBEDDING_DEVICE", "auto"),
+    )
+    index = VectorIndex(settings, store, manifest, create_embedding_provider(settings))
+    try:
+        index.verify()
+    except ProviderError:
+        index.build()  # No snapshot exists for a new checkpoint; documents are encoded once.
+    return settings, index
+
+
 def build_index(encoder, store, manifest):
     """Reuse the existing experiment store; never re-embed or write to the shared index."""
     settings = replace(
@@ -69,7 +90,16 @@ def main():
     parser.add_argument("--queries", type=Path, default=HERE / "retrieval_queries.jsonl")
     parser.add_argument("--output", type=Path, default=HERE / "retrieval_runs.jsonl")
     parser.add_argument("--top-k", type=int, default=5)
+    parser.add_argument("--finetuned-manifest", type=Path,
+                        help="training_manifest.json of the checkpoint to add as finetuned_*")
+    parser.add_argument("--finetuned-checkpoint",
+                        help="Override the manifest's artifact_uri with a local copy")
     args = parser.parse_args()
+    encoders = list(args.encoders)
+    training = None
+    if args.finetuned_manifest:
+        training = json.loads(args.finetuned_manifest.read_text())
+        encoders.append("finetuned")
 
     store = DataStore(Settings())
     manifest = store.manifest()
@@ -99,8 +129,18 @@ def main():
             "query_construction": mode, "encoder": None, "fusion": None,
         }
 
-    for encoder in args.encoders:
-        settings, index = build_index(encoder, store, manifest)
+    frozen_name = None
+    for encoder in encoders:
+        if encoder == "finetuned":
+            settings, index = build_finetuned_index(
+                store, manifest, args.finetuned_checkpoint or training["artifact_uri"],
+                training["artifact_sha256"])
+            if index.name == frozen_name:
+                raise SystemExit("Fine-tuned and frozen encoders resolved to one collection")
+        else:
+            settings, index = build_index(encoder, store, manifest)
+            if encoder == "bioclinical":
+                frozen_name = index.name
         provider = index.provider if hasattr(index, "provider") else create_embedding_provider(settings)
         for case in cases:
             for mode, query in modes(case).items():
@@ -118,7 +158,19 @@ def main():
                 "dimension": settings.dimension,
                 "indexed_text": "criterion-level fragments; best criterion hit per trial",
                 "similarity": "cosine",
+                "collection": index.name,
             }
+            if encoder == "finetuned":
+                common.update({
+                    "checkpoint_sha256": training["artifact_sha256"],
+                    "checkpoint_uri": training["artifact_uri"],
+                    "training_workflow": training["workflow_type"],
+                    "training_code_commit": training["code_commit"],
+                    "training_run": training["experiment"].get("url")
+                    or training["experiment"].get("path"),
+                    "training_data": "corpus-derived and LLM-written query/criterion pairs "
+                                     "from trials outside this benchmark universe",
+                })
             methods[f"{encoder}_dense_{mode}"] = {**common, "fusion": None}
             methods[f"{encoder}_hybrid_{mode}"] = {
                 **common, "fusion": "reciprocal rank fusion, k=60, over [BM25, dense]"}
@@ -144,8 +196,8 @@ def main():
             "question": "the benchmark question text only",
             "patient": "unmodified production patient_query(patient, question)",
         },
-        "cache": "document vectors reused from the prepared experiment store; "
-                 "no documents re-embedded in this run",
+        "cache": "frozen-encoder document vectors reused from the prepared experiment store; "
+                 "fine-tuned document vectors are encoded once into a separate store",
         "methods": methods,
     }
     config_path = args.output.with_suffix(".config.json")
