@@ -1,0 +1,636 @@
+{
+  "name": "projects/15733748057/locations/us-east1/pipelineJobs/xuyang-ms3-hash-20261110t193643z-65e00490",
+  "displayName": "xuyang-ms3-hash-20261110t193643z-65e00490",
+  "createTime": "2026-11-10T19:36:44.590272Z",
+  "startTime": "2026-11-10T19:36:45.442799Z",
+  "endTime": "2026-11-10T19:39:30.849679Z",
+  "updateTime": "2026-11-10T19:39:30.849679Z",
+  "pipelineSpec": {
+    "deploymentConfig": {
+      "@type": "type.googleapis.com/ml_pipelines.PipelineDeploymentConfig",
+      "executors": {
+        "exec-fetch-raw": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:452cc045ae11c1e42d8f7071cdae565f79e1b57aa9924b3d26c2140ad89a62ad",
+            "command": [
+              "python",
+              "-m",
+              "cloud.tasks"
+            ],
+            "args": [
+              "fetch",
+              "--source",
+              "{{$.inputs.parameters['release']}}",
+              "--output",
+              "{{$.outputs.artifacts['raw'].uri}}"
+            ],
+            "resources": {
+              "cpuLimit": 1,
+              "memoryLimit": 2.147483648,
+              "resourceCpuLimit": "1",
+              "resourceMemoryLimit": "2Gi"
+            }
+          }
+        },
+        "exec-process-trials": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:452cc045ae11c1e42d8f7071cdae565f79e1b57aa9924b3d26c2140ad89a62ad",
+            "command": [
+              "python",
+              "-m",
+              "cloud.tasks"
+            ],
+            "args": [
+              "process",
+              "--source",
+              "{{$.inputs.artifacts['raw'].uri}}",
+              "--output",
+              "{{$.outputs.artifacts['processed'].uri}}"
+            ],
+            "resources": {
+              "cpuLimit": 1,
+              "memoryLimit": 2.147483648,
+              "resourceCpuLimit": "1",
+              "resourceMemoryLimit": "2Gi"
+            }
+          }
+        },
+        "exec-retrieve-trials": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:452cc045ae11c1e42d8f7071cdae565f79e1b57aa9924b3d26c2140ad89a62ad",
+            "command": [
+              "python",
+              "-m",
+              "cloud.tasks"
+            ],
+            "args": [
+              "retrieve",
+              "--source",
+              "{{$.inputs.artifacts['report'].uri}}",
+              "--output",
+              "{{$.outputs.artifacts['rankings'].uri}}"
+            ],
+            "resources": {
+              "cpuLimit": 1,
+              "memoryLimit": 2.147483648,
+              "resourceCpuLimit": "1",
+              "resourceMemoryLimit": "2Gi"
+            },
+            "env": [
+              {
+                "name": "GCP_PROJECT",
+                "value": "trialmatch-ac215-yixiao"
+              },
+              {
+                "name": "GCP_LOCATION",
+                "value": "global"
+              }
+            ]
+          }
+        },
+        "exec-validate-data": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:452cc045ae11c1e42d8f7071cdae565f79e1b57aa9924b3d26c2140ad89a62ad",
+            "command": [
+              "python",
+              "-m",
+              "cloud.tasks"
+            ],
+            "args": [
+              "validate",
+              "--source",
+              "{{$.inputs.artifacts['processed'].uri}}",
+              "--output",
+              "{{$.outputs.artifacts['report'].uri}}"
+            ],
+            "resources": {
+              "cpuLimit": 1,
+              "memoryLimit": 2.147483648,
+              "resourceCpuLimit": "1",
+              "resourceMemoryLimit": "2Gi"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "comp-validate-data": {
+        "inputDefinitions": {
+          "artifacts": {
+            "processed": {
+              "artifactType": {
+                "schemaTitle": "system.Dataset",
+                "schemaVersion": "0.0.1"
+              }
+            }
+          }
+        },
+        "outputDefinitions": {
+          "artifacts": {
+            "report": {
+              "artifactType": {
+                "schemaTitle": "system.Artifact",
+                "schemaVersion": "0.0.1"
+              }
+            }
+          }
+        },
+        "executorLabel": "exec-validate-data"
+      },
+      "comp-process-trials": {
+        "inputDefinitions": {
+          "artifacts": {
+            "raw": {
+              "artifactType": {
+                "schemaTitle": "system.Dataset",
+                "schemaVersion": "0.0.1"
+              }
+            }
+          }
+        },
+        "outputDefinitions": {
+          "artifacts": {
+            "processed": {
+              "artifactType": {
+                "schemaTitle": "system.Dataset",
+                "schemaVersion": "0.0.1"
+              }
+            }
+          }
+        },
+        "executorLabel": "exec-process-trials"
+      },
+      "comp-retrieve-trials": {
+        "inputDefinitions": {
+          "artifacts": {
+            "report": {
+              "artifactType": {
+                "schemaTitle": "system.Artifact",
+                "schemaVersion": "0.0.1"
+              }
+            }
+          }
+        },
+        "outputDefinitions": {
+          "artifacts": {
+            "rankings": {
+              "artifactType": {
+                "schemaTitle": "system.Artifact",
+                "schemaVersion": "0.0.1"
+              }
+            }
+          }
+        },
+        "executorLabel": "exec-retrieve-trials"
+      },
+      "comp-fetch-raw": {
+        "inputDefinitions": {
+          "parameters": {
+            "release": {
+              "parameterType": "STRING"
+            }
+          }
+        },
+        "outputDefinitions": {
+          "artifacts": {
+            "raw": {
+              "artifactType": {
+                "schemaTitle": "system.Dataset",
+                "schemaVersion": "0.0.1"
+              }
+            }
+          }
+        },
+        "executorLabel": "exec-fetch-raw"
+      }
+    },
+    "schemaVersion": "2.1.0",
+    "root": {
+      "inputDefinitions": {
+        "parameters": {
+          "release": {
+            "parameterType": "STRING"
+          }
+        }
+      },
+      "dag": {
+        "tasks": {
+          "retrieve-trials": {
+            "taskInfo": {
+              "name": "retrieve-trials"
+            },
+            "inputs": {
+              "artifacts": {
+                "report": {
+                  "taskOutputArtifact": {
+                    "producerTask": "validate-data",
+                    "outputArtifactKey": "report"
+                  }
+                }
+              }
+            },
+            "dependentTasks": [
+              "validate-data"
+            ],
+            "cachingOptions": {},
+            "componentRef": {
+              "name": "comp-retrieve-trials"
+            }
+          },
+          "fetch-raw": {
+            "taskInfo": {
+              "name": "fetch-raw"
+            },
+            "inputs": {
+              "parameters": {
+                "release": {
+                  "componentInputParameter": "release"
+                }
+              }
+            },
+            "cachingOptions": {},
+            "componentRef": {
+              "name": "comp-fetch-raw"
+            }
+          },
+          "validate-data": {
+            "taskInfo": {
+              "name": "validate-data"
+            },
+            "inputs": {
+              "artifacts": {
+                "processed": {
+                  "taskOutputArtifact": {
+                    "producerTask": "process-trials",
+                    "outputArtifactKey": "processed"
+                  }
+                }
+              }
+            },
+            "dependentTasks": [
+              "process-trials"
+            ],
+            "cachingOptions": {},
+            "componentRef": {
+              "name": "comp-validate-data"
+            }
+          },
+          "process-trials": {
+            "taskInfo": {
+              "name": "process-trials"
+            },
+            "inputs": {
+              "artifacts": {
+                "raw": {
+                  "taskOutputArtifact": {
+                    "producerTask": "fetch-raw",
+                    "outputArtifactKey": "raw"
+                  }
+                }
+              }
+            },
+            "dependentTasks": [
+              "fetch-raw"
+            ],
+            "cachingOptions": {},
+            "componentRef": {
+              "name": "comp-process-trials"
+            }
+          }
+        }
+      }
+    },
+    "sdkVersion": "kfp-2.16.1",
+    "pipelineInfo": {
+      "name": "trialmatch-data-pipeline"
+    },
+    "deploymentSpec": {
+      "executors": {
+        "exec-fetch-raw": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:452cc045ae11c1e42d8f7071cdae565f79e1b57aa9924b3d26c2140ad89a62ad",
+            "command": [
+              "python",
+              "-m",
+              "cloud.tasks"
+            ],
+            "args": [
+              "fetch",
+              "--source",
+              "{{$.inputs.parameters['release']}}",
+              "--output",
+              "{{$.outputs.artifacts['raw'].uri}}"
+            ],
+            "resources": {
+              "cpuLimit": 1,
+              "memoryLimit": 2.147483648,
+              "resourceCpuLimit": "1",
+              "resourceMemoryLimit": "2Gi"
+            }
+          }
+        },
+        "exec-process-trials": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:452cc045ae11c1e42d8f7071cdae565f79e1b57aa9924b3d26c2140ad89a62ad",
+            "command": [
+              "python",
+              "-m",
+              "cloud.tasks"
+            ],
+            "args": [
+              "process",
+              "--source",
+              "{{$.inputs.artifacts['raw'].uri}}",
+              "--output",
+              "{{$.outputs.artifacts['processed'].uri}}"
+            ],
+            "resources": {
+              "cpuLimit": 1,
+              "memoryLimit": 2.147483648,
+              "resourceCpuLimit": "1",
+              "resourceMemoryLimit": "2Gi"
+            }
+          }
+        },
+        "exec-retrieve-trials": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:452cc045ae11c1e42d8f7071cdae565f79e1b57aa9924b3d26c2140ad89a62ad",
+            "command": [
+              "python",
+              "-m",
+              "cloud.tasks"
+            ],
+            "args": [
+              "retrieve",
+              "--source",
+              "{{$.inputs.artifacts['report'].uri}}",
+              "--output",
+              "{{$.outputs.artifacts['rankings'].uri}}"
+            ],
+            "resources": {
+              "cpuLimit": 1,
+              "memoryLimit": 2.147483648,
+              "resourceCpuLimit": "1",
+              "resourceMemoryLimit": "2Gi"
+            },
+            "env": [
+              {
+                "name": "GCP_PROJECT",
+                "value": "trialmatch-ac215-yixiao"
+              },
+              {
+                "name": "GCP_LOCATION",
+                "value": "global"
+              }
+            ]
+          }
+        },
+        "exec-validate-data": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:452cc045ae11c1e42d8f7071cdae565f79e1b57aa9924b3d26c2140ad89a62ad",
+            "command": [
+              "python",
+              "-m",
+              "cloud.tasks"
+            ],
+            "args": [
+              "validate",
+              "--source",
+              "{{$.inputs.artifacts['processed'].uri}}",
+              "--output",
+              "{{$.outputs.artifacts['report'].uri}}"
+            ],
+            "resources": {
+              "cpuLimit": 1,
+              "memoryLimit": 2.147483648,
+              "resourceCpuLimit": "1",
+              "resourceMemoryLimit": "2Gi"
+            }
+          }
+        }
+      }
+    }
+  },
+  "state": "PIPELINE_STATE_FAILED",
+  "jobDetail": {
+    "pipelineContext": {
+      "name": "projects/15733748057/locations/us-east1/metadataStores/default/contexts/trialmatch-data-pipeline",
+      "displayName": "trialmatch-data-pipeline",
+      "etag": "1794339405583",
+      "createTime": "2026-10-28T09:28:42.470Z",
+      "updateTime": "2026-11-10T19:36:45.583Z",
+      "schemaTitle": "system.Pipeline",
+      "schemaVersion": "0.0.1",
+      "metadata": {}
+    },
+    "pipelineRunContext": {
+      "name": "projects/15733748057/locations/us-east1/metadataStores/default/contexts/xuyang-ms3-hash-20261110t193643z-65e00490",
+      "displayName": "xuyang-ms3-hash-20261110t193643z-65e00490",
+      "etag": "1794339405698",
+      "createTime": "2026-11-10T19:36:45.698Z",
+      "updateTime": "2026-11-10T19:36:45.698Z",
+      "parentContexts": [
+        "projects/15733748057/locations/us-east1/metadataStores/default/contexts/trialmatch-data-pipeline"
+      ],
+      "schemaTitle": "system.PipelineRun",
+      "schemaVersion": "0.0.1",
+      "metadata": {}
+    },
+    "taskDetails": [
+      {
+        "taskId": "-8102248339803734016",
+        "taskName": "retrieve-trials",
+        "createTime": "2026-11-10T19:36:46.059407Z",
+        "endTime": "2026-11-10T19:39:30.605008Z",
+        "executorDetail": {},
+        "state": "NOT_TRIGGERED",
+        "parentTaskId": "-3767533698459631616",
+        "pipelineTaskStatus": [
+          {
+            "updateTime": "2026-11-10T19:39:30.599876066Z",
+            "state": "NOT_TRIGGERED",
+            "error": {
+              "code": 9,
+              "message": "The task is not triggered because there are unsuccessful upstream tasks: [validate-data]"
+            }
+          }
+        ],
+        "taskUniqueName": "retrieve-trials"
+      },
+      {
+        "taskId": "-3767533698459631616",
+        "taskName": "xuyang-ms3-hash-20261110t193643z-65e00490",
+        "createTime": "2026-11-10T19:36:45.442799Z",
+        "startTime": "2026-11-10T19:36:46.059407Z",
+        "endTime": "2026-11-10T19:39:30.830323Z",
+        "executorDetail": {},
+        "state": "FAILED",
+        "execution": {
+          "name": "projects/15733748057/locations/us-east1/metadataStores/default/executions/4049155835143577737",
+          "displayName": "xuyang-ms3-hash-20261110t193643z-65e00490",
+          "state": "FAILED",
+          "etag": "1794339570809",
+          "createTime": "2026-11-10T19:36:45.982Z",
+          "updateTime": "2026-11-10T19:39:30.809Z",
+          "schemaTitle": "system.Run",
+          "schemaVersion": "0.0.1",
+          "metadata": {
+            "input:release": "gs://trialmatch-ac215-yixiao-ms3/negative-tests/xuyang/xuyang-ms3-hash-20261110t193643z-65e00490/release.json",
+            "vmlmd_lineage_integration": {
+              "pipeline_run_component": {
+                "project_id": "trialmatch-ac215-yixiao",
+                "location_id": "us-east1",
+                "parent_task_names": [],
+                "pipeline_run_id": "xuyang-ms3-hash-20261110t193643z-65e00490",
+                "task_name": "xuyang-ms3-hash-20261110t193643z-65e00490"
+              }
+            }
+          }
+        },
+        "error": {
+          "code": 9,
+          "message": " The DAG failed because some tasks failed. The failed tasks are: [fetch-raw]."
+        },
+        "pipelineTaskStatus": [
+          {
+            "updateTime": "2026-11-10T19:39:30.680768625Z",
+            "state": "FAILED",
+            "error": {
+              "code": 9,
+              "message": " The DAG failed because some tasks failed. The failed tasks are: [fetch-raw]."
+            }
+          }
+        ],
+        "taskUniqueName": "xuyang-ms3-hash-20261110t193643z-65e00490"
+      },
+      {
+        "taskId": "-608258559859228672",
+        "taskName": "fetch-raw",
+        "createTime": "2026-11-10T19:36:46.059407Z",
+        "startTime": "2026-11-10T19:36:46.776092Z",
+        "endTime": "2026-11-10T19:39:30.462227Z",
+        "executorDetail": {
+          "containerDetail": {
+            "mainJob": "projects/15733748057/locations/us-east1/customJobs/6958957732422483968"
+          }
+        },
+        "state": "FAILED",
+        "execution": {
+          "name": "projects/15733748057/locations/us-east1/metadataStores/default/executions/8989390327699015589",
+          "displayName": "fetch-raw",
+          "state": "FAILED",
+          "etag": "1794339570441",
+          "createTime": "2026-11-10T19:36:46.360Z",
+          "updateTime": "2026-11-10T19:39:30.441Z",
+          "schemaTitle": "system.ContainerExecution",
+          "schemaVersion": "0.0.1",
+          "metadata": {
+            "input:release": "gs://trialmatch-ac215-yixiao-ms3/negative-tests/xuyang/xuyang-ms3-hash-20261110t193643z-65e00490/release.json",
+            "vertex-ai-pipelines-artifact-argument-binding": {
+              "output:raw": [
+                "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/16327654516033434890"
+              ]
+            },
+            "vmlmd_lineage_integration": {
+              "pipeline_run_component": {
+                "location_id": "us-east1",
+                "parent_task_names": [
+                  "xuyang-ms3-hash-20261110t193643z-65e00490"
+                ],
+                "project_id": "trialmatch-ac215-yixiao",
+                "pipeline_run_id": "xuyang-ms3-hash-20261110t193643z-65e00490",
+                "task_name": "fetch-raw"
+              }
+            }
+          }
+        },
+        "error": {
+          "code": 3,
+          "message": "The replica workerpool0-0 exited with a non-zero status of 1. To find out more about why your job exited please check the logs: https://console.cloud.google.com/logs/viewer?project=15733748057&resource=ml_job%2Fjob_id%2F6958957732422483968&advancedFilter=resource.type%3D%22ml_job%22%0Aresource.labels.job_id%3D%226958957732422483968%22"
+        },
+        "outputs": {
+          "raw": {
+            "artifacts": [
+              {
+                "name": "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/16327654516033434890",
+                "displayName": "raw",
+                "uri": "gs://trialmatch-ac215-yixiao-ms3/negative-tests/xuyang/xuyang-ms3-hash-20261110t193643z-65e00490/pipeline-output/15733748057/xuyang-ms3-hash-20261110t193643z-65e00490/fetch-raw_-608258559859228672/raw",
+                "etag": "1794339406624",
+                "createTime": "2026-11-10T19:36:46.624Z",
+                "updateTime": "2026-11-10T19:36:46.624Z",
+                "state": "PENDING",
+                "schemaTitle": "system.Dataset",
+                "schemaVersion": "0.0.1",
+                "metadata": {}
+              }
+            ]
+          }
+        },
+        "parentTaskId": "-3767533698459631616",
+        "pipelineTaskStatus": [
+          {
+            "updateTime": "2026-11-10T19:39:30.375538610Z",
+            "state": "FAILED"
+          }
+        ],
+        "taskUniqueName": "fetch-raw"
+      },
+      {
+        "taskId": "1121123697051041792",
+        "taskName": "process-trials",
+        "createTime": "2026-11-10T19:36:46.059407Z",
+        "endTime": "2026-11-10T19:39:30.559395Z",
+        "executorDetail": {},
+        "state": "NOT_TRIGGERED",
+        "parentTaskId": "-3767533698459631616",
+        "pipelineTaskStatus": [
+          {
+            "updateTime": "2026-11-10T19:39:30.550796544Z",
+            "state": "NOT_TRIGGERED",
+            "error": {
+              "code": 9,
+              "message": "The task is not triggered because there are unsuccessful upstream tasks: [fetch-raw]"
+            }
+          }
+        ],
+        "taskUniqueName": "process-trials"
+      },
+      {
+        "taskId": "5732809715478429696",
+        "taskName": "validate-data",
+        "createTime": "2026-11-10T19:36:46.059407Z",
+        "endTime": "2026-11-10T19:39:30.580500Z",
+        "executorDetail": {},
+        "state": "NOT_TRIGGERED",
+        "parentTaskId": "-3767533698459631616",
+        "pipelineTaskStatus": [
+          {
+            "updateTime": "2026-11-10T19:39:30.575131480Z",
+            "state": "NOT_TRIGGERED",
+            "error": {
+              "code": 9,
+              "message": "The task is not triggered because there are unsuccessful upstream tasks: [process-trials]"
+            }
+          }
+        ],
+        "taskUniqueName": "validate-data"
+      }
+    ]
+  },
+  "error": {
+    "code": 9,
+    "message": " The DAG failed because some tasks failed. The failed tasks are: [fetch-raw].; Job (project_id = trialmatch-ac215-yixiao, job_id = 5619497002057334784) is failed due to the above error.; Failed to handle the job: {project_number = 15733748057, job_id = 5619497002057334784}"
+  },
+  "labels": {
+    "owner": "xuyang",
+    "purpose": "ms3-checksum-failure",
+    "vertex-ai-pipelines-run-billing-id": "5619497002057334784"
+  },
+  "runtimeConfig": {
+    "gcsOutputDirectory": "gs://trialmatch-ac215-yixiao-ms3/negative-tests/xuyang/xuyang-ms3-hash-20261110t193643z-65e00490/pipeline-output",
+    "parameterValues": {
+      "release": "gs://trialmatch-ac215-yixiao-ms3/negative-tests/xuyang/xuyang-ms3-hash-20261110t193643z-65e00490/release.json"
+    }
+  },
+  "serviceAccount": "trialmatch-pipeline@trialmatch-ac215-yixiao.iam.gserviceaccount.com"
+}

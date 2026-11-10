@@ -1,5 +1,60 @@
 # Module A: compilation, configuration and failure checks
 
+## November 10 integration update
+
+The local branch now includes `yixiao/ms3-infra` at `50dc2ca`. Its
+[GitHub Actions run](https://github.com/liujiaxi0301/TrialMatch/actions/runs/42865683063)
+passed 47 tests and the accompanying checks. This is separate from the historical
+45-test November 5 results below.
+
+The [November 10 evidence review](evidence/module-a/gcp-20261110/README.md)
+verified exported records for `trialmatch-data-pipeline-20261110055153`, whose
+recorded source commit is `6cae15b`. All four tasks succeeded:
+`fetch-raw -> process-trials -> validate-data -> retrieve-trials`. Twenty offline
+consistency checks passed, including a new compilation of that exact source
+matching the cloud specification after accounting for SDK/API representation
+changes, image/build/release bindings, and structural checks of 48 rankings.
+
+The upload's `PARTIAL` status records four empty log queries. The runtime-graph
+screenshot was subsequently reviewed in chat and matches the successful run;
+its original image file still needs archiving. The subsequent retrieval-node JSON
+export has been archived and passed nine consistency checks: 11 entries match
+the actual CustomJob, seven verified files, 48 rows, six methods, the output URI
+and successful completion. Other nodes' log exports remain pending. The original
+collector queried the wrong monitored resource type; the actual type is `ml_job`.
+The run does not establish a negative-input
+cloud test, model training, formal benchmark scoring or clinical validation.
+No new cloud job was submitted for this review.
+
+### Cloud failure check: independently verified
+
+The [standalone checksum-failure helper](module-a-cloud-failure.md) passed 15
+offline checks, including real `cloud.tasks.fetch` rejection before DVC/output
+work with simulated storage. The SDK accepts its REST PipelineJob request shape.
+The experiment uses the reviewed image/spec, two isolated test objects and a
+fixed new job ID, with caching disabled. Missing metadata or a generic cloud
+failure cannot produce `PASSED`; repeated collection cannot resubmit a job or
+leave a stale current success result. See the
+[preflight record](evidence/module-a/negative-20261110/preflight.json).
+
+Xuyang ran `xuyang-ms3-hash-20261110t193643z-65e00490` in Cloud Shell. Independent
+review of the original archive passed 20 evidence checks: the 107-byte corrupted
+copy retains the 106-byte original's expected hash in its manifest; cloud object
+records agree with the archived bytes; fetch worker logs contain the exact
+checksum exception; and all three descendants are NOT_TRIGGERED with no start
+time or executor. The workflow image/spec match the successful baseline and all
+task caches are disabled. See the [final review](evidence/module-a/negative-20261110/README.md).
+The failed-run runtime graph and checksum-error screenshots have been reviewed
+in chat and match the records. They are optional presentation material; this
+commit includes the code, JSON evidence and documentation at the user's choice.
+
+The 15 standalone local checks and 20 offline evidence checks are separate from
+the 47-test GitHub Actions result above. The experiment
+tests component checksum rejection and downstream blocking, not Python-runner
+success-marker cleanup or deployment-shell behavior.
+
+## November 5 verification record
+
 Rechecked on 2026-11-05 on local branch `xuyang/ms3-pipeline`, after advancing
 to the existing infrastructure commit
 `e96a928f5a795c84e6e647c0670691b74805e748`. The initial check used `e95c2bb`

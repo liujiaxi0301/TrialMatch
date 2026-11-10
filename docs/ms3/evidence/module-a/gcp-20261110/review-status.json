@@ -1,0 +1,110 @@
+{
+  "status": "PASSED_WITH_LIMITATIONS",
+  "artifact_consistency_review": "PASSED",
+  "collection_status": "PARTIAL",
+  "reviewed_branch": "xuyang/ms3-pipeline",
+  "reviewed_commit": "50dc2ca0e5ff8a7a932ff96a126d3575e7f156ef",
+  "integration_branch": "yixiao/ms3-infra",
+  "review_mode": "Offline consistency review of user-exported cloud API records and local Git; no new cloud execution or authenticated direct query.",
+  "cloud_success_evidence_verified": true,
+  "actual_run_commit_recorded_by_build_and_container": "6cae15b387cb4de2e344b49864b68f7d0b24ab6a",
+  "pipeline_job": "projects/15733748057/locations/us-east1/pipelineJobs/trialmatch-data-pipeline-20261110055153",
+  "pipeline_state": "PIPELINE_STATE_SUCCEEDED",
+  "workflow_image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:452cc045ae11c1e42d8f7071cdae565f79e1b57aa9924b3d26c2140ad89a62ad",
+  "build_id": "f6edb1ef-dbb1-4389-b014-9b7f1b48ff82",
+  "input_release": "gs://trialmatch-ac215-yixiao-ms3/releases/2c8b5da003025134/452cc045ae11c1e42d8f7071cdae565f79e1b57aa9924b3d26c2140ad89a62ad/c8627e7addd3d265a61eb137d28691c545b4786b321e9e1981a9035e748e2125/release.json",
+  "output_release": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261110055153/process-trials_6552156984404082688/processed/release.json",
+  "rankings_uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261110055153/retrieve-trials_-2671215052450693120/rankings/retrieval_runs.jsonl",
+  "ci": {
+    "commit": "50dc2ca0e5ff8a7a932ff96a126d3575e7f156ef",
+    "status": "success",
+    "tests": 47,
+    "evidence": "github-actions.json"
+  },
+  "audit": "audit.json",
+  "pending_evidence": [
+    "Archive original runtime-graph and retrieval-log screenshots already reviewed in chat",
+    "Optional completion of log collection for fetch-raw, process-trials and validate-data using supplemental/remaining-node-logs.lql"
+  ],
+  "pending_module_a_work": [
+    "Separate negative-input cloud test",
+    "Training and formal evaluation integration when B/C entry points are ready"
+  ],
+  "next_action": "Retrieval log export is verified and archived. The remaining three node logs can be exported together with the provided query; preserve original screenshots. A separate negative-input cloud test remains the next substantive Module A verification task.",
+  "runtime_graph_screenshot": {
+    "status": "REVIEWED_IN_CHAT",
+    "source": "User-provided inline screenshot; no accessible image file supplied to this workspace",
+    "archived_file": null,
+    "run_id": "trialmatch-data-pipeline-20261110055153",
+    "completed_steps": "4/4",
+    "successful_nodes": [
+      "fetch-raw",
+      "process-trials",
+      "validate-data",
+      "retrieve-trials"
+    ],
+    "duration_displayed": "12 min 56 sec",
+    "displayed_start_time": "2026-11-10 00:51:55 America/New_York",
+    "displayed_end_time": "2026-11-10 01:04:51 America/New_York",
+    "matches_exported_job": true
+  },
+  "retrieval_log_screenshot": {
+    "status": "REVIEWED_IN_CHAT",
+    "node": "retrieve-trials",
+    "source": "User-provided inline screenshot of the Main job log pane and node details",
+    "archived_image_file": null,
+    "exported_log_file": "supplemental/retrieve-trials-logs.json",
+    "query_filter_visible": true,
+    "run_context": "Associated with the previously shown trialmatch-data-pipeline-20261110055153; node name, times and row count agree with exported evidence, but this cropped image does not display run ID.",
+    "node_status_displayed": "Completed",
+    "visible_entries": [
+      {
+        "time_est": "2026-11-10 01:04:16.637",
+        "event": "release_verified",
+        "files": 7
+      },
+      {
+        "time_est": "2026-11-10 01:04:23.820",
+        "message": "48 rows -> artifacts/retrieval/retrieval_runs.jsonl"
+      },
+      {
+        "time_est": "2026-11-10 01:04:23.828",
+        "message": "config -> artifacts/retrieval/retrieval_runs.config.json"
+      },
+      {
+        "time_est": "2026-11-10 01:04:26.140",
+        "event": "retrieval_rankings_saved",
+        "methods": 6
+      },
+      {
+        "time_est": "2026-11-10 01:07:16.401",
+        "message": "Job completed successfully."
+      }
+    ],
+    "interpretation": "Logs Explorer confirms ml_job with the exact retrieval CustomJob ID and 11 results. The earlier collector queried a different resource type. Service training-program messages are generic and do not establish actual model training.",
+    "remaining_nodes_without_log_evidence": [
+      "fetch-raw",
+      "process-trials",
+      "validate-data"
+    ]
+  },
+  "collector_log_query_correction": {
+    "confirmed_node": "retrieve-trials",
+    "evidence": "User screenshot of full Logs Explorer showing query and 11 results",
+    "observed_query": "resource.type=\"ml_job\"\nresource.labels.job_id=\"5535151747103719424\"\ntimestamp>=\"2026-11-10T05:51:55.094Z\"\ntimestamp<=\"2026-11-10T07:04:51.471Z\" severity>=DEFAULT",
+    "displayed_result_count": 11,
+    "original_resource_type": "aiplatform.googleapis.com/CustomJob",
+    "correct_resource_type_for_observed_logs": "ml_job",
+    "diagnosis": "Original collector used the wrong monitored resource type. The displayed job ID matches the retrieval CustomJob in vertex-job.json.",
+    "local_correction": "Changed the resource type to ml_job in a separate collector copy; preserved original collector and export byte-for-byte.",
+    "verification": "A fake API reflecting the observed filter reproduced PARTIAL with the old query. After correction all seven offline collector tests passed. Corrected collector has not been run against GCP."
+  },
+  "retrieval_logs": {
+    "status": "PASSED",
+    "archived_file": "supplemental/retrieve-trials-logs.json",
+    "sha256": "fa3c98a4a74a2e689859b18834e64f0751f36e27a89064f9c1d88663aa139b1b",
+    "entries": 11,
+    "custom_job": "projects/15733748057/locations/us-east1/customJobs/5535151747103719424",
+    "review": "supplemental/retrieve-trials-review.json"
+  }
+}

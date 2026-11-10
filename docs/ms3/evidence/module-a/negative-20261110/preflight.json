@@ -1,0 +1,24 @@
+{
+  "status": "READY_FOR_CLOUD_RUN",
+  "prepared_utc": "2026-11-10T19:31:28.577928+00:00",
+  "cloud_job_submitted": false,
+  "cloud_result": null,
+  "baseline_run": "trialmatch-data-pipeline-20261110055153",
+  "baseline_commit_recorded": "6cae15b387cb4de2e344b49864b68f7d0b24ab6a",
+  "reviewed_branch_commit": "50dc2ca0e5ff8a7a932ff96a126d3575e7f156ef",
+  "workflow_image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:452cc045ae11c1e42d8f7071cdae565f79e1b57aa9924b3d26c2140ad89a62ad",
+  "local_checks": {
+    "tests": 15,
+    "result": "PASSED",
+    "command": "docker/workflow/.venv/bin/python scripts/ms3/test_verify_checksum_failure.py",
+    "uses_cloud_mocks": true,
+    "real_component_check": "cloud.tasks.fetch rejects changed raw.dvc before DVC/output work",
+    "vertex_request_schema": "PipelineJob.from_json accepted the REST request body offline"
+  },
+  "scope": "Real cloud checksum rejection and prevention of all three downstream tasks, once executed. Excludes Python-runner marker cleanup, deployment, training and scoring.",
+  "execution_requirement": "Run the self-contained script in authenticated Cloud Shell; the current executor has no GCP identity.",
+  "source_sha256": {
+    "scripts/ms3/verify_checksum_failure.py": "d8fe3651358fab91ea8655f967b24c1d4975da9795cacc0a7c6f7c24b4cf958c",
+    "scripts/ms3/test_verify_checksum_failure.py": "817a2845ac61e08ddec28ff2171db3b9d8aa123a85fa72bb7376d2ea42f47a94"
+  }
+}

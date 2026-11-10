@@ -1,19 +1,65 @@
 # Module A: baseline and integration plan
 
-Status: Module A reliability changes published and their successful data-pipeline
-cloud run reviewed on 2026-11-05. B/C
-interfaces below remain proposals for team review, not implemented commands or
-agreed contracts.
+Status (2026-11-10): the integrated four-step data/retrieval cloud run has passed
+an offline consistency review of exported cloud records. The runtime graph was
+also reviewed in chat; its original image file still needs archiving.
+The `retrieve-trials` JSON log export has been reviewed and archived; it confirms
+the task identity, release, 48 ranking rows and successful completion. The other
+nodes' log exports remain pending. Training and formal scoring are not included.
+The broader B/C training/evaluation interfaces below remain proposals for team
+review, not implemented commands or agreed contracts.
 
 Local compilation, configuration and failure checks are now recorded in
 [module-a-checks.md](module-a-checks.md), including the original 18 core regression
 tests, six release-identity tests, eight deployment-binding tests, eleven
 input-data guard tests and two Chroma deployment-script tests (45 total).
 Build tests now also enforce immutable tags using the real Cloud Build YAML.
-GitHub Actions and a real data-pipeline success run passed at `a8f1386`.
-Negative-input cloud verification and B/C integration remain pending.
+These 45 checks and the cloud success run at `a8f1386` are the November 5 record.
+The integrated November 10 branch has 47 passing CI tests. The negative-input
+cloud checksum test has now passed independent review of its original archive:
+the exact checksum error and all three blocked descendants are confirmed.
+Training/formal-scoring integration remains pending.
 
-## Current integration (2026-11-05)
+## Current integration (2026-11-10)
+
+- Local `xuyang/ms3-pipeline` was fast-forwarded to `yixiao/ms3-infra` at
+  `50dc2ca0e5ff8a7a932ff96a126d3575e7f156ef` before this evidence/test update.
+- The DAG is `fetch-raw -> process-trials -> validate-data -> retrieve-trials`.
+  Its final node produces BM25/Gemini rankings for the fixed query protocol.
+- Yixiao's run `trialmatch-data-pipeline-20261110055153` succeeded at recorded
+  source `6cae15b387cb4de2e344b49864b68f7d0b24ab6a`. Xuyang exported its metadata
+  and artifacts; [the evidence review](evidence/module-a/gcp-20261110/README.md)
+  found consistent task dependencies, image/build records, releases and hashes,
+  with 48 ranking records covering eight queries and six methods.
+- Exact run-commit compilation agrees with the cloud specification, accounting
+  for disabled runtime caching and the API's duplicate deployment config. The
+  only changes from that commit to `50dc2ca` are README and frontend files.
+- [CI at 50dc2ca](https://github.com/liujiaxi0301/TrialMatch/actions/runs/42865683063)
+  passed 47 tests and the accompanying validation/static/compilation checks.
+- The evidence collector reported `PARTIAL` because all four log queries returned
+  no entries. Later console and JSON evidence showed the correct monitored
+  resource is `ml_job`; the collector used the wrong type. Eleven retrieval
+  log entries are now archived and agree with the release and outputs. The
+  remaining three nodes' logs can be exported together; screenshot files still
+  need archiving. These collection gaps do not change the successful states
+  recorded in the Vertex job or block a separate failure-verification task.
+- Next integration work: connect B's trainable model and C's formal scoring when
+  their entry points are ready. Preserve runtime-graph image files for the report.
+  Ranking generation alone is not training or a scored benchmark.
+- The [cloud checksum-failure helper](module-a-cloud-failure.md) is now prepared:
+  15 offline checks and Vertex request-schema validation passed. It reuses the
+  reviewed four-node spec and immutable image, creates an isolated bad input and
+  evaluates fetch failure plus all three downstream tasks. Xuyang executed it in
+  Cloud Shell as `xuyang-ms3-hash-20261110t193643z-65e00490`. The
+  [independent archive review](evidence/module-a/negative-20261110/README.md)
+  passed 20 consistency checks: the damaged copy, unchanged expected hash,
+  concrete checksum exception and three NOT_TRIGGERED descendants agree with
+  the raw records. The failure graph and checksum-error images have been reviewed
+  in chat and are optional presentation material, omitted from this commit at
+  the user's choice. This test
+  does not cover Python-runner marker cleanup or every invalid-input scenario.
+
+## Previous integration (2026-11-05)
 
 - Local branch `xuyang/ms3-pipeline` now includes the existing upstream commit
   `e96a928f5a795c84e6e647c0670691b74805e748`, which separates service dependencies.
@@ -72,12 +118,14 @@ not independently verified during this baseline check.
 
 ## What already exists
 
-`cloud/pipeline.py` compiles and submits three Vertex tasks:
+`cloud/pipeline.py` now compiles and submits four Vertex tasks:
 
 1. `fetch`: verify a GCS release and restore its fixed raw DVC snapshot.
 2. `process`: reproduce the trial/criterion files with `prepare_data.py --from-raw`.
 3. `validate`: check the processed data and vector snapshot, then perform one
    offline screening smoke check.
+4. `retrieve`: consume the validation report and produce BM25/Gemini rankings
+   plus configuration for the fixed MS3 queries and 50-trial universe.
 
 `cloud/tasks.py` publishes release files with checksums and passes task outputs
 through GCS. `cloud/deploy.sh` consumes the validated release for deployment.

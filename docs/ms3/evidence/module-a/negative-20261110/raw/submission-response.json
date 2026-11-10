@@ -1,0 +1,425 @@
+{
+  "name": "projects/15733748057/locations/us-east1/pipelineJobs/xuyang-ms3-hash-20261110t193643z-65e00490",
+  "displayName": "xuyang-ms3-hash-20261110t193643z-65e00490",
+  "createTime": "2026-11-10T19:36:44.590272Z",
+  "updateTime": "2026-11-10T19:36:44.590272Z",
+  "pipelineSpec": {
+    "deploymentConfig": {
+      "@type": "type.googleapis.com/ml_pipelines.PipelineDeploymentConfig",
+      "executors": {
+        "exec-fetch-raw": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:452cc045ae11c1e42d8f7071cdae565f79e1b57aa9924b3d26c2140ad89a62ad",
+            "command": [
+              "python",
+              "-m",
+              "cloud.tasks"
+            ],
+            "args": [
+              "fetch",
+              "--source",
+              "{{$.inputs.parameters['release']}}",
+              "--output",
+              "{{$.outputs.artifacts['raw'].uri}}"
+            ],
+            "resources": {
+              "cpuLimit": 1,
+              "memoryLimit": 2.147483648,
+              "resourceCpuLimit": "1",
+              "resourceMemoryLimit": "2Gi"
+            }
+          }
+        },
+        "exec-process-trials": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:452cc045ae11c1e42d8f7071cdae565f79e1b57aa9924b3d26c2140ad89a62ad",
+            "command": [
+              "python",
+              "-m",
+              "cloud.tasks"
+            ],
+            "args": [
+              "process",
+              "--source",
+              "{{$.inputs.artifacts['raw'].uri}}",
+              "--output",
+              "{{$.outputs.artifacts['processed'].uri}}"
+            ],
+            "resources": {
+              "cpuLimit": 1,
+              "memoryLimit": 2.147483648,
+              "resourceCpuLimit": "1",
+              "resourceMemoryLimit": "2Gi"
+            }
+          }
+        },
+        "exec-retrieve-trials": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:452cc045ae11c1e42d8f7071cdae565f79e1b57aa9924b3d26c2140ad89a62ad",
+            "command": [
+              "python",
+              "-m",
+              "cloud.tasks"
+            ],
+            "args": [
+              "retrieve",
+              "--source",
+              "{{$.inputs.artifacts['report'].uri}}",
+              "--output",
+              "{{$.outputs.artifacts['rankings'].uri}}"
+            ],
+            "resources": {
+              "cpuLimit": 1,
+              "memoryLimit": 2.147483648,
+              "resourceCpuLimit": "1",
+              "resourceMemoryLimit": "2Gi"
+            },
+            "env": [
+              {
+                "name": "GCP_PROJECT",
+                "value": "trialmatch-ac215-yixiao"
+              },
+              {
+                "name": "GCP_LOCATION",
+                "value": "global"
+              }
+            ]
+          }
+        },
+        "exec-validate-data": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:452cc045ae11c1e42d8f7071cdae565f79e1b57aa9924b3d26c2140ad89a62ad",
+            "command": [
+              "python",
+              "-m",
+              "cloud.tasks"
+            ],
+            "args": [
+              "validate",
+              "--source",
+              "{{$.inputs.artifacts['processed'].uri}}",
+              "--output",
+              "{{$.outputs.artifacts['report'].uri}}"
+            ],
+            "resources": {
+              "cpuLimit": 1,
+              "memoryLimit": 2.147483648,
+              "resourceCpuLimit": "1",
+              "resourceMemoryLimit": "2Gi"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "comp-validate-data": {
+        "inputDefinitions": {
+          "artifacts": {
+            "processed": {
+              "artifactType": {
+                "schemaTitle": "system.Dataset",
+                "schemaVersion": "0.0.1"
+              }
+            }
+          }
+        },
+        "outputDefinitions": {
+          "artifacts": {
+            "report": {
+              "artifactType": {
+                "schemaTitle": "system.Artifact",
+                "schemaVersion": "0.0.1"
+              }
+            }
+          }
+        },
+        "executorLabel": "exec-validate-data"
+      },
+      "comp-process-trials": {
+        "inputDefinitions": {
+          "artifacts": {
+            "raw": {
+              "artifactType": {
+                "schemaTitle": "system.Dataset",
+                "schemaVersion": "0.0.1"
+              }
+            }
+          }
+        },
+        "outputDefinitions": {
+          "artifacts": {
+            "processed": {
+              "artifactType": {
+                "schemaTitle": "system.Dataset",
+                "schemaVersion": "0.0.1"
+              }
+            }
+          }
+        },
+        "executorLabel": "exec-process-trials"
+      },
+      "comp-retrieve-trials": {
+        "inputDefinitions": {
+          "artifacts": {
+            "report": {
+              "artifactType": {
+                "schemaTitle": "system.Artifact",
+                "schemaVersion": "0.0.1"
+              }
+            }
+          }
+        },
+        "outputDefinitions": {
+          "artifacts": {
+            "rankings": {
+              "artifactType": {
+                "schemaTitle": "system.Artifact",
+                "schemaVersion": "0.0.1"
+              }
+            }
+          }
+        },
+        "executorLabel": "exec-retrieve-trials"
+      },
+      "comp-fetch-raw": {
+        "inputDefinitions": {
+          "parameters": {
+            "release": {
+              "parameterType": "STRING"
+            }
+          }
+        },
+        "outputDefinitions": {
+          "artifacts": {
+            "raw": {
+              "artifactType": {
+                "schemaTitle": "system.Dataset",
+                "schemaVersion": "0.0.1"
+              }
+            }
+          }
+        },
+        "executorLabel": "exec-fetch-raw"
+      }
+    },
+    "schemaVersion": "2.1.0",
+    "root": {
+      "inputDefinitions": {
+        "parameters": {
+          "release": {
+            "parameterType": "STRING"
+          }
+        }
+      },
+      "dag": {
+        "tasks": {
+          "retrieve-trials": {
+            "taskInfo": {
+              "name": "retrieve-trials"
+            },
+            "inputs": {
+              "artifacts": {
+                "report": {
+                  "taskOutputArtifact": {
+                    "producerTask": "validate-data",
+                    "outputArtifactKey": "report"
+                  }
+                }
+              }
+            },
+            "dependentTasks": [
+              "validate-data"
+            ],
+            "cachingOptions": {},
+            "componentRef": {
+              "name": "comp-retrieve-trials"
+            }
+          },
+          "fetch-raw": {
+            "taskInfo": {
+              "name": "fetch-raw"
+            },
+            "inputs": {
+              "parameters": {
+                "release": {
+                  "componentInputParameter": "release"
+                }
+              }
+            },
+            "cachingOptions": {},
+            "componentRef": {
+              "name": "comp-fetch-raw"
+            }
+          },
+          "validate-data": {
+            "taskInfo": {
+              "name": "validate-data"
+            },
+            "inputs": {
+              "artifacts": {
+                "processed": {
+                  "taskOutputArtifact": {
+                    "producerTask": "process-trials",
+                    "outputArtifactKey": "processed"
+                  }
+                }
+              }
+            },
+            "dependentTasks": [
+              "process-trials"
+            ],
+            "cachingOptions": {},
+            "componentRef": {
+              "name": "comp-validate-data"
+            }
+          },
+          "process-trials": {
+            "taskInfo": {
+              "name": "process-trials"
+            },
+            "inputs": {
+              "artifacts": {
+                "raw": {
+                  "taskOutputArtifact": {
+                    "producerTask": "fetch-raw",
+                    "outputArtifactKey": "raw"
+                  }
+                }
+              }
+            },
+            "dependentTasks": [
+              "fetch-raw"
+            ],
+            "cachingOptions": {},
+            "componentRef": {
+              "name": "comp-process-trials"
+            }
+          }
+        }
+      }
+    },
+    "sdkVersion": "kfp-2.16.1",
+    "pipelineInfo": {
+      "name": "trialmatch-data-pipeline"
+    },
+    "deploymentSpec": {
+      "executors": {
+        "exec-fetch-raw": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:452cc045ae11c1e42d8f7071cdae565f79e1b57aa9924b3d26c2140ad89a62ad",
+            "command": [
+              "python",
+              "-m",
+              "cloud.tasks"
+            ],
+            "args": [
+              "fetch",
+              "--source",
+              "{{$.inputs.parameters['release']}}",
+              "--output",
+              "{{$.outputs.artifacts['raw'].uri}}"
+            ],
+            "resources": {
+              "cpuLimit": 1,
+              "memoryLimit": 2.147483648,
+              "resourceCpuLimit": "1",
+              "resourceMemoryLimit": "2Gi"
+            }
+          }
+        },
+        "exec-process-trials": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:452cc045ae11c1e42d8f7071cdae565f79e1b57aa9924b3d26c2140ad89a62ad",
+            "command": [
+              "python",
+              "-m",
+              "cloud.tasks"
+            ],
+            "args": [
+              "process",
+              "--source",
+              "{{$.inputs.artifacts['raw'].uri}}",
+              "--output",
+              "{{$.outputs.artifacts['processed'].uri}}"
+            ],
+            "resources": {
+              "cpuLimit": 1,
+              "memoryLimit": 2.147483648,
+              "resourceCpuLimit": "1",
+              "resourceMemoryLimit": "2Gi"
+            }
+          }
+        },
+        "exec-retrieve-trials": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:452cc045ae11c1e42d8f7071cdae565f79e1b57aa9924b3d26c2140ad89a62ad",
+            "command": [
+              "python",
+              "-m",
+              "cloud.tasks"
+            ],
+            "args": [
+              "retrieve",
+              "--source",
+              "{{$.inputs.artifacts['report'].uri}}",
+              "--output",
+              "{{$.outputs.artifacts['rankings'].uri}}"
+            ],
+            "resources": {
+              "cpuLimit": 1,
+              "memoryLimit": 2.147483648,
+              "resourceCpuLimit": "1",
+              "resourceMemoryLimit": "2Gi"
+            },
+            "env": [
+              {
+                "name": "GCP_PROJECT",
+                "value": "trialmatch-ac215-yixiao"
+              },
+              {
+                "name": "GCP_LOCATION",
+                "value": "global"
+              }
+            ]
+          }
+        },
+        "exec-validate-data": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:452cc045ae11c1e42d8f7071cdae565f79e1b57aa9924b3d26c2140ad89a62ad",
+            "command": [
+              "python",
+              "-m",
+              "cloud.tasks"
+            ],
+            "args": [
+              "validate",
+              "--source",
+              "{{$.inputs.artifacts['processed'].uri}}",
+              "--output",
+              "{{$.outputs.artifacts['report'].uri}}"
+            ],
+            "resources": {
+              "cpuLimit": 1,
+              "memoryLimit": 2.147483648,
+              "resourceCpuLimit": "1",
+              "resourceMemoryLimit": "2Gi"
+            }
+          }
+        }
+      }
+    }
+  },
+  "state": "PIPELINE_STATE_PENDING",
+  "labels": {
+    "owner": "xuyang",
+    "purpose": "ms3-checksum-failure",
+    "vertex-ai-pipelines-run-billing-id": "5619497002057334784"
+  },
+  "runtimeConfig": {
+    "gcsOutputDirectory": "gs://trialmatch-ac215-yixiao-ms3/negative-tests/xuyang/xuyang-ms3-hash-20261110t193643z-65e00490/pipeline-output",
+    "parameterValues": {
+      "release": "gs://trialmatch-ac215-yixiao-ms3/negative-tests/xuyang/xuyang-ms3-hash-20261110t193643z-65e00490/release.json"
+    }
+  },
+  "serviceAccount": "trialmatch-pipeline@trialmatch-ac215-yixiao.iam.gserviceaccount.com"
+}

@@ -1,0 +1,25 @@
+{
+  "status": "PASSED",
+  "checks": {
+    "job_image_release_dag_and_cache_match": true,
+    "isolated_inputs_verified": true,
+    "pipeline_failed": true,
+    "fetch_failed": true,
+    "specific_checksum_error": true,
+    "all_three_downstream_tasks_not_executed": true
+  },
+  "pipeline_state": "PIPELINE_STATE_FAILED",
+  "task_states": {
+    "fetch-raw": "FAILED",
+    "process-trials": "NOT_TRIGGERED",
+    "validate-data": "NOT_TRIGGERED",
+    "retrieve-trials": "NOT_TRIGGERED"
+  },
+  "scope": "Cloud component checksum rejection and blocking three downstream tasks; not Python-runner marker cleanup, deployment, training or evaluation.",
+  "reviewed_utc": "2026-11-10T19:40:20.405661+00:00",
+  "pipeline_job": "projects/15733748057/locations/us-east1/pipelineJobs/xuyang-ms3-hash-20261110t193643z-65e00490",
+  "case_id": "xuyang-ms3-hash-20261110t193643z-65e00490",
+  "workflow_image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:452cc045ae11c1e42d8f7071cdae565f79e1b57aa9924b3d26c2140ad89a62ad",
+  "baseline_commit_recorded": "6cae15b387cb4de2e344b49864b68f7d0b24ab6a",
+  "collection_errors": []
+}

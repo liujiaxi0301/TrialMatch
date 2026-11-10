@@ -1,0 +1,33 @@
+{
+  "status": "SCREENSHOT_REPORTS_PASS",
+  "source": "User-provided inline Cloud Shell terminal screenshot; raw archive not received yet",
+  "independent_evidence_review": "PENDING_ARCHIVE",
+  "reported_verdict": "PASSED",
+  "pipeline_job": "projects/15733748057/locations/us-east1/pipelineJobs/xuyang-ms3-hash-20261110t193643z-65e00490",
+  "console_url": "https://console.cloud.google.com/vertex-ai/locations/us-east1/pipelines/runs/xuyang-ms3-hash-20261110t193643z-65e00490?project=trialmatch-ac215-yixiao",
+  "reported_pipeline_state": "PIPELINE_STATE_FAILED",
+  "reported_task_states": {
+    "fetch-raw": "FAILED",
+    "process-trials": "NOT_TRIGGERED",
+    "validate-data": "NOT_TRIGGERED",
+    "retrieve-trials": "NOT_TRIGGERED"
+  },
+  "reported_checks": {
+    "job_image_release_dag_and_cache_match": true,
+    "isolated_inputs_verified": true,
+    "pipeline_failed": true,
+    "fetch_failed": true,
+    "specific_checksum_error": true,
+    "all_three_downstream_tasks_not_executed": true
+  },
+  "reported_collection_errors": [],
+  "reported_reviewed_utc": "2026-11-10T19:40:20.405661+00:00",
+  "baseline_commit_recorded": "6cae15b387cb4de2e344b49864b68f7d0b24ab6a",
+  "workflow_image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:452cc045ae11c1e42d8f7071cdae565f79e1b57aa9924b3d26c2140ad89a62ad",
+  "archive_on_cloud_shell": "/home/sxyiriki/ms3-negative-20261110.tar.gz",
+  "remaining_evidence": [
+    "Upload the original evidence tar.gz for independent verification",
+    "Preserve the negative-run Vertex graph screenshot as an image file"
+  ],
+  "scope": "Cloud checksum rejection and downstream blocking; excludes Python-runner marker cleanup, deployment, training and scoring."
+}
