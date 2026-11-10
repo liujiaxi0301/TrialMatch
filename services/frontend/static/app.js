@@ -12,11 +12,28 @@ function setControls() {
   $('metadataBtn').disabled = !state.metadata;
 }
 async function api(path, options={}) {
-  const response = await fetch(path, {...options, headers:{'Content-Type':'application/json', ...options.headers}});
-  let body;
-  try { body = await response.json(); } catch { throw new Error(`Backend returned an unreadable response (HTTP ${response.status}).`); }
-  if (!response.ok) { const error = new Error(typeof body.detail === 'string' ? body.detail : JSON.stringify(body.detail || body.errors || body)); error.body = body; error.status = response.status; throw error; }
-  return body;
+  // Retry temporary read failures, never a screening submission or cancelled request.
+  const attempts = (options.method || 'GET').toUpperCase()==='GET' ? 3 : 1;
+  for (let attempt=1; ; attempt++) {
+    try {
+      const response = await fetch(path, {credentials:'same-origin', ...options, headers:{'Content-Type':'application/json', 'X-Requested-With':'XMLHttpRequest', ...options.headers}});
+      if (response.status===401 || response.status===403) {
+        const error = new Error(response.status===401 ? 'Your login has expired. Refresh this page to sign in again.' : 'This account does not have access. Use an approved team account.');
+        error.status=response.status; throw error;
+      }
+      let body;
+      try { body = await response.json(); } catch {
+        const error = new Error(`Backend returned an unreadable response (HTTP ${response.status}).`);
+        error.status=response.status; throw error;
+      }
+      if (!response.ok) { const error = new Error(typeof body.detail === 'string' ? body.detail : JSON.stringify(body.detail || body.errors || body)); error.body = body; error.status = response.status; throw error; }
+      return body;
+    } catch(error) {
+      const temporary = error instanceof TypeError || [502,503,504].includes(error.status);
+      if (!temporary || attempt>=attempts || options.signal?.aborted) throw error;
+      await new Promise(resolve=>setTimeout(resolve, attempt*2000));
+    }
+  }
 }
 function jsonDialog(title, data, filename, note='Actual backend data. All patient records in this demonstration are synthetic.') {
   state.json=data; state.filename=filename; $('dialogTitle').textContent=title; $('dialogNote').textContent=note;
