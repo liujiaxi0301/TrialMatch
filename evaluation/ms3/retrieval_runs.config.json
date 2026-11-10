@@ -1,0 +1,65 @@
+{
+  "cache": "document vectors reused from the prepared experiment store; no documents re-embedded in this run",
+  "code_commit": "b6b6b7ff3492d03ec41c08068548a1947f606ec3",
+  "generated_utc": "2026-11-10T04:29:46+00:00",
+  "manifest": "services/rag_workflow/examples/demo_manifest.json",
+  "methods": {
+    "bioclinical_dense_patient": {
+      "dimension": 768,
+      "encoder": "thomas-sounack/BioClinical-ModernBERT-base",
+      "encoder_revision": "c3648aa87af95837c809e6f0c5f85d08160db437",
+      "fusion": null,
+      "indexed_text": "criterion-level fragments; best criterion hit per trial",
+      "query_construction": "patient",
+      "similarity": "cosine"
+    },
+    "bioclinical_dense_question": {
+      "dimension": 768,
+      "encoder": "thomas-sounack/BioClinical-ModernBERT-base",
+      "encoder_revision": "c3648aa87af95837c809e6f0c5f85d08160db437",
+      "fusion": null,
+      "indexed_text": "criterion-level fragments; best criterion hit per trial",
+      "query_construction": "question",
+      "similarity": "cosine"
+    },
+    "bioclinical_hybrid_patient": {
+      "dimension": 768,
+      "encoder": "thomas-sounack/BioClinical-ModernBERT-base",
+      "encoder_revision": "c3648aa87af95837c809e6f0c5f85d08160db437",
+      "fusion": "reciprocal rank fusion, k=60, over [BM25, dense]",
+      "indexed_text": "criterion-level fragments; best criterion hit per trial",
+      "query_construction": "patient",
+      "similarity": "cosine"
+    },
+    "bioclinical_hybrid_question": {
+      "dimension": 768,
+      "encoder": "thomas-sounack/BioClinical-ModernBERT-base",
+      "encoder_revision": "c3648aa87af95837c809e6f0c5f85d08160db437",
+      "fusion": "reciprocal rank fusion, k=60, over [BM25, dense]",
+      "indexed_text": "criterion-level fragments; best criterion hit per trial",
+      "query_construction": "question",
+      "similarity": "cosine"
+    },
+    "bm25_patient": {
+      "encoder": null,
+      "fusion": null,
+      "query_construction": "patient",
+      "retrieval": "BM25 over trial title + conditions + brief summary + all criteria"
+    },
+    "bm25_question": {
+      "encoder": null,
+      "fusion": null,
+      "query_construction": "question",
+      "retrieval": "BM25 over trial title + conditions + brief summary + all criteria"
+    }
+  },
+  "patients": "services/patient_processing/data/processed/batch25_patients.jsonl",
+  "queries_file": "evaluation/ms3/retrieval_queries.jsonl",
+  "query_construction": {
+    "patient": "unmodified production patient_query(patient, question)",
+    "question": "the benchmark question text only"
+  },
+  "query_count": 8,
+  "top_k": 5,
+  "trial_universe": 50
+}
