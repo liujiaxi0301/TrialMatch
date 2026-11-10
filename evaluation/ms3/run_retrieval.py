@@ -95,6 +95,7 @@ def main():
     parser.add_argument("--finetuned-checkpoint",
                         help="Override the manifest's artifact_uri with a local copy")
     args = parser.parse_args()
+    args.output, args.queries = args.output.resolve(), args.queries.resolve()
     encoders = list(args.encoders)
     training = None
     if args.finetuned_manifest:
@@ -202,8 +203,8 @@ def main():
     }
     config_path = args.output.with_suffix(".config.json")
     config_path.write_text(json.dumps(config, indent=2, sort_keys=True) + "\n")
-    print(f"{len(rows)} rows -> {args.output.relative_to(ROOT)}")
-    print(f"config    -> {config_path.relative_to(ROOT)}")
+    print(f"{len(rows)} rows -> {args.output}")
+    print(f"config    -> {config_path}")
 
 
 if __name__ == "__main__":
