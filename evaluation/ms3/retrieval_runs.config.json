@@ -1,7 +1,7 @@
 {
   "cache": "document vectors reused from the prepared experiment store; no documents re-embedded in this run",
-  "code_commit": "b6b6b7ff3492d03ec41c08068548a1947f606ec3",
-  "generated_utc": "2026-11-10T04:29:46+00:00",
+  "code_commit": "488f3d2d92b051f70f57b9731c3de9c3fe39efde",
+  "generated_utc": "2026-11-10T04:46:28+00:00",
   "manifest": "services/rag_workflow/examples/demo_manifest.json",
   "methods": {
     "bioclinical_dense_patient": {

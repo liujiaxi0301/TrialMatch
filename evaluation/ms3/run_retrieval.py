@@ -19,6 +19,7 @@ from services.rag_workflow.config import Settings
 from services.rag_workflow.data import DataStore, read_jsonl
 from services.rag_workflow.embedding_providers import create_embedding_provider
 from services.rag_workflow.index import VectorIndex
+from services.rag_workflow.providers import ProviderError
 from services.rag_workflow.retrieve import Retriever, patient_query
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -44,7 +45,7 @@ def build_index(encoder, store, manifest):
         raise SystemExit(f"Missing {encoder} snapshot: {source}")
     try:
         index.verify()
-    except Exception:
+    except ProviderError:
         # Restore validates source IDs, hashes, model and dimension before writing,
         # and makes no document API calls. Nothing is re-encoded here.
         index.restore(source)
@@ -74,7 +75,7 @@ def main():
     manifest = store.manifest()
     universe = set(manifest["trial_ids"])
     cases = read_jsonl(args.queries)
-    commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT,
+    commit = subprocess.run(["git", "rev-parse", "HEAD"], check=False, cwd=ROOT,
                             capture_output=True, text=True).stdout.strip()
 
     def modes(case):
