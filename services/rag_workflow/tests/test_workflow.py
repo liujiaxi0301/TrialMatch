@@ -7,6 +7,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
+
 from services.rag_workflow.api import create_app
 from services.rag_workflow.config import Settings
 from services.rag_workflow.data import DataStore, complexity_flags, validate_patient

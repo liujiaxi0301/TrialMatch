@@ -227,3 +227,7 @@ artifacts/
 secrets/
 **/*service-account*.json
 **/*credentials*.json
+
+# macOS
+.DS_Store
+**/.DS_Store

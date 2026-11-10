@@ -6,6 +6,7 @@ from datetime import UTC, datetime
 
 from .config import Settings
 from .data import DataStore, complexity_flags, parse_date, validate_patient
+from .embedding_providers import create_embedding_provider, encoder_identity
 from .evidence_rules import evidence_rule
 from .index import VectorIndex
 from .judge import explain_trial, judge_batch
@@ -102,12 +103,13 @@ class ScreeningWorkflow:
             warnings.append(
                 f"PATIENT_SOURCE_WARNINGS: {len(patient['warnings'])}; source processing omitted some resource types or retained uncertain facts."
             )
-        provider = None
+        provider = embedding = None
         try:
             vector_index = None
             if self.settings.mode == "live":
                 provider = GeminiProvider(self.settings)
-                vector_index = VectorIndex(self.settings, self.store, self.manifest, provider)
+                embedding = create_embedding_provider(self.settings, gemini=provider)
+                vector_index = VectorIndex(self.settings, self.store, self.manifest, embedding)
             hits = Retriever(self.store, self.manifest, vector_index).retrieve(
                 patient, request.question, request.top_k
             )
@@ -232,6 +234,8 @@ class ScreeningWorkflow:
         except ProviderError as exc:
             errors.append(ErrorDetail(code=exc.code, message=str(exc)))
         finally:
+            if embedding is not None and embedding is not provider:
+                embedding.close()
             if provider is not None:
                 provider.close()
         # Barrier status is separate from retrieval ranking and cannot be averaged away by score.
@@ -267,6 +271,8 @@ class ScreeningWorkflow:
         }
         if provider:
             metrics.update(provider.metrics)
+        if embedding is not None and embedding is not provider:
+            metrics["retrieval_encoder"] = embedding.metrics
         return ScreenResponse(
             run_id=uuid.uuid4().hex,
             patient_id=patient["patient_id"],
@@ -284,6 +290,7 @@ class ScreeningWorkflow:
                 "source_sha256": self.store.hashes,
                 "patient_input": "inline" if request.patient else "cohort",
                 "embedding_model": self.settings.embedding_model if provider else None,
+                "embedding_configuration": encoder_identity(self.settings) if provider else None,
                 "generation_model": self.settings.generation_model if provider else None,
                 "trial_ids": self.manifest["trial_ids"],
                 "score_definition": "100 * (inclusion MET + exclusion NOT_MET) / total criteria; UNKNOWN remains in denominator; not probability",

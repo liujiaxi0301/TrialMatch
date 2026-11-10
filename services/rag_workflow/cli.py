@@ -8,6 +8,7 @@ from pathlib import Path
 
 from .config import Settings
 from .data import DataStore
+from .embedding_providers import create_embedding_provider
 from .index import VectorIndex
 from .providers import GeminiProvider, ProviderError, save_json
 from .schemas import ScreenRequest, ScreenResponse
@@ -85,7 +86,11 @@ def main(argv=None) -> int:
             except ProviderError as exc:
                 if exc.code != "MISSING_PROVIDER":
                     raise
-                provider = GeminiProvider(settings)
+                provider = (
+                    GeminiProvider(settings)
+                    if settings.embedding_provider == "gemini"
+                    else create_embedding_provider(settings)
+                )
                 try:
                     index.provider = provider
                     result = index.build()

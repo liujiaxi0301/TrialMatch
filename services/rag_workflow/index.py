@@ -6,6 +6,7 @@ import sys
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
+from .embedding_providers import encoder_identity
 from .index_versions import (
     IndexSnapshot,
     load_snapshot,
@@ -32,6 +33,9 @@ class VectorIndex:
             "dimension": settings.dimension,
             "chunker": "criterion-char3000-overlap200-v1",
         }
+        encoder = encoder_identity(settings)
+        if encoder:
+            self.identity["encoder"] = encoder
         self.version = content_hash(self.identity)[:20]
         self.name = f"trialmatch-{self.version}"
         indexes = settings.artifacts / "indexes"
@@ -180,7 +184,10 @@ class VectorIndex:
         with ThreadPoolExecutor(max_workers=4) as pool:
             for start in range(0, len(fragments), 8):
                 batch = fragments[start : start + 8]
-                embeddings = list(pool.map(lambda item: self.provider.embed(item[1]), batch))
+                if hasattr(self.provider, "embed_many"):
+                    embeddings = self.provider.embed_many([item[1] for item in batch])
+                else:
+                    embeddings = list(pool.map(lambda item: self.provider.embed(item[1]), batch))
                 collection.upsert(
                     ids=[x[0] for x in batch],
                     documents=[x[1] for x in batch],
@@ -220,8 +227,8 @@ class VectorIndex:
             records=records,
         )
         # No timestamps/host paths/patient data: repeated exports are byte-identical.
-        save_json(output, snapshot.model_dump(), sort_keys=True)
-        summary = snapshot.model_dump(exclude={"records"})
+        save_json(output, snapshot.model_dump(exclude_none=True), sort_keys=True)
+        summary = snapshot.model_dump(exclude={"records"}, exclude_none=True)
         summary["snapshot_file"] = output.name
         summary["snapshot_sha256"] = hashlib.sha256(output.read_bytes()).hexdigest()
         save_json(output.with_suffix(".manifest.json"), summary, sort_keys=True)
@@ -231,7 +238,10 @@ class VectorIndex:
         from chromadb.errors import NotFoundError
 
         snapshot = load_snapshot(source)
-        if snapshot.identity.model_dump() != self.identity or snapshot.collection != self.name:
+        if (
+            snapshot.identity.model_dump(exclude_none=True) != self.identity
+            or snapshot.collection != self.name
+        ):
             raise ProviderError(
                 "SNAPSHOT_VERSION_MISMATCH",
                 "Snapshot requires matching source files, subset, embedding model and dimension.",
