@@ -124,18 +124,20 @@ Cloud services use attached service accounts; no login JSON is uploaded.
 The five team Google accounts have access. Open the cloud app and select the
 approved account; no local Docker setup or credentials file is needed to use it.
 
-Vertex AI Pipelines has three steps:
+Vertex AI Pipelines has four steps:
 
 1. Download the fixed raw trial snapshot with DVC.
 2. Rebuild trial and criterion files using the same processing code as the local demo.
 3. Verify file checksums, the vector snapshot, and one offline screening request.
+4. Generate BM25 and Gemini retrieval rankings for the eight fixed MS3 queries.
 
 Each step uses the image in `docker/workflow/`, with its own dependency files,
 and passes its output through GCS. Cloud images contain code and do not use
 local source mounts or automatic reload.
 The app loads the validated release and restores its saved vectors into Chroma.
-This pipeline checks data reproduction and application behavior. Model training
-and clinical benchmark evaluation are separate work.
+The last step saves `retrieval_runs.jsonl` and its configuration to GCS. It produces
+rankings, not relevance scores or eligibility accuracy. Model training and human
+benchmark scoring are separate work. Gemini remains the deployment default.
 
 Cloud configuration is in `cloud/config.env`. Deployment uses the course's
 `gcloud` commands and a Docker workflow container. The pipeline uses Python
@@ -161,16 +163,26 @@ bash cloud/deploy.sh pipeline
 bash cloud/deploy.sh app
 ```
 
-The pipeline command waits for success and saves its job name, validation report,
-and output release URI under `artifacts/cloud/`. The app command requires that
-validated release. Cloud Build stores the three cloud images (API, Chroma, and
-workflow) in Artifact Registry. Local Compose still uses the four Make commands above.
+Build records the input checksums and exact image versions in
+`artifacts/cloud/release_target.json`. Publish, pipeline and app use that same
+record. The app requires a successful pipeline for the selected build, so an old
+successful run cannot authorize a new deployment. Rebuild once when upgrading
+from the earlier release format, then follow the five commands above in order.
+
+Pipeline logs and output references are in Vertex and `artifacts/cloud/`.
+Cloud Build stores three images (API, Chroma and workflow) in Artifact Registry.
+Local Compose still uses the four Make commands above. The workflow image includes
+the retrieval runner and training-data preparation scripts; it does not install Torch.
 
 The `publish` and `pipeline` commands use `docker/workflow/` and its locked
 dependencies, so local uv and Python packages are not needed. Code and data are
 mounted read-only; output files go to `artifacts/cloud/`. Local credentials are
 mounted at `/secrets` and are never copied into an image. To compile the pipeline
 without submitting a cloud job, use `bash cloud/deploy.sh pipeline --compile-only`.
+
+Pipeline checks run in GitHub Actions without cloud credentials. See the
+[retrieval protocol](evaluation/ms3/retrieval_protocol.md) for the fixed inputs
+and the [method handoff](evaluation/ms3/runs_handoff.md) for the supplied experiments.
 
 For the first deployment, open the Cloud Run service's Security tab, enable IAP,
 and grant the team the IAP-secured Web App User role. For Gmail accounts, configure

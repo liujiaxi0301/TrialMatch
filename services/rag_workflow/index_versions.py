@@ -29,6 +29,7 @@ class IndexIdentity(BaseModel):
     model: str = Field(min_length=1)
     dimension: int = Field(ge=1, le=3072)
     chunker: str = Field(min_length=1)
+    encoder: dict[str, StrictStr | StrictInt | bool] | None = None
 
 
 class IndexSnapshot(BaseModel):

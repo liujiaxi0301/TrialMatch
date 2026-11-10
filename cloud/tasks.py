@@ -4,24 +4,20 @@ import argparse
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tarfile
+import tempfile
 import time
+from dataclasses import replace
 from pathlib import Path
 
 from google.cloud import storage
 
+from cloud.release import FILES, check_input_hashes, read_target
+
 ROOT = Path(__file__).resolve().parents[1]
-FILES = [
-    "services/trial_ingestion/data/raw.dvc",
-    "services/trial_ingestion/data/raw_metadata.json",
-    "services/trial_ingestion/data/processed/trials.jsonl",
-    "services/trial_ingestion/data/processed/criteria.jsonl",
-    "services/patient_processing/data/processed/batch25_patients.jsonl",
-    "services/rag_workflow/examples/demo_manifest.json",
-    "services/rag_workflow/index_snapshots/current.json",
-]
 
 
 def blob(uri):
@@ -43,12 +39,26 @@ def log(event, **values):
     print(json.dumps({"event": event, **values}), flush=True)
 
 
-def publish(prefix, image=""):
-    """Publish an immutable release. Fail rather than overwrite a different file."""
+def publish(prefix, image="", expected_hashes=None):
+    """Validate a fixed copy of all inputs before contacting storage."""
+    with tempfile.TemporaryDirectory(prefix="trialmatch-publish-") as directory:
+        staged = Path(directory)
+        for name in FILES:
+            destination = staged / name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT / name, destination)
+        hashes = {name: digest(staged / name) for name in FILES}
+        if expected_hashes is not None:
+            check_input_hashes(hashes, expected_hashes)
+        _publish_staged(prefix, image, staged, hashes)
+
+
+def _publish_staged(prefix, image, staged, hashes):
+    """Keep cloud release objects immutable; upload only the checked copies."""
     manifest = {"schema_version": 1, "image": image, "files": {}}
     for name in FILES:
-        source = ROOT / name
-        sha = digest(source)
+        source = staged / name
+        sha = hashes[name]
         uri = f"{prefix}/{name}"
         target = blob(uri)
         if target.exists():
@@ -121,7 +131,7 @@ def process(source, output):
     with tarfile.open(archive) as source_tar:
         source_tar.extractall(ROOT / "services/trial_ingestion/data", filter="data")
     command(sys.executable, "prepare_data.py", "--from-raw")
-    publish(output, manifest["image"])
+    publish(output, manifest["image"], {name: item["sha256"] for name, item in manifest["files"].items()})
     blob(f"{output}/raw_reproduction.json").upload_from_filename(
         ROOT / "artifacts/infra/raw_reproduction.json"
     )
@@ -133,13 +143,19 @@ def validate(source, output):
     command(sys.executable, "prepare_data.py")
     from services.rag_workflow.config import Settings
     from services.rag_workflow.data import DataStore
-    from services.rag_workflow.index_versions import load_snapshot
+    from services.rag_workflow.index import VectorIndex
     from services.rag_workflow.schemas import ScreenRequest
     from services.rag_workflow.workflow import ScreeningWorkflow
 
     settings = Settings(mode="offline")
     data = DataStore(settings)
-    snapshot = load_snapshot(ROOT / FILES[-1])
+    # Exercise the same compatibility checks used by deployment. A snapshot's
+    # internal checksum alone cannot prove it belongs to this data/model/subset.
+    # The disposable embedded store never touches the deployed Chroma service.
+    with tempfile.TemporaryDirectory(prefix="trialmatch-index-check-") as directory:
+        index_settings = replace(settings, artifacts=Path(directory), chroma_host="")
+        index = VectorIndex(index_settings, data, data.manifest())
+        restored = index.restore(ROOT / FILES[-1])
     # Offline smoke check: this is a functional check, not a clinical accuracy benchmark.
     workflow = ScreeningWorkflow(settings)
     patient_id = data.manifest()["patient_ids"][0]
@@ -153,7 +169,7 @@ def validate(source, output):
         "status": "PASSED", "release_uri": f"{source}/release.json",
         "trials": len(data.trials), "patients": len(data.patients),
         "criteria": sum(len(rows) for rows in data.criteria.values()),
-        "vectors": snapshot.vector_count, "source_sha256": data.hashes,
+        "vectors": restored["vector_count"], "source_sha256": data.hashes,
         "offline_screening_status": response.result_status,
         "smoke_seconds": round(time.monotonic() - started, 3),
         "scope": "Data reproduction and functional validation; no training or clinical benchmark.",
@@ -161,6 +177,25 @@ def validate(source, output):
     write_json(f"{output}/validation.json", report)
     write_json(f"{output}/offline_screening.json", response.model_dump(mode="json"))
     log("pipeline_validation_passed", **report)
+
+
+def retrieve(source, output):
+    """Produce Gemini/BM25 rankings for the fixed queries; no relevance scores."""
+    report = json.loads(blob(f"{source}/validation.json").download_as_text())
+    if report["status"] != "PASSED":
+        raise ValueError("Retrieval requires a validated data release")
+    download_release(report["release_uri"])
+    destination = ROOT / "artifacts/retrieval/retrieval_runs.jsonl"
+    command(sys.executable, "-m", "evaluation.ms3.run_retrieval",
+            "--encoders", "gemini", "--output", str(destination))
+    config_path = destination.with_suffix(".config.json")
+    config = json.loads(config_path.read_text())
+    config["release_uri"] = report["release_uri"]
+    config_path.write_text(json.dumps(config, indent=2) + "\n")
+    for path in (destination, config_path):
+        blob(f"{output}/{path.name}").upload_from_filename(path)
+    log("retrieval_rankings_saved", output=output, queries=config["query_count"],
+        methods=len(config["methods"]), scope="Rankings only; human scoring is separate.")
 
 
 def serve():
@@ -183,17 +218,26 @@ def serve():
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=["publish", "fetch", "process", "validate", "serve"])
+    parser.add_argument("action", choices=["publish", "fetch", "process", "validate", "retrieve", "serve"])
     parser.add_argument("--source")
     parser.add_argument("--output")
     parser.add_argument("--image", default="")
+    parser.add_argument("--release-target", type=Path)
     args = parser.parse_args()
     if args.action == "serve":
         serve()
     elif args.action == "publish":
-        publish(args.output, args.image)
+        hashes = None
+        if args.release_target:
+            target = read_target(args.release_target)
+            if args.image != target["workflow_image"] or args.output + "/release.json" != target["release_uri"]:
+                raise ValueError("Publication image/address does not match the selected build")
+            hashes = target["input_sha256"]
+        publish(args.output, args.image, hashes)
     else:
-        {"fetch": fetch, "process": process, "validate": validate}[args.action](args.source, args.output)
+        {"fetch": fetch, "process": process, "validate": validate, "retrieve": retrieve}[
+            args.action
+        ](args.source, args.output)
 
 
 if __name__ == "__main__":

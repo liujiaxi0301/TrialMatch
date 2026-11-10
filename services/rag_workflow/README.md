@@ -1,5 +1,7 @@
 # Part 3: RAG / Retrieval / Workflow (MS2)
 
+MS3 encoder experiments: see [Embedding evaluation](../../evaluation/retrieval/README.md) for the BioClinical provider, reproducible retrieval comparisons and provisional results. The shared deployment still defaults to Gemini.
+
 Input: **one normalized patient record from Part 2 + a question**. Output: candidate clinical trials, **match scores**, explanations, criterion-level assessments, and references to source evidence. Built-in patients are selected by `patient_id`. The default input is the **25-patient adult T2D cohort**, rather than the four-patient sample file.
 
 This module consumes the processed outputs of Parts 1 and 2. It adapts the tutorial's Gemini embeddings, Chroma, and model calls to TrialMatch. Cheese-specific questions, book/author metadata, and fixed 350-character document chunks are replaced with patient context and eligibility criteria. The API, CLI, and Python function share the same workflow.
