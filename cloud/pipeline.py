@@ -21,7 +21,15 @@ def main():
     parser.add_argument("--release-target", type=Path,
                         help="Build record to bind to the successful deployment validation")
     parser.add_argument("--compile-only", action="store_true")
+    parser.add_argument("--trainer-image",
+                        help="Digest-pinned trainer image; adds the encoder training task")
+    parser.add_argument("--train-pairs", nargs="*", default=[],
+                        help="Extra gs:// pair files for the training task")
+    parser.add_argument("--wandb-secret", default="",
+                        help="Secret Manager version with the W&B key, read by the task")
     args = parser.parse_args()
+    if args.trainer_image and "@sha256:" not in args.trainer_image:
+        parser.error("--trainer-image must be pinned by digest")
 
     @dsl.container_component
     def fetch_raw(release: str, raw: dsl.Output[dsl.Dataset]):
@@ -38,11 +46,29 @@ def main():
         return dsl.ContainerSpec(image=args.image, command=["python", "-m", "cloud.tasks"],
             args=["validate", "--source", processed.uri, "--output", report.uri])
 
+    train_encoder = None
+    if args.trainer_image:
+        # Defined only on request, so the three data tasks compile exactly as before.
+        @dsl.container_component
+        def train_encoder(report: dsl.Input[dsl.Artifact], training: dsl.Output[dsl.Artifact]):
+            # Consumes the report validate_data wrote, so it trains only on the release
+            # this run validated; cloud.train rejects a report that is not PASSED.
+            extra = (["--pairs", *args.train_pairs] if args.train_pairs else []) + (
+                ["--wandb-secret", args.wandb_secret] if args.wandb_secret else [])
+            return dsl.ContainerSpec(image=args.trainer_image,
+                command=["python", "-m", "cloud.train"],
+                args=["--validated-report", report.uri, "--output", training.uri,
+                      "--image-uri", args.trainer_image, *extra])
+
     @dsl.pipeline(name="trialmatch-data-pipeline")
     def pipeline(release: str):
         raw = fetch_raw(release=release).set_cpu_limit("1").set_memory_limit("2Gi")
         processed = process_trials(raw=raw.outputs["raw"]).set_cpu_limit("1").set_memory_limit("2Gi")
-        validate_data(processed=processed.outputs["processed"]).set_cpu_limit("1").set_memory_limit("2Gi")
+        validated = validate_data(processed=processed.outputs["processed"]).set_cpu_limit("1").set_memory_limit("2Gi")
+        if train_encoder is not None:
+            (train_encoder(report=validated.outputs["report"]).set_cpu_limit("4")
+             .set_memory_limit("15Gi").set_accelerator_type("NVIDIA_TESLA_T4")
+             .set_accelerator_limit(1))
 
     target = Path("artifacts/cloud/pipeline.yaml")
     target.parent.mkdir(parents=True, exist_ok=True)
@@ -50,7 +76,7 @@ def main():
         # These files describe the current submission. A failed rerun must not
         # leave an older release available for cloud/deploy.sh app to consume.
         for name in ("pipeline_job.txt", "validation.json", "validated_release.txt",
-                     "validated_deployment.json"):
+                     "validated_deployment.json", "training_manifest.json"):
             (target.parent / name).unlink(missing_ok=True)
     build_target = None
     if args.release_target:
@@ -96,6 +122,14 @@ def main():
             "pipeline_job": job.resource_name, "validated_release_uri": expected_release,
         })
     print(f"Validated release: {report['release_uri']}")
+    if args.trainer_image:
+        trained = next(task for task in job.task_details if task.task_name == "train-encoder")
+        manifest_uri = trained.outputs["training"].artifacts[0].uri + "/training_manifest.json"
+        manifest = json.loads(blob(manifest_uri).download_as_text())
+        if manifest.get("source_release_uri") != expected_release:
+            raise RuntimeError("Training manifest does not reference this pipeline's release")
+        (target.parent / "training_manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+        print(f"Training manifest: {manifest_uri}")
 
 
 if __name__ == "__main__":

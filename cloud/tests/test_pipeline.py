@@ -4,7 +4,7 @@ import io
 import json
 import tempfile
 import unittest
-from contextlib import chdir, redirect_stdout
+from contextlib import chdir, redirect_stderr, redirect_stdout
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
@@ -249,6 +249,68 @@ class PipelineTests(unittest.TestCase):
                 self.init.assert_not_called()
                 self.job_class.assert_not_called()
                 self.assertFalse((self.output / "validated_deployment.json").exists())
+
+    TRAINER = "example/trainer@sha256:" + "d" * 64
+
+    def test_trainer_image_adds_a_training_task_fed_by_the_validation_report(self):
+        self.run_pipeline("--compile-only", "--trainer-image", self.TRAINER,
+                          "--train-pairs", "gs://trialmatch-test-data/training/pairs_llm.jsonl",
+                          "--wandb-secret", "projects/p/secrets/wandb-api-key/versions/latest")
+        spec = yaml.safe_load((self.output / "pipeline.yaml").read_text())
+        tasks = spec["root"]["dag"]["tasks"]
+        self.assertEqual(
+            set(tasks), {"fetch-raw", "process-trials", "validate-data", "train-encoder"}
+        )
+        training = tasks["train-encoder"]
+        self.assertEqual(training["dependentTasks"], ["validate-data"])
+        self.assertEqual(
+            training["inputs"]["artifacts"]["report"]["taskOutputArtifact"],
+            {"producerTask": "validate-data", "outputArtifactKey": "report"},
+        )
+        self.assertNotEqual(
+            training.get("triggerPolicy", {}).get("strategy"), "ALL_UPSTREAM_TASKS_COMPLETED"
+        )
+        executors = spec["deploymentSpec"]["executors"]
+        container = executors[spec["components"][training["componentRef"]["name"]]
+                              ["executorLabel"]]["container"]
+        self.assertEqual(container["image"], self.TRAINER)
+        self.assertEqual(container["command"], ["python", "-m", "cloud.train"])
+        self.assertIn("--validated-report", container["args"])
+        self.assertIn("gs://trialmatch-test-data/training/pairs_llm.jsonl", container["args"])
+        self.assertIn("NVIDIA_TESLA_T4", json.dumps(container["resources"]))
+        others = [e["container"]["image"] for name, e in executors.items()
+                  if e["container"] is not container]
+        self.assertEqual(set(others), {"example/workflow:fixed-version"})
+        self.job_class.assert_not_called()
+
+    def test_trainer_image_must_be_pinned_by_digest(self):
+        with self.assertRaises(SystemExit), redirect_stderr(io.StringIO()):
+            self.run_pipeline("--compile-only", "--trainer-image", "example/trainer:latest")
+
+    def test_training_manifest_must_reference_this_runs_release(self):
+        for source, accepted in (("gs://test-run/processed/release.json", True),
+                                 ("gs://other-run/processed/release.json", False)):
+            with self.subTest(source=source):
+                job = self.success_job()
+                job.task_details.append(SimpleNamespace(
+                    task_name="train-encoder",
+                    outputs={"training": SimpleNamespace(
+                        artifacts=[SimpleNamespace(uri="gs://test-run/training")])},
+                ))
+                report = self.blob.return_value
+                manifest = SimpleNamespace(download_as_text=lambda source=source: json.dumps(
+                    {"source_release_uri": source, "artifact_sha256": "e" * 64}))
+                self.blob.side_effect = lambda uri, manifest=manifest, report=report: (
+                    manifest if uri.endswith("/training_manifest.json") else report
+                )
+                saved = self.output / "training_manifest.json"
+                if accepted:
+                    self.run_pipeline("--trainer-image", self.TRAINER)
+                    self.assertEqual(json.loads(saved.read_text())["artifact_sha256"], "e" * 64)
+                else:
+                    with self.assertRaisesRegex(RuntimeError, "Training manifest"):
+                        self.run_pipeline("--trainer-image", self.TRAINER)
+                    self.assertFalse(saved.exists())  # The earlier run's copy is cleared.
 
 
 if __name__ == "__main__":
