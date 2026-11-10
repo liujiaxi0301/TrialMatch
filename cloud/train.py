@@ -388,9 +388,11 @@ def main(argv=None):
     model_dir = output / "model"
     model.save_pretrained(model_dir, safe_serialization=True)
     tokenizer.save_pretrained(model_dir)
-    files = {p.name: sha256_file(p) for p in sorted(model_dir.iterdir()) if p.is_file()}
-    # One digest for the whole checkpoint: weights, config and tokenizer together.
-    checkpoint = hashlib.sha256(json.dumps(files, sort_keys=True).encode()).hexdigest()
+    # One digest for the whole checkpoint: weights, config and tokenizer together. The
+    # serving provider recomputes it with this same function before loading.
+    from services.rag_workflow.embedding_providers import checkpoint_digest
+
+    checkpoint, files = checkpoint_digest(model_dir)
     final = history[-1]
     tracking = {"mode": "disabled", "path": None, "url": None}
     if run is not None:

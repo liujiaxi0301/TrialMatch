@@ -10,8 +10,10 @@ from types import SimpleNamespace
 from services.rag_workflow.config import Settings
 from services.rag_workflow.embedding_providers import (
     BioClinicalProvider,
+    checkpoint_digest,
     create_embedding_provider,
     encoder_identity,
+    resolve_checkpoint,
 )
 from services.rag_workflow.index import VectorIndex
 from services.rag_workflow.index_versions import load_snapshot
@@ -76,6 +78,50 @@ class EncoderIdentityTests(unittest.TestCase):
 
 @unittest.skipUnless(importlib.util.find_spec("torch"), "Install the optional embeddings group")
 class PoolingTests(unittest.TestCase):
+    def test_finetuned_checkpoint_needs_a_digest_and_gets_its_own_identity(self):
+        with self.assertRaisesRegex(ValueError, "EMBEDDING_CHECKPOINT_SHA256"):
+            bio_settings(embedding_checkpoint="/models/run").validate()
+        with self.assertRaisesRegex(ValueError, "without EMBEDDING_CHECKPOINT"):
+            bio_settings(embedding_checkpoint_sha256="c" * 64).validate()
+        frozen = bio_settings()
+        tuned = bio_settings(embedding_checkpoint="/models/run",
+                             embedding_checkpoint_sha256="c" * 64)
+        other = replace(tuned, embedding_checkpoint_sha256="d" * 64)
+        moved = replace(tuned, embedding_checkpoint="gs://bucket/training/run/model")
+        self.assertNotIn("checkpoint_sha256", encoder_identity(frozen))
+        self.assertEqual(encoder_identity(tuned)["checkpoint_sha256"], "c" * 64)
+        self.assertEqual(encoder_identity(tuned), encoder_identity(moved))
+        from services.rag_workflow.data import DataStore
+
+        with tempfile.TemporaryDirectory() as tmp:
+            store = DataStore(replace(frozen, artifacts=Path(tmp), chroma_host=""))
+            manifest = store.manifest()
+            manifest["trial_ids"] = manifest["trial_ids"][:1]
+            names = {
+                VectorIndex(replace(s, artifacts=Path(tmp), chroma_host=""), store, manifest).name
+                for s in (frozen, tuned, other)
+            }
+        self.assertEqual(len(names), 3)  # Frozen and each checkpoint never share vectors.
+
+    def test_checkpoint_is_verified_against_its_digest_before_loading(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            model = Path(tmp) / "model"
+            model.mkdir()
+            (model / "config.json").write_text("{}")
+            (model / "model.safetensors").write_bytes(b"weights")
+            digest, files = checkpoint_digest(model)
+            self.assertEqual(set(files), {"config.json", "model.safetensors"})
+            settings = bio_settings(embedding_checkpoint=str(model),
+                                    embedding_checkpoint_sha256=digest)
+            self.assertEqual(resolve_checkpoint(settings), model)
+            (model / "model.safetensors").write_bytes(b"tampered")
+            with self.assertRaises(ProviderError) as caught:
+                resolve_checkpoint(settings)
+            self.assertEqual(caught.exception.code, "EMBEDDING_CHECKPOINT_MISMATCH")
+            with self.assertRaises(ProviderError) as caught:
+                resolve_checkpoint(replace(settings, embedding_checkpoint=str(model) + "-gone"))
+            self.assertEqual(caught.exception.code, "EMBEDDING_CHECKPOINT_MISSING")
+
     def test_nonfinite_cached_vector_is_rejected_without_loading_model(self):
         with tempfile.TemporaryDirectory() as tmp:
             encoder = BioClinicalProvider(bio_settings(artifacts=Path(tmp)))
