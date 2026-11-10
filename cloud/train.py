@@ -32,6 +32,8 @@ MODEL = "thomas-sounack/BioClinical-ModernBERT-base"
 REVISION = "c3648aa87af95837c809e6f0c5f85d08160db437"
 POOLING = "attention-mask-mean-including-special-tokens-v1"
 WORKFLOW_TYPE = "contrastive-encoder-finetune"
+RELEASE_FILES = {"trials": "processed/trials.jsonl", "criteria": "processed/criteria.jsonl",
+                 "manifest": "demo_manifest.json"}
 
 
 class LeakageError(ValueError):
@@ -68,6 +70,37 @@ def upload_tree(directory: Path, uri: str) -> None:
         gcs_blob(f"{uri.rstrip('/')}/{path.relative_to(directory).as_posix()}").upload_from_filename(
             str(path)
         )
+
+
+def pairs_from_release(report_uri: str, directory: Path) -> tuple[Path, str]:
+    """Build corpus-derived pairs from the release a pipeline run has just validated.
+
+    Returns the pairs file and the release URI. The report must say PASSED, and every
+    file is checked against the checksum its release recorded before it is used.
+    """
+    if not report_uri.endswith(".json"):
+        report_uri = report_uri.rstrip("/") + "/validation.json"
+    report = json.loads(gcs_blob(report_uri).download_as_text())
+    if report.get("status") != "PASSED" or not str(report.get("release_uri", "")).startswith("gs://"):
+        raise ValueError("Training requires a PASSED validation report naming its release")
+    release = json.loads(gcs_blob(report["release_uri"]).download_as_text())
+    local = {}
+    for key in ("trials", "criteria", "manifest"):
+        name = next(n for n in release["files"] if n.endswith(RELEASE_FILES[key]))
+        item = release["files"][name]
+        local[key] = directory / "release" / RELEASE_FILES[key]
+        local[key].parent.mkdir(parents=True, exist_ok=True)
+        gcs_blob(item["uri"]).download_to_filename(str(local[key]))
+        if sha256_file(local[key]) != item["sha256"]:
+            raise ValueError(f"Checksum mismatch in the validated release: {name}")
+    output = directory / "release" / "pairs.jsonl"
+    subprocess.run(
+        [sys.executable, "-m", "cloud.train_pairs", "--trials", str(local["trials"]),
+         "--criteria", str(local["criteria"]), "--manifest", str(local["manifest"]),
+         "--output", str(output)],
+        cwd=ROOT, check=True,
+    )
+    return output, report["release_uri"]
 
 
 def load_pairs(path: Path) -> list[dict]:
@@ -109,7 +142,9 @@ def code_commit() -> str:
         ).stdout.strip()
         return commit + ("-dirty" if dirty else "")
     except (OSError, subprocess.CalledProcessError):
-        return "unknown"
+        # Inside the image there is no Git; the build bakes the source content hash.
+        version = os.environ.get("SOURCE_VERSION", "")
+        return f"source-version:{version}" if version and version != "unknown" else "unknown"
 
 
 def encode(model, tokenizer, texts, device, max_length, batch_size=64):
@@ -238,8 +273,11 @@ def parse_args(argv=None):
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    parser.add_argument("--pairs", nargs="+", required=True,
+    parser.add_argument("--pairs", nargs="*", default=[],
                         help="One or more pair files, local paths or gs:// URIs")
+    parser.add_argument("--validated-report", default="",
+                        help="gs:// validation report of a pipeline run; pairs are built "
+                             "from the release it validated and added to --pairs")
     parser.add_argument("--output", required=True, help="Local directory or gs:// prefix")
     parser.add_argument("--manifest", type=Path,
                         default=ROOT / "services/rag_workflow/examples/demo_manifest.json",
@@ -271,7 +309,10 @@ def parse_args(argv=None):
                         help="URI of the validated release.json the pairs were built from")
     parser.add_argument("--image-uri", default=os.environ.get("TRAINER_IMAGE_URI", ""),
                         help="Digest-pinned trainer image, recorded in the manifest")
-    return parser.parse_args(argv)
+    args = parser.parse_args(argv)
+    if not args.pairs and not args.validated_report:
+        parser.error("give --pairs, --validated-report, or both")
+    return args
 
 
 def main(argv=None):
@@ -284,8 +325,14 @@ def main(argv=None):
 
     held_out = set(json.loads(args.manifest.read_text())["trial_ids"])
     sources, pairs = [], []
-    for uri in args.pairs:
-        path = fetch(uri, scratch)
+    inputs = [(uri, fetch(uri, scratch)) for uri in args.pairs]
+    if args.validated_report:
+        built, release_uri = pairs_from_release(args.validated_report, scratch)
+        if args.source_release and args.source_release != release_uri:
+            raise ValueError("--source-release differs from the release the report validated")
+        args.source_release = release_uri
+        inputs.insert(0, (f"built-from:{release_uri}", built))
+    for uri, path in inputs:
         rows = load_pairs(path)
         sources.append({
             "uri": uri, "sha256": sha256_file(path), "pairs": len(rows),

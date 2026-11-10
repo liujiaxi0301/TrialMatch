@@ -1,5 +1,6 @@
 """Training guards that need no model download: leakage, pair loading and pooling."""
 
+import hashlib
 import importlib.util
 import io
 import json
@@ -8,6 +9,7 @@ import unittest
 from contextlib import redirect_stderr
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import patch
 
 from cloud import train
 
@@ -63,6 +65,63 @@ class PairLoadingTests(unittest.TestCase):
             path.write_text(json.dumps(pair("NCT00000000", split="test")) + "\n")
             with self.assertRaisesRegex(ValueError, "split"):
                 train.load_pairs(path)
+
+
+class ReleasePairTests(unittest.TestCase):
+    """Pairs built inside the pipeline come only from a validated, checksummed release."""
+
+    def blobs(self, objects):
+        def blob(uri):
+            def download_to_filename(path):
+                Path(path).write_bytes(objects[uri])
+
+            return SimpleNamespace(download_as_text=lambda: objects[uri].decode(),
+                                   download_to_filename=download_to_filename)
+
+        return patch.object(train, "gcs_blob", side_effect=blob)
+
+    def test_a_report_that_did_not_pass_is_rejected(self):
+        objects = {"gs://run/report/validation.json": json.dumps({"status": "FAILED"}).encode()}
+        with tempfile.TemporaryDirectory() as directory, self.blobs(objects), \
+                self.assertRaisesRegex(ValueError, "PASSED"):
+            train.pairs_from_release("gs://run/report", Path(directory))
+
+    def test_a_release_file_with_the_wrong_checksum_is_rejected(self):
+        release = {"files": {
+            f"services/x/{name}": {"uri": f"gs://run/processed/{key}", "sha256": "0" * 64}
+            for key, name in train.RELEASE_FILES.items()}}
+        objects = {
+            "gs://run/report/validation.json": json.dumps(
+                {"status": "PASSED", "release_uri": "gs://run/processed/release.json"}).encode(),
+            "gs://run/processed/release.json": json.dumps(release).encode(),
+            **{f"gs://run/processed/{key}": b"changed" for key in train.RELEASE_FILES},
+        }
+        with tempfile.TemporaryDirectory() as directory, self.blobs(objects), \
+                self.assertRaisesRegex(ValueError, "Checksum mismatch"):
+            train.pairs_from_release("gs://run/report", Path(directory))
+
+    def test_pairs_are_built_from_the_validated_release(self):
+        files = {key: (train.ROOT / name).read_bytes() for key, name in {
+            "trials": "services/trial_ingestion/data/processed/trials.jsonl",
+            "criteria": "services/trial_ingestion/data/processed/criteria.jsonl",
+            "manifest": "services/rag_workflow/examples/demo_manifest.json"}.items()}
+        release = {"files": {
+            f"services/x/{train.RELEASE_FILES[key]}": {
+                "uri": f"gs://run/processed/{key}",
+                "sha256": hashlib.sha256(content).hexdigest()}
+            for key, content in files.items()}}
+        objects = {
+            "gs://run/report/validation.json": json.dumps(
+                {"status": "PASSED", "release_uri": "gs://run/processed/release.json"}).encode(),
+            "gs://run/processed/release.json": json.dumps(release).encode(),
+            **{f"gs://run/processed/{key}": content for key, content in files.items()},
+        }
+        with tempfile.TemporaryDirectory() as directory, self.blobs(objects):
+            path, uri = train.pairs_from_release("gs://run/report", Path(directory))
+            pairs = train.load_pairs(path)
+        self.assertEqual(uri, "gs://run/processed/release.json")
+        self.assertGreater(len(pairs), 1000)
+        train.assert_no_leakage(pairs, set(json.loads(files["manifest"])["trial_ids"]))
 
 
 @unittest.skipUnless(importlib.util.find_spec("torch"), "Install the optional embeddings group")
