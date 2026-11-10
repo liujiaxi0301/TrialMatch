@@ -137,12 +137,16 @@ The app loads the validated release and restores its saved vectors into Chroma.
 This pipeline checks data reproduction and application behavior. Model training
 and clinical benchmark evaluation are separate work.
 
-Cloud configuration is in `cloud/config.env`. To deploy, install the Google
-Cloud CLI and uv, then sign in:
+Cloud configuration is in `cloud/config.env`. Deployment uses the course's
+`gcloud` commands and a Docker workflow container. The pipeline uses Python
+`kfp` components and Vertex AI `PipelineJob`, with GCS files between steps.
+
+Install Docker, the Google Cloud CLI and Python 3 (for the image version hash).
+Start Docker and set up `secrets/google-credentials.json` as described under
+Online Screening. Then sign in to the CLI and set up the cloud resources:
 
 ```bash
 gcloud auth login
-gcloud auth application-default login
 bash cloud/setup.sh
 ```
 
@@ -162,6 +166,12 @@ and output release URI under `artifacts/cloud/`. The app command requires that
 validated release. Cloud Build stores the three cloud images (API, Chroma, and
 workflow) in Artifact Registry. Local Compose still uses the four Make commands above.
 
+The `publish` and `pipeline` commands use `docker/workflow/` and its locked
+dependencies, so local uv and Python packages are not needed. Code and data are
+mounted read-only; output files go to `artifacts/cloud/`. Local credentials are
+mounted at `/secrets` and are never copied into an image. To compile the pipeline
+without submitting a cloud job, use `bash cloud/deploy.sh pipeline --compile-only`.
+
 For the first deployment, open the Cloud Run service's Security tab, enable IAP,
 and grant the team the IAP-secured Web App User role. For Gmail accounts, configure
 an External OAuth consent screen, add the team as test users, and use IAP's
@@ -178,31 +188,3 @@ gcloud compute instances stop trialmatch-chroma --zone=us-east1-b --project=tria
 
 Use `instances start` with the same options before the next demo. Its persistent
 disk keeps the vectors. Disk and storage charges continue while the VM is off.
-
-### Monthly Budget
-
-TrialMatch has a $5 monthly budget with email alerts at 50%, 80%, and 100%.
-Budget notifications call a private shutdown handler in `cloud/budget/`.
-That service also has its own Dockerfile, pyproject and lock file.
-When reported monthly costs reach $5, it sets the `trialmatch` Cloud Run service
-to zero instances and stops the `trialmatch-chroma` VM. Disks, buckets, and data
-are kept. Failed actions are retried. The handler never restarts the demo.
-
-This is not a strict spending cap: billing notifications can be delayed, and
-stored data still costs money. Direct Gemini calls, builds, or pipeline jobs
-started outside the demo are not blocked by this handler.
-
-The handler is already deployed. To install or update it as the project owner:
-
-```bash
-bash cloud/budget/deploy.sh
-```
-
-After reviewing the budget, manually resume the demo with:
-
-```bash
-gcloud compute instances start trialmatch-chroma --zone=us-east1-b --project=trialmatch-ac215-yixiao
-gcloud run services update trialmatch --scaling=auto --region=us-east1 --project=trialmatch-ac215-yixiao
-```
-
-If the current month is still over $5, the next budget notification stops it again.

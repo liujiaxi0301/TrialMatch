@@ -7,6 +7,24 @@ source cloud/config.env
 set +a
 mkdir -p artifacts/cloud
 action=${1:-help}
+
+# Like the course workflow container, mount code, data and local credentials.
+workflow() {
+  if [[ ! -f secrets/google-credentials.json ]]; then
+    echo 'Copy your Google ADC file to secrets/google-credentials.json. See README.md.' >&2
+    exit 1
+  fi
+  docker build -f docker/workflow/Dockerfile -t trialmatch-workflow:local .
+  docker run --rm \
+    -v "$PWD/cloud:/app/cloud:ro" \
+    -v "$PWD/services:/app/services:ro" \
+    -v "$PWD/artifacts:/app/artifacts" \
+    -v "$PWD/secrets:/secrets:ro" \
+    -e GOOGLE_APPLICATION_CREDENTIALS=/secrets/google-credentials.json \
+    -e GCP_PROJECT="$GCP_PROJECT" \
+    trialmatch-workflow:local python -m "$@"
+}
+
 if [[ "$action" == build ]]; then
   VERSION=$(python3 - <<'PY'
 import hashlib, pathlib, subprocess
@@ -33,7 +51,7 @@ VERSION=$(cat artifacts/cloud/image_version.txt)
 RELEASE="gs://$GCS_BUCKET/releases/$VERSION/release.json"
 case "$action" in
   publish)
-    uv run --group cloud python -m cloud.tasks publish --output="${RELEASE%/release.json}" \
+    workflow cloud.tasks publish --output="${RELEASE%/release.json}" \
       --image="$REGISTRY/workflow:$VERSION"
     ;;
   database)
@@ -52,8 +70,8 @@ case "$action" in
     fi
     ;;
   pipeline)
-    uv run --group cloud python -m cloud.pipeline --project="$GCP_PROJECT" --region="$GCP_REGION" \
-      --bucket="$GCS_BUCKET" --image="$REGISTRY/workflow:$VERSION" --release="$RELEASE"
+    workflow cloud.pipeline --project="$GCP_PROJECT" --region="$GCP_REGION" \
+      --bucket="$GCS_BUCKET" --image="$REGISTRY/workflow:$VERSION" --release="$RELEASE" "${@:2}"
     ;;
   app)
     RELEASE=$(cat artifacts/cloud/validated_release.txt)
