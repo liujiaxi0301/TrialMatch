@@ -271,13 +271,16 @@ what the known limitations are.
 
 ## 6. Open decisions needing a human
 
-1. **Pair volume.** 2,281 pairs is small. Generating queries from criteria with Gemini
-   (doc2query) would yield more and more natural pairs for roughly $1–2 and half an
-   hour, against a $5 monthly cap shared with GPU spend. Default if nobody decides:
-   proceed with the existing pairs; the milestone asks for one sound run, not a strong
-   model.
-2. **Image base divergence.** The trainer image is proposed on a Vertex PyTorch base
-   while the other three use `python:3.12-slim-bookworm`. Faster, but inconsistent.
+1. **Pair volume — decided 2026-11-10: add LLM-written queries.**
+   `cloud/train_pairs_llm.py` asks the configured Gemini model for the search request
+   each criterion helps answer, rejects queries that mostly repeat their criterion,
+   and writes `artifacts/training/pairs_llm.jsonl`. It needs live credentials and
+   network, so it runs on the owner's workstation; responses are cached on disk.
+   Inspect a sample by eye before training, then train on both pair files together.
+2. **Image base divergence — assumed, not yet confirmed by the owner.** The trainer
+   image uses a Vertex PyTorch GPU base while the other three use
+   `python:3.12-slim-bookworm`, because a from-scratch CUDA image is about 5 GB and
+   slow to build with two days left. Revisit if the team prefers one base.
 3. **Budget headroom** for one T4 run, to be confirmed with the infrastructure owner.
 
 ---
