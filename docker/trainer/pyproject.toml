@@ -1,0 +1,18 @@
+[project]
+name = "trialmatch-trainer"
+version = "0.1.0"
+# Matches the interpreter of the Vertex PyTorch GPU base image, which also supplies
+# torch and CUDA. Torch is deliberately absent here so the base's build is kept.
+requires-python = ">=3.10,<3.11"
+dependencies = [
+    "transformers>=4.48,<5",
+    "wandb>=0.19,<1",
+    "google-cloud-storage>=3,<4",
+    "google-cloud-aiplatform>=1.120,<2",
+    "google-cloud-secret-manager>=2.20,<3",
+    # The base image's scipy and scikit-learn are compiled against NumPy 1.x.
+    "numpy>=1.26,<2",
+]
+
+[tool.uv]
+package = false
