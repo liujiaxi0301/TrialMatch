@@ -5,10 +5,13 @@ steps:
     args: [build, -f, docker/chromadb/Dockerfile, -t, '${_REGISTRY}/chroma:${_VERSION}-${BUILD_ID}', .]
   - name: gcr.io/cloud-builders/docker
     args: [build, -f, docker/workflow/Dockerfile, -t, '${_REGISTRY}/workflow:${_VERSION}-${BUILD_ID}', .]
+  - name: gcr.io/cloud-builders/docker
+    args: [build, -f, docker/trainer/Dockerfile, --build-arg, 'SOURCE_VERSION=${_VERSION}', -t, '${_REGISTRY}/trainer:${_VERSION}-${BUILD_ID}', .]
 images:
   - '${_REGISTRY}/api:${_VERSION}-${BUILD_ID}'
   - '${_REGISTRY}/chroma:${_VERSION}-${BUILD_ID}'
   - '${_REGISTRY}/workflow:${_VERSION}-${BUILD_ID}'
+  - '${_REGISTRY}/trainer:${_VERSION}-${BUILD_ID}'
 options:
   logging: CLOUD_LOGGING_ONLY
 timeout: 1200s

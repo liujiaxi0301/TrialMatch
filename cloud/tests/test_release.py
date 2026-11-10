@@ -223,7 +223,8 @@ if name == "gcloud":
     images = [expand(image) for image in config["images"]]
     assert set(built) == set(images), (built, images)
     digests = {"workflow": os.environ["FAKE_DIGEST"], "api": os.environ["FAKE_API_DIGEST"],
-               "chroma": os.environ.get("FAKE_CHROMA_DIGEST", "sha256:" + "e" * 64)}
+               "chroma": os.environ.get("FAKE_CHROMA_DIGEST", "sha256:" + "e" * 64),
+               "trainer": os.environ.get("FAKE_TRAINER_DIGEST", "sha256:" + "f" * 64)}
     results = [{"name": image, "digest": digests[image.rsplit("/", 1)[1].split(":")[0]]}
                for image in images]
     state_path = Path(os.environ["FAKE_REGISTRY_STATE"])
@@ -336,7 +337,7 @@ if name == "gcloud":
         self.assertEqual(targets[0]["source_version"], targets[1]["source_version"])
         self.assertNotEqual(targets[0]["image_tag"], targets[1]["image_tag"])
         self.assertNotEqual(targets[0]["release_uri"], targets[1]["release_uri"])
-        self.assertEqual(len(old_registry), 6)
+        self.assertEqual(len(old_registry), 8)  # Four images per build.
         self.assertEqual(sum(c["tool"] == "gcloud" for c in self.calls()), 2)
 
     def test_failed_or_unusable_build_cannot_reuse_previous_selection(self):
