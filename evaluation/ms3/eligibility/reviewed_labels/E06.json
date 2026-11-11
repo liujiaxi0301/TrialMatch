@@ -1,0 +1,196 @@
+{
+  "case_id": "E06",
+  "patient_id": "3beee40e-512b-420f-38a3-28e56cddbc9b",
+  "trial_id": "NCT03883412",
+  "split": "reporting",
+  "review_status": "frozen",
+  "reviewer_qualification": "Non-clinician evidence-based reference assessment",
+  "labels": [
+    {
+      "criterion_id": "NCT03883412_inc_001",
+      "criterion_type": "inclusion",
+      "criterion_text": "Age 21-60",
+      "gold_decision": "NOT_MET",
+      "reason": "Patient was 69 years old at the reference date, exceeding the upper age limit of 60.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Lou594_Crooks415_3beee40e-512b-420f-38a3-28e56cddbc9b.json#Patient/3beee40e-512b-420f-38a3-28e56cddbc9b"
+      ],
+      "missing_information": [],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT03883412_inc_002",
+      "criterion_type": "inclusion",
+      "criterion_text": "A1C ≤ 8.5%",
+      "gold_decision": "MET",
+      "reason": "The latest HbA1c was 5.76% on 2021-06-21, meeting the <=8.5% threshold.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Lou594_Crooks415_3beee40e-512b-420f-38a3-28e56cddbc9b.json#Observation/b30e60c0-c261-b471-a467-078f518b066b"
+      ],
+      "missing_information": [],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT03883412_inc_003",
+      "criterion_type": "inclusion",
+      "criterion_text": "Never on GLP-1RA (eg: exenatide, liraglutide) or DPP4I ( eg: Sitaglipton)",
+      "gold_decision": "UNKNOWN",
+      "reason": "No GLP-1RA or DPP-4 inhibitor use is established, but the available medication records do not prove lifetime non-use.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Complete lifetime GLP-1RA and DPP-4 inhibitor exposure history."
+      ],
+      "review_notes": "Never-use requirement: missing prescriptions do not prove lifetime non-use."
+    },
+    {
+      "criterion_id": "NCT03883412_inc_004",
+      "criterion_type": "inclusion",
+      "criterion_text": "On stable dose of oral hypoglycemic agents \\>4 months",
+      "gold_decision": "UNKNOWN",
+      "reason": "Metformin 500 mg extended-release prescriptions recur over time, including an active 2021 order, but uninterrupted treatment at a stable administered dose for over four months is not established.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Lou594_Crooks415_3beee40e-512b-420f-38a3-28e56cddbc9b.json#MedicationRequest/62d775c9-854e-d6f7-ba29-fd94eb1f27f1",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Lou594_Crooks415_3beee40e-512b-420f-38a3-28e56cddbc9b.json#MedicationRequest/89d4961b-eb19-321d-304a-30d41041a620"
+      ],
+      "missing_information": [
+        "Confirmed dose, adherence, and continuous treatment duration exceeding four months."
+      ],
+      "review_notes": "Repeat orders do not prove continuous stable administered dosing."
+    },
+    {
+      "criterion_id": "NCT03883412_inc_005",
+      "criterion_type": "inclusion",
+      "criterion_text": "On stable dose of other medications for \\>4 months",
+      "gold_decision": "UNKNOWN",
+      "reason": "Amlodipine 2.5 mg daily prescriptions recur across 2021, but the full non-diabetes medication regimen and its continuous stable dosing for over four months are not fully established.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Lou594_Crooks415_3beee40e-512b-420f-38a3-28e56cddbc9b.json#MedicationRequest/7196d434-cadf-0262-6b66-33f6b1d15f5a",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Lou594_Crooks415_3beee40e-512b-420f-38a3-28e56cddbc9b.json#MedicationRequest/6d5b1724-4f6b-dbac-410a-190c6adbe421"
+      ],
+      "missing_information": [
+        "Confirmed stable dosing and duration for all applicable other medications."
+      ],
+      "review_notes": "Repeat prescriptions alone do not establish full-regimen stability."
+    },
+    {
+      "criterion_id": "NCT03883412_exc_001",
+      "criterion_type": "exclusion",
+      "criterion_text": "Taking Insulin",
+      "gold_decision": "UNKNOWN",
+      "reason": "No affirmative insulin therapy is documented, but its absence cannot be established from medication records alone.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Explicit current insulin-use status."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT03883412_exc_002",
+      "criterion_type": "exclusion",
+      "criterion_text": "Smoking presently or in the past 6 months",
+      "gold_decision": "NOT_MET",
+      "reason": "The latest tobacco assessment explicitly reports Never smoker, inconsistent with current smoking or smoking within the preceding six months.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Lou594_Crooks415_3beee40e-512b-420f-38a3-28e56cddbc9b.json#Observation/d0751a93-7329-8b7d-818f-1956af6707c6"
+      ],
+      "missing_information": [],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT03883412_exc_003",
+      "criterion_type": "exclusion",
+      "criterion_text": "BP \\>160/90",
+      "gold_decision": "MET",
+      "reason": "The latest blood pressure was 152/114 mmHg on 2021-06-21. Diastolic pressure exceeds 90 mmHg and therefore triggers the >160/90 exclusion under the agreed either-component interpretation.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Lou594_Crooks415_3beee40e-512b-420f-38a3-28e56cddbc9b.json#Observation/208dd5ab-6dc6-a9ea-d49a-a2033466573a"
+      ],
+      "missing_information": [],
+      "review_notes": "Human-confirmed interpretation: systolic >160 OR diastolic >90."
+    },
+    {
+      "criterion_id": "NCT03883412_exc_004",
+      "criterion_type": "exclusion",
+      "criterion_text": "BMI \\>35",
+      "gold_decision": "NOT_MET",
+      "reason": "The latest documented BMI was 29.04 kg/m2, below the exclusion threshold of >35.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Lou594_Crooks415_3beee40e-512b-420f-38a3-28e56cddbc9b.json#Observation/986b8e69-9685-1484-7040-741fbdf3a2a1"
+      ],
+      "missing_information": [],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT03883412_exc_005",
+      "criterion_type": "exclusion",
+      "criterion_text": "Family history of medullary thyroid cancer or multiple endocrine neoplasia syndrome",
+      "gold_decision": "UNKNOWN",
+      "reason": "Family history of medullary thyroid carcinoma or multiple endocrine neoplasia syndrome is not established or explicitly ruled out.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Relevant family history."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT03883412_exc_006",
+      "criterion_type": "exclusion",
+      "criterion_text": "History of congestive heart failure, ischemic heart disease, severe pulmonary disease, liver or kidney disease.",
+      "gold_decision": "UNKNOWN",
+      "reason": "The available longitudinal diagnoses do not establish or comprehensively rule out the specified heart failure, ischemic heart disease, severe pulmonary, liver, or kidney disease history.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Complete history of the listed organ-system diseases."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT03883412_exc_007",
+      "criterion_type": "exclusion",
+      "criterion_text": "Any vascular disease such as myocardial infarction, stroke, peripheral vascular disease",
+      "gold_decision": "UNKNOWN",
+      "reason": "Myocardial infarction, stroke, peripheral vascular disease, or other qualifying vascular disease is not confirmed or comprehensively excluded.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Complete cardiovascular and peripheral vascular disease history."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT03883412_exc_008",
+      "criterion_type": "exclusion",
+      "criterion_text": "Presence of an intracardiac or intrapulmonary shunt (we will screen for this by auscultation during the physical exam by PI).",
+      "gold_decision": "UNKNOWN",
+      "reason": "Presence or absence of an intracardiac or intrapulmonary shunt is not established; the protocol specifies investigator screening by auscultation.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Relevant physical examination or diagnostic assessment."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT03883412_exc_009",
+      "criterion_type": "exclusion",
+      "criterion_text": "Pregnant or breastfeeding.",
+      "gold_decision": "NOT_MET",
+      "reason": "The patient is recorded as male. Under the previously agreed synthetic-cohort convention, this pregnancy-or-breastfeeding exclusion is treated as not met.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Lou594_Crooks415_3beee40e-512b-420f-38a3-28e56cddbc9b.json#Patient/3beee40e-512b-420f-38a3-28e56cddbc9b"
+      ],
+      "missing_information": [],
+      "review_notes": "Synthetic-cohort demographic convention, not real-world clinical inference."
+    },
+    {
+      "criterion_id": "NCT03883412_exc_010",
+      "criterion_type": "exclusion",
+      "criterion_text": "Known hypersensitivity to perflutren (contained in Definity)",
+      "gold_decision": "UNKNOWN",
+      "reason": "Known hypersensitivity to perflutren is neither confirmed nor explicitly excluded.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Perflutren or Definity allergy history."
+      ],
+      "review_notes": ""
+    }
+  ]
+}

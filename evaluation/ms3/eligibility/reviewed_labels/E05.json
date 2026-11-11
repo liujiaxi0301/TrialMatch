@@ -1,0 +1,135 @@
+{
+  "case_id": "E05",
+  "patient_id": "28db1c55-fe99-d5c8-8fc4-bffda09ab3be",
+  "trial_id": "NCT03827382",
+  "split": "reporting",
+  "review_status": "frozen",
+  "reviewer_qualification": "Non-clinician evidence-based reference assessment",
+  "labels": [
+    {
+      "criterion_id": "NCT03827382_inc_001",
+      "criterion_type": "inclusion",
+      "criterion_text": "Informed consent as documented by signature",
+      "gold_decision": "UNKNOWN",
+      "reason": "No study-specific signed informed consent is documented.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Signed informed consent form."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT03827382_inc_002",
+      "criterion_type": "inclusion",
+      "criterion_text": "Type 2 diabetes diagnosed within the last two years according to the American Diabetes Association (ADA) criteria",
+      "gold_decision": "NOT_MET",
+      "reason": "Diabetes onset was documented on 1999-11-18, about 22 years before the reference date. The requirement for diagnosis within the last two years is not satisfied.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Sana377_Wolff180_28db1c55-fe99-d5c8-8fc4-bffda09ab3be.json#Condition/0268eaac-54f1-9e9c-543a-90d097828c1e"
+      ],
+      "missing_information": [],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT03827382_inc_003",
+      "criterion_type": "inclusion",
+      "criterion_text": "Age ≥ 18 years",
+      "gold_decision": "MET",
+      "reason": "The patient was 44 years old at the reference date, satisfying age >=18.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Sana377_Wolff180_28db1c55-fe99-d5c8-8fc4-bffda09ab3be.json#Patient/28db1c55-fe99-d5c8-8fc4-bffda09ab3be"
+      ],
+      "missing_information": [],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT03827382_inc_004",
+      "criterion_type": "inclusion",
+      "criterion_text": "HbA1c ≥ 7.5 %",
+      "gold_decision": "NOT_MET",
+      "reason": "Latest HbA1c was 6.04% on 2021-03-25, below the required 7.5%.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Sana377_Wolff180_28db1c55-fe99-d5c8-8fc4-bffda09ab3be.json#Observation/bd9a5105-f03f-4c86-cdc2-849305817199"
+      ],
+      "missing_information": [],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT03827382_exc_001",
+      "criterion_type": "exclusion",
+      "criterion_text": "Clinically instable patient as defined by the physicians on duty including signs of new cardiac ischemia in the ECG, systolic blood pressure ≥ 200 mmHg, fever ≥ 38.5 °C, symptoms of SIRS or reduced vigilance.",
+      "gold_decision": "UNKNOWN",
+      "reason": "Latest systolic BP was 101 mmHg, but ECG findings, fever, SIRS, vigilance and physician assessment are insufficiently documented.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Sana377_Wolff180_28db1c55-fe99-d5c8-8fc4-bffda09ab3be.json#Observation/db3ede97-0425-edcb-85e2-583e815f3c9d"
+      ],
+      "missing_information": [
+        "Complete contemporaneous clinical instability assessment."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT03827382_exc_002",
+      "criterion_type": "exclusion",
+      "criterion_text": "Anti-diabetic medication for ≥ 24 hours",
+      "gold_decision": "UNKNOWN",
+      "reason": "Metformin prescriptions are documented, including an active order, but actual medication use for at least 24 hours is not confirmed.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Sana377_Wolff180_28db1c55-fe99-d5c8-8fc4-bffda09ab3be.json#MedicationRequest/b8a2bda8-25ac-af23-e535-848f18934354",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Sana377_Wolff180_28db1c55-fe99-d5c8-8fc4-bffda09ab3be.json#MedicationRequest/57c6f1b7-98c3-9c99-87d5-c86af50f7a0b"
+      ],
+      "missing_information": [
+        "Confirmed actual antidiabetic medication use duration."
+      ],
+      "review_notes": "Consistent with E01: an active prescription supports prescribed therapy but does not prove actual use duration. '24 HR Metformin' refers to extended-release formulation."
+    },
+    {
+      "criterion_id": "NCT03827382_exc_003",
+      "criterion_type": "exclusion",
+      "criterion_text": "Inability to perform a bicycle exercise during 30 minutes",
+      "gold_decision": "UNKNOWN",
+      "reason": "Ability or inability to complete 30 minutes of bicycle exercise is not established.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Bicycle exercise tolerance assessment."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT03827382_exc_004",
+      "criterion_type": "exclusion",
+      "criterion_text": "Previous lifestyle-intervention by an endocrinologist",
+      "gold_decision": "UNKNOWN",
+      "reason": "Prior lifestyle intervention specifically delivered by an endocrinologist is not confirmed or ruled out.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Lifestyle intervention history and clinician specialty."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT03827382_exc_005",
+      "criterion_type": "exclusion",
+      "criterion_text": "Engagement in physical activity more than five times per week",
+      "gold_decision": "UNKNOWN",
+      "reason": "Weekly exercise frequency is not sufficiently documented.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Exercise frequency per week."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT03827382_exc_006",
+      "criterion_type": "exclusion",
+      "criterion_text": "Enrollment in other interventional study",
+      "gold_decision": "UNKNOWN",
+      "reason": "Enrollment in another interventional study is neither confirmed nor explicitly ruled out.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Current interventional study enrollment status."
+      ],
+      "review_notes": ""
+    }
+  ]
+}

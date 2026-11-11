@@ -1,0 +1,232 @@
+{
+  "trial": {
+    "trial_id": "NCT01945840",
+    "brief_title": "Gut Hormones and Roux en Y Gastric Bypass",
+    "official_title": "Do Gut Hormones Mediate the Beneficial Effects of Roux-en-Y Bypass?",
+    "overall_status": "RECRUITING",
+    "conditions": [
+      "Obesity",
+      "Type 2 Diabetes"
+    ],
+    "keywords": [],
+    "mesh_terms": [
+      "Obesity",
+      "Diabetes Mellitus, Type 2"
+    ],
+    "study_type": "INTERVENTIONAL",
+    "phases": [
+      "NA"
+    ],
+    "brief_summary": "The purpose of this study is to assess whether the changes in gut hormones seen following Roux en Y Gastric Bypass surgery are responsible for some of the beneficial effects seen post-operatively.",
+    "minimum_age": "18 Years",
+    "maximum_age": "70 Years",
+    "sex": "ALL",
+    "healthy_volunteers": true,
+    "eligibility_text": "Inclusion criteria\n\n* Aged 18 - 70 years.\n* Male or female.\n* Eligible for bariatric surgery under the NHS.\n* Diagnosed with impaired glucose regulation or type 2 diabetes, according to WHO 2011 criteria.\n* Those with diabetes should be stable and well controlled with either diet or one oral hypoglycaemic agent.\n* HbA1c ≤9.0% or 74.9 mmol/mol.\n\nExclusion criteria\n\n* History of any medical, psychological or other condition, or use of any medications, including over-the-counter products, which, in the opinion of the investigators, would either interfere with the study or potentially cause harm to the volunteer.\n* Without access at home to a telephone or other factor likely to interfere with ability to participate reliably in the study.\n* Pregnancy or breastfeeding.\n* Smokers.\n* Unable to maintain adequate contraception for the duration of the study and for one month afterwards.\n* History of hypersensitivity to any of the components of the subcutaneous infusions.\n* Donated blood during the preceding 3 months or intention to do so before the end of the study.\n* Insulin treatment.\n* Uncontrolled hypertension.\n* Any other co-morbidity that would compromise the validity of the study or the safety of the participant such as heart failure, clinically apparent cardiovascular disease.\n* Volunteers on anti-coagulants such as warfarin and factor Xa inhibitors will not undergo adipose tissue biopsy.\n* Unable to give informed consent.\n* Previous bariatric surgery.\n* Unable to undergo fMRI due to:\n\n  * Claustrophobia.\n  * Pacemaker, metal implant, clips, implanted device, shrapnel or bullet, metal in eyes that precludes magnetic resonance imaging.\n  * Significant structural abnormality on magnetic resonance brain scan",
+    "locations": [
+      {
+        "facility": "NIHR/Wellcome Trust Imperial CRF, Hammersmith Hospital",
+        "status": "RECRUITING",
+        "city": "London",
+        "state": "Greater London",
+        "zip": null,
+        "country": "United Kingdom",
+        "latitude": 51.50853,
+        "longitude": -0.12574
+      }
+    ],
+    "enrollment_count": 190,
+    "enrollment_type": "ESTIMATED",
+    "start_date": "2013-10",
+    "completion_date": "2028-10-31",
+    "last_update_date": "2021-04-20",
+    "source": "ClinicalTrials.gov API v2",
+    "snapshot_date": "2026-10-11"
+  },
+  "criteria": [
+    {
+      "trial_id": "NCT01945840",
+      "criterion_id": "NCT01945840_inc_001",
+      "criterion_type": "inclusion",
+      "criterion_text": "Aged 18 - 70 years.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "criterion_id": "NCT01945840_inc_002",
+      "criterion_type": "inclusion",
+      "criterion_text": "Male or female.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "criterion_id": "NCT01945840_inc_003",
+      "criterion_type": "inclusion",
+      "criterion_text": "Eligible for bariatric surgery under the NHS.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "criterion_id": "NCT01945840_inc_004",
+      "criterion_type": "inclusion",
+      "criterion_text": "Diagnosed with impaired glucose regulation or type 2 diabetes, according to WHO 2011 criteria.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "criterion_id": "NCT01945840_inc_005",
+      "criterion_type": "inclusion",
+      "criterion_text": "Those with diabetes should be stable and well controlled with either diet or one oral hypoglycaemic agent.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "criterion_id": "NCT01945840_inc_006",
+      "criterion_type": "inclusion",
+      "criterion_text": "HbA1c ≤9.0% or 74.9 mmol/mol.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "criterion_id": "NCT01945840_exc_001",
+      "criterion_type": "exclusion",
+      "criterion_text": "History of any medical, psychological or other condition, or use of any medications, including over-the-counter products, which, in the opinion of the investigators, would either interfere with the study or potentially cause harm to the volunteer.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "criterion_id": "NCT01945840_exc_002",
+      "criterion_type": "exclusion",
+      "criterion_text": "Without access at home to a telephone or other factor likely to interfere with ability to participate reliably in the study.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "criterion_id": "NCT01945840_exc_003",
+      "criterion_type": "exclusion",
+      "criterion_text": "Pregnancy or breastfeeding.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "criterion_id": "NCT01945840_exc_004",
+      "criterion_type": "exclusion",
+      "criterion_text": "Smokers.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "criterion_id": "NCT01945840_exc_005",
+      "criterion_type": "exclusion",
+      "criterion_text": "Unable to maintain adequate contraception for the duration of the study and for one month afterwards.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "criterion_id": "NCT01945840_exc_006",
+      "criterion_type": "exclusion",
+      "criterion_text": "History of hypersensitivity to any of the components of the subcutaneous infusions.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "criterion_id": "NCT01945840_exc_007",
+      "criterion_type": "exclusion",
+      "criterion_text": "Donated blood during the preceding 3 months or intention to do so before the end of the study.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "criterion_id": "NCT01945840_exc_008",
+      "criterion_type": "exclusion",
+      "criterion_text": "Insulin treatment.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "criterion_id": "NCT01945840_exc_009",
+      "criterion_type": "exclusion",
+      "criterion_text": "Uncontrolled hypertension.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "criterion_id": "NCT01945840_exc_010",
+      "criterion_type": "exclusion",
+      "criterion_text": "Any other co-morbidity that would compromise the validity of the study or the safety of the participant such as heart failure, clinically apparent cardiovascular disease.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "criterion_id": "NCT01945840_exc_011",
+      "criterion_type": "exclusion",
+      "criterion_text": "Volunteers on anti-coagulants such as warfarin and factor Xa inhibitors will not undergo adipose tissue biopsy.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "criterion_id": "NCT01945840_exc_012",
+      "criterion_type": "exclusion",
+      "criterion_text": "Unable to give informed consent.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "criterion_id": "NCT01945840_exc_013",
+      "criterion_type": "exclusion",
+      "criterion_text": "Previous bariatric surgery.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "criterion_id": "NCT01945840_exc_014",
+      "criterion_type": "exclusion",
+      "criterion_text": "Unable to undergo fMRI due to:",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "criterion_id": "NCT01945840_exc_015",
+      "criterion_type": "exclusion",
+      "criterion_text": "Claustrophobia.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "criterion_id": "NCT01945840_exc_016",
+      "criterion_type": "exclusion",
+      "criterion_text": "Pacemaker, metal implant, clips, implanted device, shrapnel or bullet, metal in eyes that precludes magnetic resonance imaging.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "criterion_id": "NCT01945840_exc_017",
+      "criterion_type": "exclusion",
+      "criterion_text": "Significant structural abnormality on magnetic resonance brain scan",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    }
+  ]
+}

@@ -1,0 +1,227 @@
+{
+  "trial": {
+    "trial_id": "NCT03264352",
+    "brief_title": "Intervention for High-normal Blood Pressure in Adults With Type 2 Diabetes",
+    "official_title": "Intervention for High-normal Blood Pressure in Adults With Type 2 Diabetes",
+    "overall_status": "RECRUITING",
+    "conditions": [
+      "Diabetes Mellitus, Type 2",
+      "Adverse Event",
+      "Blood Pressure",
+      "Prehypertension",
+      "Cardiovascular Risk Factor"
+    ],
+    "keywords": [],
+    "mesh_terms": [
+      "Diabetes Mellitus, Type 2",
+      "Prehypertension"
+    ],
+    "study_type": "INTERVENTIONAL",
+    "phases": [
+      "PHASE4"
+    ],
+    "brief_summary": "Lowering of blood pressure (BP) in high-risk hypertensive individuals reduces major adverse cardiovascular and cerebrovascular events. Diabetic patients with hypertension benefit from BP lowering treatment. The present trial, IPAD in brief, is a randomized, open-label, parallel-designed, multicenter study involving nearly 12,000 patients to be recruited and to be followed up for a median of four years. IPAD tests the hypothesis that antihypertensive medications in adults with type 2 diabetes, whose seated BP 120-139 mm Hg systolic and below 90 mm Hg diastolic, results in 20% difference in the incidence of major adverse cardiovascular and cerebrovascular events. During follow-up for participants in the intensive group, the sitting systolic pressure should be decreased to below 120 mm Hg, by titration and combination of the study medications of an angiotensin type-1 receptor blocker Allisartan (240 mg/day), a dihydropyridine calcium-channel blocker (amlodipine 5-10 mg/day), and/or other medications if necessary. For those in the standard group, the sitting systolic pressure should be monitored and controlled below 140 mm Hg.",
+    "minimum_age": "45 Years",
+    "maximum_age": "79 Years",
+    "sex": "ALL",
+    "healthy_volunteers": false,
+    "eligibility_text": "Inclusion Criteria:\n\n* irrespective of sex;\n* aged between 45 and 79 years;\n* with office-measured seated BP 120-139 mm Hg systolic and below 90 mm Hg diastolic;\n* diagnosed of type 2 diabetes mellitus (T2DM), currently on diabetic therapy;\n* informed consent provided and long-term follow-up possible\n\nExclusion Criteria:\n\n* poor control of blood glucose, HbA1c \\> 10.0%\n* administration of any antihypertensive medications within 1 month;\n* a history of hypoglycemic coma / seizure;\n* confirmed diagnosis of type 1 diabetes mellitus;\n* alanine-aminotransferase (ALT) or aspartate-aminotransferase (AST) over three times the upper limit of normal;\n* estimated glomerular filtration rate \\< 45 ml/min/1.73m2;\n* a history of congestive heart failure with left ventricular ejection fraction \\< 40%;\n* coronary artery disease requiring RAS blockers for secondary prevention;\n* acute on-set of stroke within 6 months prior to randomization;\n* a ratio of urinary albumin (in mg/L) to urinary creatinine (in g/L) (ACR) ≥ 300 mg/g;\n* known contraindications for the active study medications;\n* a history of psychological or mental disorder;\n* pregnancy or currently planning to have babies or lactation;\n* severe diseases such as severe heart diseases;\n* an expected residual life span less than 3 years;\n* a malignancy that clinical investigators consider as unsuitable to participate;\n* currently participating in another clinical trial.",
+    "locations": [
+      {
+        "facility": "Guangdong General Hospital",
+        "status": "RECRUITING",
+        "city": "Guangzhou",
+        "state": "Guangdong",
+        "zip": "501080",
+        "country": "China",
+        "latitude": 23.11667,
+        "longitude": 113.25
+      }
+    ],
+    "enrollment_count": 11414,
+    "enrollment_type": "ESTIMATED",
+    "start_date": "2018-02-01",
+    "completion_date": "2029-09-01",
+    "last_update_date": "2026-09-14",
+    "source": "ClinicalTrials.gov API v2",
+    "snapshot_date": "2026-10-11"
+  },
+  "criteria": [
+    {
+      "trial_id": "NCT03264352",
+      "criterion_id": "NCT03264352_inc_001",
+      "criterion_type": "inclusion",
+      "criterion_text": "irrespective of sex;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03264352",
+      "criterion_id": "NCT03264352_inc_002",
+      "criterion_type": "inclusion",
+      "criterion_text": "aged between 45 and 79 years;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03264352",
+      "criterion_id": "NCT03264352_inc_003",
+      "criterion_type": "inclusion",
+      "criterion_text": "with office-measured seated BP 120-139 mm Hg systolic and below 90 mm Hg diastolic;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03264352",
+      "criterion_id": "NCT03264352_inc_004",
+      "criterion_type": "inclusion",
+      "criterion_text": "diagnosed of type 2 diabetes mellitus (T2DM), currently on diabetic therapy;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03264352",
+      "criterion_id": "NCT03264352_inc_005",
+      "criterion_type": "inclusion",
+      "criterion_text": "informed consent provided and long-term follow-up possible",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03264352",
+      "criterion_id": "NCT03264352_exc_001",
+      "criterion_type": "exclusion",
+      "criterion_text": "poor control of blood glucose, HbA1c \\> 10.0%",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03264352",
+      "criterion_id": "NCT03264352_exc_002",
+      "criterion_type": "exclusion",
+      "criterion_text": "administration of any antihypertensive medications within 1 month;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03264352",
+      "criterion_id": "NCT03264352_exc_003",
+      "criterion_type": "exclusion",
+      "criterion_text": "a history of hypoglycemic coma / seizure;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03264352",
+      "criterion_id": "NCT03264352_exc_004",
+      "criterion_type": "exclusion",
+      "criterion_text": "confirmed diagnosis of type 1 diabetes mellitus;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03264352",
+      "criterion_id": "NCT03264352_exc_005",
+      "criterion_type": "exclusion",
+      "criterion_text": "alanine-aminotransferase (ALT) or aspartate-aminotransferase (AST) over three times the upper limit of normal;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03264352",
+      "criterion_id": "NCT03264352_exc_006",
+      "criterion_type": "exclusion",
+      "criterion_text": "estimated glomerular filtration rate \\< 45 ml/min/1.73m2;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03264352",
+      "criterion_id": "NCT03264352_exc_007",
+      "criterion_type": "exclusion",
+      "criterion_text": "a history of congestive heart failure with left ventricular ejection fraction \\< 40%;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03264352",
+      "criterion_id": "NCT03264352_exc_008",
+      "criterion_type": "exclusion",
+      "criterion_text": "coronary artery disease requiring RAS blockers for secondary prevention;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03264352",
+      "criterion_id": "NCT03264352_exc_009",
+      "criterion_type": "exclusion",
+      "criterion_text": "acute on-set of stroke within 6 months prior to randomization;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03264352",
+      "criterion_id": "NCT03264352_exc_010",
+      "criterion_type": "exclusion",
+      "criterion_text": "a ratio of urinary albumin (in mg/L) to urinary creatinine (in g/L) (ACR) ≥ 300 mg/g;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03264352",
+      "criterion_id": "NCT03264352_exc_011",
+      "criterion_type": "exclusion",
+      "criterion_text": "known contraindications for the active study medications;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03264352",
+      "criterion_id": "NCT03264352_exc_012",
+      "criterion_type": "exclusion",
+      "criterion_text": "a history of psychological or mental disorder;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03264352",
+      "criterion_id": "NCT03264352_exc_013",
+      "criterion_type": "exclusion",
+      "criterion_text": "pregnancy or currently planning to have babies or lactation;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03264352",
+      "criterion_id": "NCT03264352_exc_014",
+      "criterion_type": "exclusion",
+      "criterion_text": "severe diseases such as severe heart diseases;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03264352",
+      "criterion_id": "NCT03264352_exc_015",
+      "criterion_type": "exclusion",
+      "criterion_text": "an expected residual life span less than 3 years;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03264352",
+      "criterion_id": "NCT03264352_exc_016",
+      "criterion_type": "exclusion",
+      "criterion_text": "a malignancy that clinical investigators consider as unsuitable to participate;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03264352",
+      "criterion_id": "NCT03264352_exc_017",
+      "criterion_type": "exclusion",
+      "criterion_text": "currently participating in another clinical trial.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    }
+  ]
+}

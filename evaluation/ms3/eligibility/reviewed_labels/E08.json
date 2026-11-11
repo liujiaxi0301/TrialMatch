@@ -1,0 +1,194 @@
+{
+  "case_id": "E08",
+  "patient_id": "509f9a77-2a22-f98b-c539-9a44057efb51",
+  "trial_id": "NCT04783441",
+  "split": "reporting",
+  "review_status": "frozen",
+  "reviewer_qualification": "Non-clinician evidence-based reference assessment",
+  "labels": [
+    {
+      "criterion_id": "NCT04783441_inc_001",
+      "criterion_type": "inclusion",
+      "criterion_text": "Age 18 or above",
+      "gold_decision": "MET",
+      "reason": "Patient was 56 years old at the reference date, meeting the minimum age of 18.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Loretta235_Bosco882_509f9a77-2a22-f98b-c539-9a44057efb51.json#Patient/509f9a77-2a22-f98b-c539-9a44057efb51"
+      ],
+      "missing_information": [],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT04783441_inc_002",
+      "criterion_type": "inclusion",
+      "criterion_text": "Received a kidney transplant within the past year with functioning kidney (eGFR \\> 30 mL/min",
+      "gold_decision": "UNKNOWN",
+      "reason": "The latest eGFR was 131.54 mL/min/1.73m2, exceeding 30, but no evidence confirms a kidney transplant within the preceding year.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Loretta235_Bosco882_509f9a77-2a22-f98b-c539-9a44057efb51.json#Observation/55b9ffc0-71db-a7a6-2cde-43fa5e792ff0"
+      ],
+      "missing_information": [
+        "Kidney transplant history and transplant date."
+      ],
+      "review_notes": "eGFR above 30 does not establish a prior kidney transplant. All components of the inclusion criterion must be satisfied."
+    },
+    {
+      "criterion_id": "NCT04783441_inc_003",
+      "criterion_type": "inclusion",
+      "criterion_text": "Person with Type 2 Diabetes and on insulin",
+      "gold_decision": "UNKNOWN",
+      "reason": "Type 2 diabetes is established by SNOMED CT code 44054006, but current insulin treatment is not confirmed or explicitly ruled out.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Loretta235_Bosco882_509f9a77-2a22-f98b-c539-9a44057efb51.json#Condition/b19cd9b8-ebdd-15f4-8361-8b3f26b6bb94"
+      ],
+      "missing_information": [
+        "Current insulin treatment status."
+      ],
+      "review_notes": "Diabetes SNOMED CT 44054006 supports type 2 diabetes, but absence of an insulin prescription is not proof of non-use."
+    },
+    {
+      "criterion_id": "NCT04783441_inc_004",
+      "criterion_type": "inclusion",
+      "criterion_text": "Access to home wi-fi connection",
+      "gold_decision": "UNKNOWN",
+      "reason": "Access to a home Wi-Fi connection is not established.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Confirmation of home Wi-Fi access."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT04783441_exc_001",
+      "criterion_type": "exclusion",
+      "criterion_text": "Person with Type 1 Diabetes",
+      "gold_decision": "UNKNOWN",
+      "reason": "The patient has documented type 2 diabetes (SNOMED CT 44054006), but there is no explicit affirmative evidence ruling out type 1 diabetes. Under the frozen evaluation rubric, positive T2D evidence alone does not establish absence of T1D.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Loretta235_Bosco882_509f9a77-2a22-f98b-c539-9a44057efb51.json#Condition/b19cd9b8-ebdd-15f4-8361-8b3f26b6bb94"
+      ],
+      "missing_information": [
+        "Affirmative clinical documentation establishing absence of type 1 diabetes."
+      ],
+      "review_notes": "POST-FREEZE PROTOCOL CONSISTENCY CORRECTION (2026-11-10, before model evaluation): changed NOT_MET to UNKNOWN. The previous decision incorrectly inferred absence of T1D from a documented T2D diagnosis. The T2D fact is retained as contextual evidence, not proof of T1D absence. No model predictions were used for this correction."
+    },
+    {
+      "criterion_id": "NCT04783441_exc_002",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patients taking hydroxyurea",
+      "gold_decision": "UNKNOWN",
+      "reason": "Current hydroxyurea treatment is neither confirmed nor explicitly ruled out.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Current hydroxyurea medication status."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT04783441_exc_003",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patient unable to wear the Dexcom G6 device at all times for any reason",
+      "gold_decision": "UNKNOWN",
+      "reason": "The record does not establish whether the patient is unable to wear the Dexcom G6 continuously.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Dexcom G6 device tolerance and continuous-wear assessment."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT04783441_exc_004",
+      "criterion_type": "exclusion",
+      "criterion_text": "Must be able to test blood glucose with meter 4x a day when on blinded CGM.",
+      "gold_decision": "UNKNOWN",
+      "reason": "The record does not establish whether the patient can perform four daily fingerstick glucose tests during blinded CGM.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Ability and willingness to test blood glucose four times daily."
+      ],
+      "review_notes": "Criterion polarity ambiguity: although classified as exclusion, the original text states a required ability. Gold labels assess the literal criterion without automatically reversing its meaning."
+    },
+    {
+      "criterion_id": "NCT04783441_exc_005",
+      "criterion_type": "exclusion",
+      "criterion_text": "Presence of clinically significant visual or cognitive impairment",
+      "gold_decision": "UNKNOWN",
+      "reason": "Clinically significant visual or cognitive impairment is neither confirmed nor explicitly excluded.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Visual function and cognitive function assessment."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT04783441_exc_006",
+      "criterion_type": "exclusion",
+      "criterion_text": "Illiterate",
+      "gold_decision": "NOT_MET",
+      "reason": "The patient has a confirmed record of receiving a high school equivalency certificate, providing affirmative evidence inconsistent with illiteracy.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Loretta235_Bosco882_509f9a77-2a22-f98b-c539-9a44057efb51.json#Condition/75b9719b-65fe-3175-4d84-ff7e63c553ac"
+      ],
+      "missing_information": [],
+      "review_notes": "The high school equivalency certificate is affirmative evidence against illiteracy, rather than an absence-based inference."
+    },
+    {
+      "criterion_id": "NCT04783441_exc_007",
+      "criterion_type": "exclusion",
+      "criterion_text": "Prisoners",
+      "gold_decision": "UNKNOWN",
+      "reason": "A criminal record and a positive historical incarceration screening are documented, but current prisoner status at the reference date is not established.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Loretta235_Bosco882_509f9a77-2a22-f98b-c539-9a44057efb51.json#Condition/37e12ac1-4b08-a5a4-0c8a-5320a7f807ab",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Loretta235_Bosco882_509f9a77-2a22-f98b-c539-9a44057efb51.json#Observation/4604be73-6794-dd82-2dc6-796720e0c718"
+      ],
+      "missing_information": [
+        "Current incarceration or prisoner status."
+      ],
+      "review_notes": "Past incarceration does not establish current prisoner status."
+    },
+    {
+      "criterion_id": "NCT04783441_exc_008",
+      "criterion_type": "exclusion",
+      "criterion_text": "Women who are pregnant, who plan to become pregnant during the course of the study, or who are breastfeeding",
+      "gold_decision": "UNKNOWN",
+      "reason": "A pregnancy was documented in 2012, but pregnancy, breastfeeding, and pregnancy plans during the study are not established at the reference date.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Loretta235_Bosco882_509f9a77-2a22-f98b-c539-9a44057efb51.json#Condition/f2630062-a4fc-69a0-fc68-1427d807986a"
+      ],
+      "missing_information": [
+        "Current pregnancy status.",
+        "Breastfeeding status.",
+        "Pregnancy plans during the study."
+      ],
+      "review_notes": "Historical pregnancy does not establish pregnancy or breastfeeding at the reference date, nor future pregnancy plans."
+    },
+    {
+      "criterion_id": "NCT04783441_exc_009",
+      "criterion_type": "exclusion",
+      "criterion_text": "Presence of clinically unstable cardiovascular disease",
+      "gold_decision": "UNKNOWN",
+      "reason": "Hypertension is documented and the latest blood pressure was 149/97 mmHg, but clinically unstable cardiovascular disease is not established.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Loretta235_Bosco882_509f9a77-2a22-f98b-c539-9a44057efb51.json#Condition/41f11156-c61f-d9f3-3cd8-589e4d663661",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Loretta235_Bosco882_509f9a77-2a22-f98b-c539-9a44057efb51.json#Observation/cecd6e63-b964-1b02-0dcc-fcd633ec16f5"
+      ],
+      "missing_information": [
+        "Clinical cardiovascular stability assessment."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT04783441_exc_010",
+      "criterion_type": "exclusion",
+      "criterion_text": "Active malignancy treatment",
+      "gold_decision": "UNKNOWN",
+      "reason": "Active malignancy treatment is neither confirmed nor explicitly ruled out.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Current malignancy diagnosis and treatment status."
+      ],
+      "review_notes": ""
+    }
+  ]
+}

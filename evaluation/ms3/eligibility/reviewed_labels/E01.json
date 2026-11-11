@@ -1,0 +1,297 @@
+{
+  "case_id": "E01",
+  "patient_id": "060e72d3-912e-55cd-0c92-5faa6cb7a6db",
+  "trial_id": "NCT03264352",
+  "split": "dev",
+  "review_status": "frozen",
+  "reviewer_qualification": "Non-clinician evidence-based reference assessment",
+  "gold_label_version": "E01-v1",
+  "frozen_on": "2026-11-08",
+  "review_method": "User-confirmed non-clinician reference labeling, AI-assisted source review",
+  "reference_date_policy": "Historical snapshot (2021-11-30); explicit time windows and measurement qualifiers respected",
+  "on_therapy_policy": "An active documented prescribed regimen may support an unwindowed 'on therapy' criterion without proving drug administration/adherence. Explicit use/administration windows require actual use evidence.",
+  "source_patient_facts_sha256_canonical": "a475506990dbe67e119c4724f48cc2560f7a3500434442a259fb2e1d01cb4355",
+  "source_trial_criteria_sha256_canonical": "ee94a84c650a52ac55f5b2eb124afb8c7acab2af40b4fb5855ef4cb8e5157890",
+  "labels": [
+    {
+      "criterion_id": "NCT03264352_inc_001",
+      "criterion_type": "inclusion",
+      "criterion_text": "irrespective of sex;",
+      "gold_decision": "MET",
+      "reason": "The inclusion statement imposes no sex restriction. The documented male patient falls within the unrestricted category.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Patient/060e72d3-912e-55cd-0c92-5faa6cb7a6db"
+      ],
+      "missing_information": [],
+      "review_notes": "Nonrestrictive criterion; evaluated MET under the agreed three-label rubric."
+    },
+    {
+      "criterion_id": "NCT03264352_inc_002",
+      "criterion_type": "inclusion",
+      "criterion_text": "aged between 45 and 79 years;",
+      "gold_decision": "MET",
+      "reason": "Patient age at reference date 2021-11-30 is 52 years, within the stated 45–79 year range.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Patient/060e72d3-912e-55cd-0c92-5faa6cb7a6db"
+      ],
+      "missing_information": [],
+      "review_notes": "Age explicitly calculated as of the frozen historical reference date."
+    },
+    {
+      "criterion_id": "NCT03264352_inc_003",
+      "criterion_type": "inclusion",
+      "criterion_text": "with office-measured seated BP 120-139 mm Hg systolic and below 90 mm Hg diastolic;",
+      "gold_decision": "UNKNOWN",
+      "reason": "The latest documented BP was 114/79 mmHg on 2021-08-13 (systolic below the requested 120–139 range). An older 126/74 mmHg reading was within the numeric range, but the record does not establish that either measurement is a seated office BP meeting the specified screening condition.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Observation/9326e766-eaaa-bba8-becd-1c1821ed5b37",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Observation/d03a5082-3c25-dfef-7289-d107c7533bb4"
+      ],
+      "missing_information": [
+        "A verified seated office BP measurement for the relevant screening assessment."
+      ],
+      "review_notes": "Do not cherry-pick the older in-range observation or treat generic BP as verified seated office BP."
+    },
+    {
+      "criterion_id": "NCT03264352_inc_004",
+      "criterion_type": "inclusion",
+      "criterion_text": "diagnosed of type 2 diabetes mellitus (T2DM), currently on diabetic therapy;",
+      "gold_decision": "MET",
+      "reason": "The patient has a documented type 2 diabetes-associated neuropathy diagnosis and an active insulin MedicationRequest dated 2021-08-13. Under the proposed operational definition, 'currently on diabetic therapy' refers to a documented active treatment regimen, not proven dose administration or adherence.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Condition/818fb907-ad8a-48a9-e1e1-1c681e3fd1e6",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#MedicationRequest/7956bd70-74e0-726c-bfc8-dfc7ad038212"
+      ],
+      "missing_information": [],
+      "review_notes": "PROPOSED policy clarification: an active medication order is sufficient for 'on therapy', but NOT for an explicit 'administration/use within 1 month' criterion. The MedicationRequest's derived status_at_reference_date is undetermined, so this interpretation must be approved before labels are frozen."
+    },
+    {
+      "criterion_id": "NCT03264352_inc_005",
+      "criterion_type": "inclusion",
+      "criterion_text": "informed consent provided and long-term follow-up possible",
+      "gold_decision": "UNKNOWN",
+      "reason": "The record does not establish trial-specific informed consent or the feasibility of long-term follow-up.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Documentation of trial informed consent and long-term follow-up feasibility."
+      ],
+      "review_notes": "Consent to ordinary medical care is not synonymous with research consent."
+    },
+    {
+      "criterion_id": "NCT03264352_exc_001",
+      "criterion_type": "exclusion",
+      "criterion_text": "poor control of blood glucose, HbA1c \\> 10.0%",
+      "gold_decision": "NOT_MET",
+      "reason": "The latest recorded HbA1c was 3.6% (2021-08-13), not above the exclusion threshold of 10.0%.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Observation/ef853916-559d-e5e7-6ebe-96d5a9a7bcb1"
+      ],
+      "missing_information": [],
+      "review_notes": "Historical numeric comparison; no explicit additional window in the trial criterion. Synthetic value accepted as recorded."
+    },
+    {
+      "criterion_id": "NCT03264352_exc_002",
+      "criterion_type": "exclusion",
+      "criterion_text": "administration of any antihypertensive medications within 1 month;",
+      "gold_decision": "UNKNOWN",
+      "reason": "Active lisinopril and amlodipine MedicationRequests were recorded on 2021-08-13, but there are no dated administration/use records documenting antihypertensive medication consumption within the month before 2021-11-30.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#MedicationRequest/71b6eefe-910d-9a04-e9a8-154eb88f54b1",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#MedicationRequest/ab0ab071-ec84-5098-4b87-19d4826e0464"
+      ],
+      "missing_information": [
+        "Confirmed administration/use of an antihypertensive drug in the required one-month window, or explicit evidence of no use."
+      ],
+      "review_notes": "MedicationRequest is an order, not evidence of administration; August order date is outside the one-month window."
+    },
+    {
+      "criterion_id": "NCT03264352_exc_003",
+      "criterion_type": "exclusion",
+      "criterion_text": "a history of hypoglycemic coma / seizure;",
+      "gold_decision": "UNKNOWN",
+      "reason": "No explicit documented history or negative-history assessment for hypoglycemic coma or seizure is available.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Documented presence or explicit absence of hypoglycemic coma/seizure history."
+      ],
+      "review_notes": "No matching Condition alone is not proof of absence."
+    },
+    {
+      "criterion_id": "NCT03264352_exc_004",
+      "criterion_type": "exclusion",
+      "criterion_text": "confirmed diagnosis of type 1 diabetes mellitus;",
+      "gold_decision": "UNKNOWN",
+      "reason": "A type 2 diabetes-related diagnosis is documented, but the chart does not explicitly establish the presence or absence of a separate confirmed type 1 diabetes diagnosis.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Condition/818fb907-ad8a-48a9-e1e1-1c681e3fd1e6"
+      ],
+      "missing_information": [
+        "An explicit verified type 1 diabetes diagnosis or documented negative history/assessment."
+      ],
+      "review_notes": "Do not infer absence of T1D only from documented T2D."
+    },
+    {
+      "criterion_id": "NCT03264352_exc_005",
+      "criterion_type": "exclusion",
+      "criterion_text": "alanine-aminotransferase (ALT) or aspartate-aminotransferase (AST) over three times the upper limit of normal;",
+      "gold_decision": "UNKNOWN",
+      "reason": "No ALT or AST laboratory measurements with a source-supported upper limit of normal were identified in the complete normalized facts.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "ALT/AST results and corresponding upper-limit-of-normal reference ranges."
+      ],
+      "review_notes": "Do not import external reference ranges to fill a missing source range."
+    },
+    {
+      "criterion_id": "NCT03264352_exc_006",
+      "criterion_type": "exclusion",
+      "criterion_text": "estimated glomerular filtration rate \\< 45 ml/min/1.73m2;",
+      "gold_decision": "NOT_MET",
+      "reason": "The latest recorded eGFR was 64.8 mL/min/1.73 m² (2021-08-13), not below the specified 45 mL/min/1.73 m² exclusion threshold.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Observation/ca098d2b-bc70-c7d7-9d9e-bb52a428c610"
+      ],
+      "missing_information": [],
+      "review_notes": "Historical numeric comparison; no additional time window in the criterion."
+    },
+    {
+      "criterion_id": "NCT03264352_exc_007",
+      "criterion_type": "exclusion",
+      "criterion_text": "a history of congestive heart failure with left ventricular ejection fraction \\< 40%;",
+      "gold_decision": "UNKNOWN",
+      "reason": "The record does not establish a history of congestive heart failure with left ventricular ejection fraction below 40%, nor an explicit comprehensive negative assessment.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Documented CHF history and LV ejection fraction, or an explicit negative history encompassing the criterion."
+      ],
+      "review_notes": "Other cardiovascular measurements cannot substitute for LVEF."
+    },
+    {
+      "criterion_id": "NCT03264352_exc_008",
+      "criterion_type": "exclusion",
+      "criterion_text": "coronary artery disease requiring RAS blockers for secondary prevention;",
+      "gold_decision": "UNKNOWN",
+      "reason": "A lisinopril prescription and hypertension diagnosis exist, but no evidence establishes coronary artery disease requiring RAS blockade for secondary prevention, nor explicitly rules it out.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#MedicationRequest/71b6eefe-910d-9a04-e9a8-154eb88f54b1",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Condition/89d4f018-d2e3-85f0-5e7f-75fcf38373af"
+      ],
+      "missing_information": [
+        "Coronary artery disease history and the indication for RAS-blocker therapy, or an explicit negative assessment."
+      ],
+      "review_notes": "A RAS-blocker prescription does not prove the CAD secondary-prevention indication."
+    },
+    {
+      "criterion_id": "NCT03264352_exc_009",
+      "criterion_type": "exclusion",
+      "criterion_text": "acute on-set of stroke within 6 months prior to randomization;",
+      "gold_decision": "UNKNOWN",
+      "reason": "No verified positive or negative history of acute stroke is documented, and the intended randomization date is unspecified.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Stroke history/date or explicit absence within six months and the relevant randomization date."
+      ],
+      "review_notes": "Reference date is not automatically the trial randomization date."
+    },
+    {
+      "criterion_id": "NCT03264352_exc_010",
+      "criterion_type": "exclusion",
+      "criterion_text": "a ratio of urinary albumin (in mg/L) to urinary creatinine (in g/L) (ACR) ≥ 300 mg/g;",
+      "gold_decision": "NOT_MET",
+      "reason": "The latest documented urinary albumin/creatinine ratio was 16.96 mg/g (2021-08-13), below the exclusion threshold of ≥300 mg/g.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Observation/e4e7ebd8-ad39-1f7e-7dbd-94d506a108ae"
+      ],
+      "missing_information": [],
+      "review_notes": "The source observation directly reports a mg/g ratio; no external conversion needed."
+    },
+    {
+      "criterion_id": "NCT03264352_exc_011",
+      "criterion_type": "exclusion",
+      "criterion_text": "known contraindications for the active study medications;",
+      "gold_decision": "UNKNOWN",
+      "reason": "Known contraindications cannot be assessed without identifying the active study medications and verifying patient-specific contraindications.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Identity of active study medications and patient-specific contraindication history/assessment."
+      ],
+      "review_notes": "Do not equate absent contraindication codes with documented absence."
+    },
+    {
+      "criterion_id": "NCT03264352_exc_012",
+      "criterion_type": "exclusion",
+      "criterion_text": "a history of psychological or mental disorder;",
+      "gold_decision": "UNKNOWN",
+      "reason": "Stress is documented as a finding, but this does not itself establish a diagnosed psychological/mental disorder. No explicit comprehensive negative psychiatric history is supplied.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Condition/ce3a0dd1-bfa3-df8e-4b92-e768b0ebcfaf"
+      ],
+      "missing_information": [
+        "A qualifying psychiatric diagnosis/history or documented negative history/assessment."
+      ],
+      "review_notes": "Psychological stress and screening scores should not be automatically converted into a psychiatric diagnosis."
+    },
+    {
+      "criterion_id": "NCT03264352_exc_013",
+      "criterion_type": "exclusion",
+      "criterion_text": "pregnancy or currently planning to have babies or lactation;",
+      "gold_decision": "UNKNOWN",
+      "reason": "The recorded administrative sex is male, but the record does not comprehensively establish the status of all alternatives, especially whether the patient is currently planning to have a baby.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Patient/060e72d3-912e-55cd-0c92-5faa6cb7a6db"
+      ],
+      "missing_information": [
+        "Relevant pregnancy/lactation status if applicable and explicit reproductive-planning information."
+      ],
+      "review_notes": "This is an OR criterion; do not infer the planning component from male administrative sex."
+    },
+    {
+      "criterion_id": "NCT03264352_exc_014",
+      "criterion_type": "exclusion",
+      "criterion_text": "severe diseases such as severe heart diseases;",
+      "gold_decision": "UNKNOWN",
+      "reason": "The phrase severe diseases, such as severe heart diseases, requires a clinical severity and applicability judgment not established by the available structured facts.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Clinical evaluation of severe disease or explicit absence of relevant severe illness."
+      ],
+      "review_notes": "Do not infer severe disease from unrelated diagnoses alone."
+    },
+    {
+      "criterion_id": "NCT03264352_exc_015",
+      "criterion_type": "exclusion",
+      "criterion_text": "an expected residual life span less than 3 years;",
+      "gold_decision": "UNKNOWN",
+      "reason": "No documented prognosis supports or rules out an expected remaining lifespan shorter than three years.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "An explicit clinical prognosis/expected survival assessment."
+      ],
+      "review_notes": "Absence of a death date is not a life-expectancy estimate."
+    },
+    {
+      "criterion_id": "NCT03264352_exc_016",
+      "criterion_type": "exclusion",
+      "criterion_text": "a malignancy that clinical investigators consider as unsuitable to participate;",
+      "gold_decision": "UNKNOWN",
+      "reason": "No investigator assessment establishes whether any malignancy makes this patient unsuitable for study participation; lack of a cancer code does not establish the converse.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Malignancy status/history and investigator-specific suitability assessment."
+      ],
+      "review_notes": "Investigator judgment cannot be inferred from records alone."
+    },
+    {
+      "criterion_id": "NCT03264352_exc_017",
+      "criterion_type": "exclusion",
+      "criterion_text": "currently participating in another clinical trial.",
+      "gold_decision": "UNKNOWN",
+      "reason": "No explicit clinical-trial participation status as of the reference date is documented.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Documented current participation in another trial or verified absence."
+      ],
+      "review_notes": "No trial-related resource is not proof of nonparticipation."
+    }
+  ]
+}

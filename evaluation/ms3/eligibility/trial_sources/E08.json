@@ -1,0 +1,161 @@
+{
+  "trial": {
+    "trial_id": "NCT04783441",
+    "brief_title": "Use of CGM in Kidney Transplant Recipients",
+    "official_title": "Continuous Glucose Monitoring (CGM) to Improve Glycemic Control in Kidney Transplant Recipients",
+    "overall_status": "RECRUITING",
+    "conditions": [
+      "Kidney Transplant; Complications",
+      "Diabetes Mellitus, Type 2",
+      "Insulin Dependent Diabetes"
+    ],
+    "keywords": [],
+    "mesh_terms": [
+      "Diabetes Mellitus, Type 2",
+      "Diabetes Mellitus, Type 1"
+    ],
+    "study_type": "INTERVENTIONAL",
+    "phases": [
+      "NA"
+    ],
+    "brief_summary": "The investigators want to study the impact CGM (continuous glucose monitoring) has on patients glycemic control as determined by time in range (TIR 70-180 mg/dL) in the Diabetic Kidney Transplant population.",
+    "minimum_age": "18 Years",
+    "maximum_age": null,
+    "sex": "ALL",
+    "healthy_volunteers": false,
+    "eligibility_text": "Inclusion Criteria:\n\n1. Age 18 or above\n2. Received a kidney transplant within the past year with functioning kidney (eGFR \\> 30 mL/min\n3. Person with Type 2 Diabetes and on insulin\n4. Access to home wi-fi connection\n\nExclusion Criteria:\n\n1. Person with Type 1 Diabetes\n2. Patients taking hydroxyurea\n3. Patient unable to wear the Dexcom G6 device at all times for any reason\n4. Must be able to test blood glucose with meter 4x a day when on blinded CGM.\n5. Presence of clinically significant visual or cognitive impairment\n6. Illiterate\n7. Prisoners\n8. Women who are pregnant, who plan to become pregnant during the course of the study, or who are breastfeeding\n9. Presence of clinically unstable cardiovascular disease\n10. Active malignancy treatment",
+    "locations": [
+      {
+        "facility": "UC Davis Health",
+        "status": "RECRUITING",
+        "city": "Sacramento",
+        "state": "California",
+        "zip": "95817",
+        "country": "United States",
+        "latitude": 38.58157,
+        "longitude": -121.4944
+      }
+    ],
+    "enrollment_count": 80,
+    "enrollment_type": "ESTIMATED",
+    "start_date": "2021-06-29",
+    "completion_date": "2026-12-31",
+    "last_update_date": "2026-01-29",
+    "source": "ClinicalTrials.gov API v2",
+    "snapshot_date": "2026-10-11"
+  },
+  "criteria": [
+    {
+      "trial_id": "NCT04783441",
+      "criterion_id": "NCT04783441_inc_001",
+      "criterion_type": "inclusion",
+      "criterion_text": "Age 18 or above",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04783441",
+      "criterion_id": "NCT04783441_inc_002",
+      "criterion_type": "inclusion",
+      "criterion_text": "Received a kidney transplant within the past year with functioning kidney (eGFR \\> 30 mL/min",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04783441",
+      "criterion_id": "NCT04783441_inc_003",
+      "criterion_type": "inclusion",
+      "criterion_text": "Person with Type 2 Diabetes and on insulin",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04783441",
+      "criterion_id": "NCT04783441_inc_004",
+      "criterion_type": "inclusion",
+      "criterion_text": "Access to home wi-fi connection",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04783441",
+      "criterion_id": "NCT04783441_exc_001",
+      "criterion_type": "exclusion",
+      "criterion_text": "Person with Type 1 Diabetes",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04783441",
+      "criterion_id": "NCT04783441_exc_002",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patients taking hydroxyurea",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04783441",
+      "criterion_id": "NCT04783441_exc_003",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patient unable to wear the Dexcom G6 device at all times for any reason",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04783441",
+      "criterion_id": "NCT04783441_exc_004",
+      "criterion_type": "exclusion",
+      "criterion_text": "Must be able to test blood glucose with meter 4x a day when on blinded CGM.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04783441",
+      "criterion_id": "NCT04783441_exc_005",
+      "criterion_type": "exclusion",
+      "criterion_text": "Presence of clinically significant visual or cognitive impairment",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04783441",
+      "criterion_id": "NCT04783441_exc_006",
+      "criterion_type": "exclusion",
+      "criterion_text": "Illiterate",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04783441",
+      "criterion_id": "NCT04783441_exc_007",
+      "criterion_type": "exclusion",
+      "criterion_text": "Prisoners",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04783441",
+      "criterion_id": "NCT04783441_exc_008",
+      "criterion_type": "exclusion",
+      "criterion_text": "Women who are pregnant, who plan to become pregnant during the course of the study, or who are breastfeeding",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04783441",
+      "criterion_id": "NCT04783441_exc_009",
+      "criterion_type": "exclusion",
+      "criterion_text": "Presence of clinically unstable cardiovascular disease",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04783441",
+      "criterion_id": "NCT04783441_exc_010",
+      "criterion_type": "exclusion",
+      "criterion_text": "Active malignancy treatment",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    }
+  ]
+}

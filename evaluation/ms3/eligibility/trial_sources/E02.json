@@ -1,0 +1,112 @@
+{
+  "trial": {
+    "trial_id": "NCT05028140",
+    "brief_title": "Efficacy and Safety of Piemonte Association in the Treatment of Type II Diabetes Mellitus",
+    "official_title": "National, Multicenter, Randomized, Double-blind, Triple-dummy, Phase III Clinical Trial to Evaluate the Efficacy and Safety of Piemonte Association in the Treatment of Type II Diabetes Mellitus",
+    "overall_status": "RECRUITING",
+    "conditions": [
+      "Type II Diabetes"
+    ],
+    "keywords": [
+      "Type II diabetes mellitus"
+    ],
+    "mesh_terms": [
+      "Diabetes Mellitus, Type 2"
+    ],
+    "study_type": "INTERVENTIONAL",
+    "phases": [
+      "PHASE3"
+    ],
+    "brief_summary": "The purpose of this study is to evaluate the efficacy and safety of Piemonte association in the treatment of type 2 diabetes mellitus",
+    "minimum_age": "18 Years",
+    "maximum_age": "85 Years",
+    "sex": "ALL",
+    "healthy_volunteers": false,
+    "eligibility_text": "Inclusion Criteria:\n\n* Ability to confirm voluntary participation and agree to all trial purposes by signing and dating the consent form;\n* Diagnosis of type II diabetes mellitus, and who did not reach the therapeutic goal of HbA1c with previous dietary, physical exercise, and previous therapies at stable doses within 3 months.\n\nExclusion Criteria:\n\n* Any clinical and laboratory findings that, in the judgment of the investigator, may interfere with the safety of participants;\n* History of alcohol abuse or illicit drug use;\n* Participation in a clinical trial in the year prior to this study;\n* Pregnancy or risk of pregnacy and lactating participants;\n* Known hypersensitivity to any of the formula compounds;\n* Type 1 diabetes.",
+    "locations": [
+      {
+        "facility": "EMS",
+        "status": "RECRUITING",
+        "city": "Hortolândia",
+        "state": "São Paulo",
+        "zip": null,
+        "country": "Brazil",
+        "latitude": -22.85833,
+        "longitude": -47.22
+      }
+    ],
+    "enrollment_count": 480,
+    "enrollment_type": "ESTIMATED",
+    "start_date": "2024-10-08",
+    "completion_date": "2027-09",
+    "last_update_date": "2025-12-08",
+    "source": "ClinicalTrials.gov API v2",
+    "snapshot_date": "2026-10-11"
+  },
+  "criteria": [
+    {
+      "trial_id": "NCT05028140",
+      "criterion_id": "NCT05028140_inc_001",
+      "criterion_type": "inclusion",
+      "criterion_text": "Ability to confirm voluntary participation and agree to all trial purposes by signing and dating the consent form;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT05028140",
+      "criterion_id": "NCT05028140_inc_002",
+      "criterion_type": "inclusion",
+      "criterion_text": "Diagnosis of type II diabetes mellitus, and who did not reach the therapeutic goal of HbA1c with previous dietary, physical exercise, and previous therapies at stable doses within 3 months.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT05028140",
+      "criterion_id": "NCT05028140_exc_001",
+      "criterion_type": "exclusion",
+      "criterion_text": "Any clinical and laboratory findings that, in the judgment of the investigator, may interfere with the safety of participants;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT05028140",
+      "criterion_id": "NCT05028140_exc_002",
+      "criterion_type": "exclusion",
+      "criterion_text": "History of alcohol abuse or illicit drug use;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT05028140",
+      "criterion_id": "NCT05028140_exc_003",
+      "criterion_type": "exclusion",
+      "criterion_text": "Participation in a clinical trial in the year prior to this study;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT05028140",
+      "criterion_id": "NCT05028140_exc_004",
+      "criterion_type": "exclusion",
+      "criterion_text": "Pregnancy or risk of pregnacy and lactating participants;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT05028140",
+      "criterion_id": "NCT05028140_exc_005",
+      "criterion_type": "exclusion",
+      "criterion_text": "Known hypersensitivity to any of the formula compounds;",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT05028140",
+      "criterion_id": "NCT05028140_exc_006",
+      "criterion_type": "exclusion",
+      "criterion_text": "Type 1 diabetes.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    }
+  ]
+}

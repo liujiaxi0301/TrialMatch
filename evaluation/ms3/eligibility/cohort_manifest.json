@@ -1,0 +1,18 @@
+{
+  "benchmark": "TrialMatch MS3 Eligibility Evaluation",
+  "selection_type": "purposive_exploratory",
+  "selection_basis": "previously reviewed topical relevance grade 2",
+  "patient_trial_pairs": 8,
+  "evaluation_cases": 8,
+  "criterion_count": 115,
+  "inclusion_count": 32,
+  "exclusion_count": 83,
+  "source_sha256": {
+    "trials": "1678d523a1246319d4ae5ba8d2dd5d4ab1359746ad71fb7feee67b20bb07edd6",
+    "criteria": "f7701a9979eb105219407c553703752879f6a2c55fb8736240c8e7bddc96de59",
+    "patients": "33ac165b9be7c564207325ae951d40b9cfdc3b72f8fb2f56e3e58193894331a1"
+  },
+  "retrieval_queries_sha256": "1fa5bf9163cb065b7c000f04a13ae32737c849b2c288d0ca2680ffd1f74c8a06",
+  "retrieval_labels_sha256": "97554ab89eb71c31f2598783be6aa0019fb79e5526abfd3c60f5c4c4fe0edbc1",
+  "eligibility_predictions_used_for_selection": false
+}
