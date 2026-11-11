@@ -145,7 +145,7 @@ Design requirements:
 **Acceptance criteria**
 
 - [ ] Validation loss decreases across epochs; the curve is visible in W&B.
-- [ ] Validation Recall@10 after training exceeds the frozen checkpoint's score on the
+- [x] Validation Recall@10 after training exceeds the frozen checkpoint's score on the
       same validation pairs, measured by the same code path. If it does not, report
       that honestly and keep the run — a negative result with a correct method is a
       valid MS3 deliverable; a fabricated improvement is not.
@@ -159,6 +159,15 @@ Design requirements:
 pools through `masked_mean_l2`, now the provider's single pooling definition. A local
 200-pair, one-epoch smoke run on MPS completed and wrote a manifest (W&B offline). The
 first two boxes stay open until the Vertex run puts a curve in W&B.
+
+**Status 2026-11-10, after the Vertex run.** Recall@10 on the internal validation pairs
+rose from 0.249 (frozen) to 0.802 after three epochs, through the same code path. The
+first box stays open on purpose: validation loss fell from 3.348 to 0.964 and 0.948 but
+rose to 0.999 in epoch 3, so it does not decrease across every epoch. The saved
+checkpoint is the epoch-3 model. Training now starts with a numerics check that compares
+accelerator embeddings with CPU embeddings of the same weights, because the first Vertex
+attempt returned non-finite embeddings on CUDA with the `sdpa` attention path under the
+base image's PyTorch 2.4; the run used the `eager` path, which matched CPU to 2.4e-7.
 
 ### B2 — `docker/trainer/`: the training image
 
@@ -209,12 +218,21 @@ commit, and the full job log.
 
 **Acceptance criteria**
 
-- [ ] A Vertex job reached `JOB_STATE_SUCCEEDED` and its resource name is recorded.
-- [ ] A W&B run exists with the loss curve and the config, and its URL is in the manifest.
-- [ ] The checkpoint is in GCS and its recorded SHA256 matches what is there.
+- [x] A Vertex job reached `JOB_STATE_SUCCEEDED` and its resource name is recorded.
+- [x] A W&B run exists with the loss curve and the config, and its URL is in the manifest.
+- [x] The checkpoint is in GCS and its recorded SHA256 matches what is there.
 - [ ] Re-running the documented command with the same inputs reproduces the manifest's
       configuration — not necessarily identical weights, but a stated seed and versions.
 - [ ] A screenshot of the W&B run is committed, as MS3 requires visible evidence.
+
+**Status 2026-11-10.** Job `projects/15733748057/locations/us-east1/customJobs/8919501313956380672`
+(`train-20261110-t4-r3`) succeeded on one T4 in 889 s of training. Evidence is in
+`docs/ms3/evidence/module-b/2026-11-10/`, including the two failed attempts that preceded
+it. Two things differ from the plan above: the batch size is 8, not 16, because the
+`eager` attention path ran out of memory on the T4 at 16; and the job was submitted with
+a team member's user credentials rather than a service-account key. The reproduction box
+is open because the command has not been run a second time, and the screenshot box is
+open until the image is added.
 
 ### B4 — Pipeline component
 

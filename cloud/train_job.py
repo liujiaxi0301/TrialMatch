@@ -19,6 +19,7 @@ Without GPU quota the same job runs on CPU: pass `--accelerator-count 0` with a 
 import argparse
 import hashlib
 import json
+import os
 import re
 import sys
 import time
@@ -166,6 +167,8 @@ def parse_args(argv=None):
 
 def main(argv=None):
     args = parse_args(argv)
+    # User credentials carry no project, and the storage client needs one.
+    os.environ.setdefault("GOOGLE_CLOUD_PROJECT", args.project)
     commit = code_commit()
     output = f"gs://{args.bucket}/training/{args.run_id}"
     pools = worker_pool(args, output, commit)
