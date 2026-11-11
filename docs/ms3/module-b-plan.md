@@ -221,7 +221,7 @@ commit, and the full job log.
 - [x] A Vertex job reached `JOB_STATE_SUCCEEDED` and its resource name is recorded.
 - [x] A W&B run exists with the loss curve and the config, and its URL is in the manifest.
 - [x] The checkpoint is in GCS and its recorded SHA256 matches what is there.
-- [ ] Re-running the documented command with the same inputs reproduces the manifest's
+- [x] Re-running the documented command with the same inputs reproduces the manifest's
       configuration — not necessarily identical weights, but a stated seed and versions.
 - [x] A screenshot of the W&B run is committed, as MS3 requires visible evidence.
 
@@ -230,8 +230,9 @@ commit, and the full job log.
 `docs/ms3/evidence/module-b/2026-11-10/`, including the two failed attempts that preceded
 it. Two things differ from the plan above: the batch size is 8, not 16, because the
 `eager` attention path ran out of memory on the T4 at 16; and the job was submitted with
-a team member's user credentials rather than a service-account key. The W&B loss charts are in the evidence directory. The reproduction box
-is open because the command has not been run a second time.
+a team member's user credentials rather than a service-account key. The W&B loss charts are in the evidence directory. A second run of the
+same command (`reproduction/`) reproduced the configuration, every validation metric and
+the checkpoint SHA256.
 
 ### B4 — Pipeline component
 

@@ -69,3 +69,10 @@ python -m cloud.train_job \
   --run-id <new-run-id> --batch-size 8 --evidence <directory>
 ```
 
+The command was run a second time on 2026-11-11 with the same image, pair files and seed
+(`reproduction/`, job `projects/15733748057/locations/us-east1/customJobs/7098921164591857664`,
+W&B run https://forge.coreweave.com/wandb/jennyyang-harvard-university/trialmatch-ms3/runs/9bwyr4mr).
+Its manifest differs from the first only in the run name and output path. Every validation
+metric is equal to the digits recorded, and the checkpoint has the same SHA256,
+`7dcec7d9c8ca3697ee60091346723130ebb37263254e81a69a0aff038dbc931c`. That is one repeat on
+the same GPU type and image; identical weights on other hardware are not implied.
