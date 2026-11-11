@@ -249,3 +249,208 @@ gcloud run services update trialmatch --scaling=auto --region=us-east1 --project
 ```
 
 If the current month is still over $5, the next budget notification stops it again.
+
+## Encoder Training (MS3)
+
+**New since MS2.** MS2 retrieved with a frozen encoder. MS3 adds contrastive fine-tuning
+of that encoder as a serverless Vertex AI job, tracked in Weights & Biases. Everything in
+this section is new: `cloud/train_pairs.py`, `cloud/train_pairs_llm.py`, `cloud/train.py`,
+`cloud/train_job.py`, `docker/trainer/`, an optional fourth pipeline task in
+`cloud/pipeline.py`, a `trainer` step in `cloud/build.yaml`, and checkpoint support in
+`services/rag_workflow/embedding_providers.py`. The plan and its acceptance checklist are
+in [docs/ms3/module-b-plan.md](docs/ms3/module-b-plan.md).
+
+The fine-tuned encoder is not deployed. The app still serves the MS2 retrieval path. The
+checkpoint was used only to produce extra benchmark rankings for the evaluation owner.
+
+### What was trained
+
+- Model: `thomas-sounack/BioClinical-ModernBERT-base` at revision
+  `c3648aa87af95837c809e6f0c5f85d08160db437`. Pooling is the attention-mask mean followed
+  by L2 normalization, the same function the serving provider uses; a test asserts the
+  two agree.
+- Objective: InfoNCE at temperature 0.05, over in-batch positives and up to four mined
+  hard negatives per pair.
+- Data: 5,137 training and 476 validation query/criterion pairs. 2,281 pairs have
+  templated queries built from trial metadata; 3,332 have queries written by
+  `gemini-3.1-flash-lite` from a criterion.
+- Held-out data: the 50 trials in `services/rag_workflow/examples/demo_manifest.json` are
+  the retrieval benchmark. The trainer stops before loading a model if any of them, or
+  any trial present in both splits, appears in the pairs.
+
+### Result of the run
+
+Job `projects/15733748057/locations/us-east1/customJobs/8919501313956380672` ran on one
+`n1-standard-4` with one T4 in `us-east1` and trained for 889 seconds.
+
+| | val loss | Recall@10 | MRR@10 |
+| --- | ---: | ---: | ---: |
+| frozen encoder | 3.348 | 0.249 | 0.147 |
+| epoch 1 | 0.964 | 0.782 | 0.477 |
+| epoch 2 | 0.948 | 0.802 | 0.514 |
+| epoch 3 | 0.999 | 0.802 | 0.488 |
+
+These numbers are on 386 validation queries against 1,046 passages from training-side
+trials. They are not benchmark scores. Validation loss rises in epoch 3 and MRR@10 falls
+with it, so the model overfits slightly by the end; the saved checkpoint is the epoch-3
+model, not the best one.
+
+- W&B run: <https://forge.coreweave.com/wandb/jennyyang-harvard-university/trialmatch-ms3/runs/26xhkrre>.
+  `train/loss` is logged every step, `val/loss`, `val/recall@10` and `val/mrr@10` at
+  step 0 (frozen encoder) and after each epoch. The run config holds every hyperparameter,
+  the pair-file checksums, the code commit and the image digest.
+- Checkpoint: `gs://trialmatch-ac215-yixiao-ms3/training/train-20261110-t4-r3/model`,
+  SHA256 `7dcec7d9c8ca3697ee60091346723130ebb37263254e81a69a0aff038dbc931c`. The digest
+  covers the weights, config and tokenizer files together and is recorded in
+  `training_manifest.json` next to the checkpoint.
+- Evidence: [docs/ms3/evidence/module-b/2026-11-10/](docs/ms3/evidence/module-b/2026-11-10/README.md)
+  has the job record, the manifest, the full job log and the two failed attempts that
+  came first.
+
+![Training loss per step](docs/ms3/evidence/module-b/2026-11-10/wandb-train-loss.png)
+
+![Validation loss at the frozen baseline and after each epoch](docs/ms3/evidence/module-b/2026-11-10/wandb-val-loss.png)
+
+### Regenerate the training pairs
+
+```bash
+uv run --locked python -m cloud.train_pairs
+```
+
+```bash
+uv run --locked --group embeddings --env-file services/rag_workflow/.env \
+  python -m cloud.train_pairs_llm --limit 4000
+```
+
+These write `artifacts/training/pairs.jsonl` and `artifacts/training/pairs_llm.jsonl`.
+The second needs Gemini credentials the first time; responses are cached on disk, so a
+repeat makes no request.
+
+The files the run trained on are stored at
+`gs://trialmatch-ac215-yixiao-ms3/training/pairs/20261110/` and their SHA256 values are in
+the training manifest. Use those copies to reproduce the run. Regenerating today gives
+the same queries, positives and splits, but hard negatives differ in 3 of 2,281 rows and
+188 of 3,332 rows: negative mining broke score ties by hash order when those files were
+made, and now breaks them by a fixed order.
+
+### Try the trainer locally
+
+A small run on a laptop, without W&B credentials:
+
+```bash
+export HF_HOME="$PWD/artifacts/embedding_eval/huggingface"
+WANDB_MODE=offline uv run --locked --group training python -m cloud.train \
+  --pairs artifacts/training/pairs.jsonl --output artifacts/training/smoke \
+  --limit 48 --epochs 1 --batch-size 8 --max-negatives 2 --max-length 128
+```
+
+```bash
+uv run --locked --group training python -m unittest cloud.tests.test_train cloud.tests.test_train_job
+```
+
+### Reproduce the Vertex AI run
+
+Experiment tracking setup, once per project: create the Secret Manager secret
+`wandb-api-key` holding a W&B API key, and grant
+`trialmatch-pipeline@trialmatch-ac215-yixiao.iam.gserviceaccount.com` the Secret Manager
+Secret Accessor role on it. The job reads the key at run time. It is never in Git, the
+image, the job spec or the logs. Without a readable key the run is tracked offline
+instead of failing.
+
+Sign in as in Cloud Setup, then build the trainer image:
+
+```bash
+gcloud builds submit . --project=trialmatch-ac215-yixiao --region=us-east1 \
+  --config=docker/trainer/cloudbuild.yaml \
+  --substitutions="_REGISTRY=us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch,_VERSION=$(git rev-parse HEAD)" \
+  --gcs-source-staging-dir="gs://trialmatch-ac215-yixiao-ms3/builds/source" \
+  --service-account="projects/trialmatch-ac215-yixiao/serviceAccounts/trialmatch-build@trialmatch-ac215-yixiao.iam.gserviceaccount.com" \
+  --suppress-logs --format=json > trainer_build.json
+```
+
+The image digest is `results.images[0].digest` in `trainer_build.json`. The image is
+based on Vertex's prebuilt `pytorch-gpu.2-4.py310` container and takes about 30 minutes
+to build.
+
+Submit the job with the image pinned by digest. This is the command of our second run;
+the first differed only in its run ID and evidence directory:
+
+```bash
+export GOOGLE_CLOUD_QUOTA_PROJECT=trialmatch-ac215-yixiao
+uv run --project docker/workflow --locked python -m cloud.train_job \
+  --image us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/trainer@sha256:97c872638eabbf681d020d6bb1c1f534a707e3798b997d57ad435d7bd964fea9 \
+  --pairs gs://trialmatch-ac215-yixiao-ms3/training/pairs/20261110/pairs.jsonl gs://trialmatch-ac215-yixiao-ms3/training/pairs/20261110/pairs_llm.jsonl \
+  --run-id train-20261110-t4-repro --batch-size 8 \
+  --evidence docs/ms3/evidence/module-b/2026-11-10/reproduction
+```
+
+Vertex AI job configuration, all defaults of `cloud/train_job.py` except the batch size:
+
+| Setting | Value |
+| --- | --- |
+| Machine | `n1-standard-4`, 1 x `NVIDIA_TESLA_T4`, region `us-east1` |
+| Service account | `trialmatch-pipeline@trialmatch-ac215-yixiao.iam.gserviceaccount.com` |
+| Time limit | 5,400 seconds, after which Vertex cancels the job |
+| Training | 3 epochs, batch size 8, 4 negatives per pair, max length 256, learning rate 2e-5, seed 0, fp16 |
+| Output | `gs://trialmatch-ac215-yixiao-ms3/training/<run-id>/` |
+
+The command waits for the job, recomputes the checkpoint SHA256 from GCS against the
+manifest, writes `job.json`, `training_manifest.json` and `job.log` into the evidence
+directory, and exits non-zero unless the job succeeded and the digest matches. Add
+`--dry-run` to print the job spec without submitting. A run ID can be used once.
+
+We ran it twice. The second run (`reproduction/` in the evidence directory) had the same
+configuration, the same validation metrics at every epoch and the same checkpoint SHA256
+as the first. That is one repeat on the same GPU type and image.
+
+Two things the job does that are worth knowing:
+
+- Before training it embeds one padded batch on CPU and on the GPU and compares them. On
+  this image's PyTorch 2.4 the default `sdpa` attention path returned non-finite
+  embeddings on CUDA, so the job uses the `eager` path, which matched CPU to 2.4e-7. We
+  did not find the root cause of the `sdpa` failure.
+- Batch size 16 runs out of memory on a T4 with the `eager` path, which is why the run
+  uses 8.
+
+Without GPU quota the same job runs on CPU with `--accelerator-count 0` and a larger
+`--machine-type`. The job spec for that was checked with `--dry-run` only; no CPU job
+has been run.
+
+### Rankings from the fine-tuned encoder
+
+```bash
+export HF_HOME="$PWD/artifacts/embedding_eval/huggingface"
+export GOOGLE_CLOUD_PROJECT=trialmatch-ac215-yixiao
+uv run --locked --group embeddings python -m evaluation.ms3.run_retrieval \
+  --encoders bioclinical \
+  --finetuned-manifest docs/ms3/evidence/module-b/2026-11-10/training_manifest.json
+```
+
+This downloads the checkpoint, verifies it against the manifest's SHA256, indexes the 50
+benchmark trials into a collection of its own, and writes
+`evaluation/ms3/retrieval_runs.jsonl` with four `finetuned_*` methods beside the six
+earlier ones. It produces rankings only. Scoring belongs to the evaluation owner; see
+[the handoff](evaluation/ms3/runs_handoff.md).
+
+### In the pipeline
+
+`cloud/pipeline.py` adds a fourth task, `train-encoder`, after `validate-data` when it is
+given `--trainer-image` with a digest. It trains on the templated pairs rebuilt from the
+validated release. The pipeline compiles with the task and its tests pass, but it has
+not been run on Vertex AI, and a failed training task would fail the whole pipeline run.
+
+### Limitations
+
+- Queries are templated from trial metadata or written by an LLM. There are no human
+  relevance labels, and no clinician reviewed any pair.
+- The data is small: 5,613 pairs from one disease area.
+- About 72% of the LLM-written pairs have an exclusion criterion as the positive, and
+  some of those queries describe having the condition the criterion excludes. The model
+  is trained to match topic, not eligibility direction.
+- Hard negatives are mined by lexical overlap, so they are weak. Templated queries share
+  topic words with their positives by construction.
+- The validation pairs come from the same generators as the training pairs. The Recall@10
+  gain shows the encoder learned this task. It does not show better retrieval for real
+  patient queries; the benchmark has not been scored with this encoder.
+- No early stopping and no best-checkpoint selection: the saved model is the last epoch.
+- Patients are synthetic. Nothing in this project is clinically validated.

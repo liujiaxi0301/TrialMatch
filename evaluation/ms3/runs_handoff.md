@@ -112,13 +112,14 @@ With the fine-tuned rows (the checkpoint is downloaded and verified against the 
 
 ```bash
 export HF_HOME="$PWD/artifacts/embedding_eval/huggingface"
+export GOOGLE_CLOUD_PROJECT=trialmatch-ac215-yixiao
 uv run --locked --group embeddings python -m evaluation.ms3.run_retrieval \
   --encoders bioclinical \
   --finetuned-manifest docs/ms3/evidence/module-b/2026-11-10/training_manifest.json
 ```
 
 The committed file was produced with `--finetuned-checkpoint` pointing at a local copy of
-the same checkpoint, digest-checked; the form above, which downloads it, has not been run.
+the same checkpoint, digest-checked. Re-running the form above reproduced the same 80 rows.
 
 Requires the prepared BioClinical snapshot under `artifacts/embedding_eval/`.
 Add `--encoders gemini bioclinical` with valid credentials for the Gemini rows.

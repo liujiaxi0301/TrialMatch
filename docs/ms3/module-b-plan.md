@@ -284,10 +284,18 @@ what the known limitations are.
 
 **Acceptance criteria**
 
-- [ ] Changes relative to MS2 are explicitly marked.
-- [ ] Every command in the section has been run as written.
-- [ ] Limitations are stated: corpus-derived queries rather than human relevance labels,
+- [x] Changes relative to MS2 are explicitly marked.
+- [x] Every command in the section has been run as written.
+- [x] Limitations are stated: corpus-derived queries rather than human relevance labels,
       2,281 pairs, lexical topic alignment, synthetic patients, no clinical validation.
+
+**Status 2026-11-11.** The README has an "Encoder Training (MS3)" section. Every command
+in it was run from a clean worktree, with two qualifications. The Vertex jobs were
+submitted with the workflow environment's interpreter directly; the `uv run --project
+docker/workflow` form in the README was run with `--dry-run` only. The run ID in the
+README command has been used, so a repeat needs a new one. Regenerating the pairs showed
+that negative mining broke ties by hash order; that is now fixed, and the README states
+how far regenerated files differ from the ones the run trained on.
 
 ---
 
