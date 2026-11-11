@@ -1,0 +1,8 @@
+{"query_id": "Q01", "method": "bm25_v1", "ranked_trial_ids": ["NCT04501406", "NCT04670666", "NCT04024631", "NCT04442451", "NCT04326192"]}
+{"query_id": "Q02", "method": "bm25_v1", "ranked_trial_ids": ["NCT04284943", "NCT04670666", "NCT04442451", "NCT04442334", "NCT04874012"]}
+{"query_id": "Q03", "method": "bm25_v1", "ranked_trial_ids": ["NCT05015283", "NCT04670666", "NCT04874012", "NCT04442334", "NCT04284943"]}
+{"query_id": "Q04", "method": "bm25_v1", "ranked_trial_ids": ["NCT04670666", "NCT04501406", "NCT04442451", "NCT04284943", "NCT04024631"]}
+{"query_id": "Q05", "method": "bm25_v1", "ranked_trial_ids": ["NCT04670666", "NCT04869098", "NCT04442334", "NCT04501406", "NCT04284943"]}
+{"query_id": "Q06", "method": "bm25_v1", "ranked_trial_ids": ["NCT04501406", "NCT05015283", "NCT04670666", "NCT04442451", "NCT04442334"]}
+{"query_id": "Q07", "method": "bm25_v1", "ranked_trial_ids": ["NCT04501406", "NCT04670666", "NCT04442451", "NCT05015283", "NCT03323216"]}
+{"query_id": "Q08", "method": "bm25_v1", "ranked_trial_ids": ["NCT04670666", "NCT04501406", "NCT04869098", "NCT04284943", "NCT04783441"]}

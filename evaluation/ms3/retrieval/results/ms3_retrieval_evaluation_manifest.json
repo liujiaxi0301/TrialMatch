@@ -1,0 +1,36 @@
+{
+  "evaluation": "TrialMatch MS3 retrieval",
+  "reporting_queries": [
+    "Q03",
+    "Q04",
+    "Q05",
+    "Q06",
+    "Q07",
+    "Q08"
+  ],
+  "development_queries": [
+    "Q01",
+    "Q02"
+  ],
+  "gold_labels": 182,
+  "source_groups": {
+    "Jenny handoff": 10,
+    "Legacy baseline": 4
+  },
+  "relevance_scale": [
+    0,
+    1,
+    2
+  ],
+  "p_at_3_threshold": 1,
+  "ndcg_at_5_ideal": "all judged candidates for each query",
+  "gold_sha256": "9a31a38eb1573b8cce81559763ef500aef2c2962b2c771cc3332231879344159",
+  "handoff_sha256": "043561602395f71cee8966416aa67362da0cad96b9833ac8c1db6a758d8a8a3f",
+  "legacy_ranking_sha256": {
+    "BM25 Question-only (legacy)": "d13ad6017f2cbcba5b2ded1584b6dc92d11e3850f5a3638b8f6c6741b19426e0",
+    "BM25 Patient-aware (legacy)": "526dd1b1fe01b8c7d46a286ea1c80e6503f02a20f8f2408d5caa5015fa55c890",
+    "BM25 + Gemini/Chroma Hybrid": "3643807c6605f67d2a275d02624ee8b021684033d6cfbf019f7b1842b33345f9",
+    "Hybrid Question-only (legacy)": "e039b80973cd0e24338c66d805be5c3bec99bdec65026defdf85012f95795713"
+  },
+  "note": "Pooled-candidate evaluation; not full-corpus recall. Legacy and handoff runs may differ in model or run provenance."
+}

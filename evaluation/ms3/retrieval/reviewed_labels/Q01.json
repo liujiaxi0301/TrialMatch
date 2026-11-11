@@ -1,0 +1,133 @@
+{
+  "query_id": "Q01",
+  "review_status": "user-reviewed",
+  "reviewer_qualification": "Non-clinician manual relevance assessment",
+  "labels": [
+    {
+      "trial_id": "NCT03264352",
+      "relevance": 2,
+      "reason": "Directly studies blood pressure lowering and treatment targets in adults with T2D.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT03821636",
+      "relevance": 0,
+      "reason": "Focuses on gastric bypass and diabetes remission, not blood pressure management.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT03827382",
+      "relevance": 0,
+      "reason": "Evaluates exercise and lifestyle intervention; blood pressure is only a safety exclusion.",
+      "source_reference": "brief_summary; exclusion criteria"
+    },
+    {
+      "trial_id": "NCT03925714",
+      "relevance": 0,
+      "reason": "Investigates p53 and SIRT1 in diabetes development, not blood pressure management.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04024631",
+      "relevance": 0,
+      "reason": "Studies genetic diabetes risk and insulin resistance rather than blood pressure management.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04326192",
+      "relevance": 0,
+      "reason": "Investigates spinal cord stimulation and metabolism rather than blood pressure management.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04442451",
+      "relevance": 0,
+      "reason": "Focuses on exercise fatigability and vascular function, not blood pressure control.",
+      "source_reference": "brief_summary; exclusion criteria"
+    },
+    {
+      "trial_id": "NCT04501406",
+      "relevance": 0,
+      "reason": "Studies pioglitazone for NASH; hypertension appears only as an exclusion concern.",
+      "source_reference": "brief_summary; exclusion criteria"
+    },
+    {
+      "trial_id": "NCT04583800",
+      "relevance": 0,
+      "reason": "Studies heart failure and cognitive decline risk prediction, not blood pressure management.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04670666",
+      "relevance": 0,
+      "reason": "Evaluates a diabetes drug combination without a stated blood pressure management objective.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04874012",
+      "relevance": 0,
+      "reason": "Studies taurine effects on glycemic, lipid, inflammatory, and anthropometric outcomes in T2D, not blood pressure management.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT04791371",
+      "relevance": 0,
+      "reason": "Investigates exercise training, muscle perfusion, cardiac function, and exercise capacity; blood pressure appears only as an exclusion concern.",
+      "source_reference": "brief_summary; exclusion criteria"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "relevance": 0,
+      "reason": "Studies gut hormone changes after gastric bypass; hypertension is only an exclusion criterion.",
+      "source_reference": "NCT01945840:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT03087032",
+      "relevance": 0,
+      "reason": "Compares glucose-lowering regimens in T2D without a blood-pressure management objective.",
+      "source_reference": "NCT03087032:brief_summary"
+    },
+    {
+      "trial_id": "NCT03883412",
+      "relevance": 1,
+      "reason": "Studies vascular function in T2D using exercise and liraglutide, but not blood-pressure treatment directly.",
+      "source_reference": "NCT03883412:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT04442334",
+      "relevance": 0,
+      "reason": "NAFLD registry; hypertension is a metabolic comorbidity rather than the research focus.",
+      "source_reference": "NCT04442334:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT04869098",
+      "relevance": 0,
+      "reason": "Examines protein supplementation in night-shift workers and excludes people with diabetes.",
+      "source_reference": "NCT04869098:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT04889053",
+      "relevance": 0,
+      "reason": "Investigates coronary calcification, statins and biomarkers in T2D, not blood-pressure management.",
+      "source_reference": "NCT04889053:brief_summary"
+    },
+    {
+      "trial_id": "NCT05000996",
+      "relevance": 1,
+      "reason": "Studies cardiometabolic outcomes after metabolic surgery and includes hypertension history, but not direct BP management.",
+      "source_reference": "NCT05000996:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT05028140",
+      "relevance": 0,
+      "reason": "Evaluates T2D treatment efficacy without an identified blood-pressure endpoint.",
+      "source_reference": "NCT05028140:brief_summary"
+    },
+    {
+      "trial_id": "NCT05124457",
+      "relevance": 0,
+      "reason": "Compares neonatal hypoglycemia with maternal insulin regimens, not blood-pressure management.",
+      "source_reference": "NCT05124457:brief_summary"
+    }
+  ]
+}

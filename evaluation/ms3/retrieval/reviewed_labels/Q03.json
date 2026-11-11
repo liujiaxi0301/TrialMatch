@@ -1,0 +1,145 @@
+{
+  "query_id": "Q03",
+  "review_status": "user-reviewed",
+  "reviewer_qualification": "Non-clinician manual relevance assessment",
+  "labels": [
+    {
+      "trial_id": "NCT01984762",
+      "relevance": 2,
+      "reason": "Directly compares sleeve gastrectomy and Roux-en-Y gastric bypass for T2D outcomes in patients with obesity.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT02390973",
+      "relevance": 2,
+      "reason": "Investigates long-term metabolic and diabetes outcomes following bariatric surgery in patients with T2D.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT04284943",
+      "relevance": 1,
+      "reason": "Studies glycemic outcomes of gastric reconstruction in patients with T2D and gastric cancer, rather than obesity-directed metabolic surgery.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT04432025",
+      "relevance": 1,
+      "reason": "Examines diabetes medication continuation after bariatric surgery, rather than the effectiveness of surgery itself.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04442334",
+      "relevance": 0,
+      "reason": "NAFLD registry does not investigate bariatric or metabolic surgery.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04670666",
+      "relevance": 0,
+      "reason": "Studies pharmacological treatment of T2D; bariatric surgery appears only in exclusion criteria.",
+      "source_reference": "brief_summary; exclusion criteria"
+    },
+    {
+      "trial_id": "NCT04874012",
+      "relevance": 0,
+      "reason": "Investigates taurine supplementation for metabolic outcomes, not metabolic surgery.",
+      "source_reference": "brief_summary; exclusion criteria"
+    },
+    {
+      "trial_id": "NCT05000996",
+      "relevance": 2,
+      "reason": "Directly investigates metabolic surgery and postoperative cardiometabolic outcomes; patients with T2D are explicitly included in the target population.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT05015283",
+      "relevance": 2,
+      "reason": "Directly compares two metabolic surgery procedures for diabetes remission in patients with obesity and T2D.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT03264352",
+      "relevance": 0,
+      "reason": "Investigates antihypertensive medication in adults with T2D, not bariatric or metabolic surgery.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04326192",
+      "relevance": 0,
+      "reason": "Investigates spinal cord stimulation for weight loss and metabolic effects, not bariatric or metabolic surgery.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT04501406",
+      "relevance": 0,
+      "reason": "Evaluates pioglitazone for NASH in T2D; bariatric procedures appear only as exclusion criteria.",
+      "source_reference": "brief_summary; exclusion criteria #8"
+    },
+    {
+      "trial_id": "NCT04869098",
+      "relevance": 0,
+      "reason": "Investigates dietary protein supplementation in night-shift workers, excludes diabetes, and does not involve surgery.",
+      "source_reference": "brief_summary; exclusion criteria"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "relevance": 2,
+      "reason": "Directly investigates beneficial effects and underlying mechanisms of Roux-en-Y gastric bypass in bariatric surgery candidates with impaired glucose regulation or T2D.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT02037867",
+      "relevance": 0,
+      "reason": "Studies liver disease screening and biomarkers in at-risk populations including obesity and T2D, not bariatric or metabolic surgery.",
+      "source_reference": "NCT02037867:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT02973412",
+      "relevance": 0,
+      "reason": "Examines chronotype and glycemic control in diabetes without a surgical intervention.",
+      "source_reference": "NCT02973412:brief_summary"
+    },
+    {
+      "trial_id": "NCT03087032",
+      "relevance": 0,
+      "reason": "Studies liraglutide versus insulin treatment in overweight or obese T2D patients, not metabolic surgery.",
+      "source_reference": "NCT03087032:brief_summary"
+    },
+    {
+      "trial_id": "NCT03821636",
+      "relevance": 2,
+      "reason": "Directly compares Roux-en-Y gastric bypass techniques for T2D remission in severely obese patients.",
+      "source_reference": "NCT03821636:brief_title;brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT03883412",
+      "relevance": 0,
+      "reason": "Studies exercise and liraglutide effects on vascular function in T2D without bariatric surgery.",
+      "source_reference": "NCT03883412:brief_summary"
+    },
+    {
+      "trial_id": "NCT04024631",
+      "relevance": 0,
+      "reason": "Investigates genetic risk for T2D in non-diabetic participants rather than metabolic surgery outcomes.",
+      "source_reference": "NCT04024631:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT04187443",
+      "relevance": 0,
+      "reason": "Evaluates drug treatment for diabetic macular edema, not bariatric or metabolic surgery.",
+      "source_reference": "NCT04187443:brief_summary"
+    },
+    {
+      "trial_id": "NCT05028140",
+      "relevance": 0,
+      "reason": "Evaluates a treatment for T2D without a bariatric or metabolic surgical component.",
+      "source_reference": "NCT05028140:brief_summary"
+    },
+    {
+      "trial_id": "NCT05124457",
+      "relevance": 0,
+      "reason": "Compares maternal insulin regimens for neonatal hypoglycemia, unrelated to metabolic surgery.",
+      "source_reference": "NCT05124457:brief_summary"
+    }
+  ]
+}
