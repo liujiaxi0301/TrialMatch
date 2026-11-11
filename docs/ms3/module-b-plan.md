@@ -223,16 +223,15 @@ commit, and the full job log.
 - [x] The checkpoint is in GCS and its recorded SHA256 matches what is there.
 - [ ] Re-running the documented command with the same inputs reproduces the manifest's
       configuration — not necessarily identical weights, but a stated seed and versions.
-- [ ] A screenshot of the W&B run is committed, as MS3 requires visible evidence.
+- [x] A screenshot of the W&B run is committed, as MS3 requires visible evidence.
 
 **Status 2026-11-10.** Job `projects/15733748057/locations/us-east1/customJobs/8919501313956380672`
 (`train-20261110-t4-r3`) succeeded on one T4 in 889 s of training. Evidence is in
 `docs/ms3/evidence/module-b/2026-11-10/`, including the two failed attempts that preceded
 it. Two things differ from the plan above: the batch size is 8, not 16, because the
 `eager` attention path ran out of memory on the T4 at 16; and the job was submitted with
-a team member's user credentials rather than a service-account key. The reproduction box
-is open because the command has not been run a second time, and the screenshot box is
-open until the image is added.
+a team member's user credentials rather than a service-account key. The W&B loss charts are in the evidence directory. The reproduction box
+is open because the command has not been run a second time.
 
 ### B4 — Pipeline component
 

@@ -43,6 +43,12 @@ is not the retrieval benchmark and no benchmark query was scored.
 Validation loss does not fall in every epoch: it rises in epoch 3, and MRR@10 falls with
 it. The saved checkpoint is the epoch-3 model, not the epoch-2 one.
 
+Charts exported from the W&B run `26xhkrre` (steps are optimizer steps, 643 per epoch):
+
+![Training loss per step](wandb-train-loss.png)
+
+![Validation loss at the frozen baseline and after each epoch](wandb-val-loss.png)
+
 ## The two attempts before it
 
 - `attempt-1-failed/`: job `2476890940770353152`. The frozen encoder's validation loss was
@@ -63,4 +69,3 @@ python -m cloud.train_job \
   --run-id <new-run-id> --batch-size 8 --evidence <directory>
 ```
 
-This command has been run once. The W&B loss-curve screenshot is not in this directory yet.
