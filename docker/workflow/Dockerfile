@@ -6,8 +6,13 @@ RUN pip install --no-cache-dir uv==0.13.1
 COPY docker/workflow/pyproject.toml docker/workflow/uv.lock ./
 RUN uv sync --frozen --no-dev --no-cache
 COPY cloud/__init__.py cloud/tasks.py cloud/pipeline.py cloud/release.py ./cloud/
+COPY cloud/eligibility.py ./cloud/
+COPY cloud/training_inputs.py ./cloud/
 COPY cloud/train_pairs.py cloud/train_pairs_llm.py ./cloud/
 COPY evaluation/ms3/run_retrieval.py evaluation/ms3/retrieval_queries.jsonl ./evaluation/ms3/
+COPY evaluation/ms3/gemini_developer_provider.py ./evaluation/ms3/
+COPY evaluation/ms3/eligibility/run_eligibility.py evaluation/ms3/eligibility/eligibility_protocol.md evaluation/ms3/eligibility/cohort_manifest.json evaluation/ms3/eligibility/eligibility_cases.jsonl ./evaluation/ms3/eligibility/
+COPY evaluation/ms3/eligibility/reviewed_labels/ ./evaluation/ms3/eligibility/reviewed_labels/
 COPY evaluation/retrieval/__init__.py evaluation/retrieval/benchmark.py ./evaluation/retrieval/
 COPY prepare_data.py ./
 COPY services/trial_ingestion/scripts ./services/trial_ingestion/scripts

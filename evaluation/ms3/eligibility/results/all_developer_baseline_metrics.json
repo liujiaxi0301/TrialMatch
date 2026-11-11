@@ -1,0 +1,967 @@
+{
+  "benchmark": "TrialMatch MS3 Eligibility Evaluation",
+  "split": "all",
+  "provider": "developer",
+  "model": "gemini-3.1-flash-lite",
+  "official_reporting_ready": true,
+  "not_official_reason": null,
+  "gold_sha256_by_case": {
+    "E01": "d3d092ef23c2ce82f672dbb7757798f3ca099e05735a606c5779c3c9558912bf",
+    "E02": "6fceaf1fd5bafc565f1cd5ea020388587de42accae5458b5a78b6475e43e00ee",
+    "E03": "b4b04e4be52116bb181e05d2b0ed3660b3e2f902bd1a5a3e2ce80c37cfa96008",
+    "E04": "bd66010d848d2d5b26c30a76b02884c97beaf122ac0048c77479c043f99e4904",
+    "E05": "ef409e103ca166511fa6b6dc616fda64e9cb92ecc26f3dd4b662d0676dc355c6",
+    "E06": "f28419d2a8aab56f54de2e8e986d4942cb41abdedfb41a25e2cf4e350a033f7f",
+    "E07": "04bcb3850547b7365ca8dd59a13567aaca5d24ee33b165d4ff0b4f7ac8969893",
+    "E08": "8a0322abed547ece1ce9a99e9346d24e6834e6f6ef7a530e0342fefa6c6740b8"
+  },
+  "prediction_sha256": "9cd58e6dc59db269831b18c1cc8640466c5ce67080053c4182fd3eb658206899",
+  "criterion_metrics_all_outputs_including_failures": {
+    "n": 115,
+    "accuracy": 0.78261,
+    "correct": 90,
+    "macro_f1": 0.54956,
+    "macro_f1_classes_with_gold_support": [
+      "MET",
+      "NOT_MET",
+      "UNKNOWN"
+    ],
+    "per_class": {
+      "MET": {
+        "support": 16,
+        "predicted": 4,
+        "tp": 4,
+        "precision": 1.0,
+        "recall": 0.25,
+        "f1": 0.4
+      },
+      "NOT_MET": {
+        "support": 17,
+        "predicted": 4,
+        "tp": 4,
+        "precision": 1.0,
+        "recall": 0.23529,
+        "f1": 0.38095
+      },
+      "UNKNOWN": {
+        "support": 82,
+        "predicted": 107,
+        "tp": 82,
+        "precision": 0.76636,
+        "recall": 1.0,
+        "f1": 0.86772
+      }
+    },
+    "confusion_gold_rows_pred_columns": {
+      "MET": {
+        "MET": 4,
+        "NOT_MET": 0,
+        "UNKNOWN": 12
+      },
+      "NOT_MET": {
+        "MET": 0,
+        "NOT_MET": 4,
+        "UNKNOWN": 13
+      },
+      "UNKNOWN": {
+        "MET": 0,
+        "NOT_MET": 0,
+        "UNKNOWN": 82
+      }
+    }
+  },
+  "criterion_metrics_successful_outputs_only": {
+    "n": 115,
+    "accuracy": 0.78261,
+    "correct": 90,
+    "macro_f1": 0.54956,
+    "macro_f1_classes_with_gold_support": [
+      "MET",
+      "NOT_MET",
+      "UNKNOWN"
+    ],
+    "per_class": {
+      "MET": {
+        "support": 16,
+        "predicted": 4,
+        "tp": 4,
+        "precision": 1.0,
+        "recall": 0.25,
+        "f1": 0.4
+      },
+      "NOT_MET": {
+        "support": 17,
+        "predicted": 4,
+        "tp": 4,
+        "precision": 1.0,
+        "recall": 0.23529,
+        "f1": 0.38095
+      },
+      "UNKNOWN": {
+        "support": 82,
+        "predicted": 107,
+        "tp": 82,
+        "precision": 0.76636,
+        "recall": 1.0,
+        "f1": 0.86772
+      }
+    },
+    "confusion_gold_rows_pred_columns": {
+      "MET": {
+        "MET": 4,
+        "NOT_MET": 0,
+        "UNKNOWN": 12
+      },
+      "NOT_MET": {
+        "MET": 0,
+        "NOT_MET": 4,
+        "UNKNOWN": 13
+      },
+      "UNKNOWN": {
+        "MET": 0,
+        "NOT_MET": 0,
+        "UNKNOWN": 82
+      }
+    }
+  },
+  "inference_failures": {
+    "count": 0,
+    "rate": 0.0,
+    "by_error_code": {},
+    "failed_rows_are_in_full_denominator": true,
+    "failure_unknowns_must_not_be_counted_as_successful_abstentions": true
+  },
+  "class_safety": {
+    "gold_unknown_predicted_definite": 0,
+    "gold_definite_predicted_unknown": 25,
+    "opposite_definite_judgments": 0
+  },
+  "by_case": {
+    "E01": {
+      "n": 22,
+      "accuracy": 0.81818,
+      "correct": 18,
+      "macro_f1": 0.56296,
+      "macro_f1_classes_with_gold_support": [
+        "MET",
+        "NOT_MET",
+        "UNKNOWN"
+      ],
+      "per_class": {
+        "MET": {
+          "support": 3,
+          "predicted": 2,
+          "tp": 2,
+          "precision": 1.0,
+          "recall": 0.66667,
+          "f1": 0.8
+        },
+        "NOT_MET": {
+          "support": 3,
+          "predicted": 0,
+          "tp": 0,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "UNKNOWN": {
+          "support": 16,
+          "predicted": 20,
+          "tp": 16,
+          "precision": 0.8,
+          "recall": 1.0,
+          "f1": 0.88889
+        }
+      },
+      "confusion_gold_rows_pred_columns": {
+        "MET": {
+          "MET": 2,
+          "NOT_MET": 0,
+          "UNKNOWN": 1
+        },
+        "NOT_MET": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 3
+        },
+        "UNKNOWN": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 16
+        }
+      }
+    },
+    "E02": {
+      "n": 8,
+      "accuracy": 0.875,
+      "correct": 7,
+      "macro_f1": 0.46667,
+      "macro_f1_classes_with_gold_support": [
+        "NOT_MET",
+        "UNKNOWN"
+      ],
+      "per_class": {
+        "MET": {
+          "support": 0,
+          "predicted": 0,
+          "tp": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "NOT_MET": {
+          "support": 1,
+          "predicted": 0,
+          "tp": 0,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "UNKNOWN": {
+          "support": 7,
+          "predicted": 8,
+          "tp": 7,
+          "precision": 0.875,
+          "recall": 1.0,
+          "f1": 0.93333
+        }
+      },
+      "confusion_gold_rows_pred_columns": {
+        "MET": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 0
+        },
+        "NOT_MET": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 1
+        },
+        "UNKNOWN": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 7
+        }
+      }
+    },
+    "E03": {
+      "n": 23,
+      "accuracy": 0.78261,
+      "correct": 18,
+      "macro_f1": 0.42393,
+      "macro_f1_classes_with_gold_support": [
+        "MET",
+        "NOT_MET",
+        "UNKNOWN"
+      ],
+      "per_class": {
+        "MET": {
+          "support": 4,
+          "predicted": 1,
+          "tp": 1,
+          "precision": 1.0,
+          "recall": 0.25,
+          "f1": 0.4
+        },
+        "NOT_MET": {
+          "support": 2,
+          "predicted": 0,
+          "tp": 0,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "UNKNOWN": {
+          "support": 17,
+          "predicted": 22,
+          "tp": 17,
+          "precision": 0.77273,
+          "recall": 1.0,
+          "f1": 0.87179
+        }
+      },
+      "confusion_gold_rows_pred_columns": {
+        "MET": {
+          "MET": 1,
+          "NOT_MET": 0,
+          "UNKNOWN": 3
+        },
+        "NOT_MET": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 2
+        },
+        "UNKNOWN": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 17
+        }
+      }
+    },
+    "E04": {
+      "n": 8,
+      "accuracy": 0.5,
+      "correct": 4,
+      "macro_f1": 0.22222,
+      "macro_f1_classes_with_gold_support": [
+        "MET",
+        "NOT_MET",
+        "UNKNOWN"
+      ],
+      "per_class": {
+        "MET": {
+          "support": 2,
+          "predicted": 0,
+          "tp": 0,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "NOT_MET": {
+          "support": 2,
+          "predicted": 0,
+          "tp": 0,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "UNKNOWN": {
+          "support": 4,
+          "predicted": 8,
+          "tp": 4,
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.66667
+        }
+      },
+      "confusion_gold_rows_pred_columns": {
+        "MET": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 2
+        },
+        "NOT_MET": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 2
+        },
+        "UNKNOWN": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 4
+        }
+      }
+    },
+    "E05": {
+      "n": 10,
+      "accuracy": 0.9,
+      "correct": 9,
+      "macro_f1": 0.86667,
+      "macro_f1_classes_with_gold_support": [
+        "MET",
+        "NOT_MET",
+        "UNKNOWN"
+      ],
+      "per_class": {
+        "MET": {
+          "support": 1,
+          "predicted": 1,
+          "tp": 1,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "NOT_MET": {
+          "support": 2,
+          "predicted": 1,
+          "tp": 1,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.66667
+        },
+        "UNKNOWN": {
+          "support": 7,
+          "predicted": 8,
+          "tp": 7,
+          "precision": 0.875,
+          "recall": 1.0,
+          "f1": 0.93333
+        }
+      },
+      "confusion_gold_rows_pred_columns": {
+        "MET": {
+          "MET": 1,
+          "NOT_MET": 0,
+          "UNKNOWN": 0
+        },
+        "NOT_MET": {
+          "MET": 0,
+          "NOT_MET": 1,
+          "UNKNOWN": 1
+        },
+        "UNKNOWN": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 7
+        }
+      }
+    },
+    "E06": {
+      "n": 15,
+      "accuracy": 0.73333,
+      "correct": 11,
+      "macro_f1": 0.49495,
+      "macro_f1_classes_with_gold_support": [
+        "MET",
+        "NOT_MET",
+        "UNKNOWN"
+      ],
+      "per_class": {
+        "MET": {
+          "support": 2,
+          "predicted": 0,
+          "tp": 0,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "NOT_MET": {
+          "support": 4,
+          "predicted": 2,
+          "tp": 2,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.66667
+        },
+        "UNKNOWN": {
+          "support": 9,
+          "predicted": 13,
+          "tp": 9,
+          "precision": 0.69231,
+          "recall": 1.0,
+          "f1": 0.81818
+        }
+      },
+      "confusion_gold_rows_pred_columns": {
+        "MET": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 2
+        },
+        "NOT_MET": {
+          "MET": 0,
+          "NOT_MET": 2,
+          "UNKNOWN": 2
+        },
+        "UNKNOWN": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 9
+        }
+      }
+    },
+    "E07": {
+      "n": 15,
+      "accuracy": 0.73333,
+      "correct": 11,
+      "macro_f1": 0.5,
+      "macro_f1_classes_with_gold_support": [
+        "MET",
+        "NOT_MET",
+        "UNKNOWN"
+      ],
+      "per_class": {
+        "MET": {
+          "support": 3,
+          "predicted": 0,
+          "tp": 0,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "NOT_MET": {
+          "support": 2,
+          "predicted": 1,
+          "tp": 1,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.66667
+        },
+        "UNKNOWN": {
+          "support": 10,
+          "predicted": 14,
+          "tp": 10,
+          "precision": 0.71429,
+          "recall": 1.0,
+          "f1": 0.83333
+        }
+      },
+      "confusion_gold_rows_pred_columns": {
+        "MET": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 3
+        },
+        "NOT_MET": {
+          "MET": 0,
+          "NOT_MET": 1,
+          "UNKNOWN": 1
+        },
+        "UNKNOWN": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 10
+        }
+      }
+    },
+    "E08": {
+      "n": 14,
+      "accuracy": 0.85714,
+      "correct": 12,
+      "macro_f1": 0.30769,
+      "macro_f1_classes_with_gold_support": [
+        "MET",
+        "NOT_MET",
+        "UNKNOWN"
+      ],
+      "per_class": {
+        "MET": {
+          "support": 1,
+          "predicted": 0,
+          "tp": 0,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "NOT_MET": {
+          "support": 1,
+          "predicted": 0,
+          "tp": 0,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "UNKNOWN": {
+          "support": 12,
+          "predicted": 14,
+          "tp": 12,
+          "precision": 0.85714,
+          "recall": 1.0,
+          "f1": 0.92308
+        }
+      },
+      "confusion_gold_rows_pred_columns": {
+        "MET": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 1
+        },
+        "NOT_MET": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 1
+        },
+        "UNKNOWN": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 12
+        }
+      }
+    }
+  },
+  "by_criterion_type": {
+    "exclusion": {
+      "n": 83,
+      "accuracy": 0.80723,
+      "correct": 67,
+      "macro_f1": 0.38569,
+      "macro_f1_classes_with_gold_support": [
+        "MET",
+        "NOT_MET",
+        "UNKNOWN"
+      ],
+      "per_class": {
+        "MET": {
+          "support": 5,
+          "predicted": 0,
+          "tp": 0,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "NOT_MET": {
+          "support": 13,
+          "predicted": 2,
+          "tp": 2,
+          "precision": 1.0,
+          "recall": 0.15385,
+          "f1": 0.26667
+        },
+        "UNKNOWN": {
+          "support": 65,
+          "predicted": 81,
+          "tp": 65,
+          "precision": 0.80247,
+          "recall": 1.0,
+          "f1": 0.89041
+        }
+      },
+      "confusion_gold_rows_pred_columns": {
+        "MET": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 5
+        },
+        "NOT_MET": {
+          "MET": 0,
+          "NOT_MET": 2,
+          "UNKNOWN": 11
+        },
+        "UNKNOWN": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 65
+        }
+      }
+    },
+    "inclusion": {
+      "n": 32,
+      "accuracy": 0.71875,
+      "correct": 23,
+      "macro_f1": 0.66357,
+      "macro_f1_classes_with_gold_support": [
+        "MET",
+        "NOT_MET",
+        "UNKNOWN"
+      ],
+      "per_class": {
+        "MET": {
+          "support": 11,
+          "predicted": 4,
+          "tp": 4,
+          "precision": 1.0,
+          "recall": 0.36364,
+          "f1": 0.53333
+        },
+        "NOT_MET": {
+          "support": 4,
+          "predicted": 2,
+          "tp": 2,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.66667
+        },
+        "UNKNOWN": {
+          "support": 17,
+          "predicted": 26,
+          "tp": 17,
+          "precision": 0.65385,
+          "recall": 1.0,
+          "f1": 0.7907
+        }
+      },
+      "confusion_gold_rows_pred_columns": {
+        "MET": {
+          "MET": 4,
+          "NOT_MET": 0,
+          "UNKNOWN": 7
+        },
+        "NOT_MET": {
+          "MET": 0,
+          "NOT_MET": 2,
+          "UNKNOWN": 2
+        },
+        "UNKNOWN": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 17
+        }
+      }
+    }
+  },
+  "by_method": {
+    "abstain": {
+      "n": 2,
+      "accuracy": 1.0,
+      "correct": 2,
+      "macro_f1": 1.0,
+      "macro_f1_classes_with_gold_support": [
+        "UNKNOWN"
+      ],
+      "per_class": {
+        "MET": {
+          "support": 0,
+          "predicted": 0,
+          "tp": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "NOT_MET": {
+          "support": 0,
+          "predicted": 0,
+          "tp": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "UNKNOWN": {
+          "support": 2,
+          "predicted": 2,
+          "tp": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        }
+      },
+      "confusion_gold_rows_pred_columns": {
+        "MET": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 0
+        },
+        "NOT_MET": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 0
+        },
+        "UNKNOWN": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 2
+        }
+      }
+    },
+    "llm": {
+      "n": 75,
+      "accuracy": 0.90667,
+      "correct": 68,
+      "macro_f1": 0.4279,
+      "macro_f1_classes_with_gold_support": [
+        "MET",
+        "NOT_MET",
+        "UNKNOWN"
+      ],
+      "per_class": {
+        "MET": {
+          "support": 5,
+          "predicted": 1,
+          "tp": 1,
+          "precision": 1.0,
+          "recall": 0.2,
+          "f1": 0.33333
+        },
+        "NOT_MET": {
+          "support": 3,
+          "predicted": 0,
+          "tp": 0,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "UNKNOWN": {
+          "support": 67,
+          "predicted": 74,
+          "tp": 67,
+          "precision": 0.90541,
+          "recall": 1.0,
+          "f1": 0.95035
+        }
+      },
+      "confusion_gold_rows_pred_columns": {
+        "MET": {
+          "MET": 1,
+          "NOT_MET": 0,
+          "UNKNOWN": 4
+        },
+        "NOT_MET": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 3
+        },
+        "UNKNOWN": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 67
+        }
+      }
+    },
+    "llm_abstain": {
+      "n": 31,
+      "accuracy": 0.41935,
+      "correct": 13,
+      "macro_f1": 0.19697,
+      "macro_f1_classes_with_gold_support": [
+        "MET",
+        "NOT_MET",
+        "UNKNOWN"
+      ],
+      "per_class": {
+        "MET": {
+          "support": 8,
+          "predicted": 0,
+          "tp": 0,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "NOT_MET": {
+          "support": 10,
+          "predicted": 0,
+          "tp": 0,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "UNKNOWN": {
+          "support": 13,
+          "predicted": 31,
+          "tp": 13,
+          "precision": 0.41935,
+          "recall": 1.0,
+          "f1": 0.59091
+        }
+      },
+      "confusion_gold_rows_pred_columns": {
+        "MET": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 8
+        },
+        "NOT_MET": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 10
+        },
+        "UNKNOWN": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 13
+        }
+      }
+    },
+    "rule": {
+      "n": 7,
+      "accuracy": 1.0,
+      "correct": 7,
+      "macro_f1": 1.0,
+      "macro_f1_classes_with_gold_support": [
+        "MET",
+        "NOT_MET"
+      ],
+      "per_class": {
+        "MET": {
+          "support": 3,
+          "predicted": 3,
+          "tp": 3,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "NOT_MET": {
+          "support": 4,
+          "predicted": 4,
+          "tp": 4,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "UNKNOWN": {
+          "support": 0,
+          "predicted": 0,
+          "tp": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        }
+      },
+      "confusion_gold_rows_pred_columns": {
+        "MET": {
+          "MET": 3,
+          "NOT_MET": 0,
+          "UNKNOWN": 0
+        },
+        "NOT_MET": {
+          "MET": 0,
+          "NOT_MET": 4,
+          "UNKNOWN": 0
+        },
+        "UNKNOWN": {
+          "MET": 0,
+          "NOT_MET": 0,
+          "UNKNOWN": 0
+        }
+      }
+    }
+  },
+  "method_distribution": {
+    "llm_abstain": 31,
+    "rule": 7,
+    "llm": 75,
+    "abstain": 2
+  },
+  "trial_status": {
+    "E01": {
+      "gold": "NEEDS_MORE_INFORMATION",
+      "predicted": "NEEDS_MORE_INFORMATION",
+      "matches": true,
+      "has_inference_failure": false
+    },
+    "E02": {
+      "gold": "NEEDS_MORE_INFORMATION",
+      "predicted": "NEEDS_MORE_INFORMATION",
+      "matches": true,
+      "has_inference_failure": false
+    },
+    "E03": {
+      "gold": "SCREENING_BARRIER",
+      "predicted": "NEEDS_MORE_INFORMATION",
+      "matches": false,
+      "has_inference_failure": false
+    },
+    "E04": {
+      "gold": "SCREENING_BARRIER",
+      "predicted": "NEEDS_MORE_INFORMATION",
+      "matches": false,
+      "has_inference_failure": false
+    },
+    "E05": {
+      "gold": "SCREENING_BARRIER",
+      "predicted": "SCREENING_BARRIER",
+      "matches": true,
+      "has_inference_failure": false
+    },
+    "E06": {
+      "gold": "SCREENING_BARRIER",
+      "predicted": "SCREENING_BARRIER",
+      "matches": true,
+      "has_inference_failure": false
+    },
+    "E07": {
+      "gold": "SCREENING_BARRIER",
+      "predicted": "NEEDS_MORE_INFORMATION",
+      "matches": false,
+      "has_inference_failure": false
+    },
+    "E08": {
+      "gold": "NEEDS_MORE_INFORMATION",
+      "predicted": "NEEDS_MORE_INFORMATION",
+      "matches": true,
+      "has_inference_failure": false
+    }
+  },
+  "trial_status_agreement": 0.625,
+  "trial_false_potential_matches": 0,
+  "citation_identifier_validity": {
+    "valid_references": true,
+    "clinical_support_not_automatically_verified": true
+  },
+  "limitations": [
+    "Small purposively selected Synthea patient-trial pairs, not an enrollment study",
+    "Reference decisions are evidence-based non-clinician annotations",
+    "Criterion judgments within a trial are correlated",
+    "Gold UNKNOWN prevalence is high; evaluate definite prediction safety separately",
+    "Citation IDs validated against the patient record, not independently clinically adjudicated",
+    "Historical patient reference date 2021-11-30; trial snapshot 2026-10-11"
+  ]
+}

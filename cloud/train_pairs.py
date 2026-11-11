@@ -44,7 +44,8 @@ class InvertedBM25:
 
     def top(self, query: str, limit: int) -> list[str]:
         scores = Counter()
-        for token in set(tokens(query)):
+        # Sorted, so the float sums and therefore near-ties do not depend on hash order.
+        for token in sorted(set(tokens(query))):
             posting = self.postings.get(token)
             if not posting or len(posting) > self.total * 0.3:
                 continue  # Skip absent and near-universal tokens.
@@ -53,7 +54,7 @@ class InvertedBM25:
             for key, freq in posting:
                 norm = 0.25 + 0.75 * self.length[key] / self.average
                 scores[key] += idf * freq * 2.5 / (freq + 1.5 * norm)
-        return [key for key, _ in scores.most_common(limit)]
+        return sorted(scores, key=lambda key: (-scores[key], key))[:limit]
 
 
 GENERIC = re.compile(

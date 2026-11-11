@@ -1,0 +1,120 @@
+{
+  "case_id": "E04",
+  "patient_id": "060e72d3-912e-55cd-0c92-5faa6cb7a6db",
+  "trial_id": "NCT04802395",
+  "split": "reporting",
+  "review_status": "frozen",
+  "reviewer_qualification": "Non-clinician evidence-based reference assessment",
+  "labels": [
+    {
+      "criterion_id": "NCT04802395_inc_001",
+      "criterion_type": "inclusion",
+      "criterion_text": "Individuals with Type 2 diabetes and concurrent chronic (diabetic) kidney disease (G3a-G3b or G1-G2, A2-A3) per KDIGO CKD staging.",
+      "gold_decision": "NOT_MET",
+      "reason": "Type 2 diabetes and diabetic kidney disease are documented. However, the latest eGFR of 64.8 mL/min/1.73m2 and urine albumin-creatinine ratio of 16.96 mg/g correspond to G2/A1, outside the required KDIGO G3a-G3b or G1-G2/A2-A3 combinations.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Condition/818fb907-ad8a-48a9-e1e1-1c681e3fd1e6",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Condition/42fb5998-3cc2-92ca-b7f5-da48e65f46d6",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Condition/903a4c5b-d56b-9537-5407-e8daec9c9347",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Observation/ca098d2b-bc70-c7d7-9d9e-bb52a428c610",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Observation/e4e7ebd8-ad39-1f7e-7dbd-94d506a108ae"
+      ],
+      "missing_information": [],
+      "review_notes": "CKD diagnosis alone does not establish the trial-specific KDIGO G/A combination."
+    },
+    {
+      "criterion_id": "NCT04802395_exc_001",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patents without the appropriate characteristics as identified in the KidneyIntelX intended use population.",
+      "gold_decision": "MET",
+      "reason": "Under the trial's stated KidneyIntelX intended-use population criteria, the patient falls outside the required kidney-function and albuminuria combinations. The latest results are G2/A1.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Condition/903a4c5b-d56b-9537-5407-e8daec9c9347",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Observation/ca098d2b-bc70-c7d7-9d9e-bb52a428c610",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Observation/e4e7ebd8-ad39-1f7e-7dbd-94d506a108ae"
+      ],
+      "missing_information": [],
+      "review_notes": "Human-confirmed interpretation of the intended-use exclusion based on the trial's inclusion definition."
+    },
+    {
+      "criterion_id": "NCT04802395_exc_002",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patients with eGFR \\<30 or ≥ 60 ml/min/1.73m2 without albuminuria.",
+      "gold_decision": "MET",
+      "reason": "The latest eGFR is 64.8 mL/min/1.73m2 (at least 60), while the urine albumin-creatinine ratio is 16.96 mg/g (A1, below the albuminuria threshold). This satisfies the exclusion of eGFR at least 60 without albuminuria.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Observation/ca098d2b-bc70-c7d7-9d9e-bb52a428c610",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Observation/e4e7ebd8-ad39-1f7e-7dbd-94d506a108ae"
+      ],
+      "missing_information": [],
+      "review_notes": "The exclusion is an OR expression; the eGFR >=60 without albuminuria branch is satisfied."
+    },
+    {
+      "criterion_id": "NCT04802395_exc_003",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patients with ESRD or on renal recovery treatments at time of enrollment.",
+      "gold_decision": "UNKNOWN",
+      "reason": "The patient has documented diabetic kidney disease and eGFR 64.8, which do not support current ESRD, but explicit ESRD status and renal replacement or recovery treatment status at enrollment are not established.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Condition/42fb5998-3cc2-92ca-b7f5-da48e65f46d6",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Condition/903a4c5b-d56b-9537-5407-e8daec9c9347",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Observation/ca098d2b-bc70-c7d7-9d9e-bb52a428c610"
+      ],
+      "missing_information": [
+        "Explicit ESRD status and renal treatment status at the study enrollment date."
+      ],
+      "review_notes": "Do not infer an explicit absence of renal treatment solely from preserved eGFR or missing treatment records."
+    },
+    {
+      "criterion_id": "NCT04802395_exc_004",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patients who are pregnant at the time of enrollment.",
+      "gold_decision": "NOT_MET",
+      "reason": "The patient is recorded as male, age 52. Under the previously agreed synthetic-cohort demographic convention, this pregnancy-only exclusion is treated as not met.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Patient/060e72d3-912e-55cd-0c92-5faa6cb7a6db"
+      ],
+      "missing_information": [],
+      "review_notes": "Same synthetic-data convention as E02 exc_004 and E03 exc_003; not a general clinical determination of pregnancy capacity."
+    },
+    {
+      "criterion_id": "NCT04802395_exc_005",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patients who are currently hospitalized.",
+      "gold_decision": "UNKNOWN",
+      "reason": "Available historical encounters and social information do not establish whether the patient was hospitalized at the reference or enrollment date.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Current inpatient or hospitalization status at enrollment."
+      ],
+      "review_notes": "No documented hospitalization is not equivalent to documented absence of hospitalization."
+    },
+    {
+      "criterion_id": "NCT04802395_exc_006",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patients without minimum 6 month pre-baseline KidneyIntelX medical history.",
+      "gold_decision": "UNKNOWN",
+      "reason": "The patient has extensive longitudinal medical records, but the KidneyIntelX-specific baseline date and required pre-baseline medical-history coverage are not established.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Condition/818fb907-ad8a-48a9-e1e1-1c681e3fd1e6",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Benny518_Tillman293_060e72d3-912e-55cd-0c92-5faa6cb7a6db.json#Condition/903a4c5b-d56b-9537-5407-e8daec9c9347"
+      ],
+      "missing_information": [
+        "KidneyIntelX baseline date and confirmation of at least six months of qualifying medical history before that baseline."
+      ],
+      "review_notes": "Long general medical history does not automatically establish the trial-specific six-month baseline requirement."
+    },
+    {
+      "criterion_id": "NCT04802395_exc_007",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patients who are currently on Enbrel.",
+      "gold_decision": "UNKNOWN",
+      "reason": "The available medication records do not affirmatively establish current Enbrel (etanercept) therapy or an explicit absence of such therapy.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Current Enbrel/etanercept medication status at the reference date."
+      ],
+      "review_notes": "Absence of an Enbrel medication request cannot be used as definite negative evidence."
+    }
+  ]
+}

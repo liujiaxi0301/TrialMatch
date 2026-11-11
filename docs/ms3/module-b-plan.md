@@ -3,6 +3,20 @@
 Owner: Jenny (B). Branch: `jenny/ms3-training`, based on `xuyang/ms3-pipeline`.
 Audience: whoever picks this up next, including an agent session with no prior context.
 
+**Integration note (2026-11-11, Module A).** The local merge of B at `55e88ba`
+preserves the current four data/retrieval tasks and adds training as an optional
+fifth task, with batch size 8. Earlier references below to a fourth task describe
+B's older three-step base. The component has not run as part of the integrated
+cloud pipeline. B's internal validation uses generated pairs split by trial-ID
+hash; Jessie's manually annotated benchmark is a separate evaluation. The fixed
+50-trial benchmark universe is excluded from pair generation. Shared negative
+candidate texts within B's internal split do not establish that C's labels were
+used in training or require retraining; do not claim complete trial-text isolation.
+A now also requires expected SHA256 values for extra pipeline pairs
+and checks them inside the trainer before model loading. This additive interface
+requires rebuilding the trainer image; it does not change the training algorithm
+or historical run evidence. See [module-a-training.md](module-a-training.md).
+
 MS3 is due **22:00 ET on 2026-11-12**, submitted as a commit hash on Canvas from a
 `milestone3` branch. Module B owns objective 1 of the milestone, *advanced training
 workflows*: experiment tracking plus at least one logged, reproducible training run
@@ -145,15 +159,29 @@ Design requirements:
 **Acceptance criteria**
 
 - [ ] Validation loss decreases across epochs; the curve is visible in W&B.
-- [ ] Validation Recall@10 after training exceeds the frozen checkpoint's score on the
+- [x] Validation Recall@10 after training exceeds the frozen checkpoint's score on the
       same validation pairs, measured by the same code path. If it does not, report
       that honestly and keep the run — a negative result with a correct method is a
       valid MS3 deliverable; a fabricated improvement is not.
-- [ ] A pooling-equivalence test passes against `BioClinicalProvider`.
-- [ ] The leakage assertion is exercised by a test that feeds it a demo trial and
+- [x] A pooling-equivalence test passes against `BioClinicalProvider`.
+- [x] The leakage assertion is exercised by a test that feeds it a demo trial and
       expects failure.
-- [ ] `training_manifest.json` contains every field module A asked for.
-- [ ] `ruff check cloud/train.py` is clean.
+- [x] `training_manifest.json` contains every field module A asked for.
+- [x] `ruff check cloud/train.py` is clean.
+
+**Status 2026-11-10.** `cloud/train.py` and `cloud/tests/test_train.py` are in. Training
+pools through `masked_mean_l2`, now the provider's single pooling definition. A local
+200-pair, one-epoch smoke run on MPS completed and wrote a manifest (W&B offline). The
+first two boxes stay open until the Vertex run puts a curve in W&B.
+
+**Status 2026-11-10, after the Vertex run.** Recall@10 on the internal validation pairs
+rose from 0.249 (frozen) to 0.802 after three epochs, through the same code path. The
+first box stays open on purpose: validation loss fell from 3.348 to 0.964 and 0.948 but
+rose to 0.999 in epoch 3, so it does not decrease across every epoch. The saved
+checkpoint is the epoch-3 model. Training now starts with a numerics check that compares
+accelerator embeddings with CPU embeddings of the same weights, because the first Vertex
+attempt returned non-finite embeddings on CUDA with the `sdpa` attention path under the
+base image's PyTorch 2.4; the run used the `eager` path, which matched CPU to 2.4e-7.
 
 ### B2 — `docker/trainer/`: the training image
 
@@ -172,10 +200,23 @@ Design requirements:
 
 **Acceptance criteria**
 
-- [ ] `docker build -f docker/trainer/Dockerfile .` succeeds locally or in Cloud Build.
-- [ ] `docker run <image> python -m cloud.train --help` prints usage.
-- [ ] `docker/workflow/pyproject.toml` is unchanged — no torch leaked into it.
-- [ ] The image is referenced by digest, never by a mutable tag, wherever it is consumed.
+- [x] `docker build -f docker/trainer/Dockerfile .` succeeds locally or in Cloud Build.
+- [x] `docker run <image> python -m cloud.train --help` prints usage.
+- [x] `docker/workflow/pyproject.toml` is unchanged — no torch leaked into it.
+- [x] The image is referenced by digest, never by a mutable tag, wherever it is consumed.
+
+**Status 2026-11-10.** Built locally for linux/amd64 on
+`pytorch-gpu.2-4.py310@sha256:db53e742…` (PyTorch 2.4 is the newest PyTorch GPU base
+Vertex publishes; Python 3.10, so the trainer has its own lock). A tiny end-to-end
+training run completed inside the container on CPU. Three things differ from the
+sketch above: NumPy is held below 2 because the base's SciPy is built against 1.x; the
+base's `ENTRYPOINT` is cleared so `docker run <image> python -m …` works; and
+`cloud/tests/test_release.py` needed its fake registry taught about a fourth image.
+The `cloud/build.yaml` step was added and then removed on 2026-11-11: the trainer image
+took about 30 minutes to build in Cloud Build, longer than that file's shared
+`timeout: 1200s`, so it would have broken the deployment build. The image is built only
+with `docker/trainer/cloudbuild.yaml`. `cloud/build.yaml` and `cloud/tests/test_release.py`
+are back to their content before module B.
 
 ### B3 — One Vertex AI training run, with evidence
 
@@ -194,12 +235,21 @@ commit, and the full job log.
 
 **Acceptance criteria**
 
-- [ ] A Vertex job reached `JOB_STATE_SUCCEEDED` and its resource name is recorded.
-- [ ] A W&B run exists with the loss curve and the config, and its URL is in the manifest.
-- [ ] The checkpoint is in GCS and its recorded SHA256 matches what is there.
-- [ ] Re-running the documented command with the same inputs reproduces the manifest's
+- [x] A Vertex job reached `JOB_STATE_SUCCEEDED` and its resource name is recorded.
+- [x] A W&B run exists with the loss curve and the config, and its URL is in the manifest.
+- [x] The checkpoint is in GCS and its recorded SHA256 matches what is there.
+- [x] Re-running the documented command with the same inputs reproduces the manifest's
       configuration — not necessarily identical weights, but a stated seed and versions.
-- [ ] A screenshot of the W&B run is committed, as MS3 requires visible evidence.
+- [x] A screenshot of the W&B run is committed, as MS3 requires visible evidence.
+
+**Status 2026-11-10.** Job `projects/15733748057/locations/us-east1/customJobs/8919501313956380672`
+(`train-20261110-t4-r3`) succeeded on one T4 in 889 s of training. Evidence is in
+`docs/ms3/evidence/module-b/2026-11-10/`, including the two failed attempts that preceded
+it. Two things differ from the plan above: the batch size is 8, not 16, because the
+`eager` attention path ran out of memory on the T4 at 16; and the job was submitted with
+a team member's user credentials rather than a service-account key. The W&B loss charts are in the evidence directory. A second run of the
+same command (`reproduction/`) reproduced the configuration, every validation metric and
+the checkpoint SHA256.
 
 ### B4 — Pipeline component
 
@@ -210,12 +260,21 @@ plan is explicit that a placeholder task does not count as integration.
 
 **Acceptance criteria**
 
-- [ ] `python -m cloud.pipeline --compile-only …` produces a spec containing four tasks
+- [x] `python -m cloud.pipeline --compile-only …` produces a spec containing four tasks
       with the training task's inputs wired to the validated release.
-- [ ] `cloud/tests/` still passes in full (45 tests at last count), plus a new test
+- [x] `cloud/tests/` still passes in full (45 tests at last count), plus a new test
       asserting the fourth task appears with the right dependency.
 - [ ] The existing `pipeline-checks.yml` workflow stays green.
 - [ ] Reviewed with module A's owner before merging.
+
+**Status 2026-11-10.** The task is added only when `--trainer-image` (digest-pinned) is
+passed, so the three data tasks compile exactly as before and the existing tests are
+untouched. It reads `validate_data`'s report, rebuilds the corpus-derived pairs from
+the checksummed release that report names, and the submitter rejects a training
+manifest whose `source_release_uri` is not this run's release. 61 tests pass. Not yet
+run on Vertex, not yet reviewed by module A's owner, **not pushed**. One coupling to
+decide in review: a failed training task fails the whole pipeline run, so the data
+release would not be marked validated either.
 
 ### B5 — Re-evaluate and hand back to the evaluation owner
 
@@ -226,12 +285,12 @@ with the new method configuration and the additional labelling load.
 
 **Acceptance criteria**
 
-- [ ] The fine-tuned collection identity differs from the frozen one, so the two sets of
+- [x] The fine-tuned collection identity differs from the frozen one, so the two sets of
       vectors cannot be mixed.
-- [ ] Every returned trial ID is inside the 50-trial universe; the runner already fails
+- [x] Every returned trial ID is inside the 50-trial universe; the runner already fails
       otherwise.
-- [ ] **No metric over Q03–Q08 appears anywhere in B's output.**
-- [ ] The handoff states the count of newly surfaced, still-unjudged trials.
+- [x] **No metric over Q03–Q08 appears anywhere in B's output.**
+- [x] The handoff states the count of newly surfaced, still-unjudged trials.
 
 ### B6 — README and milestone evidence
 
@@ -242,10 +301,18 @@ what the known limitations are.
 
 **Acceptance criteria**
 
-- [ ] Changes relative to MS2 are explicitly marked.
-- [ ] Every command in the section has been run as written.
-- [ ] Limitations are stated: corpus-derived queries rather than human relevance labels,
+- [x] Changes relative to MS2 are explicitly marked.
+- [x] Every command in the section has been run as written.
+- [x] Limitations are stated: corpus-derived queries rather than human relevance labels,
       2,281 pairs, lexical topic alignment, synthetic patients, no clinical validation.
+
+**Status 2026-11-11.** The README has an "Encoder Training (MS3)" section. Every command
+in it was run from a clean worktree, with two qualifications. The Vertex jobs were
+submitted with the workflow environment's interpreter directly; the `uv run --project
+docker/workflow` form in the README was run with `--dry-run` only. The run ID in the
+README command has been used, so a repeat needs a new one. Regenerating the pairs showed
+that negative mining broke ties by hash order; that is now fixed, and the README states
+how far regenerated files differ from the ones the run trained on.
 
 ---
 

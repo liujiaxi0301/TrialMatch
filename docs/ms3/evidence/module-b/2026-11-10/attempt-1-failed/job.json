@@ -1,0 +1,68 @@
+{
+  "display_name": "trialmatch-train-20261110-t4",
+  "project": "trialmatch-ac215-yixiao",
+  "region": "us-east1",
+  "service_account": "trialmatch-pipeline@trialmatch-ac215-yixiao.iam.gserviceaccount.com",
+  "max_run_seconds": 5400,
+  "output": "gs://trialmatch-ac215-yixiao-ms3/training/train-20261110-t4",
+  "code_commit": "9d4c9946b9b8872c098020713e27bbee3ce1f54b",
+  "worker_pool_specs": [
+    {
+      "machine_spec": {
+        "machine_type": "n1-standard-4",
+        "accelerator_type": "NVIDIA_TESLA_T4",
+        "accelerator_count": 1
+      },
+      "replica_count": 1,
+      "container_spec": {
+        "image_uri": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/trainer@sha256:1684df93ebb8f9632b9183734e65ccebd28aa1699eaebac2e947dfbb7b7e1e4d",
+        "command": [
+          "python",
+          "-m",
+          "cloud.train"
+        ],
+        "args": [
+          "--pairs",
+          "gs://trialmatch-ac215-yixiao-ms3/training/pairs/20261110/pairs.jsonl",
+          "gs://trialmatch-ac215-yixiao-ms3/training/pairs/20261110/pairs_llm.jsonl",
+          "--output",
+          "gs://trialmatch-ac215-yixiao-ms3/training/train-20261110-t4",
+          "--epochs",
+          "3",
+          "--batch-size",
+          "16",
+          "--lr",
+          "2e-05",
+          "--temperature",
+          "0.05",
+          "--max-length",
+          "256",
+          "--max-negatives",
+          "4",
+          "--seed",
+          "0",
+          "--wandb-project",
+          "trialmatch-ms3",
+          "--run-name",
+          "train-20261110-t4",
+          "--image-uri",
+          "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/trainer@sha256:1684df93ebb8f9632b9183734e65ccebd28aa1699eaebac2e947dfbb7b7e1e4d",
+          "--wandb-secret",
+          "projects/trialmatch-ac215-yixiao/secrets/wandb-api-key/versions/latest"
+        ],
+        "env": [
+          {
+            "name": "CODE_COMMIT",
+            "value": "9d4c9946b9b8872c098020713e27bbee3ce1f54b"
+          }
+        ]
+      }
+    }
+  ],
+  "resource_name": "projects/15733748057/locations/us-east1/customJobs/2476890940770353152",
+  "state": "JOB_STATE_FAILED",
+  "error": "The replica workerpool0-0 exited with a non-zero status of 1. Termination reason: Error. To find out more about why your job exited please check the logs: https://console.cloud.google.com/logs/viewer?project=15733748057&resource=ml_job%2Fjob_id%2F2476890940770353152&advancedFilter=resource.type%3D%22ml_job%22%0Aresource.labels.job_id%3D%222476890940770353152%22",
+  "create_time": "2026-11-11 03:29:18.729517+00:00",
+  "end_time": "2026-11-11 03:46:00+00:00",
+  "console": "https://console.cloud.google.com/vertex-ai/locations/us-east1/training/2476890940770353152?project=trialmatch-ac215-yixiao"
+}

@@ -1,0 +1,80 @@
+{
+  "benchmark": "TrialMatch MS3 Eligibility Evaluation",
+  "run_phase": "predictions_only_before_gold_comparison",
+  "split": "all",
+  "case_ids": [
+    "E01",
+    "E02",
+    "E03",
+    "E04",
+    "E05",
+    "E06",
+    "E07",
+    "E08"
+  ],
+  "provider": "developer",
+  "model": "gemini-3.1-flash-lite",
+  "offline_baseline_not_live_model_evaluation": false,
+  "generation_temperature": 0,
+  "llm_batch_size": 6,
+  "max_llm_batches_per_case": 12,
+  "max_facts_per_criterion": 12,
+  "max_criterion_chars": 6000,
+  "source_sha256": {
+    "trials": "1678d523a1246319d4ae5ba8d2dd5d4ab1359746ad71fb7feee67b20bb07edd6",
+    "criteria": "f7701a9979eb105219407c553703752879f6a2c55fb8736240c8e7bddc96de59",
+    "patients": "33ac165b9be7c564207325ae951d40b9cfdc3b72f8fb2f56e3e58193894331a1"
+  },
+  "cases_sha256": "3d6ba874be1165a73d546281888fb1e6a6d19084a297dfd9f7ab104cebda3b2e",
+  "cohort_manifest_sha256": "99db4b7cf763763dd04ee2e4e83c26081f7f784c73970f1e6fb2eea93ca6b91b",
+  "code_sha256": {
+    "services/rag_workflow/evidence_rules.py": "23e8a9c38ee08da108384ae966b6a1f6ac6bcfe4327af8c4efb9cc70dee47c02",
+    "services/rag_workflow/judge.py": "33d40398ff12ed791a84945f8d5ab75ff51dd2d76962a36150f58762490bace5",
+    "services/rag_workflow/rules.py": "7981c0131c191d0ae2f14c473fcb5075156c9a610c7329e3e12bd9c5d05e4695",
+    "services/rag_workflow/retrieve.py": "6ea6e7ac09deb4be8b0a9d4b4b2d52fe5358890cbe81883bcd56e96518bccbe4",
+    "services/rag_workflow/data.py": "e6a4ed6c65a3d9148fd484e6b360a7d2fa9d504addf97ba6ef8ab7e65318424b",
+    "services/rag_workflow/providers.py": "d7d546b3fb20af23f0862bffaeb55d11e411b7539798cdb009ec2ac1d16bb4b4",
+    "services/rag_workflow/prompts/criterion_judge.txt": "421eda360d8309da69e509e2e6186ff1ecf269859a2170e250ac9f0c97bc7380",
+    "evaluation/ms3/gemini_developer_provider.py": "60153734fd27e8828e8f462021f1a81df06c62071f62384c36302d4ba1d56363",
+    "evaluation/ms3/eligibility/eligibility_protocol.md": "dd2f7b61fb0c0ec3d1022cc28eb6e2fd2679de6b5e4daa4a7d07700cf4a0f541",
+    "evaluation/ms3/eligibility/run_eligibility.py": "82ff6abb1733b87146be473f9641c2e67248b2b98c4e9bfea3ea0c05ea2db146"
+  },
+  "git": {
+    "branch": "jiaxi/ms3-evaluation",
+    "commit": "0c56990eead6e8bf1b02b76fde50ed4edd998547"
+  },
+  "prediction_count": 115,
+  "prediction_errors": 0,
+  "model_metrics": {
+    "original_run": {
+      "embedding_requests": 0,
+      "generation_requests": 31,
+      "cache_hits": 0,
+      "prompt_tokens": 184486,
+      "output_tokens": 11244
+    },
+    "retry": {
+      "embedding_requests": 0,
+      "generation_requests": 2,
+      "cache_hits": 0,
+      "prompt_tokens": 19371,
+      "output_tokens": 1292
+    }
+  },
+  "model_response_errors_are_not_valid_unknowns": true,
+  "predictions_sha256": "9cd58e6dc59db269831b18c1cc8640466c5ce67080053c4182fd3eb658206899",
+  "recovery": {
+    "recovery_timestamp_utc": "2026-11-11T04:17:47.888419+00:00",
+    "source_predictions_sha256": "96f24f4270e3092c1b492a123f6c6e7adf67b2e25594de2c8069f7eae0f0a73c",
+    "recovered_case": "E06",
+    "recovered_count": 12,
+    "unchanged_successful_count": 103,
+    "original_error_code": "GCP_429",
+    "attempts_by_batch": {
+      "1": 1,
+      "2": 1
+    },
+    "minimum_request_spacing_seconds": 75,
+    "method": "original_batch_retry"
+  }
+}

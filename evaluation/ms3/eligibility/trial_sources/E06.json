@@ -1,0 +1,164 @@
+{
+  "trial": {
+    "trial_id": "NCT03883412",
+    "brief_title": "Effect of Exercise and/or Liraglutide on Vascular Dysfunction and Insulin Sensitivity in Type 2 Diabetes ( ZQL007)",
+    "official_title": "Effect of Exercise and/or Liraglutide on Vascular Dysfunction and Insulin Sensitivity in Type 2 Diabetes ( ZQL007)",
+    "overall_status": "RECRUITING",
+    "conditions": [
+      "Type2 Diabetes"
+    ],
+    "keywords": [],
+    "mesh_terms": [],
+    "study_type": "INTERVENTIONAL",
+    "phases": [
+      "PHASE4"
+    ],
+    "brief_summary": "The primary objective of this study is to examine whether exercise training alone, liraglutide treatment alone or exercise training plus liraglutide treatment increases cardiac and muscle capillary blood volume, improves vascular function in the larger conduit vessels, and enhances insulin's metabolic action in humans with Type 2 diabetes. Subjects will be randomized to one of the three groups: exercise training, liraglutide treatment, and exercise + liraglutide. They will be studied at the baseline and then after 16 weeks of intervention.",
+    "minimum_age": "21 Years",
+    "maximum_age": "60 Years",
+    "sex": "ALL",
+    "healthy_volunteers": true,
+    "eligibility_text": "Inclusion Criteria:\n\n* Age 21-60\n* A1C ≤ 8.5%\n* Never on GLP-1RA (eg: exenatide, liraglutide) or DPP4I ( eg: Sitaglipton)\n* On stable dose of oral hypoglycemic agents \\>4 months\n* On stable dose of other medications for \\>4 months\n\nExclusion Criteria:\n\n* Taking Insulin\n* Smoking presently or in the past 6 months\n* BP \\>160/90\n* BMI \\>35\n* Family history of medullary thyroid cancer or multiple endocrine neoplasia syndrome\n* History of congestive heart failure, ischemic heart disease, severe pulmonary disease, liver or kidney disease.\n* Any vascular disease such as myocardial infarction, stroke, peripheral vascular disease\n* Presence of an intracardiac or intrapulmonary shunt (we will screen for this by auscultation during the physical exam by PI).\n* Pregnant or breastfeeding.\n* Known hypersensitivity to perflutren (contained in Definity)",
+    "locations": [
+      {
+        "facility": "University of Virginia",
+        "status": "RECRUITING",
+        "city": "Charlottesville",
+        "state": "Virginia",
+        "zip": "22906",
+        "country": "United States",
+        "latitude": 38.02931,
+        "longitude": -78.47668
+      }
+    ],
+    "enrollment_count": 60,
+    "enrollment_type": "ESTIMATED",
+    "start_date": "2019-02-28",
+    "completion_date": "2027-12",
+    "last_update_date": "2026-08-12",
+    "source": "ClinicalTrials.gov API v2",
+    "snapshot_date": "2026-10-11"
+  },
+  "criteria": [
+    {
+      "trial_id": "NCT03883412",
+      "criterion_id": "NCT03883412_inc_001",
+      "criterion_type": "inclusion",
+      "criterion_text": "Age 21-60",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03883412",
+      "criterion_id": "NCT03883412_inc_002",
+      "criterion_type": "inclusion",
+      "criterion_text": "A1C ≤ 8.5%",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03883412",
+      "criterion_id": "NCT03883412_inc_003",
+      "criterion_type": "inclusion",
+      "criterion_text": "Never on GLP-1RA (eg: exenatide, liraglutide) or DPP4I ( eg: Sitaglipton)",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03883412",
+      "criterion_id": "NCT03883412_inc_004",
+      "criterion_type": "inclusion",
+      "criterion_text": "On stable dose of oral hypoglycemic agents \\>4 months",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03883412",
+      "criterion_id": "NCT03883412_inc_005",
+      "criterion_type": "inclusion",
+      "criterion_text": "On stable dose of other medications for \\>4 months",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03883412",
+      "criterion_id": "NCT03883412_exc_001",
+      "criterion_type": "exclusion",
+      "criterion_text": "Taking Insulin",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03883412",
+      "criterion_id": "NCT03883412_exc_002",
+      "criterion_type": "exclusion",
+      "criterion_text": "Smoking presently or in the past 6 months",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03883412",
+      "criterion_id": "NCT03883412_exc_003",
+      "criterion_type": "exclusion",
+      "criterion_text": "BP \\>160/90",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03883412",
+      "criterion_id": "NCT03883412_exc_004",
+      "criterion_type": "exclusion",
+      "criterion_text": "BMI \\>35",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03883412",
+      "criterion_id": "NCT03883412_exc_005",
+      "criterion_type": "exclusion",
+      "criterion_text": "Family history of medullary thyroid cancer or multiple endocrine neoplasia syndrome",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03883412",
+      "criterion_id": "NCT03883412_exc_006",
+      "criterion_type": "exclusion",
+      "criterion_text": "History of congestive heart failure, ischemic heart disease, severe pulmonary disease, liver or kidney disease.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03883412",
+      "criterion_id": "NCT03883412_exc_007",
+      "criterion_type": "exclusion",
+      "criterion_text": "Any vascular disease such as myocardial infarction, stroke, peripheral vascular disease",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03883412",
+      "criterion_id": "NCT03883412_exc_008",
+      "criterion_type": "exclusion",
+      "criterion_text": "Presence of an intracardiac or intrapulmonary shunt (we will screen for this by auscultation during the physical exam by PI).",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03883412",
+      "criterion_id": "NCT03883412_exc_009",
+      "criterion_type": "exclusion",
+      "criterion_text": "Pregnant or breastfeeding.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03883412",
+      "criterion_id": "NCT03883412_exc_010",
+      "criterion_type": "exclusion",
+      "criterion_text": "Known hypersensitivity to perflutren (contained in Definity)",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    }
+  ]
+}

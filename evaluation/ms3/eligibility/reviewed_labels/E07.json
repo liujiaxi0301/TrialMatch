@@ -1,0 +1,201 @@
+{
+  "case_id": "E07",
+  "patient_id": "80534c6c-b12d-caa5-42de-b179fd7f9695",
+  "trial_id": "NCT04687215",
+  "split": "reporting",
+  "review_status": "frozen",
+  "reviewer_qualification": "Non-clinician evidence-based reference assessment",
+  "labels": [
+    {
+      "criterion_id": "NCT04687215_inc_001",
+      "criterion_type": "inclusion",
+      "criterion_text": "Patients with DM type 2 of more than 1-year duration",
+      "gold_decision": "MET",
+      "reason": "Type 2 diabetes is supported by the documented diabetes diagnosis and type 2 diabetic neuropathy. Diabetes onset was 2019-10-18, more than two years before the 2021-11-30 reference date.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Anthony633_Wehner319_80534c6c-b12d-caa5-42de-b179fd7f9695.json#Condition/35e47ee0-a817-3fe3-29a4-f195dbe54b67",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Anthony633_Wehner319_80534c6c-b12d-caa5-42de-b179fd7f9695.json#Condition/9a929975-ee6c-2bd7-3805-06e7300367ad"
+      ],
+      "missing_information": [],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT04687215_inc_002",
+      "criterion_type": "inclusion",
+      "criterion_text": "DM stage 3 or less",
+      "gold_decision": "UNKNOWN",
+      "reason": "The protocol says DM stage 3 or less, but does not specify the diabetes staging system. No corresponding diabetes stage is documented.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Definition of the DM staging system and documented patient stage."
+      ],
+      "review_notes": "Protocol ambiguity: do not substitute CKD staging or infer a diabetes stage from complications."
+    },
+    {
+      "criterion_id": "NCT04687215_inc_003",
+      "criterion_type": "inclusion",
+      "criterion_text": "Patients ≥18 years of age",
+      "gold_decision": "MET",
+      "reason": "The patient was 27 years old at the reference date, meeting the minimum age of 18 years.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Anthony633_Wehner319_80534c6c-b12d-caa5-42de-b179fd7f9695.json#Patient/80534c6c-b12d-caa5-42de-b179fd7f9695"
+      ],
+      "missing_information": [],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT04687215_inc_004",
+      "criterion_type": "inclusion",
+      "criterion_text": "Refractory painful diabetic peripheral neuropathy of the lower extremities",
+      "gold_decision": "UNKNOWN",
+      "reason": "Type 2 diabetic neuropathy is documented. A pain score of 4/10 was recorded in 2019, but the record does not establish lower-extremity localization, neuropathic pain attribution, or refractory pain despite treatment.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Anthony633_Wehner319_80534c6c-b12d-caa5-42de-b179fd7f9695.json#Condition/9a929975-ee6c-2bd7-3805-06e7300367ad",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Anthony633_Wehner319_80534c6c-b12d-caa5-42de-b179fd7f9695.json#Observation/904b72a9-e3cc-434f-665a-13f9e258a551"
+      ],
+      "missing_information": [
+        "Lower-extremity neuropathic pain assessment.",
+        "Treatment history and evidence of refractory pain."
+      ],
+      "review_notes": "Documented diabetic neuropathy is insufficient to establish refractory painful lower-extremity neuropathy."
+    },
+    {
+      "criterion_id": "NCT04687215_inc_005",
+      "criterion_type": "inclusion",
+      "criterion_text": "ABI index \\<0.9",
+      "gold_decision": "UNKNOWN",
+      "reason": "An ankle-brachial index below 0.9 is not documented or contradicted by a measured ABI.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Ankle-brachial index measurement."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT04687215_exc_001",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patients on anticoagulants",
+      "gold_decision": "UNKNOWN",
+      "reason": "Current anticoagulant treatment is neither affirmatively documented nor explicitly ruled out.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Current anticoagulant medication status."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT04687215_exc_002",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patients with active infections",
+      "gold_decision": "UNKNOWN",
+      "reason": "A previous episode of acute viral pharyngitis in August 2020 was documented as resolved, but the presence or absence of an active infection at the reference date is not established.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Anthony633_Wehner319_80534c6c-b12d-caa5-42de-b179fd7f9695.json#Condition/9b087586-3bf7-2ddf-9edc-e2e4d2d666fe"
+      ],
+      "missing_information": [
+        "Current infection assessment at enrollment."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT04687215_exc_003",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patients with HbA1\\>10",
+      "gold_decision": "NOT_MET",
+      "reason": "The latest documented HbA1c was 6.6% on 2019-10-18, below the protocol exclusion threshold of 10%.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Anthony633_Wehner319_80534c6c-b12d-caa5-42de-b179fd7f9695.json#Observation/e1c4bcf2-6910-2a8f-e3dd-aed00ec98566"
+      ],
+      "missing_information": [],
+      "review_notes": "Interpreted protocol shorthand HbA1 >10 as an HbA1c threshold."
+    },
+    {
+      "criterion_id": "NCT04687215_exc_004",
+      "criterion_type": "exclusion",
+      "criterion_text": "Psychiatric disorders and cognitive dysfunctions",
+      "gold_decision": "UNKNOWN",
+      "reason": "Stress and social isolation are documented, but these findings do not independently establish a qualifying psychiatric disorder or cognitive dysfunction. Their absence is also not established.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Anthony633_Wehner319_80534c6c-b12d-caa5-42de-b179fd7f9695.json#Condition/00b81fce-db51-5ede-6b9f-f52c67b0cedc",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Anthony633_Wehner319_80534c6c-b12d-caa5-42de-b179fd7f9695.json#Condition/61712ac5-a763-db22-2269-23a2b151c779"
+      ],
+      "missing_information": [
+        "Qualifying psychiatric diagnosis or cognitive-function assessment."
+      ],
+      "review_notes": "Stress and social isolation are not automatically psychiatric diagnoses."
+    },
+    {
+      "criterion_id": "NCT04687215_exc_005",
+      "criterion_type": "exclusion",
+      "criterion_text": "Illicit Drug Usage",
+      "gold_decision": "MET",
+      "reason": "A confirmed drug-misuse finding began in 2016 and remains recorded as active, supported by a DAST-10 score of 7. Under the agreed broad interpretation of illicit drug usage as nonmedical drug misuse, the exclusion criterion is met.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Anthony633_Wehner319_80534c6c-b12d-caa5-42de-b179fd7f9695.json#Condition/7ac3c36a-427e-f29c-4d42-3791364d4094",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Anthony633_Wehner319_80534c6c-b12d-caa5-42de-b179fd7f9695.json#Observation/0ddd47ef-1269-ca7c-b996-eb393065dd0d"
+      ],
+      "missing_information": [],
+      "review_notes": "Human-confirmed broad interpretation of illicit drug usage. Drug misuse and DAST-10 score support nonmedical drug misuse, but do not identify a specific legally illicit substance. The condition's recorded active status is not independent proof of use on the reference date."
+    },
+    {
+      "criterion_id": "NCT04687215_exc_006",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patients on dialysis",
+      "gold_decision": "UNKNOWN",
+      "reason": "Current dialysis treatment is neither confirmed nor explicitly excluded by the available records.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Current dialysis or renal replacement therapy status."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT04687215_exc_007",
+      "criterion_type": "exclusion",
+      "criterion_text": "BMI\\>35.0",
+      "gold_decision": "NOT_MET",
+      "reason": "The latest documented BMI was 26.75 kg/m2 on 2019-10-18, below the exclusion threshold of greater than 35.0.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Anthony633_Wehner319_80534c6c-b12d-caa5-42de-b179fd7f9695.json#Observation/dd135b04-6b6e-1383-9ae3-e0c5faa460d2"
+      ],
+      "missing_information": [],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT04687215_exc_008",
+      "criterion_type": "exclusion",
+      "criterion_text": "Surgery within the last 30 days",
+      "gold_decision": "UNKNOWN",
+      "reason": "The available records do not establish whether surgery occurred within the 30 days before the reference or enrollment date.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Complete surgical history during the preceding 30 days."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT04687215_exc_009",
+      "criterion_type": "exclusion",
+      "criterion_text": "Ulcer of the lower extremities",
+      "gold_decision": "UNKNOWN",
+      "reason": "Lower-extremity ulcers are neither confirmed nor explicitly ruled out.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Current lower-extremity ulcer examination or diagnosis."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT04687215_exc_010",
+      "criterion_type": "exclusion",
+      "criterion_text": "Calcification of the peripheral arteries",
+      "gold_decision": "UNKNOWN",
+      "reason": "Peripheral arterial calcification is neither confirmed nor excluded by relevant vascular imaging or assessment.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Peripheral arterial imaging or vascular assessment."
+      ],
+      "review_notes": ""
+    }
+  ]
+}

@@ -35,6 +35,10 @@ embeddings = [
     "torch>=2.5,<3",
     "transformers>=4.48,<5",
 ]
+training = [
+    {include-group = "embeddings"},
+    "wandb>=0.19,<1",
+]
 
 [tool.uv]
 package = false

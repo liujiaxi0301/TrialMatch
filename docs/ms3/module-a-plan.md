@@ -1,5 +1,26 @@
 # Module A: baseline and integration plan
 
+Local training-input update (2026-11-11): extra `--train-pairs` now require
+`--train-pairs-sha256`. The trainer verifies the exact bytes it parses before
+model loading; the submitter checks the resulting pair-source records before
+publishing success. Workflow and trainer images need rebuilding for the new
+interface. See [module-a-training.md](module-a-training.md); no cloud run is claimed.
+
+Local eligibility update (2026-11-11): C's fixed-pair evaluator from `243f6bc`
+is imported unchanged and connected by the optional `--eligibility` flag after
+`validate-data`. It runs independently of B's training and checks model-call
+failures before publishing success. See [module-a-eligibility.md](module-a-eligibility.md).
+Default/data-only, training-only, eligibility-only and combined configurations
+contain 4, 5, 5 and 6 tasks respectively. Cloud verification remains pending.
+
+Local integration update (2026-11-11): Jenny's `55e88ba` training implementation is
+being merged into `xuyang/ms3-pipeline` for review. The default four-node DAG is
+preserved; selecting `--trainer-image` adds `train-encoder` after validation, with
+batch size 8. The training manifest is checked before local success markers are
+written. See [module-a-training.md](module-a-training.md) for the interface,
+verification and remaining work. No integrated training cloud run is claimed.
+The historical evidence below continues to describe the earlier four-node run.
+
 Status (2026-11-10): the integrated four-step data/retrieval cloud run has passed
 an offline consistency review of exported cloud records. The runtime graph was
 also reviewed in chat; its original image file still needs archiving.
@@ -162,12 +183,16 @@ source release, artifact URI/checksum, workflow type, configuration, code/image
 version and experiment run reference. An index experiment may represent the
 training requirement only after the team confirms that approach with the TF.
 
-Proposed C input: the same data release, B's artifact manifest, a fixed benchmark
+Original proposed C input: the same data release, B's artifact manifest, a fixed benchmark
 version and an output location. Proposed output: metrics plus per-case results,
 recording the benchmark version, actual execution mode, artifact version, case
 counts and errors. C owns metric definitions. Execution failures must remain
 visible and cause a failed step; a completed run with poor quality scores should
 be distinguished from an execution failure.
+
+The delivered C eligibility evaluator instead uses fixed patient/trial pairs and
+does not consume B's checkpoint. Its independent branch is now implemented
+locally; the broader model/retrieval comparison above remains separate work.
 
 Keep the existing data-release schema usable by deployment. Agree any new
 model/evaluation release fields with D before changing that interface.

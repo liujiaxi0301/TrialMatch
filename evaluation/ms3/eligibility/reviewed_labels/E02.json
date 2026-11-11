@@ -1,0 +1,127 @@
+{
+  "case_id": "E02",
+  "patient_id": "1293efbb-72dc-8b15-3bd6-916f96ed54f4",
+  "trial_id": "NCT05028140",
+  "split": "dev",
+  "review_status": "frozen",
+  "reviewer_qualification": "Non-clinician evidence-based reference assessment",
+  "gold_label_version": "E02-v1",
+  "frozen_on": "2026-11-10",
+  "review_method": "User-confirmed non-clinician reference labeling, AI-assisted source review",
+  "reference_date_policy": "Historical snapshot (2021-11-30); explicit temporal windows and qualifiers respected",
+  "on_therapy_policy": "A documented active prescribed regimen can support unwindowed on-therapy wording; actual use/administration windows require direct use evidence",
+  "pregnancy_screening_policy": "Synthetic, non-clinical demographic proxy only for E02 pregnancy/lactation-only exclusion; broader reproductive planning requires separate evidence",
+  "source_patient_facts_sha256_canonical": "14d3f3ad82868180d59a3c97428f15f89d71ddedc60b3b29393703603e556a21",
+  "source_trial_criteria_sha256_canonical": "8a9f8ff5d18ea0b69c485ae534f61cb358a601786a43cad9e2b3828a4bb91d24",
+  "gold_labels_sha256_canonical": "422edcdb766a34213ed669eed3e1709491a7c573b149a1d4448906d5f037c8c7",
+  "labels": [
+    {
+      "criterion_id": "NCT05028140_inc_001",
+      "criterion_type": "inclusion",
+      "criterion_text": "Ability to confirm voluntary participation and agree to all trial purposes by signing and dating the consent form;",
+      "gold_decision": "UNKNOWN",
+      "reason": "No record establishes that the patient voluntarily consented to this specific trial and signed and dated its consent form.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Trial-specific signed and dated informed consent confirming voluntary participation."
+      ],
+      "review_notes": "Consent cannot be inferred from unrelated prior health-care encounters."
+    },
+    {
+      "criterion_id": "NCT05028140_inc_002",
+      "criterion_type": "inclusion",
+      "criterion_text": "Diagnosis of type II diabetes mellitus, and who did not reach the therapeutic goal of HbA1c with previous dietary, physical exercise, and previous therapies at stable doses within 3 months.",
+      "gold_decision": "UNKNOWN",
+      "reason": "A confirmed type 2 diabetes-associated diagnosis, 2021-02-07 HbA1c of 6.12%, and an active metformin order are documented. However, the protocol-specific HbA1c therapeutic goal, prior failure to meet that goal despite diet/exercise, and stable treatment doses over the specified three-month period are not established.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Chauncey770_Jones311_1293efbb-72dc-8b15-3bd6-916f96ed54f4.json#Condition/bd7379b1-97dd-d546-b764-2880ffe8b27b",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Chauncey770_Jones311_1293efbb-72dc-8b15-3bd6-916f96ed54f4.json#Observation/0bceaeda-3ec4-d52a-e44c-b53fddfd7e31",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Chauncey770_Jones311_1293efbb-72dc-8b15-3bd6-916f96ed54f4.json#MedicationRequest/a2675d90-7dfb-30a7-5e4d-0e8ce9689c58"
+      ],
+      "missing_information": [
+        "The trial-defined HbA1c goal and evidence it was unmet.",
+        "Documented diet, exercise and prior therapeutic interventions.",
+        "Treatment dose stability for the required three-month window."
+      ],
+      "review_notes": "Do not substitute a general diabetes HbA1c target for a trial-specific one. Active medication request does not establish three-month dose stability or adherence."
+    },
+    {
+      "criterion_id": "NCT05028140_exc_001",
+      "criterion_type": "exclusion",
+      "criterion_text": "Any clinical and laboratory findings that, in the judgment of the investigator, may interfere with the safety of participants;",
+      "gold_decision": "UNKNOWN",
+      "reason": "The criterion explicitly requires the investigator to judge that clinical or laboratory findings may interfere with participant safety. Available records do not contain this trial-specific safety determination.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Investigator assessment of clinical and laboratory findings for participation safety."
+      ],
+      "review_notes": "Neither routine medical diagnoses nor normal-appearing values can replace investigator judgment."
+    },
+    {
+      "criterion_id": "NCT05028140_exc_002",
+      "criterion_type": "exclusion",
+      "criterion_text": "History of alcohol abuse or illicit drug use;",
+      "gold_decision": "UNKNOWN",
+      "reason": "Several historical drug-abuse screening procedures and AUDIT-C scores are recorded, including AUDIT-C 2 in 2021. Neither the existence of a screening procedure nor a low questionnaire score proves or excludes a lifetime history of alcohol abuse or illicit drug use.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Chauncey770_Jones311_1293efbb-72dc-8b15-3bd6-916f96ed54f4.json#Procedure/85ff7a38-8777-ea64-9b46-c1ca18a5ba64",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Chauncey770_Jones311_1293efbb-72dc-8b15-3bd6-916f96ed54f4.json#Observation/22a5f5b8-2b6f-c387-0d46-c7b2c293490e"
+      ],
+      "missing_information": [
+        "An explicit positive or sufficiently scoped negative history of alcohol abuse and illicit drug use."
+      ],
+      "review_notes": "Drug-abuse screening performed is not equivalent to a positive or negative illicit-drug-use result."
+    },
+    {
+      "criterion_id": "NCT05028140_exc_003",
+      "criterion_type": "exclusion",
+      "criterion_text": "Participation in a clinical trial in the year prior to this study;",
+      "gold_decision": "UNKNOWN",
+      "reason": "The source record has no explicit information confirming or excluding participation in another clinical trial during the year before the relevant study entry.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Clinical-trial participation history covering the one-year window before study entry."
+      ],
+      "review_notes": "Historical snapshot reference date is 2021-11-30; the actual planned study entry date is not supplied."
+    },
+    {
+      "criterion_id": "NCT05028140_exc_004",
+      "criterion_type": "exclusion",
+      "criterion_text": "Pregnancy or risk of pregnacy and lactating participants;",
+      "gold_decision": "NOT_MET",
+      "reason": "In this synthetic retrospective screening benchmark, the recorded 62-year-old male demographics are treated as not triggering the trial’s pregnancy/lactation-only exclusion; no additional reproductive-planning clause is present.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Chauncey770_Jones311_1293efbb-72dc-8b15-3bd6-916f96ed54f4.json#Patient/1293efbb-72dc-8b15-3bd6-916f96ed54f4"
+      ],
+      "missing_information": [],
+      "review_notes": "Confirmed E02 synthetic-data demographic convention: recorded male gender and age 62 are treated as non-applicability for this pregnancy/lactation-only exclusion. This is a retrospective benchmark convention, NOT a universal clinical determination of pregnancy potential. E01 exc_013 also includes planning to have a baby, so remains UNKNOWN."
+    },
+    {
+      "criterion_id": "NCT05028140_exc_005",
+      "criterion_type": "exclusion",
+      "criterion_text": "Known hypersensitivity to any of the formula compounds;",
+      "gold_decision": "UNKNOWN",
+      "reason": "No affirmative hypersensitivity history or explicit, complete negative allergy history to each formula component is documented. The formula compound list is not established by the supplied patient facts.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Exact formulation/component list.",
+        "Positive or comprehensive negative hypersensitivity evidence for relevant compounds."
+      ],
+      "review_notes": "Absence of an AllergyIntolerance entry in the normalized source data is not evidence of no allergy."
+    },
+    {
+      "criterion_id": "NCT05028140_exc_006",
+      "criterion_type": "exclusion",
+      "criterion_text": "Type 1 diabetes.",
+      "gold_decision": "UNKNOWN",
+      "reason": "A confirmed type 2 diabetes-associated neuropathy diagnosis supports T2D, but the record does not independently establish whether a type 1 diabetes diagnosis exists or is explicitly absent.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Chauncey770_Jones311_1293efbb-72dc-8b15-3bd6-916f96ed54f4.json#Condition/bd7379b1-97dd-d546-b764-2880ffe8b27b"
+      ],
+      "missing_information": [
+        "Explicit type 1 diabetes status, or a sufficiently scoped negative diagnosis assessment."
+      ],
+      "review_notes": "Consistent with E01 exc_004: positive T2D evidence is not treated as an explicit negative T1D statement."
+    }
+  ]
+}

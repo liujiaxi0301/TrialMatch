@@ -1,8 +1,10 @@
 """Separate retrieval encoders from generation; keep the Gemini default compatible."""
 
+import hashlib
 import json
 import math
 import threading
+from pathlib import Path
 
 from .providers import GeminiProvider, ProviderError, content_hash, save_json
 
@@ -11,7 +13,7 @@ def encoder_identity(settings) -> dict:
     if settings.embedding_provider == "gemini":
         return {}  # Preserve existing Gemini snapshots and content-addressed collection IDs.
     settings.validate()
-    return {
+    identity = {
         "provider": "bioclinical",
         "revision": settings.embedding_revision,
         "pooling": "attention-mask-mean-including-special-tokens-v1",
@@ -20,6 +22,66 @@ def encoder_identity(settings) -> dict:
         "dtype": "float32",
         "attention": "sdpa",
     }
+    if settings.embedding_checkpoint:
+        # Only the content digest enters the identity: the same weights are the same
+        # encoder wherever they are stored, and the frozen identity stays unchanged.
+        identity["checkpoint_sha256"] = settings.embedding_checkpoint_sha256
+    return identity
+
+
+def checkpoint_digest(directory) -> tuple[str, dict]:
+    """One SHA256 over every file of a checkpoint directory, and the per-file digests."""
+    files = {}
+    for path in sorted(Path(directory).iterdir()):
+        if path.is_file():
+            digest = hashlib.sha256()
+            with path.open("rb") as handle:
+                for chunk in iter(lambda: handle.read(1 << 20), b""):
+                    digest.update(chunk)
+            files[path.name] = digest.hexdigest()
+    return hashlib.sha256(json.dumps(files, sort_keys=True).encode()).hexdigest(), files
+
+
+def resolve_checkpoint(settings) -> Path:
+    """Local directory of the configured checkpoint, verified against its digest."""
+    source, expected = settings.embedding_checkpoint, settings.embedding_checkpoint_sha256
+    if source.startswith("gs://"):
+        directory = settings.artifacts / "cache/checkpoints" / expected
+        complete = directory.with_suffix(".complete")  # Outside the hashed directory.
+        if not complete.exists():
+            from google.cloud import storage
+
+            bucket_name, _, prefix = source.removeprefix("gs://").partition("/")
+            prefix = prefix.rstrip("/") + "/"
+            directory.mkdir(parents=True, exist_ok=True)
+            for blob in storage.Client().list_blobs(bucket_name, prefix=prefix):
+                name = blob.name.removeprefix(prefix)
+                if name and "/" not in name:
+                    blob.download_to_filename(str(directory / name))
+            complete.touch()
+    else:
+        directory = Path(source).expanduser()
+    if not directory.is_dir():
+        raise ProviderError("EMBEDDING_CHECKPOINT_MISSING", "Checkpoint directory not found.")
+    actual, _ = checkpoint_digest(directory)
+    if actual != expected:
+        raise ProviderError(
+            "EMBEDDING_CHECKPOINT_MISMATCH", "Checkpoint content differs from its digest."
+        )
+    return directory
+
+
+def masked_mean_l2(hidden, attention_mask):
+    """Attention-mask mean over every token, special tokens included, then L2.
+
+    The single definition of BioClinical pooling: `cloud.train` optimizes through this
+    same function, so a fine-tuned checkpoint is pooled exactly as it is served.
+    """
+    import torch
+
+    mask = attention_mask.unsqueeze(-1).to(hidden.dtype)
+    pooled = (hidden * mask).sum(1) / mask.sum(1).clamp(min=1)
+    return torch.nn.functional.normalize(pooled, p=2, dim=1)
 
 
 def create_embedding_provider(settings, gemini=None):
@@ -60,15 +122,17 @@ class BioClinicalProvider:
                 if torch.backends.mps.is_available()
                 else "cpu"
             )
-        self.tokenizer = AutoTokenizer.from_pretrained(
-            self.settings.embedding_model,
-            revision=self.settings.embedding_revision,
-            trust_remote_code=False,
-        )
+        if self.settings.embedding_checkpoint:
+            source = {"pretrained_model_name_or_path": str(resolve_checkpoint(self.settings))}
+        else:
+            source = {
+                "pretrained_model_name_or_path": self.settings.embedding_model,
+                "revision": self.settings.embedding_revision,
+            }
+        self.tokenizer = AutoTokenizer.from_pretrained(**source, trust_remote_code=False)
         self.model = (
             AutoModel.from_pretrained(
-                self.settings.embedding_model,
-                revision=self.settings.embedding_revision,
+                **source,
                 trust_remote_code=False,
                 attn_implementation="sdpa",
                 torch_dtype=torch.float32,
@@ -123,9 +187,7 @@ class BioClinicalProvider:
                 batch = {key: value.to(self.device) for key, value in batch.items()}
                 with torch.inference_mode():
                     hidden = self.model(**batch).last_hidden_state.float()
-                    mask = batch["attention_mask"].unsqueeze(-1).to(hidden.dtype)
-                    pooled = (hidden * mask).sum(1) / mask.sum(1).clamp(min=1)
-                    result = torch.nn.functional.normalize(pooled, p=2, dim=1)
+                    result = masked_mean_l2(hidden, batch["attention_mask"])
                     if not torch.isfinite(result).all() or (result.norm(dim=1) < 0.99).any():
                         raise ProviderError(
                             "INVALID_EMBEDDING", "Nonfinite or empty encoder output."

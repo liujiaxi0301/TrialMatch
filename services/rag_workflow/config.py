@@ -57,6 +57,14 @@ class Settings:
     embedding_revision: str = field(
         default_factory=lambda: os.environ.get("EMBEDDING_REVISION", "")
     )
+    # A fine-tuned checkpoint of the pinned base model: a local directory or gs:// prefix
+    # holding model.safetensors and the tokenizer, plus the digest its manifest recorded.
+    embedding_checkpoint: str = field(
+        default_factory=lambda: os.environ.get("EMBEDDING_CHECKPOINT", "")
+    )
+    embedding_checkpoint_sha256: str = field(
+        default_factory=lambda: os.environ.get("EMBEDDING_CHECKPOINT_SHA256", "")
+    )
     embedding_max_tokens: int = field(
         default_factory=lambda: int(os.environ.get("EMBEDDING_MAX_TOKENS", "2048"))
     )
@@ -80,6 +88,15 @@ class Settings:
 
             if not re.fullmatch(r"[0-9a-f]{40}", self.embedding_revision):
                 raise ValueError("BioClinical requires an exact 40-character EMBEDDING_REVISION")
+            if self.embedding_checkpoint and not re.fullmatch(
+                r"[0-9a-f]{64}", self.embedding_checkpoint_sha256
+            ):
+                raise ValueError(
+                    "A fine-tuned checkpoint requires its 64-character "
+                    "EMBEDDING_CHECKPOINT_SHA256 from training_manifest.json"
+                )
+            if self.embedding_checkpoint_sha256 and not self.embedding_checkpoint:
+                raise ValueError("EMBEDDING_CHECKPOINT_SHA256 is set without EMBEDDING_CHECKPOINT")
             if self.dimension != 768:
                 raise ValueError("BioClinical base mean pooling requires EMBEDDING_DIMENSION=768")
             if not 1 <= self.embedding_max_tokens <= 8192:

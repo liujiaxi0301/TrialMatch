@@ -1,0 +1,149 @@
+{
+  "trial": {
+    "trial_id": "NCT03827382",
+    "brief_title": "Bicycle Exercise and Lifestyle Intervention in Newly Diagnosed Diabetes",
+    "official_title": "Bicycle Exercise and Lifestyle Intervention in Newly Diagnosed Diabetes",
+    "overall_status": "RECRUITING",
+    "conditions": [
+      "Life Style"
+    ],
+    "keywords": [
+      "Life Style Intervention",
+      "Type 2 Diabetes mellitus"
+    ],
+    "mesh_terms": [
+      "Diabetes Mellitus, Type 2"
+    ],
+    "study_type": "INTERVENTIONAL",
+    "phases": [
+      "NA"
+    ],
+    "brief_summary": "The aim of the study is to test the efficacy, feasibility, and safety of a bicycle exercise followed by an intensive lifestyle intervention for 3 months in patients with recent onset and medically untreated type 2 diabetes.",
+    "minimum_age": "18 Years",
+    "maximum_age": null,
+    "sex": "ALL",
+    "healthy_volunteers": false,
+    "eligibility_text": "Inclusion Criteria:\n\n* Informed consent as documented by signature\n* Type 2 diabetes diagnosed within the last two years according to the American Diabetes Association (ADA) criteria\n* Age ≥ 18 years\n* HbA1c ≥ 7.5 %\n\nExclusion Criteria:\n\n* Clinically instable patient as defined by the physicians on duty including signs of new cardiac ischemia in the ECG, systolic blood pressure ≥ 200 mmHg, fever ≥ 38.5 °C, symptoms of SIRS or reduced vigilance.\n* Anti-diabetic medication for ≥ 24 hours\n* Inability to perform a bicycle exercise during 30 minutes\n* Previous lifestyle-intervention by an endocrinologist\n* Engagement in physical activity more than five times per week\n* Enrollment in other interventional study",
+    "locations": [
+      {
+        "facility": "University of Basel",
+        "status": "RECRUITING",
+        "city": "Basel",
+        "state": "Canton of Basel-City",
+        "zip": "4031",
+        "country": "Switzerland",
+        "latitude": 47.55839,
+        "longitude": 7.57327
+      },
+      {
+        "facility": "Cantonal Hospital Olten",
+        "status": "RECRUITING",
+        "city": "Olten",
+        "state": "Canton of Solothurn",
+        "zip": "4600",
+        "country": "Switzerland",
+        "latitude": 47.34999,
+        "longitude": 7.90329
+      },
+      {
+        "facility": "Hopital du Jura",
+        "status": "RECRUITING",
+        "city": "Delémont",
+        "state": null,
+        "zip": "2800",
+        "country": "Switzerland",
+        "latitude": 47.36493,
+        "longitude": 7.34453
+      }
+    ],
+    "enrollment_count": 62,
+    "enrollment_type": "ESTIMATED",
+    "start_date": "2019-02-01",
+    "completion_date": "2025-12-31",
+    "last_update_date": "2025-02-14",
+    "source": "ClinicalTrials.gov API v2",
+    "snapshot_date": "2026-10-11"
+  },
+  "criteria": [
+    {
+      "trial_id": "NCT03827382",
+      "criterion_id": "NCT03827382_inc_001",
+      "criterion_type": "inclusion",
+      "criterion_text": "Informed consent as documented by signature",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03827382",
+      "criterion_id": "NCT03827382_inc_002",
+      "criterion_type": "inclusion",
+      "criterion_text": "Type 2 diabetes diagnosed within the last two years according to the American Diabetes Association (ADA) criteria",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03827382",
+      "criterion_id": "NCT03827382_inc_003",
+      "criterion_type": "inclusion",
+      "criterion_text": "Age ≥ 18 years",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03827382",
+      "criterion_id": "NCT03827382_inc_004",
+      "criterion_type": "inclusion",
+      "criterion_text": "HbA1c ≥ 7.5 %",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03827382",
+      "criterion_id": "NCT03827382_exc_001",
+      "criterion_type": "exclusion",
+      "criterion_text": "Clinically instable patient as defined by the physicians on duty including signs of new cardiac ischemia in the ECG, systolic blood pressure ≥ 200 mmHg, fever ≥ 38.5 °C, symptoms of SIRS or reduced vigilance.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03827382",
+      "criterion_id": "NCT03827382_exc_002",
+      "criterion_type": "exclusion",
+      "criterion_text": "Anti-diabetic medication for ≥ 24 hours",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03827382",
+      "criterion_id": "NCT03827382_exc_003",
+      "criterion_type": "exclusion",
+      "criterion_text": "Inability to perform a bicycle exercise during 30 minutes",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03827382",
+      "criterion_id": "NCT03827382_exc_004",
+      "criterion_type": "exclusion",
+      "criterion_text": "Previous lifestyle-intervention by an endocrinologist",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03827382",
+      "criterion_id": "NCT03827382_exc_005",
+      "criterion_type": "exclusion",
+      "criterion_text": "Engagement in physical activity more than five times per week",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT03827382",
+      "criterion_id": "NCT03827382_exc_006",
+      "criterion_type": "exclusion",
+      "criterion_text": "Enrollment in other interventional study",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    }
+  ]
+}

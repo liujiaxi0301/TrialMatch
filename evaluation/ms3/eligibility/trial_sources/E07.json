@@ -1,0 +1,173 @@
+{
+  "trial": {
+    "trial_id": "NCT04687215",
+    "brief_title": "Diabetic Neuropathy in Spinal Cord Stimulator Patients",
+    "official_title": "Spinal Cord Stimulation Improves Pain, Arterial Stiffness and Vascular Flow in Lower Extremities in Patients With Diabetes Mellitus Type II A Multidisciplinary Collaborative Prospective Study",
+    "overall_status": "RECRUITING",
+    "conditions": [
+      "Diabetes Mellitus",
+      "Neuropathy",
+      "Neuropathic Pain",
+      "Vascular Diseases",
+      "Vascular Stiffness",
+      "Microvascular Changes",
+      "Pain, Chronic"
+    ],
+    "keywords": [],
+    "mesh_terms": [
+      "Diabetes Mellitus",
+      "Neuralgia",
+      "Vascular Diseases",
+      "Chronic Pain"
+    ],
+    "study_type": "OBSERVATIONAL",
+    "phases": [],
+    "brief_summary": "The objective of this study is to assess the effect Spinal Cord Stimulators have toward improving vascular changes of diabetes mellitus in patients eligible for SCS placement based on their condition of painful diabetic neuropathy; we will evaluate improving their disability and quality of life, improving micro-circulatory changes induced by Diabetes Mellitus (DM), improving macro-circulatory changes induced by DM and improving arterial stiffness of the vessels of the lower extremity.",
+    "minimum_age": "18 Years",
+    "maximum_age": null,
+    "sex": "ALL",
+    "healthy_volunteers": false,
+    "eligibility_text": "Inclusion Criteria:\n\n1. Patients with DM type 2 of more than 1-year duration\n2. DM stage 3 or less\n3. Patients ≥18 years of age\n4. Refractory painful diabetic peripheral neuropathy of the lower extremities\n5. ABI index \\<0.9\n\nExclusion Criteria:\n\n1. Patients on anticoagulants\n2. Patients with active infections\n3. Patients with HbA1\\>10\n4. Psychiatric disorders and cognitive dysfunctions\n5. Illicit Drug Usage\n6. Patients on dialysis\n7. BMI\\>35.0\n8. Surgery within the last 30 days\n9. Ulcer of the lower extremities\n10. Calcification of the peripheral arteries",
+    "locations": [
+      {
+        "facility": "University of Chicago Medical Center",
+        "status": "RECRUITING",
+        "city": "Chicago",
+        "state": "Illinois",
+        "zip": "60637",
+        "country": "United States",
+        "latitude": 41.85003,
+        "longitude": -87.65005
+      }
+    ],
+    "enrollment_count": 25,
+    "enrollment_type": "ESTIMATED",
+    "start_date": "2022-01-27",
+    "completion_date": "2026-12-01",
+    "last_update_date": "2026-02-05",
+    "source": "ClinicalTrials.gov API v2",
+    "snapshot_date": "2026-10-11"
+  },
+  "criteria": [
+    {
+      "trial_id": "NCT04687215",
+      "criterion_id": "NCT04687215_inc_001",
+      "criterion_type": "inclusion",
+      "criterion_text": "Patients with DM type 2 of more than 1-year duration",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04687215",
+      "criterion_id": "NCT04687215_inc_002",
+      "criterion_type": "inclusion",
+      "criterion_text": "DM stage 3 or less",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04687215",
+      "criterion_id": "NCT04687215_inc_003",
+      "criterion_type": "inclusion",
+      "criterion_text": "Patients ≥18 years of age",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04687215",
+      "criterion_id": "NCT04687215_inc_004",
+      "criterion_type": "inclusion",
+      "criterion_text": "Refractory painful diabetic peripheral neuropathy of the lower extremities",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04687215",
+      "criterion_id": "NCT04687215_inc_005",
+      "criterion_type": "inclusion",
+      "criterion_text": "ABI index \\<0.9",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04687215",
+      "criterion_id": "NCT04687215_exc_001",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patients on anticoagulants",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04687215",
+      "criterion_id": "NCT04687215_exc_002",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patients with active infections",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04687215",
+      "criterion_id": "NCT04687215_exc_003",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patients with HbA1\\>10",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04687215",
+      "criterion_id": "NCT04687215_exc_004",
+      "criterion_type": "exclusion",
+      "criterion_text": "Psychiatric disorders and cognitive dysfunctions",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04687215",
+      "criterion_id": "NCT04687215_exc_005",
+      "criterion_type": "exclusion",
+      "criterion_text": "Illicit Drug Usage",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04687215",
+      "criterion_id": "NCT04687215_exc_006",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patients on dialysis",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04687215",
+      "criterion_id": "NCT04687215_exc_007",
+      "criterion_type": "exclusion",
+      "criterion_text": "BMI\\>35.0",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04687215",
+      "criterion_id": "NCT04687215_exc_008",
+      "criterion_type": "exclusion",
+      "criterion_text": "Surgery within the last 30 days",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04687215",
+      "criterion_id": "NCT04687215_exc_009",
+      "criterion_type": "exclusion",
+      "criterion_text": "Ulcer of the lower extremities",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04687215",
+      "criterion_id": "NCT04687215_exc_010",
+      "criterion_type": "exclusion",
+      "criterion_text": "Calcification of the peripheral arteries",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    }
+  ]
+}

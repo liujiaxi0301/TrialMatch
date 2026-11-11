@@ -41,7 +41,7 @@ jobs:
         run: uv sync --project docker/workflow --locked --no-dev --python 3.12
 
       - name: Lint pipeline code and tests
-        run: uv tool run ruff==0.17.1 check cloud/pipeline.py cloud/tasks.py cloud/release.py cloud/tests
+        run: uv tool run ruff==0.17.1 check cloud/pipeline.py cloud/tasks.py cloud/release.py cloud/eligibility.py cloud/train.py cloud/training_inputs.py cloud/tests
 
       - name: Check deployment script syntax
         run: bash -n cloud/deploy.sh cloud/setup.sh
@@ -51,6 +51,9 @@ jobs:
 
       - name: Run pipeline regression tests
         run: docker/workflow/.venv/bin/python -m unittest discover -s cloud/tests -v
+
+      - name: Check the frozen eligibility evaluator without model calls
+        run: docker/workflow/.venv/bin/python -m unittest discover -s evaluation/ms3/eligibility/tests -v
 
       - name: Compile the pipeline without submitting a cloud job
         run: >-

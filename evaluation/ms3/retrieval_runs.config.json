@@ -1,10 +1,11 @@
 {
-  "cache": "document vectors reused from the prepared experiment store; no documents re-embedded in this run",
-  "code_commit": "488f3d2d92b051f70f57b9731c3de9c3fe39efde",
-  "generated_utc": "2026-11-10T04:46:28+00:00",
+  "cache": "frozen-encoder document vectors reused from the prepared experiment store; fine-tuned document vectors are encoded once into a separate store",
+  "code_commit": "d8771c2ebf4310f0128b496dbb90901106ecc801",
+  "generated_utc": "2026-11-11T04:34:02+00:00",
   "manifest": "services/rag_workflow/examples/demo_manifest.json",
   "methods": {
     "bioclinical_dense_patient": {
+      "collection": "trialmatch-521ce7bbbd24d65deb8e",
       "dimension": 768,
       "encoder": "thomas-sounack/BioClinical-ModernBERT-base",
       "encoder_revision": "c3648aa87af95837c809e6f0c5f85d08160db437",
@@ -14,6 +15,7 @@
       "similarity": "cosine"
     },
     "bioclinical_dense_question": {
+      "collection": "trialmatch-521ce7bbbd24d65deb8e",
       "dimension": 768,
       "encoder": "thomas-sounack/BioClinical-ModernBERT-base",
       "encoder_revision": "c3648aa87af95837c809e6f0c5f85d08160db437",
@@ -23,6 +25,7 @@
       "similarity": "cosine"
     },
     "bioclinical_hybrid_patient": {
+      "collection": "trialmatch-521ce7bbbd24d65deb8e",
       "dimension": 768,
       "encoder": "thomas-sounack/BioClinical-ModernBERT-base",
       "encoder_revision": "c3648aa87af95837c809e6f0c5f85d08160db437",
@@ -32,6 +35,7 @@
       "similarity": "cosine"
     },
     "bioclinical_hybrid_question": {
+      "collection": "trialmatch-521ce7bbbd24d65deb8e",
       "dimension": 768,
       "encoder": "thomas-sounack/BioClinical-ModernBERT-base",
       "encoder_revision": "c3648aa87af95837c809e6f0c5f85d08160db437",
@@ -51,6 +55,70 @@
       "fusion": null,
       "query_construction": "question",
       "retrieval": "BM25 over trial title + conditions + brief summary + all criteria"
+    },
+    "finetuned_dense_patient": {
+      "checkpoint_sha256": "7dcec7d9c8ca3697ee60091346723130ebb37263254e81a69a0aff038dbc931c",
+      "checkpoint_uri": "gs://trialmatch-ac215-yixiao-ms3/training/train-20261110-t4-r3/model",
+      "collection": "trialmatch-431a2592eb61038bd5cc",
+      "dimension": 768,
+      "encoder": "thomas-sounack/BioClinical-ModernBERT-base",
+      "encoder_revision": "c3648aa87af95837c809e6f0c5f85d08160db437",
+      "fusion": null,
+      "indexed_text": "criterion-level fragments; best criterion hit per trial",
+      "query_construction": "patient",
+      "similarity": "cosine",
+      "training_code_commit": "f16f3e83402a80d63ef3941849800859e496738a",
+      "training_data": "corpus-derived and LLM-written query/criterion pairs from trials outside this benchmark universe",
+      "training_run": "https://forge.coreweave.com/wandb/jennyyang-harvard-university/trialmatch-ms3/runs/26xhkrre",
+      "training_workflow": "contrastive-encoder-finetune"
+    },
+    "finetuned_dense_question": {
+      "checkpoint_sha256": "7dcec7d9c8ca3697ee60091346723130ebb37263254e81a69a0aff038dbc931c",
+      "checkpoint_uri": "gs://trialmatch-ac215-yixiao-ms3/training/train-20261110-t4-r3/model",
+      "collection": "trialmatch-431a2592eb61038bd5cc",
+      "dimension": 768,
+      "encoder": "thomas-sounack/BioClinical-ModernBERT-base",
+      "encoder_revision": "c3648aa87af95837c809e6f0c5f85d08160db437",
+      "fusion": null,
+      "indexed_text": "criterion-level fragments; best criterion hit per trial",
+      "query_construction": "question",
+      "similarity": "cosine",
+      "training_code_commit": "f16f3e83402a80d63ef3941849800859e496738a",
+      "training_data": "corpus-derived and LLM-written query/criterion pairs from trials outside this benchmark universe",
+      "training_run": "https://forge.coreweave.com/wandb/jennyyang-harvard-university/trialmatch-ms3/runs/26xhkrre",
+      "training_workflow": "contrastive-encoder-finetune"
+    },
+    "finetuned_hybrid_patient": {
+      "checkpoint_sha256": "7dcec7d9c8ca3697ee60091346723130ebb37263254e81a69a0aff038dbc931c",
+      "checkpoint_uri": "gs://trialmatch-ac215-yixiao-ms3/training/train-20261110-t4-r3/model",
+      "collection": "trialmatch-431a2592eb61038bd5cc",
+      "dimension": 768,
+      "encoder": "thomas-sounack/BioClinical-ModernBERT-base",
+      "encoder_revision": "c3648aa87af95837c809e6f0c5f85d08160db437",
+      "fusion": "reciprocal rank fusion, k=60, over [BM25, dense]",
+      "indexed_text": "criterion-level fragments; best criterion hit per trial",
+      "query_construction": "patient",
+      "similarity": "cosine",
+      "training_code_commit": "f16f3e83402a80d63ef3941849800859e496738a",
+      "training_data": "corpus-derived and LLM-written query/criterion pairs from trials outside this benchmark universe",
+      "training_run": "https://forge.coreweave.com/wandb/jennyyang-harvard-university/trialmatch-ms3/runs/26xhkrre",
+      "training_workflow": "contrastive-encoder-finetune"
+    },
+    "finetuned_hybrid_question": {
+      "checkpoint_sha256": "7dcec7d9c8ca3697ee60091346723130ebb37263254e81a69a0aff038dbc931c",
+      "checkpoint_uri": "gs://trialmatch-ac215-yixiao-ms3/training/train-20261110-t4-r3/model",
+      "collection": "trialmatch-431a2592eb61038bd5cc",
+      "dimension": 768,
+      "encoder": "thomas-sounack/BioClinical-ModernBERT-base",
+      "encoder_revision": "c3648aa87af95837c809e6f0c5f85d08160db437",
+      "fusion": "reciprocal rank fusion, k=60, over [BM25, dense]",
+      "indexed_text": "criterion-level fragments; best criterion hit per trial",
+      "query_construction": "question",
+      "similarity": "cosine",
+      "training_code_commit": "f16f3e83402a80d63ef3941849800859e496738a",
+      "training_data": "corpus-derived and LLM-written query/criterion pairs from trials outside this benchmark universe",
+      "training_run": "https://forge.coreweave.com/wandb/jennyyang-harvard-university/trialmatch-ms3/runs/26xhkrre",
+      "training_workflow": "contrastive-encoder-finetune"
     }
   },
   "patients": "services/patient_processing/data/processed/batch25_patients.jsonl",

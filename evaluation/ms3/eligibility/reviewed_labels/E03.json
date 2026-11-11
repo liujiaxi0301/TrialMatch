@@ -1,0 +1,311 @@
+{
+  "case_id": "E03",
+  "patient_id": "56cfe6a5-4835-d925-fd7a-84faf11306f0",
+  "trial_id": "NCT01945840",
+  "split": "reporting",
+  "review_status": "frozen",
+  "reviewer_qualification": "Non-clinician evidence-based reference assessment",
+  "labels": [
+    {
+      "criterion_id": "NCT01945840_inc_001",
+      "criterion_type": "inclusion",
+      "criterion_text": "Aged 18 - 70 years.",
+      "gold_decision": "MET",
+      "reason": "Patient was 51 years old at the reference date, within 18–70.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Matthew562_O'Connell601_56cfe6a5-4835-d925-fd7a-84faf11306f0.json#Patient/56cfe6a5-4835-d925-fd7a-84faf11306f0"
+      ],
+      "missing_information": [],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT01945840_inc_002",
+      "criterion_type": "inclusion",
+      "criterion_text": "Male or female.",
+      "gold_decision": "MET",
+      "reason": "Male or female participants are accepted; patient is documented as male.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Matthew562_O'Connell601_56cfe6a5-4835-d925-fd7a-84faf11306f0.json#Patient/56cfe6a5-4835-d925-fd7a-84faf11306f0"
+      ],
+      "missing_information": [],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT01945840_inc_003",
+      "criterion_type": "inclusion",
+      "criterion_text": "Eligible for bariatric surgery under the NHS.",
+      "gold_decision": "UNKNOWN",
+      "reason": "Obesity and BMI 33.82 are documented, but NHS bariatric surgery eligibility has not been established.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Matthew562_O'Connell601_56cfe6a5-4835-d925-fd7a-84faf11306f0.json#Condition/f0beaf8d-106b-9a84-035d-9315d59914bc",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Matthew562_O'Connell601_56cfe6a5-4835-d925-fd7a-84faf11306f0.json#Observation/375cf7fa-5546-94c2-324e-64cf8d0c1d5b"
+      ],
+      "missing_information": [
+        "Obesity and BMI 33.82 are documented, but NHS bariatric surgery eligibility has not been established."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT01945840_inc_004",
+      "criterion_type": "inclusion",
+      "criterion_text": "Diagnosed with impaired glucose regulation or type 2 diabetes, according to WHO 2011 criteria.",
+      "gold_decision": "UNKNOWN",
+      "reason": "Diabetes is diagnosed, but evidence that diagnosis followed WHO 2011 criteria is unavailable.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Matthew562_O'Connell601_56cfe6a5-4835-d925-fd7a-84faf11306f0.json#Condition/b7265ff6-e45e-160b-bd7e-e2e029377f0b"
+      ],
+      "missing_information": [
+        "Diabetes is diagnosed, but evidence that diagnosis followed WHO 2011 criteria is unavailable."
+      ],
+      "review_notes": "WHO 2011 qualifier requires explicit supporting evidence."
+    },
+    {
+      "criterion_id": "NCT01945840_inc_005",
+      "criterion_type": "inclusion",
+      "criterion_text": "Those with diabetes should be stable and well controlled with either diet or one oral hypoglycaemic agent.",
+      "gold_decision": "UNKNOWN",
+      "reason": "Metformin and serial HbA1c are documented, but stable well-controlled diabetes on diet or one oral agent is not fully established.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Matthew562_O'Connell601_56cfe6a5-4835-d925-fd7a-84faf11306f0.json#Condition/b7265ff6-e45e-160b-bd7e-e2e029377f0b",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Matthew562_O'Connell601_56cfe6a5-4835-d925-fd7a-84faf11306f0.json#MedicationRequest/5140313c-c80a-d307-4572-806429c98a8c",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Matthew562_O'Connell601_56cfe6a5-4835-d925-fd7a-84faf11306f0.json#Observation/dce42437-ea7c-4299-701b-d462ad60d8f7",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Matthew562_O'Connell601_56cfe6a5-4835-d925-fd7a-84faf11306f0.json#Observation/d9428026-941b-b3c0-ec27-9f129b2a15c0",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Matthew562_O'Connell601_56cfe6a5-4835-d925-fd7a-84faf11306f0.json#Observation/eea1ad4a-9e2c-b861-76f7-4237617ea129"
+      ],
+      "missing_information": [
+        "Metformin and serial HbA1c are documented, but stable well-controlled diabetes on diet or one oral agent is not fully established."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT01945840_inc_006",
+      "criterion_type": "inclusion",
+      "criterion_text": "HbA1c ≤9.0% or 74.9 mmol/mol.",
+      "gold_decision": "MET",
+      "reason": "Latest HbA1c was 6.95%, satisfying the stated maximum of 9.0%.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Matthew562_O'Connell601_56cfe6a5-4835-d925-fd7a-84faf11306f0.json#Observation/eea1ad4a-9e2c-b861-76f7-4237617ea129"
+      ],
+      "missing_information": [],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT01945840_exc_001",
+      "criterion_type": "exclusion",
+      "criterion_text": "History of any medical, psychological or other condition, or use of any medications, including over-the-counter products, which, in the opinion of the investigators, would either interfere with the study or potentially cause harm to the volunteer.",
+      "gold_decision": "UNKNOWN",
+      "reason": "Clinical conditions exist, but no investigator assessment establishes interference with study safety or suitability.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Matthew562_O'Connell601_56cfe6a5-4835-d925-fd7a-84faf11306f0.json#Condition/7a0c4eea-ecf2-51e7-1870-97d1d0fe3351",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Matthew562_O'Connell601_56cfe6a5-4835-d925-fd7a-84faf11306f0.json#Condition/d49ad27a-241e-254e-dfac-6db15b500e8a"
+      ],
+      "missing_information": [
+        "Clinical conditions exist, but no investigator assessment establishes interference with study safety or suitability."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT01945840_exc_002",
+      "criterion_type": "exclusion",
+      "criterion_text": "Without access at home to a telephone or other factor likely to interfere with ability to participate reliably in the study.",
+      "gold_decision": "UNKNOWN",
+      "reason": "Home telephone access and reliability of participation are not documented.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Home telephone access and reliability of participation are not documented."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT01945840_exc_003",
+      "criterion_type": "exclusion",
+      "criterion_text": "Pregnancy or breastfeeding.",
+      "gold_decision": "NOT_MET",
+      "reason": "Under the agreed synthetic-cohort demographic convention, the male patient does not meet the pregnancy or breastfeeding exclusion.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Matthew562_O'Connell601_56cfe6a5-4835-d925-fd7a-84faf11306f0.json#Patient/56cfe6a5-4835-d925-fd7a-84faf11306f0"
+      ],
+      "missing_information": [],
+      "review_notes": "Agreed synthetic-cohort convention; not a real-world clinical pregnancy determination."
+    },
+    {
+      "criterion_id": "NCT01945840_exc_004",
+      "criterion_type": "exclusion",
+      "criterion_text": "Smokers.",
+      "gold_decision": "NOT_MET",
+      "reason": "Latest tobacco status explicitly states Never smoker.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Matthew562_O'Connell601_56cfe6a5-4835-d925-fd7a-84faf11306f0.json#Observation/34b931e7-f6c0-382b-de03-5cd57eb14c4e"
+      ],
+      "missing_information": [],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT01945840_exc_005",
+      "criterion_type": "exclusion",
+      "criterion_text": "Unable to maintain adequate contraception for the duration of the study and for one month afterwards.",
+      "gold_decision": "UNKNOWN",
+      "reason": "Ability to maintain adequate contraception throughout the required period is not documented.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Ability to maintain adequate contraception throughout the required period is not documented."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT01945840_exc_006",
+      "criterion_type": "exclusion",
+      "criterion_text": "History of hypersensitivity to any of the components of the subcutaneous infusions.",
+      "gold_decision": "UNKNOWN",
+      "reason": "Hypersensitivity status for the planned infusion components is not established.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Hypersensitivity status for the planned infusion components is not established."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT01945840_exc_007",
+      "criterion_type": "exclusion",
+      "criterion_text": "Donated blood during the preceding 3 months or intention to do so before the end of the study.",
+      "gold_decision": "UNKNOWN",
+      "reason": "Blood donation within the required window or intention to donate is not documented.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Blood donation within the required window or intention to donate is not documented."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT01945840_exc_008",
+      "criterion_type": "exclusion",
+      "criterion_text": "Insulin treatment.",
+      "gold_decision": "UNKNOWN",
+      "reason": "Metformin treatment is documented, but absence of insulin treatment cannot be established from missing insulin orders.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Matthew562_O'Connell601_56cfe6a5-4835-d925-fd7a-84faf11306f0.json#MedicationRequest/5140313c-c80a-d307-4572-806429c98a8c"
+      ],
+      "missing_information": [
+        "Metformin treatment is documented, but absence of insulin treatment cannot be established from missing insulin orders."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT01945840_exc_009",
+      "criterion_type": "exclusion",
+      "criterion_text": "Uncontrolled hypertension.",
+      "gold_decision": "MET",
+      "reason": "Confirmed hypertension, repeated elevated BP including 194/100 and 145/101, and active antihypertensive prescriptions support uncontrolled hypertension.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Matthew562_O'Connell601_56cfe6a5-4835-d925-fd7a-84faf11306f0.json#Condition/7a0c4eea-ecf2-51e7-1870-97d1d0fe3351",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Matthew562_O'Connell601_56cfe6a5-4835-d925-fd7a-84faf11306f0.json#Observation/b1db25b6-f4fe-7c1e-edd4-24161e66badd",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Matthew562_O'Connell601_56cfe6a5-4835-d925-fd7a-84faf11306f0.json#Observation/4dc456ad-aa03-cd97-481a-f86d6ca96a7d",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Matthew562_O'Connell601_56cfe6a5-4835-d925-fd7a-84faf11306f0.json#MedicationRequest/f80c0f89-4b49-6e2e-c9b9-c1aa3413110a",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Matthew562_O'Connell601_56cfe6a5-4835-d925-fd7a-84faf11306f0.json#MedicationRequest/c4dd8a4b-7d77-f149-aa35-d423995b1221"
+      ],
+      "missing_information": [],
+      "review_notes": "Human-confirmed interpretation of uncontrolled hypertension; trial gives no numeric cutoff."
+    },
+    {
+      "criterion_id": "NCT01945840_exc_010",
+      "criterion_type": "exclusion",
+      "criterion_text": "Any other co-morbidity that would compromise the validity of the study or the safety of the participant such as heart failure, clinically apparent cardiovascular disease.",
+      "gold_decision": "UNKNOWN",
+      "reason": "Comorbidities are documented, but their impact on study safety or validity has not been assessed.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Matthew562_O'Connell601_56cfe6a5-4835-d925-fd7a-84faf11306f0.json#Condition/7a0c4eea-ecf2-51e7-1870-97d1d0fe3351",
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Matthew562_O'Connell601_56cfe6a5-4835-d925-fd7a-84faf11306f0.json#Observation/4dc456ad-aa03-cd97-481a-f86d6ca96a7d"
+      ],
+      "missing_information": [
+        "Comorbidities are documented, but their impact on study safety or validity has not been assessed."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT01945840_exc_011",
+      "criterion_type": "exclusion",
+      "criterion_text": "Volunteers on anti-coagulants such as warfarin and factor Xa inhibitors will not undergo adipose tissue biopsy.",
+      "gold_decision": "UNKNOWN",
+      "reason": "Anticoagulant treatment status and whether adipose tissue biopsy is planned are unknown.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Anticoagulant treatment status and whether adipose tissue biopsy is planned are unknown."
+      ],
+      "review_notes": "Conditional biopsy restriction does not necessarily exclude the patient from the whole trial."
+    },
+    {
+      "criterion_id": "NCT01945840_exc_012",
+      "criterion_type": "exclusion",
+      "criterion_text": "Unable to give informed consent.",
+      "gold_decision": "UNKNOWN",
+      "reason": "Study-specific capacity to provide informed consent is not documented.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "Study-specific capacity to provide informed consent is not documented."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT01945840_exc_013",
+      "criterion_type": "exclusion",
+      "criterion_text": "Previous bariatric surgery.",
+      "gold_decision": "UNKNOWN",
+      "reason": "No explicit positive or comprehensive negative history of bariatric surgery is documented.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "No explicit positive or comprehensive negative history of bariatric surgery is documented."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT01945840_exc_014",
+      "criterion_type": "exclusion",
+      "criterion_text": "Unable to undergo fMRI due to:",
+      "gold_decision": "UNKNOWN",
+      "reason": "The parsed criterion is an incomplete fMRI lead-in; inability to undergo fMRI is not established.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "The parsed criterion is an incomplete fMRI lead-in; inability to undergo fMRI is not established."
+      ],
+      "review_notes": "Criterion parsing artifact; retain for evaluation and parsing-quality review."
+    },
+    {
+      "criterion_id": "NCT01945840_exc_015",
+      "criterion_type": "exclusion",
+      "criterion_text": "Claustrophobia.",
+      "gold_decision": "UNKNOWN",
+      "reason": "Historical anxiety or panic findings do not establish or rule out claustrophobia.",
+      "supporting_fact_ids": [
+        "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Matthew562_O'Connell601_56cfe6a5-4835-d925-fd7a-84faf11306f0.json#Condition/d49ad27a-241e-254e-dfac-6db15b500e8a"
+      ],
+      "missing_information": [
+        "Historical anxiety or panic findings do not establish or rule out claustrophobia."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT01945840_exc_016",
+      "criterion_type": "exclusion",
+      "criterion_text": "Pacemaker, metal implant, clips, implanted device, shrapnel or bullet, metal in eyes that precludes magnetic resonance imaging.",
+      "gold_decision": "UNKNOWN",
+      "reason": "MRI safety information about implants, metallic foreign bodies and related contraindications is incomplete.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "MRI safety information about implants, metallic foreign bodies and related contraindications is incomplete."
+      ],
+      "review_notes": ""
+    },
+    {
+      "criterion_id": "NCT01945840_exc_017",
+      "criterion_type": "exclusion",
+      "criterion_text": "Significant structural abnormality on magnetic resonance brain scan",
+      "gold_decision": "UNKNOWN",
+      "reason": "No brain MRI interpretation establishes or rules out significant structural abnormalities.",
+      "supporting_fact_ids": [],
+      "missing_information": [
+        "No brain MRI interpretation establishes or rules out significant structural abnormalities."
+      ],
+      "review_notes": ""
+    }
+  ]
+}
