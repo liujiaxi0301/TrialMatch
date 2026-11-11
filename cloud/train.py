@@ -19,6 +19,7 @@ never enter this module, and they say nothing about clinical accuracy.
 import argparse
 import hashlib
 import json
+import math
 import os
 import random
 import subprocess
@@ -203,6 +204,86 @@ def info_nce(model, tokenizer, rows, device, max_length, temperature):
     return torch.nn.functional.cross_entropy(logits, torch.arange(len(rows), device=device))
 
 
+# Tried in order until the accelerator reproduces the CPU embeddings of the same weights.
+ENCODER_VARIANTS = (
+    {"attn_implementation": "sdpa"},
+    {"attn_implementation": "sdpa", "reference_compile": False},
+    {"attn_implementation": "eager", "reference_compile": False},
+)
+NUMERIC_TOLERANCE = 1e-3
+
+
+def probe_embeddings(model, tokenizer, texts, device, max_length, half=False):
+    """Pooled embeddings of one padded batch, with gradients off; `half` uses fp16 autocast."""
+    import torch
+
+    from services.rag_workflow.embedding_providers import masked_mean_l2
+
+    model.eval()
+    batch = tokenize(tokenizer, texts, max_length, device)
+    with torch.inference_mode(), torch.autocast("cuda", dtype=torch.float16, enabled=half):
+        hidden = model(**batch).last_hidden_state.float()
+    return masked_mean_l2(hidden, batch["attention_mask"]).cpu()
+
+
+def numeric_gap(vectors, reference) -> float:
+    """Largest absolute difference from the reference; infinite if anything is not finite."""
+    import torch
+
+    if not torch.isfinite(vectors).all():
+        return float("inf")
+    return (vectors - reference).abs().max().item()
+
+
+def load_encoder(args, device, tokenizer, probe, want_amp):
+    """Load the encoder and prove the device computes what the CPU computes.
+
+    A padded batch is embedded on CPU first. On an accelerator each attention variant is
+    then checked against that reference, and the first that matches is used; mixed
+    precision is kept only if it matches too. Training on a device that silently returns
+    different or non-finite embeddings would produce a checkpoint that means nothing.
+    """
+    import torch
+    from transformers import AutoModel
+
+    def load(variant):
+        return AutoModel.from_pretrained(
+            args.model, revision=args.revision, trust_remote_code=False,
+            torch_dtype=torch.float32, **variant,
+        )
+
+    model = load(ENCODER_VARIANTS[0])
+    report = {"probe_texts": len(probe), "tolerance": NUMERIC_TOLERANCE, "attempts": []}
+    if device == "cpu":
+        return model, False, {**report, "variant": ENCODER_VARIANTS[0], "reference": "self"}
+    reference = probe_embeddings(model, tokenizer, probe, "cpu", args.max_length)
+    if not torch.isfinite(reference).all():
+        raise RuntimeError("The CPU reference embeddings are not finite")
+    for variant in ENCODER_VARIANTS:
+        if report["attempts"]:
+            model = load(variant)
+        model = model.to(device)
+        gap = numeric_gap(probe_embeddings(model, tokenizer, probe, device, args.max_length),
+                          reference)
+        report["attempts"].append({"variant": variant, "max_abs_gap_fp32": gap})
+        print(json.dumps({"numerics": report["attempts"][-1]}), flush=True)
+        if gap <= NUMERIC_TOLERANCE:
+            break
+        model = None  # Drop the rejected copy before loading the next variant.
+    else:
+        raise RuntimeError(f"No encoder variant matches the CPU reference on {device}: "
+                           f"{json.dumps(report['attempts'])}")
+    amp = False
+    if want_amp:
+        gap = numeric_gap(
+            probe_embeddings(model, tokenizer, probe, device, args.max_length, half=True),
+            reference)
+        amp = gap <= 10 * NUMERIC_TOLERANCE
+        report["max_abs_gap_fp16"] = gap
+        print(json.dumps({"numerics": {"max_abs_gap_fp16": gap, "amp": amp}}), flush=True)
+    return model, amp, {**report, "variant": variant, "reference": "cpu"}
+
+
 def evaluate(model, tokenizer, pairs, device, args) -> dict:
     """Validation loss, plus Recall@10 and MRR@10 over the validation pairs' own pool."""
     import torch
@@ -353,7 +434,7 @@ def main(argv=None):
 
     import torch
     import transformers
-    from transformers import AutoModel, AutoTokenizer
+    from transformers import AutoTokenizer
 
     random.seed(args.seed)
     torch.manual_seed(args.seed)
@@ -377,10 +458,16 @@ def main(argv=None):
     tokenizer = AutoTokenizer.from_pretrained(
         args.model, revision=args.revision, trust_remote_code=False
     )
-    model = AutoModel.from_pretrained(
-        args.model, revision=args.revision, trust_remote_code=False,
-        attn_implementation="sdpa", torch_dtype=torch.float32,
-    ).to(device)
+    # Short and long texts in one batch, so padding and the local attention window are used.
+    probe = [train[0]["query"], train[0]["positive"],
+             " ".join(row["positive"] for row in train[:12]),
+             " ".join(row["query"] for row in train[:40])]
+    model, amp, numerics = load_encoder(args, device, tokenizer, probe,
+                                        device == "cuda" and not args.no_amp)
+    model = model.to(device)
+    config.update(amp=amp, numerics=numerics)
+    if run is not None:
+        run.config.update({"amp": amp, "numerics": numerics}, allow_val_change=True)
 
     history = []
 
@@ -393,6 +480,8 @@ def main(argv=None):
         return metrics
 
     baseline = validate(0, 0)  # The frozen checkpoint, through the same code path.
+    if not math.isfinite(baseline["val/loss"]):
+        raise RuntimeError("The frozen encoder's validation loss is not finite")
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
     steps_per_epoch = -(-len(train) // args.batch_size)
@@ -402,7 +491,6 @@ def main(argv=None):
         optimizer,
         lambda s: (s + 1) / warmup if s < warmup else max(0.0, (total - s) / max(1, total - warmup)),
     )
-    amp = device == "cuda" and not args.no_amp
     scaler = torch.amp.GradScaler("cuda", enabled=amp)
     shuffler = random.Random(args.seed)
     step = 0

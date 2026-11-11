@@ -28,6 +28,8 @@ from cloud.train import code_commit, gcs_blob
 
 ROOT = Path(__file__).resolve().parents[1]
 DIGEST = re.compile(r"^[a-z0-9./_-]+@sha256:[0-9a-f]{64}$")
+FINISHED = {"JOB_STATE_SUCCEEDED", "JOB_STATE_FAILED", "JOB_STATE_CANCELLED",
+            "JOB_STATE_EXPIRED", "JOB_STATE_PARTIALLY_SUCCEEDED"}
 RUN_ID = re.compile(r"^[a-z0-9][a-z0-9-]{2,62}$")
 
 
@@ -142,6 +144,10 @@ def parse_args(argv=None):
     parser.add_argument("--source-release", default="")
     parser.add_argument("--evidence", type=Path, help="Directory for the run's evidence files")
     parser.add_argument("--dry-run", action="store_true", help="Print the job spec and stop")
+    parser.add_argument("--attach", default="",
+                        help="Resource name of a job already submitted with these arguments; "
+                             "wait for it and collect its evidence instead of submitting again")
+    parser.add_argument("--poll-seconds", type=int, default=30)
     args = parser.parse_args(argv)
     if not DIGEST.fullmatch(args.image):
         parser.error("--image must be pinned by digest: <registry>/trainer@sha256:<64 hex>")
@@ -175,21 +181,30 @@ def main(argv=None):
 
     aiplatform.init(project=args.project, location=args.region,
                     staging_bucket=f"gs://{args.bucket}/training/staging")
-    job = aiplatform.CustomJob(display_name=spec["display_name"], worker_pool_specs=pools)
-    job.submit(service_account=args.service_account, timeout=args.max_run_seconds)
+    if args.attach:
+        job = aiplatform.CustomJob.get(args.attach)
+        if job.display_name != spec["display_name"]:
+            sys.exit(f"{args.attach} is {job.display_name}, not {spec['display_name']}")
+    else:
+        job = aiplatform.CustomJob(display_name=spec["display_name"], worker_pool_specs=pools)
+        job.submit(service_account=args.service_account, timeout=args.max_run_seconds)
     print(job.resource_name, flush=True)
     record = {**spec, "resource_name": job.resource_name}
     evidence = args.evidence
     if evidence:
         evidence.mkdir(parents=True, exist_ok=True)
         (evidence / "job.json").write_text(json.dumps(record, indent=2) + "\n")
-    try:
-        job.wait()
-    except Exception as exc:  # noqa: BLE001 - the state below decides the exit code
-        print(f"Waiting ended with {type(exc).__name__}: {exc}")
-    job = aiplatform.CustomJob.get(job.resource_name)
-    state = job.state.name
-    record.update(state=state, create_time=str(job.create_time), end_time=str(job.end_time),
+    # submit() returns at once and wait() does not block for it, so poll the state.
+    state = ""
+    while True:
+        job = aiplatform.CustomJob.get(job.resource_name)
+        if job.state.name != state:
+            state = job.state.name
+            print(time.strftime("%H:%M:%SZ", time.gmtime()), state, flush=True)
+        if state in FINISHED:
+            break
+        time.sleep(args.poll_seconds)
+    record.update(state=state, error=getattr(job.error, "message", "") or "", create_time=str(job.create_time), end_time=str(job.end_time),
                   console=f"https://console.cloud.google.com/vertex-ai/locations/{args.region}"
                           f"/training/{job.name}?project={args.project}")
     succeeded = state == "JOB_STATE_SUCCEEDED"
