@@ -256,8 +256,10 @@ If the current month is still over $5, the next budget notification stops it aga
 of that encoder as a serverless Vertex AI job, tracked in Weights & Biases. Everything in
 this section is new: `cloud/train_pairs.py`, `cloud/train_pairs_llm.py`, `cloud/train.py`,
 `cloud/train_job.py`, `docker/trainer/`, an optional fourth pipeline task in
-`cloud/pipeline.py`, a `trainer` step in `cloud/build.yaml`, and checkpoint support in
-`services/rag_workflow/embedding_providers.py`. The plan and its acceptance checklist are
+`cloud/pipeline.py`, and checkpoint support in
+`services/rag_workflow/embedding_providers.py`. The trainer image has its own build
+config, `docker/trainer/cloudbuild.yaml`, so `cloud/build.yaml` and the deployment build
+are unchanged. The plan and its acceptance checklist are
 in [docs/ms3/module-b-plan.md](docs/ms3/module-b-plan.md).
 
 The fine-tuned encoder is not deployed. The app still serves the MS2 retrieval path. The

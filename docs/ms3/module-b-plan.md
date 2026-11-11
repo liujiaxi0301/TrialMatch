@@ -198,8 +198,11 @@ training run completed inside the container on CPU. Three things differ from the
 sketch above: NumPy is held below 2 because the base's SciPy is built against 1.x; the
 base's `ENTRYPOINT` is cleared so `docker run <image> python -m …` works; and
 `cloud/tests/test_release.py` needed its fake registry taught about a fourth image.
-The `cloud/build.yaml` step is committed locally and **not pushed** pending the
-infrastructure owner. Note the 32 GB image and the shared `timeout: 1200s`.
+The `cloud/build.yaml` step was added and then removed on 2026-11-11: the trainer image
+took about 30 minutes to build in Cloud Build, longer than that file's shared
+`timeout: 1200s`, so it would have broken the deployment build. The image is built only
+with `docker/trainer/cloudbuild.yaml`. `cloud/build.yaml` and `cloud/tests/test_release.py`
+are back to their content before module B.
 
 ### B3 — One Vertex AI training run, with evidence
 
