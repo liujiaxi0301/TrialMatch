@@ -270,10 +270,10 @@ with the new method configuration and the additional labelling load.
 
 - [x] The fine-tuned collection identity differs from the frozen one, so the two sets of
       vectors cannot be mixed.
-- [ ] Every returned trial ID is inside the 50-trial universe; the runner already fails
+- [x] Every returned trial ID is inside the 50-trial universe; the runner already fails
       otherwise.
-- [ ] **No metric over Q03–Q08 appears anywhere in B's output.**
-- [ ] The handoff states the count of newly surfaced, still-unjudged trials.
+- [x] **No metric over Q03–Q08 appears anywhere in B's output.**
+- [x] The handoff states the count of newly surfaced, still-unjudged trials.
 
 ### B6 — README and milestone evidence
 
