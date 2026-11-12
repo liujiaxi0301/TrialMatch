@@ -115,7 +115,7 @@ the existing patient data. The reproduction record is saved to
 ## Cloud Setup (MS3)
 
 - [Cloud app](https://trialmatch-15733748057.us-east1.run.app) (authorized Google login required).
-- [Successful four-step pipeline](https://console.cloud.google.com/vertex-ai/locations/us-east1/pipelines/runs/trialmatch-data-pipeline-20261110055153?project=trialmatch-ac215-yixiao).
+- [Successful four-step pipeline](https://console.cloud.google.com/vertex-ai/locations/us-east1/pipelines/runs/trialmatch-data-pipeline-20261112024908?project=trialmatch-ac215-yixiao).
 
 The app uses Cloud Run. Chroma runs on a separate VM with a persistent disk
 mounted at `/data` inside its container. Only the TrialMatch subnet can reach
@@ -123,6 +123,8 @@ Chroma. Team members sign in with Google through Identity-Aware Proxy (IAP).
 Cloud services use attached service accounts; no login JSON is uploaded.
 The five team Google accounts have access. Open the cloud app and select the
 approved account; no local Docker setup or credentials file is needed to use it.
+The app includes readiness checks, request IDs and structured request logs.
+Gemini remains the default.
 
 The default Vertex AI Pipeline has four steps:
 
@@ -139,21 +141,24 @@ The last step saves `retrieval_runs.jsonl` and its configuration to GCS. It prod
 rankings, not relevance scores or eligibility accuracy. Model training and human
 benchmark scoring are separate work. Gemini remains the deployment default.
 
-Optional local integrations add B's encoder training (`--trainer-image`) and
-C's fixed-pair eligibility evaluation (`--eligibility`) after data validation.
-Both flags together produce six tasks. These additions have not yet been
-verified in an integrated cloud run; the cloud link above is the four-task run.
-An additional `--finetuned-retrieval-image` connects the current training output
-to Jenny's ranking script, producing six tasks with training or seven when
-eligibility is also enabled. See [new-model ranking integration](docs/ms3/module-a-finetuned-retrieval.md).
-Add `--retrieval-evaluation` to score these current-run rankings with Jessie's
-frozen pooled relevance labels: seven tasks, or eight with eligibility. The
-adapter verifies versions, reports unjudged candidates and reuses C's metric
-formulas without model calls. See [retrieval evaluation integration](docs/ms3/module-a-retrieval-evaluation.md).
-This local integration still needs an integrated cloud run. C's existing
-14-method report and reproducible scorer are preserved in `evaluation/ms3/retrieval/`.
-See [eligibility integration](docs/ms3/module-a-eligibility.md) and
-[training integration](docs/ms3/module-a-training.md) for their contracts.
+Optional flags add encoder training (`--trainer-image`), rankings from that
+run's checkpoint (`--finetuned-retrieval-image`), frozen-label scoring
+(`--retrieval-evaluation`) and fixed-pair eligibility evaluation (`--eligibility`).
+Together these form eight tasks. The adapter checks input versions and output
+checksums, uses the existing metric formulas and reports any unjudged candidates.
+The app's four-step deployment check remains separate from these model experiments.
+
+In the November 12 eight-task run, training and retrieval from the new checkpoint
+passed. The frozen retrieval scorer found 10 unjudged query/trial pairs, and
+eligibility evaluation found six `INVALID_LLM_OUTPUT` predictions among 115
+criteria. These block a passing end-to-end evaluation.
+The [eight-task run](https://console.cloud.google.com/vertex-ai/locations/us-east1/pipelines/runs/trialmatch-data-pipeline-20261112023318?project=trialmatch-ac215-yixiao)
+contains the task outcomes and artifacts.
+
+Details: [training](docs/ms3/module-a-training.md),
+[new-model rankings](docs/ms3/module-a-finetuned-retrieval.md),
+[retrieval scoring](docs/ms3/module-a-retrieval-evaluation.md) and
+[eligibility evaluation](docs/ms3/module-a-eligibility.md).
 
 Cloud configuration is in `cloud/config.env`. Deployment uses the course's
 `gcloud` commands and a Docker workflow container. The pipeline uses Python
@@ -412,12 +417,13 @@ trainer checks downloaded bytes before loading the model. Rebuild both workflow
 and trainer images for this interface; the historical trainer image cannot accept
 the new checksum argument. Its default batch size is 8 (`--trainer-batch-size` can override it).
 
-The local integration is described in
+The integration is described in
 [Module A training integration](docs/ms3/module-a-training.md). It checks the training
 manifest's release, image, output path, checksum metadata and batch size before saving
-any success markers. This five-node pipeline has not been run on Vertex. The existing
-retrieval node still uses Gemini; consuming the new checkpoint is the next integration
-step. A failed training task fails the whole pipeline and prevents new success markers.
+any success markers. `--finetuned-retrieval-image` consumes this run's checkpoint,
+and `--retrieval-evaluation` scores those rankings with the frozen benchmark.
+The separate baseline retrieval node and deployed app still use Gemini.
+A failed task fails the full pipeline and prevents new success markers.
 
 `--eligibility` independently adds `evaluate-eligibility`, using C's eight fixed
 patient/trial pairs (115 criteria) with Vertex Gemini. It requires a digest-pinned
@@ -439,6 +445,7 @@ retain diagnostic artifacts. See [Module A eligibility integration](docs/ms3/mod
 - The validation pairs come from the same generators as the training pairs. The Recall@10
   gain is an internal diagnostic. Negative mining also crosses the training/validation
   trial split; that issue remains with Module B before claiming an independent validation
-  result. The retrieval benchmark has not been scored with this encoder.
+  result. The latest pipeline checkpoint also needs the unjudged retrieval pairs
+  reviewed before its benchmark scores can be reported.
 - No early stopping and no best-checkpoint selection: the saved model is the last epoch.
 - Patients are synthetic. Nothing in this project is clinically validated.
