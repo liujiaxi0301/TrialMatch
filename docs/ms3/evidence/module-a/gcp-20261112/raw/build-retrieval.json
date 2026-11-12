@@ -1,0 +1,127 @@
+{
+  "artifacts": {
+    "images": [
+      "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/retrieval:96a1ab99463f8e3363a6b4f74a1b1eeb2df4fa59-277555be-3e0e-4c4c-a231-852fbbecb378"
+    ]
+  },
+  "createTime": "2026-11-12T16:34:12.490660549Z",
+  "finishTime": "2026-11-12T16:36:17.758641Z",
+  "id": "277555be-3e0e-4c4c-a231-852fbbecb378",
+  "images": [
+    "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/retrieval:96a1ab99463f8e3363a6b4f74a1b1eeb2df4fa59-277555be-3e0e-4c4c-a231-852fbbecb378"
+  ],
+  "logUrl": "https://console.cloud.google.com/cloud-build/builds;region=us-east1/277555be-3e0e-4c4c-a231-852fbbecb378?project=15733748057",
+  "name": "projects/15733748057/locations/us-east1/builds/277555be-3e0e-4c4c-a231-852fbbecb378",
+  "options": {
+    "logging": "CLOUD_LOGGING_ONLY",
+    "pool": {},
+    "workerRelease": "legacy"
+  },
+  "projectId": "trialmatch-ac215-yixiao",
+  "queueTtl": "3600s",
+  "results": {
+    "buildStepImages": [
+      "sha256:fbc05705e6f24467e40ae8a4097ab9b8fae1116551f838fa2c55f4367427fc36"
+    ],
+    "buildStepOutputs": [
+      ""
+    ],
+    "images": [
+      {
+        "artifactRegistryPackage": "projects/trialmatch-ac215-yixiao/locations/us-east1/repositories/trialmatch/packages/retrieval/versions/sha256:e5c6f23007514ef9713f9c50eb1cc7267f1b55f20e9a48ade45281b76e17c487",
+        "digest": "sha256:e5c6f23007514ef9713f9c50eb1cc7267f1b55f20e9a48ade45281b76e17c487",
+        "name": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/retrieval:96a1ab99463f8e3363a6b4f74a1b1eeb2df4fa59-277555be-3e0e-4c4c-a231-852fbbecb378",
+        "pushTiming": {
+          "endTime": "2026-11-12T16:36:17.273332761Z",
+          "startTime": "2026-11-12T16:35:09.412326309Z"
+        }
+      }
+    ],
+    "resourceUsage": {
+      "averageCpuUtilization": 0.6502174,
+      "averageMemoryUtilization": 0.091872625,
+      "peakCpuUtilization": 0.9949495,
+      "peakMemoryUtilization": 0.10906505,
+      "totalCpuDuration": "157.070s"
+    }
+  },
+  "serviceAccount": "projects/trialmatch-ac215-yixiao/serviceAccounts/trialmatch-build@trialmatch-ac215-yixiao.iam.gserviceaccount.com",
+  "source": {
+    "storageSource": {
+      "bucket": "trialmatch-ac215-yixiao-ms3",
+      "generation": "1794501252386460",
+      "object": "builds/source/1794501240.744106-2f20812825e44a8e8708c6daf493157b.tgz"
+    }
+  },
+  "sourceProvenance": {
+    "fileHashes": {
+      "gs://trialmatch-ac215-yixiao-ms3/builds/source/1794501240.744106-2f20812825e44a8e8708c6daf493157b.tgz#1794501252386460": {
+        "fileHash": [
+          {
+            "type": "MD5",
+            "value": "wlsMDSTJsD4em9s1aI0Q_A=="
+          },
+          {
+            "type": "SHA256",
+            "value": "K4doYg8aXbcM7jGtMKYtkL5_OVcy1PpZBVGbPbqVF4g="
+          }
+        ]
+      }
+    },
+    "resolvedStorageSource": {
+      "bucket": "trialmatch-ac215-yixiao-ms3",
+      "generation": "1794501252386460",
+      "object": "builds/source/1794501240.744106-2f20812825e44a8e8708c6daf493157b.tgz"
+    }
+  },
+  "startTime": "2026-11-12T16:34:13.283838160Z",
+  "status": "SUCCESS",
+  "steps": [
+    {
+      "args": [
+        "build",
+        "-f",
+        "docker/retrieval/Dockerfile",
+        "--build-arg",
+        "SOURCE_COMMIT=96a1ab99463f8e3363a6b4f74a1b1eeb2df4fa59",
+        "-t",
+        "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/retrieval:96a1ab99463f8e3363a6b4f74a1b1eeb2df4fa59-277555be-3e0e-4c4c-a231-852fbbecb378",
+        "."
+      ],
+      "name": "gcr.io/cloud-builders/docker",
+      "pullTiming": {
+        "endTime": "2026-11-12T16:34:18.606084936Z",
+        "startTime": "2026-11-12T16:34:18.598518686Z"
+      },
+      "status": "SUCCESS",
+      "timing": {
+        "endTime": "2026-11-12T16:35:09.371650666Z",
+        "startTime": "2026-11-12T16:34:18.598518686Z"
+      }
+    }
+  ],
+  "substitutions": {
+    "_REGISTRY": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch",
+    "_SOURCE_COMMIT": "96a1ab99463f8e3363a6b4f74a1b1eeb2df4fa59",
+    "_VERSION": "96a1ab99463f8e3363a6b4f74a1b1eeb2df4fa59"
+  },
+  "timeout": "2400s",
+  "timing": {
+    "BUILD": {
+      "endTime": "2026-11-12T16:35:09.412080078Z",
+      "startTime": "2026-11-12T16:34:17.931466009Z"
+    },
+    "FETCHSOURCE": {
+      "endTime": "2026-11-12T16:34:17.931092736Z",
+      "startTime": "2026-11-12T16:34:13.847895516Z"
+    },
+    "PUSH": {
+      "endTime": "2026-11-12T16:36:17.275652800Z",
+      "startTime": "2026-11-12T16:35:09.412278354Z"
+    },
+    "STORAGE_SOURCE": {
+      "endTime": "2026-11-12T16:34:17.931092736Z",
+      "startTime": "2026-11-12T16:34:13.847895516Z"
+    }
+  }
+}

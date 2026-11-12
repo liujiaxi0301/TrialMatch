@@ -1,8 +1,12 @@
 # Module A: optional training integration
 
-Status: local integration for review, 2026-11-11. Baseline A is `132668e`; the
-incoming implementation and independent training evidence belong to Jenny's
-`jenny/ms3-training` at `55e88ba`. This work has not submitted a cloud job.
+Status update, 2026-11-12: `train-encoder` succeeded in the
+[seven-node integration run](evidence/module-a/gcp-20261112/README.md), with batch
+size 8 and an online W&B record. Its later retrieval-scoring task failed on ten
+missing relevance judgments. The [selected submission report](submission-evidence.md)
+continues to use Jenny's November 10 checkpoint and its matching historical rankings.
+The integration below began on baseline A `132668e`, importing Jenny's
+`jenny/ms3-training` implementation at `55e88ba`.
 
 ## Execution graph
 
@@ -135,7 +139,7 @@ they do not identify runnable cloud artifacts. The spec is written to
 check image separation and T4 configuration, and simulate successful, failed,
 unavailable and mismatched training outputs without cloud calls.
 
-Latest local verification on 2026-11-11, including eligibility and the
+Historical local verification on 2026-11-11, including eligibility and the
 expected-pair-hash checks:
 
 - `cloud/tests`: 99 tests, 96 passed and 3 PyTorch-dependent tests skipped.
@@ -162,18 +166,20 @@ eligibility and expected-pair-hash changes, using Ruff 0.17.1:
 - These are local results for the pending merge, not GitHub Actions results or
   evidence that the integrated graph has run on Vertex.
 
-## Remaining work
+## Current status and remaining limitations
 
-- New-model ranking generation is now connected locally through the optional
+- New-model ranking generation is connected through the optional
   `retrieve-finetuned` task, which verifies the actual checkpoint bytes before
   loading. `retrieve-trials` continues to produce the separate Gemini rankings.
-  New image builds and integrated cloud execution remain pending; see the
-  retrieval integration linked above.
-- C's fixed-pair evaluator is now connected in the separate optional eligibility
-  integration linked above. Formal retrieval scoring remains pending.
-- The five-task pipeline has not been run on Vertex. Jenny's two successful
-  CustomJobs remain separate evidence. Their `source_release_uri` is null;
-  they must not be presented as outputs of this integrated data pipeline.
+  Both retrieval branches and training succeeded in the November 12 seven-task
+  run; the built image digests and outputs are in its archived evidence.
+- C's fixed-pair evaluator is connected in the separate optional eligibility
+  integration linked above. It was not enabled in this seven-task run. Formal
+  retrieval scoring for the new checkpoint stopped on ten unjudged pairs and
+  remains deferred. Use the existing report for its original checkpoint.
+- Jenny's two successful standalone CustomJobs remain separate evidence. Their
+  `source_release_uri` is null; they must not be presented as outputs of the
+  November 12 integrated data pipeline, which produced a different checkpoint.
 - B's negative mining shares candidate texts across the train/validation anchor
   trial split. Inspection of the current templated pairs found 29 training
   negative texts originating only from validation trials, including one text
@@ -188,9 +194,10 @@ eligibility and expected-pair-hash changes, using Ruff 0.17.1:
 - LLM query generation can still write an empty file after all requests fail.
   The trainer rejects an overall dataset lacking train or validation pairs, but
   does not require every extra pair file to be nonempty.
-- Before cloud execution, select reviewed image/data versions, check extra-pair
+- Before any future cloud execution, select reviewed image/data versions, check extra-pair
   provenance, secret access and GPU availability, then retain the actual run and
-  output artifacts. Those checks are not established by local compilation.
+  output artifacts. The archived November 12 record establishes that execution's
+  inputs and outputs; it does not establish access or capacity for a future run.
 
 No deployment command is invoked by this integration. The existing Cloud Run
 service, Chroma VM and teammates' remote branches have not been changed.

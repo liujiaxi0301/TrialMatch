@@ -1,0 +1,24 @@
+{
+  "source_archive": "ms3-integrated-evidence.tar.gz",
+  "source_archive_sha256": "4f6d17d0f7d5da4f174cb53319944c0ffc29b02940db419b68f74b32875ead4d",
+  "scope": "Selected original metadata, output manifests, rankings and failure logs from the uploaded archive; full build/training logs and checkpoint weights are not included. review.json describes the prior full-archive offline review.",
+  "files": {
+    "raw/pipeline-job.json": "e41905f46c9955ed66e3d78e8b74e8584c7c5d00841e63c972ae7582fb05874e",
+    "raw/summary.json": "1c419525534612432e855b4e1e2431d989aff178cdee9af14243eee41b8f35e6",
+    "raw/pipeline-command.json": "d2c8b20d47601dee063300c4eb5a74884f8c0bf2c0127b9f65349a7552874669",
+    "raw/build-workflow.json": "74cbff2f2d8ae81ebaf73c48f1c3d60ec101a61b5fe85b655dd660a8c6e98000",
+    "raw/build-trainer.json": "80b95dfe5e35c02cf4f0eceec07905abf1a98858732efd8ade339148c6748b84",
+    "raw/build-retrieval.json": "ea81d12397b9099703110a718359c53bc2b5c109d79c2d48aa32917047dfeaa6",
+    "raw/input-release.json": "2d1612b73737b599312fdb7e2d040e73d1d25694f3118e47b3825ff449171734",
+    "raw/submitter/release_target.json": "6a2db8d2f12bb20fcd959d4ec7f104b488d5a23bac317a72ab881256b26ed852",
+    "raw/outputs/process-trials/release.json": "206cd0133b129f5707413becbe2c58782d089e213416b150f6d4dca116d0e4d2",
+    "raw/outputs/validate-data/validation.json": "0394a725c605e20960b5769efe228bcdac51de847e6f80652bf569bb75d1fa08",
+    "raw/outputs/train-encoder/training_manifest.json": "ade965f5be8cf1c839e223d90fb3e393caffa46321e592cfff3871820ff12c37",
+    "raw/outputs/retrieve-finetuned/finetuned_retrieval_manifest.json": "cb3a67ba764bfc6f44deb255ab0007a525e5981eea36f2418d74b49504ae0127",
+    "raw/outputs/retrieve-finetuned/retrieval_runs.jsonl": "49dfacb901c3cc2a9d98ea2df3a6c63fde8a46f9aefcc00f657dd8fca71b54f0",
+    "raw/outputs/retrieve-finetuned/retrieval_runs.config.json": "7d97b0526a5076750f1ff181ecdf429ec91067497f5d8ab34200cb1eed197f11",
+    "raw/outputs/evaluate-retrieval/unjudged_pairs.json": "997e79c46f0f13d27be2e313ec481759d89d012ef3f4d64f6e0a073a28545749",
+    "raw/logs/evaluate-retrieval-0.json": "1cfd00c04870d4b13a79b1cf05d776daa068d41c5a724e0bd6fce9b5c9e2991a",
+    "review.json": "674fac76383475e5c35821f7faff267f5c15b28a410c4792e411508f627f4d58"
+  }
+}

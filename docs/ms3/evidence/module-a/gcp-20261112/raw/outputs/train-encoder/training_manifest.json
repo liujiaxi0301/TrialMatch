@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "workflow_type": "contrastive-encoder-finetune",
+  "source_release_uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/process-trials_4056802151026917376/processed/release.json",
+  "artifact_uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/train-encoder_-554883867400470528/training/model",
+  "artifact_sha256": "7dd900ba458da9156de2fdac75e9bce934839e7169d81135f4225cc4aae18f98",
+  "artifact_files": {
+    "config.json": "b320e3a43a2afa28418177378d24e84fc5196b4cb11ffd383100cd7468e74e08",
+    "model.safetensors": "0f5efb41edbb1a4a098211e1cf3e1f34622d508f499ed96e65dad482bdd097f4",
+    "special_tokens_map.json": "ea97ecdbcc73713039d8d64dbb05e3689495c96657fbd9a18f5bed381be81049",
+    "tokenizer.json": "a4285a69e0471620769dce979c70a6994eb7ff1554da8fb4bdbc7ad3eb5ad666",
+    "tokenizer_config.json": "2966a59b9e9cf122279aec1249e22e5bc7ad8430c754e95031b13fd128d4e560"
+  },
+  "base_model": {
+    "name": "thomas-sounack/BioClinical-ModernBERT-base",
+    "revision": "c3648aa87af95837c809e6f0c5f85d08160db437"
+  },
+  "pooling": "attention-mask-mean-including-special-tokens-v1",
+  "normalization": "l2",
+  "pair_files": [
+    {
+      "uri": "built-from:gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/process-trials_4056802151026917376/processed/release.json",
+      "sha256": "8924c520c5b5351e144feaafeaeb0de166be795a1c28399876efe4256400667a",
+      "expected_sha256": null,
+      "pairs": 2281,
+      "train": 2087,
+      "validation": 194
+    },
+    {
+      "uri": "gs://trialmatch-ac215-yixiao-ms3/training/pairs/20261110/pairs_llm.jsonl",
+      "sha256": "94ae0f0193b2a7715625d4227c76d1cbfacce8ef0b2b53faa3b449e77d93994c",
+      "expected_sha256": "94ae0f0193b2a7715625d4227c76d1cbfacce8ef0b2b53faa3b449e77d93994c",
+      "pairs": 3332,
+      "train": 3050,
+      "validation": 282
+    }
+  ],
+  "config": {
+    "pairs": [
+      "gs://trialmatch-ac215-yixiao-ms3/training/pairs/20261110/pairs_llm.jsonl"
+    ],
+    "pairs_sha256": [
+      "94ae0f0193b2a7715625d4227c76d1cbfacce8ef0b2b53faa3b449e77d93994c"
+    ],
+    "validated_report": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/validate-data_309807261054664704/report",
+    "output": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/train-encoder_-554883867400470528/training",
+    "manifest": "/app/services/rag_workflow/examples/demo_manifest.json",
+    "model": "thomas-sounack/BioClinical-ModernBERT-base",
+    "revision": "c3648aa87af95837c809e6f0c5f85d08160db437",
+    "epochs": 3,
+    "batch_size": 8,
+    "lr": 2e-05,
+    "weight_decay": 0.01,
+    "warmup_ratio": 0.1,
+    "temperature": 0.05,
+    "max_length": 256,
+    "max_negatives": 4,
+    "seed": 0,
+    "device": "cuda",
+    "no_amp": false,
+    "limit": 0,
+    "wandb_project": "trialmatch-ms3",
+    "wandb_entity": "",
+    "run_name": "",
+    "wandb_secret": "projects/15733748057/secrets/wandb-api-key/versions/1",
+    "source_release": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/process-trials_4056802151026917376/processed/release.json",
+    "image_uri": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/trainer@sha256:8b2a2cb9bbcf88a1d9456e21d26ae70bd1ce1aecaec42f01bd6daf6172d9e97f",
+    "amp": true,
+    "pooling": "attention-mask-mean-including-special-tokens-v1",
+    "normalization": "l2",
+    "loss": "info-nce",
+    "negatives": "in-batch positives and mined hard negatives",
+    "workflow_type": "contrastive-encoder-finetune",
+    "code_commit": "source-version:96a1ab99463f8e3363a6b4f74a1b1eeb2df4fa59",
+    "pair_files": [
+      {
+        "uri": "built-from:gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/process-trials_4056802151026917376/processed/release.json",
+        "sha256": "8924c520c5b5351e144feaafeaeb0de166be795a1c28399876efe4256400667a",
+        "expected_sha256": null,
+        "pairs": 2281,
+        "train": 2087,
+        "validation": 194
+      },
+      {
+        "uri": "gs://trialmatch-ac215-yixiao-ms3/training/pairs/20261110/pairs_llm.jsonl",
+        "sha256": "94ae0f0193b2a7715625d4227c76d1cbfacce8ef0b2b53faa3b449e77d93994c",
+        "expected_sha256": "94ae0f0193b2a7715625d4227c76d1cbfacce8ef0b2b53faa3b449e77d93994c",
+        "pairs": 3332,
+        "train": 3050,
+        "validation": 282
+      }
+    ],
+    "train_pairs": 5137,
+    "validation_pairs": 476,
+    "held_out_trials": 50,
+    "torch": "2.4.0+cu124",
+    "transformers": "4.57.6",
+    "numerics": {
+      "probe_texts": 4,
+      "tolerance": 0.001,
+      "attempts": [
+        {
+          "variant": {
+            "attn_implementation": "sdpa"
+          },
+          "max_abs_gap_fp32": Infinity
+        },
+        {
+          "variant": {
+            "attn_implementation": "sdpa",
+            "reference_compile": false
+          },
+          "max_abs_gap_fp32": Infinity
+        },
+        {
+          "variant": {
+            "attn_implementation": "eager",
+            "reference_compile": false
+          },
+          "max_abs_gap_fp32": 2.384185791015625e-07
+        }
+      ],
+      "max_abs_gap_fp16": 8.981674909591675e-05,
+      "variant": {
+        "attn_implementation": "eager",
+        "reference_compile": false
+      },
+      "reference": "cpu"
+    }
+  },
+  "code_commit": "source-version:96a1ab99463f8e3363a6b4f74a1b1eeb2df4fa59",
+  "image_uri": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/trainer@sha256:8b2a2cb9bbcf88a1d9456e21d26ae70bd1ce1aecaec42f01bd6daf6172d9e97f",
+  "experiment": {
+    "mode": "online",
+    "path": "jennyyang-harvard-university/trialmatch-ms3/kv0ifsun",
+    "url": "https://forge.coreweave.com/wandb/jennyyang-harvard-university/trialmatch-ms3/runs/kv0ifsun",
+    "run_id": "kv0ifsun"
+  },
+  "validation": {
+    "scope": "internal: held-out training trials, not the retrieval benchmark",
+    "baseline_frozen": {
+      "epoch": 0,
+      "val/loss": 3.3481583955909024,
+      "val/recall@10": 0.2487046632124352,
+      "val/mrr@10": 0.14721399786166628,
+      "val/queries": 386,
+      "val/pool": 1046
+    },
+    "epochs": [
+      {
+        "epoch": 1,
+        "val/loss": 0.9901886350717866,
+        "val/recall@10": 0.7797927461139895,
+        "val/mrr@10": 0.48932992022370253,
+        "val/queries": 386,
+        "val/pool": 1046
+      },
+      {
+        "epoch": 2,
+        "val/loss": 1.0070192843299954,
+        "val/recall@10": 0.8022452504317789,
+        "val/mrr@10": 0.4904916111522328,
+        "val/queries": 386,
+        "val/pool": 1046
+      },
+      {
+        "epoch": 3,
+        "val/loss": 1.06173277386472,
+        "val/recall@10": 0.8033246977547496,
+        "val/mrr@10": 0.49333004358911087,
+        "val/queries": 386,
+        "val/pool": 1046
+      }
+    ],
+    "recall@10_improved": true
+  },
+  "seed": 0,
+  "duration_seconds": 934.6
+}

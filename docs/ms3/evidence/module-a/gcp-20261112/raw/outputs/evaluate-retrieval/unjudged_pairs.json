@@ -1,0 +1,47 @@
+{
+  "status": "BLOCKED_UNJUDGED",
+  "retrieval_manifest_uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/retrieve-finetuned_-5166569885827858432/rankings/finetuned_retrieval_manifest.json",
+  "evaluation_bundle_sha256": "981402d2618aa3faf3a06efe5ce978f5d4832db078e2c708c22f270bba259580",
+  "pairs": [
+    {
+      "query_id": "Q02",
+      "trial_id": "NCT01945840"
+    },
+    {
+      "query_id": "Q02",
+      "trial_id": "NCT03827382"
+    },
+    {
+      "query_id": "Q05",
+      "trial_id": "NCT03156478"
+    },
+    {
+      "query_id": "Q05",
+      "trial_id": "NCT04455867"
+    },
+    {
+      "query_id": "Q06",
+      "trial_id": "NCT03156478"
+    },
+    {
+      "query_id": "Q06",
+      "trial_id": "NCT03569735"
+    },
+    {
+      "query_id": "Q06",
+      "trial_id": "NCT04874012"
+    },
+    {
+      "query_id": "Q06",
+      "trial_id": "NCT04932928"
+    },
+    {
+      "query_id": "Q06",
+      "trial_id": "NCT05138432"
+    },
+    {
+      "query_id": "Q07",
+      "trial_id": "NCT04326192"
+    }
+  ]
+}

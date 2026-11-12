@@ -116,6 +116,16 @@ the existing patient data. The reproduction record is saved to
 
 - [Cloud app](https://trialmatch-15733748057.us-east1.run.app) (authorized Google login required).
 - [Successful four-step pipeline](https://console.cloud.google.com/vertex-ai/locations/us-east1/pipelines/runs/trialmatch-data-pipeline-20261110055153?project=trialmatch-ac215-yixiao).
+- [MS3 evidence and evaluation reproduction](docs/ms3/submission-evidence.md): the selected
+  14-method report, its November 10 checkpoint, and the separate November 12 integration run.
+
+For submission and presentation, use Jessie's existing
+[retrieval report](evaluation/ms3/retrieval/RETRIEVAL_EVALUATION_REPORT.md) with
+its saved rankings and 182 reviewed judgments. All four result files were
+reproduced byte-for-byte on November 12; this requires no training or model calls.
+The newer seven-task Vertex run completed training and ranking but stopped at
+evaluation because ten query/trial pairs were unjudged. Its checkpoint has no
+completed retrieval metrics and does not inherit the earlier report's scores.
 
 The app uses Cloud Run. Chroma runs on a separate VM with a persistent disk
 mounted at `/data` inside its container. Only the TrialMatch subnet can reach
@@ -141,8 +151,9 @@ benchmark scoring are separate work. Gemini remains the deployment default.
 
 Optional local integrations add B's encoder training (`--trainer-image`) and
 C's fixed-pair eligibility evaluation (`--eligibility`) after data validation.
-Both flags together produce six tasks. These additions have not yet been
-verified in an integrated cloud run; the cloud link above is the four-task run.
+Both flags together produce six tasks. Training ran successfully in the November 12
+integration; eligibility was not enabled in that run. The cloud link above remains
+the successful four-task run.
 An additional `--finetuned-retrieval-image` connects the current training output
 to Jenny's ranking script, producing six tasks with training or seven when
 eligibility is also enabled. See [new-model ranking integration](docs/ms3/module-a-finetuned-retrieval.md).
@@ -150,8 +161,10 @@ Add `--retrieval-evaluation` to score these current-run rankings with Jessie's
 frozen pooled relevance labels: seven tasks, or eight with eligibility. The
 adapter verifies versions, reports unjudged candidates and reuses C's metric
 formulas without model calls. See [retrieval evaluation integration](docs/ms3/module-a-retrieval-evaluation.md).
-This local integration still needs an integrated cloud run. C's existing
-14-method report and reproducible scorer are preserved in `evaluation/ms3/retrieval/`.
+The [November 12 integration evidence](docs/ms3/evidence/module-a/gcp-20261112/README.md)
+records six successful tasks and a failed scoring task (`BLOCKED_UNJUDGED`).
+C's existing 14-method report and reproducible scorer remain unchanged in
+`evaluation/ms3/retrieval/` and are the selected evaluation results for this submission.
 See [eligibility integration](docs/ms3/module-a-eligibility.md) and
 [training integration](docs/ms3/module-a-training.md) for their contracts.
 
