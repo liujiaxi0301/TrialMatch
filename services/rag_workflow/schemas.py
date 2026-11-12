@@ -1,7 +1,7 @@
 """Shared API/function/CLI response contract, including explicit unknown/failure states."""
 
 from enum import StrEnum
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -22,11 +22,15 @@ class ScreeningStatus(StrEnum):
     POTENTIAL = "POTENTIAL_MATCH_FOR_REVIEW"
 
 
+RetrievalModel = Literal["gemini", "finetuned"]
+
+
 class ScreenRequest(StrictModel):
     patient_id: str | None = Field(default=None, min_length=1, max_length=250)
     patient: dict[str, Any] | None = None
     question: str = Field(min_length=1, max_length=2000)
     top_k: int = Field(default=3, ge=1, le=5)
+    retrieval_model: RetrievalModel | None = None
 
     @model_validator(mode="after")
     def exactly_one_patient(self):

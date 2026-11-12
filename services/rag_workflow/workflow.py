@@ -78,6 +78,10 @@ class ScreeningWorkflow:
         self.manifest = self.store.manifest()
 
     def screen(self, request: ScreenRequest) -> ScreenResponse:
+        settings = self.settings.for_retrieval(request.retrieval_model)
+        if settings.mode == "offline" and request.retrieval_model is not None:
+            raise ValueError("Retrieval model selection requires live mode")
+        settings.validate()
         patient = (
             validate_patient(request.patient)
             if request.patient is not None
@@ -88,7 +92,7 @@ class ScreeningWorkflow:
         warnings.append(
             "HISTORICAL_SYNTHETIC_DEMO: patient reference date and trial snapshot are separate; this is not current enrollment eligibility."
         )
-        if self.settings.mode == "offline":
+        if settings.mode == "offline":
             warnings.append(
                 "OFFLINE_MODE: real BM25 retrieval and deterministic rules; no embeddings or LLM calls; unsupported criteria remain UNKNOWN."
             )
@@ -106,15 +110,15 @@ class ScreeningWorkflow:
         provider = embedding = None
         try:
             vector_index = None
-            if self.settings.mode == "live":
-                provider = GeminiProvider(self.settings)
-                embedding = create_embedding_provider(self.settings, gemini=provider)
-                vector_index = VectorIndex(self.settings, self.store, self.manifest, embedding)
+            if settings.mode == "live":
+                provider = GeminiProvider(settings)
+                embedding = create_embedding_provider(settings, gemini=provider)
+                vector_index = VectorIndex(settings, self.store, self.manifest, embedding)
             hits = Retriever(self.store, self.manifest, vector_index).retrieve(
                 patient, request.question, request.top_k
             )
-            selector = ContextSelector(patient, self.settings.max_facts_per_criterion)
-            batches_left = self.settings.max_llm_batches
+            selector = ContextSelector(patient, settings.max_facts_per_criterion)
+            batches_left = settings.max_llm_batches
             for hit in hits:
                 trial = self.store.trials[hit["trial_id"]]
                 criteria = self.store.criteria[hit["trial_id"]]
@@ -130,7 +134,7 @@ class ScreeningWorkflow:
                             )
                         )
                         continue
-                    if len(criterion["criterion_text"]) > self.settings.max_criterion_chars:
+                    if len(criterion["criterion_text"]) > settings.max_criterion_chars:
                         assessments.append(
                             unknown(
                                 criterion,
@@ -159,8 +163,8 @@ class ScreeningWorkflow:
                                 "patient_evidence": selector.select(criterion),
                             }
                         )
-                for start in range(0, len(pending), self.settings.llm_batch_size):
-                    batch = pending[start : start + self.settings.llm_batch_size]
+                for start in range(0, len(pending), settings.llm_batch_size):
+                    batch = pending[start : start + settings.llm_batch_size]
                     if batches_left <= 0:
                         assessments.extend(
                             unknown(
@@ -278,7 +282,7 @@ class ScreeningWorkflow:
             patient_id=patient["patient_id"],
             question=request.question,
             patient_reference_date=patient["reference_date"],
-            mode=self.settings.mode,
+            mode=settings.mode,
             result_status=result_status,
             answer=answer,
             candidate_trials=results,
@@ -289,9 +293,11 @@ class ScreeningWorkflow:
                 "created_at": datetime.now(UTC).isoformat(),
                 "source_sha256": self.store.hashes,
                 "patient_input": "inline" if request.patient else "cohort",
-                "embedding_model": self.settings.embedding_model if provider else None,
-                "embedding_configuration": encoder_identity(self.settings) if provider else None,
-                "generation_model": self.settings.generation_model if provider else None,
+                "retrieval_model": ("bm25" if settings.mode == "offline" else
+                                    "finetuned" if settings.embedding_checkpoint else settings.embedding_provider),
+                "embedding_model": settings.embedding_model if provider else None,
+                "embedding_configuration": encoder_identity(settings) if provider else None,
+                "generation_model": settings.generation_model if provider else None,
                 "trial_ids": self.manifest["trial_ids"],
                 "score_definition": "100 * (inclusion MET + exclusion NOT_MET) / total criteria; UNKNOWN remains in denominator; not probability",
             },

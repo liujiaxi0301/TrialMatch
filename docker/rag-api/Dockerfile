@@ -7,6 +7,9 @@ ENV UV_PROJECT_ENVIRONMENT=/.venv
 ENV PATH="/.venv/bin:$PATH"
 ENV UV_CACHE_DIR=/tmp/uv-cache
 ENV OPENSSL_armcap=0
+ENV OMP_NUM_THREADS=2
+ENV MKL_NUM_THREADS=2
+ENV TOKENIZERS_PARALLELISM=false
 
 RUN pip install --no-cache-dir uv==0.13.1
 COPY docker/rag-api/pyproject.toml docker/rag-api/uv.lock ./

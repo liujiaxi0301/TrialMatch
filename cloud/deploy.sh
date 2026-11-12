@@ -106,7 +106,7 @@ case "$action" in
       --service-account="trialmatch-api@$GCP_PROJECT.iam.gserviceaccount.com" \
       --network="$NETWORK" --subnet="$SUBNET" --vpc-egress=private-ranges-only \
       --no-allow-unauthenticated --min-instances=0 --max-instances=1 --max=1 \
-      --cpu=1 --memory=2Gi --concurrency=1 --timeout=300 --port=8080 \
+      --cpu=2 --memory=4Gi --concurrency=1 --timeout=300 --port=8080 \
       --set-env-vars="TRIALMATCH_MODE=live,GCP_PROJECT=$GCP_PROJECT,GCP_LOCATION=global,RELEASE_URI=$RELEASE,CHROMADB_HOST=$CHROMA_IP,CHROMADB_PORT=8000,TRIALMATCH_ARTIFACTS=/app/artifacts,TRIALMATCH_CORS_ORIGINS="
     ;;
   *) echo "Unknown action: $action" >&2; exit 1 ;;

@@ -20,6 +20,7 @@ def main(argv=None) -> int:
     parser.add_argument(
         "--mode", choices=["offline", "live"], help="Explicitly select offline or live"
     )
+    parser.add_argument("--retrieval-model", choices=["gemini", "finetuned"])
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("inspect-data")
     manifest = commands.add_parser("make-manifest")
@@ -44,7 +45,7 @@ def main(argv=None) -> int:
     screen.add_argument("--top-k", type=int, default=3)
     screen.add_argument("--output", type=Path)
     args = parser.parse_args(argv)
-    settings = Settings()
+    settings = Settings().for_retrieval(args.retrieval_model)
     if args.mode:
         settings = replace(settings, mode=args.mode)
     try:

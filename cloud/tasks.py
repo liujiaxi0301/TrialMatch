@@ -202,6 +202,7 @@ def serve():
     download_release(os.environ["RELEASE_URI"])
     from services.rag_workflow.config import Settings
     from services.rag_workflow.data import DataStore
+    from services.rag_workflow.embedding_providers import create_embedding_provider
     from services.rag_workflow.index import VectorIndex
 
     settings = Settings()
@@ -209,6 +210,25 @@ def serve():
     if settings.mode == "live":
         index = VectorIndex(settings, data, data.manifest())
         status = index.restore(ROOT / FILES[-1])
+        log("cloud_index_ready", collection=status["collection"], vectors=status["vector_count"])
+        trained = settings.for_retrieval("finetuned")
+        index = VectorIndex(trained, data, data.manifest())
+        snapshot = trained.artifacts / "finetuned-index.json"
+        # Save beside the model directory so it never changes the checkpoint digest.
+        remote = blob(f"{trained.embedding_checkpoint.rsplit('/', 1)[0]}/indexes/{index.version}.json")
+        if remote.exists():
+            snapshot.parent.mkdir(parents=True, exist_ok=True)
+            remote.download_to_filename(snapshot)
+            status = index.restore(snapshot)
+        else:
+            provider = create_embedding_provider(trained)
+            try:
+                index.provider = provider
+                status = index.build()
+            finally:
+                provider.close()
+            index.export(snapshot)
+            remote.upload_from_filename(snapshot, if_generation_match=0)
         log("cloud_index_ready", collection=status["collection"], vectors=status["vector_count"])
     os.execvp(sys.executable, [
         sys.executable, "-m", "uvicorn", "services.frontend.app:app",

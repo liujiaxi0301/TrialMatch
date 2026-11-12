@@ -12,6 +12,7 @@ live:
 	docker compose exec -T rag-api python -m services.rag_workflow.cli restore-index \
 		--input services/rag_workflow/index_snapshots/current.json
 	docker compose exec -T rag-api python -m services.rag_workflow.cli index-status
+	docker compose exec -T rag-api python -m services.rag_workflow.cli --retrieval-model finetuned build-index
 	TRIALMATCH_MODE=live docker compose up --remove-orphans --wait --wait-timeout 180
 
 down:

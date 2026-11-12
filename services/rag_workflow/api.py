@@ -17,7 +17,7 @@ from .observability import (
 )
 from .providers import ProviderError
 from .readiness import ReadinessProbe
-from .schemas import ScreenRequest, ScreenResponse
+from .schemas import RetrievalModel, ScreenRequest, ScreenResponse
 from .workflow import ScreeningWorkflow
 
 
@@ -45,11 +45,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     def workflow():
         return ScreeningWorkflow(config)
 
-    readiness = ReadinessProbe(config, workflow)
+    @lru_cache(maxsize=3)
+    def readiness(retrieval_model=None):
+        return ReadinessProbe(config.for_retrieval(retrieval_model), workflow)
 
     @app.get("/ready", tags=["Operations"])
-    def ready():
-        report = readiness.check()
+    def ready(retrieval_model: RetrievalModel | None = None):
+        report = readiness(retrieval_model).check()
         emit("readiness_checked", ready=report["ready"], check_scope=report["check_scope"])
         return JSONResponse(status_code=200 if report["ready"] else 503, content=report)
 
@@ -117,7 +119,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                     "message": "Screening dependency unavailable.",
                 },
             ) from exc
-        log_screening(result, config)
+        log_screening(result, config.for_retrieval(request.retrieval_model))
         if result.result_status == "ERROR":
             return JSONResponse(status_code=503, content=result.model_dump(mode="json"))
         return result

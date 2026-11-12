@@ -36,8 +36,8 @@ Compose waits for trial processing to finish and Chroma to be healthy before
 starting the app. Index import and retrieval code belong to the backend image.
 Chroma stores vectors in the `rag-chroma-data` volume mounted at `/data`.
 
-Offline screening uses BM25 and needs no vector index. Online screening uses
-the saved Gemini index restored by `make live`.
+Offline screening uses BM25 and needs no vector index. Online screening offers
+Gemini or the trained BioClinical encoder for retrieval, each with its own Chroma index.
 
 Install Docker and make, start Docker, and run from the repository root:
 
@@ -51,7 +51,7 @@ The default offline mode uses the included processed data and requires no Google
 | Command | Purpose |
 |---|---|
 | `make up` | Build images, check the existing processed data, and start Chroma and the offline app. |
-| `make live` | Build images, download and restore the Gemini index, and start online screening. |
+| `make live` | Restore the Gemini index, prepare the trained encoder index, and start online screening. |
 | `make down` | Stop the containers and keep stored data. |
 | `make reproduce` | Download the fixed raw trials with DVC, rebuild and verify the processed files, and start the offline app. |
 
@@ -77,12 +77,35 @@ Install the Google Cloud CLI and sign in with `gcloud auth application-default l
 Create `secrets/` and copy the credentials file printed by the command to `secrets/google-credentials.json`.
 Copy `.env.example` to `.env` and set `GCP_PROJECT`.
 Compose mounts the same credentials file for DVC and Gemini.
-The account needs access to the shared DVC storage and the project's Gemini service.
+The account needs access to the shared DVC storage, the model in the MS3 bucket,
+and the project's Gemini service.
 The project needs billing and `aiplatform.googleapis.com` enabled.
 
 ```bash
 make live
 ```
+
+Choose **Gemini** or **Fine-tuned BioClinical** under **Retrieval** on the page.
+Both use BM25 plus vector search; only the embedding model and its index change.
+Gemini still handles criterion assessment and the response in both choices.
+The selected model is shown with the response. Offline mode remains BM25 only.
+
+The trained option uses the November 10 checkpoint
+`gs://trialmatch-ac215-yixiao-ms3/training/train-20261110-t4-r3/model`, pinned by
+its SHA256 in `services/rag_workflow/config.py`. It runs on CPU; no training or GPU
+is needed. The first `make live` downloads the checkpoint and builds its index.
+Later starts reuse the saved files and Chroma collection.
+
+`POST /screen` accepts an optional `retrieval_model`: `gemini` or `finetuned`.
+Omitting it keeps the configured default (Gemini). For example:
+
+```bash
+curl http://localhost:8080/screen -H 'Content-Type: application/json' -d \
+  '{"patient_id":"060e72d3-912e-55cd-0c92-5faa6cb7a6db","question":"Which type 2 diabetes trials may suit this patient?","top_k":1,"retrieval_model":"finetuned"}'
+```
+
+Use `/ready?retrieval_model=gemini` or `/ready?retrieval_model=finetuned` to check
+the corresponding data and index. These checks do not make model calls.
 
 Credentials and `.env` stay out of Git. `make up` does not need them.
 See [shared storage](services/rag_workflow/INDEX_VERSIONING.md#5-shared-storage)
@@ -137,7 +160,10 @@ The default Vertex AI Pipeline has four steps:
 Each step uses the image in `docker/workflow/`, with its own dependency files,
 and passes its output through GCS. Cloud images contain code and do not use
 local source mounts or automatic reload.
-The app loads the validated release and restores its saved vectors into Chroma.
+The app loads the validated release, restores the Gemini vectors and prepares the
+trained encoder's separate Chroma index. Its snapshot is saved beside the model
+in GCS and restored on later starts. Cloud Run uses two CPUs and 4 GiB of
+memory for CPU inference, with zero minimum instances and one maximum instance.
 The last step saves `retrieval_runs.jsonl` and its configuration to GCS. It produces
 rankings, not relevance scores or eligibility accuracy. Model training and human
 benchmark scoring are separate work. Gemini remains the deployment default.
@@ -241,8 +267,10 @@ config, `docker/trainer/cloudbuild.yaml`, so `cloud/build.yaml` and the deployme
 are unchanged. The plan and its acceptance checklist are
 in [docs/ms3/module-b-plan.md](docs/ms3/module-b-plan.md).
 
-The fine-tuned encoder is not deployed. The app still serves the MS2 retrieval path. The
-checkpoint was used only to produce extra benchmark rankings for the evaluation owner.
+The app can use the evaluated November 10 checkpoint for retrieval. Gemini remains
+the default and handles generation in both choices. The app keeps its patient-aware
+hybrid query; benchmark scores apply to the report's stated query and retrieval
+settings, not automatically to every web request.
 
 ### What was trained
 
@@ -429,7 +457,8 @@ The integration is described in
 manifest's release, image, output path, checksum metadata and batch size before saving
 any success markers. `--finetuned-retrieval-image` consumes this run's checkpoint,
 and `--retrieval-evaluation` scores those rankings with the frozen benchmark.
-The separate baseline retrieval node and deployed app still use Gemini.
+The separate baseline retrieval node still uses Gemini. The app defaults to Gemini
+and also offers the evaluated November 10 checkpoint.
 A failed task fails the full pipeline and prevents new success markers.
 
 `--eligibility` independently adds `evaluate-eligibility`, using C's eight fixed

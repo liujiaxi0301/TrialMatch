@@ -54,7 +54,7 @@ def resolve_checkpoint(settings) -> Path:
             bucket_name, _, prefix = source.removeprefix("gs://").partition("/")
             prefix = prefix.rstrip("/") + "/"
             directory.mkdir(parents=True, exist_ok=True)
-            for blob in storage.Client().list_blobs(bucket_name, prefix=prefix):
+            for blob in storage.Client(project=settings.project or None).list_blobs(bucket_name, prefix=prefix):
                 name = blob.name.removeprefix(prefix)
                 if name and "/" not in name:
                     blob.download_to_filename(str(directory / name))
@@ -92,7 +92,7 @@ def create_embedding_provider(settings, gemini=None):
 
 
 class BioClinicalProvider:
-    """Experimental frozen MLM encoder + masked mean pooling, not retrieval fine-tuned.
+    """BioClinical encoder with masked mean pooling, frozen or checkpoint-tuned.
 
     Both queries and documents use the same encoder. No invented Gemini task prefixes.
     Oversized inputs raise an error instead of silently dropping clinical information.
