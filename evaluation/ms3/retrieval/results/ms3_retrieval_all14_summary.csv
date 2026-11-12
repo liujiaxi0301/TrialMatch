@@ -1,0 +1,43 @@
+scope,source_group,method,n_queries,mean_p_at_3,mean_ndcg_at_5,queries_with_zero_p3
+report_Q03_Q08,Jenny handoff,bioclinical_dense_patient,6,0.0,0.030257,6
+dev_Q01_Q02,Jenny handoff,bioclinical_dense_patient,2,0.333333,0.214351,1
+all_Q01_Q08,Jenny handoff,bioclinical_dense_patient,8,0.083333,0.07628,7
+report_Q03_Q08,Jenny handoff,bioclinical_dense_question,6,0.0,0.031823,6
+dev_Q01_Q02,Jenny handoff,bioclinical_dense_question,2,0.333333,0.41521,1
+all_Q01_Q08,Jenny handoff,bioclinical_dense_question,8,0.083333,0.127669,7
+report_Q03_Q08,Jenny handoff,bioclinical_hybrid_patient,6,0.0,0.021868,6
+dev_Q01_Q02,Jenny handoff,bioclinical_hybrid_patient,2,0.333333,0.302157,1
+all_Q01_Q08,Jenny handoff,bioclinical_hybrid_patient,8,0.083333,0.09194,7
+report_Q03_Q08,Jenny handoff,bioclinical_hybrid_question,6,0.222222,0.244813,3
+dev_Q01_Q02,Jenny handoff,bioclinical_hybrid_question,2,0.666667,0.7291,0
+all_Q01_Q08,Jenny handoff,bioclinical_hybrid_question,8,0.333333,0.365885,3
+report_Q03_Q08,Jenny handoff,bm25_patient,6,0.055556,0.103349,5
+dev_Q01_Q02,Jenny handoff,bm25_patient,2,0.5,0.451311,1
+all_Q01_Q08,Jenny handoff,bm25_patient,8,0.166667,0.190339,6
+report_Q03_Q08,Jenny handoff,bm25_question,6,0.5,0.651097,0
+dev_Q01_Q02,Jenny handoff,bm25_question,2,0.666667,0.79008,0
+all_Q01_Q08,Jenny handoff,bm25_question,8,0.541667,0.685842,0
+report_Q03_Q08,Jenny handoff,finetuned_dense_patient,6,0.055556,0.100578,5
+dev_Q01_Q02,Jenny handoff,finetuned_dense_patient,2,0.666667,0.530931,0
+all_Q01_Q08,Jenny handoff,finetuned_dense_patient,8,0.208333,0.208166,5
+report_Q03_Q08,Jenny handoff,finetuned_dense_question,6,0.388889,0.471223,0
+dev_Q01_Q02,Jenny handoff,finetuned_dense_question,2,0.666667,0.780509,0
+all_Q01_Q08,Jenny handoff,finetuned_dense_question,8,0.458333,0.548545,0
+report_Q03_Q08,Jenny handoff,finetuned_hybrid_patient,6,0.0,0.152036,6
+dev_Q01_Q02,Jenny handoff,finetuned_hybrid_patient,2,0.5,0.527418,1
+all_Q01_Q08,Jenny handoff,finetuned_hybrid_patient,8,0.125,0.245882,7
+report_Q03_Q08,Jenny handoff,finetuned_hybrid_question,6,0.555556,0.619958,1
+dev_Q01_Q02,Jenny handoff,finetuned_hybrid_question,2,0.666667,0.863114,0
+all_Q01_Q08,Jenny handoff,finetuned_hybrid_question,8,0.583333,0.680747,1
+report_Q03_Q08,Legacy baseline,BM25 Question-only (legacy),6,0.5,0.651097,0
+dev_Q01_Q02,Legacy baseline,BM25 Question-only (legacy),2,0.666667,0.79008,0
+all_Q01_Q08,Legacy baseline,BM25 Question-only (legacy),8,0.541667,0.685842,0
+report_Q03_Q08,Legacy baseline,BM25 Patient-aware (legacy),6,0.055556,0.103349,5
+dev_Q01_Q02,Legacy baseline,BM25 Patient-aware (legacy),2,0.5,0.451311,1
+all_Q01_Q08,Legacy baseline,BM25 Patient-aware (legacy),8,0.166667,0.190339,6
+report_Q03_Q08,Legacy baseline,BM25 + Gemini/Chroma Hybrid,6,0.111111,0.122624,4
+dev_Q01_Q02,Legacy baseline,BM25 + Gemini/Chroma Hybrid,2,0.5,0.656385,1
+all_Q01_Q08,Legacy baseline,BM25 + Gemini/Chroma Hybrid,8,0.208333,0.256064,5
+report_Q03_Q08,Legacy baseline,Hybrid Question-only (legacy),6,0.388889,0.598805,1
+dev_Q01_Q02,Legacy baseline,Hybrid Question-only (legacy),2,0.666667,0.681557,0
+all_Q01_Q08,Legacy baseline,Hybrid Question-only (legacy),8,0.458333,0.619493,1

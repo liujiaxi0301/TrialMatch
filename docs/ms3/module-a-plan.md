@@ -1,5 +1,20 @@
 # Module A: baseline and integration plan
 
+Local retrieval-evaluation update (2026-11-11 ET): C's `da31297` retrieval bundle
+is imported unchanged, with the original query path retained for compatibility.
+`--retrieval-evaluation` adds CPU scoring after this run's fine-tuned rankings,
+using C's formulas and pinned labels. The graph has seven tasks, or eight with
+eligibility. Missing labels block scoring with a diagnostic; historical reports
+remain separate. Local verification and integrated cloud execution are separate
+gates. See [module-a-retrieval-evaluation.md](module-a-retrieval-evaluation.md).
+
+Local new-model retrieval update (2026-11-11, after `6053b7d`):
+`--finetuned-retrieval-image` connects Jenny's ranking entry point to this run's
+training artifact and validation report. It verifies the checkpoint and publishes
+rankings/config/manifest from a separate CPU image. Training plus retrieval has
+six tasks, or seven with eligibility. The optional scoring integration is described above.
+See [module-a-finetuned-retrieval.md](module-a-finetuned-retrieval.md).
+
 Local training-input update (2026-11-11): extra `--train-pairs` now require
 `--train-pairs-sha256`. The trainer verifies the exact bytes it parses before
 model loading; the submitter checks the resulting pair-source records before

@@ -1,0 +1,26 @@
+{
+  "benchmark_sha256": "237fc7c91d58f99defdb520ebfe63ddc9bdf42d4972657e8d961444235f6e555",
+  "files": {
+    "evaluation/ms3/retrieval/evaluate_retrieval_complete.py": "52d399e3f6347ea0db4b45d7eface001129e4a1ea0242e036460d1f1b4c4e1c4",
+    "evaluation/ms3/retrieval/retrieval_labels.csv": "9a31a38eb1573b8cce81559763ef500aef2c2962b2c771cc3332231879344159",
+    "evaluation/ms3/retrieval/retrieval_queries.jsonl": "1fa5bf9163cb065b7c000f04a13ae32737c849b2c288d0ca2680ffd1f74c8a06",
+    "evaluation/ms3/retrieval/reviewed_labels/Q01.json": "0cd566740705bb0dfd81d7ca7db1a8d6b8dddd4239487b43afa4c9843a9845db",
+    "evaluation/ms3/retrieval/reviewed_labels/Q02.json": "477b34986abe8b5364d6bbbf3b461859afe0471c4b54587c48759bca7cf9e412",
+    "evaluation/ms3/retrieval/reviewed_labels/Q03.json": "b2d8b5fa880fc62a3f4319a97c26a1a4c1ccd587954cfbf25052ea476258b674",
+    "evaluation/ms3/retrieval/reviewed_labels/Q04.json": "09ad39b7d84faf8dcfa7decb7dd9f0bde542f19ff53171b40ef7008b3606371c",
+    "evaluation/ms3/retrieval/reviewed_labels/Q05.json": "6ea2806360c7a03eb5f052b5f2c7bb1d4ccc72f740f2c31ec72a513fef26d882",
+    "evaluation/ms3/retrieval/reviewed_labels/Q06.json": "5180974038dd628d93051c59553ad2b6fb79807f972395a13324558b8964e352",
+    "evaluation/ms3/retrieval/reviewed_labels/Q07.json": "7a0ac0dc6d1c276d673e108b2d0ce7f8033dc352e98879b5aaa1a35d934804d9",
+    "evaluation/ms3/retrieval/reviewed_labels/Q08.json": "39dd2727046ddfa2a49881c60d2788bfbc0059fa60b0ce976795409305a70fe9"
+  },
+  "gold_labels": 182,
+  "owner": "Jiaxi (Jessie), Module C",
+  "queries_sha256": "1fa5bf9163cb065b7c000f04a13ae32737c849b2c288d0ca2680ffd1f74c8a06",
+  "schema_version": 1,
+  "source_commit": "da3129766e77e35a646740ad0753bd90ebc6b0c4",
+  "source_sha256": {
+    "criteria": "f7701a9979eb105219407c553703752879f6a2c55fb8736240c8e7bddc96de59",
+    "patients": "33ac165b9be7c564207325ae951d40b9cfdc3b72f8fb2f56e3e58193894331a1",
+    "trials": "1678d523a1246319d4ae5ba8d2dd5d4ab1359746ad71fb7feee67b20bb07edd6"
+  }
+}

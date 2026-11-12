@@ -1,0 +1,121 @@
+{
+  "query_id": "Q02",
+  "review_status": "user-reviewed",
+  "reviewer_qualification": "Non-clinician manual relevance assessment",
+  "labels": [
+    {
+      "trial_id": "NCT02390973",
+      "relevance": 2,
+      "reason": "T2D surgical study with HbA1c >=6.5% explicitly listed as one alternative inclusion criterion.",
+      "source_reference": "inclusion criteria"
+    },
+    {
+      "trial_id": "NCT03087032",
+      "relevance": 2,
+      "reason": "T2D treatment trial with explicit HbA1c thresholds for newly diagnosed and uncontrolled diabetes.",
+      "source_reference": "inclusion criteria"
+    },
+    {
+      "trial_id": "NCT03811470",
+      "relevance": 0,
+      "reason": "Diabetes registry without an explicit HbA1c-specific enrollment requirement.",
+      "source_reference": "inclusion criteria"
+    },
+    {
+      "trial_id": "NCT04284943",
+      "relevance": 2,
+      "reason": "Study of gastric surgery in patients with T2D and gastric cancer requiring HbA1c >=6.5%.",
+      "source_reference": "inclusion criteria"
+    },
+    {
+      "trial_id": "NCT04442334",
+      "relevance": 1,
+      "reason": "NAFLD registry includes HbA1c as an optional metabolic syndrome criterion, but T2D enrollment is not its primary focus.",
+      "source_reference": "inclusion criteria; brief_summary"
+    },
+    {
+      "trial_id": "NCT04442451",
+      "relevance": 2,
+      "reason": "Uses explicit HbA1c ranges to define the T2D study group.",
+      "source_reference": "inclusion criteria"
+    },
+    {
+      "trial_id": "NCT04670666",
+      "relevance": 2,
+      "reason": "T2D drug trial requiring HbA1c between 7.5% and 10.5%.",
+      "source_reference": "inclusion criteria"
+    },
+    {
+      "trial_id": "NCT04874012",
+      "relevance": 2,
+      "reason": "Taurine intervention in T2D requiring HbA1c between 7.5% and 10.5%.",
+      "source_reference": "inclusion criteria"
+    },
+    {
+      "trial_id": "NCT05015283",
+      "relevance": 2,
+      "reason": "Metabolic surgery trial in T2D with an explicit HbA1c >=7.0% inclusion threshold.",
+      "source_reference": "inclusion criteria"
+    },
+    {
+      "trial_id": "NCT04501406",
+      "relevance": 2,
+      "reason": "Explicitly recruits patients with T2D and requires HbA1c <= 9.5%, directly matching the query's eligibility focus.",
+      "source_reference": "brief_summary; inclusion criteria #3-4"
+    },
+    {
+      "trial_id": "NCT05028140",
+      "relevance": 2,
+      "reason": "Explicitly recruits patients with T2D who have not achieved their HbA1c treatment goal despite prior therapies.",
+      "source_reference": "inclusion criteria"
+    },
+    {
+      "trial_id": "NCT03156478",
+      "relevance": 0,
+      "reason": "T2D prevention study excluding diagnosed diabetes; no HbA1c eligibility requirement.",
+      "source_reference": "NCT03156478:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT04455867",
+      "relevance": 2,
+      "reason": "T2D observational study explicitly lists high HbA1c as one alternative inclusion condition, without a numeric cutoff.",
+      "source_reference": "NCT04455867:eligibility_text"
+    },
+    {
+      "trial_id": "NCT04687215",
+      "relevance": 2,
+      "reason": "T2D neuropathy study with an exclusion written as HbA1>10, apparently referring to glycated hemoglobin; notation is imprecise.",
+      "source_reference": "NCT04687215:eligibility_text"
+    },
+    {
+      "trial_id": "NCT04791371",
+      "relevance": 2,
+      "reason": "Includes T2D participants and explicitly excludes T2D HbA1c >9.",
+      "source_reference": "NCT04791371:eligibility_text"
+    },
+    {
+      "trial_id": "NCT04869098",
+      "relevance": 0,
+      "reason": "Night-shift metabolic study excludes diagnosed diabetes and gives no HbA1c eligibility condition.",
+      "source_reference": "NCT04869098:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT04889053",
+      "relevance": 0,
+      "reason": "T2D coronary calcification study without an HbA1c-based inclusion or exclusion requirement.",
+      "source_reference": "NCT04889053:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT04932928",
+      "relevance": 2,
+      "reason": "T2D lifestyle intervention explicitly requires HbA1c 7.0-10.0% and measures HbA1c change.",
+      "source_reference": "NCT04932928:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT05124457",
+      "relevance": 0,
+      "reason": "Maternal insulin study includes pre-existing T2D but does not specify HbA1c-based eligibility.",
+      "source_reference": "NCT05124457:brief_summary;eligibility_text"
+    }
+  ]
+}

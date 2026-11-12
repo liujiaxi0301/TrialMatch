@@ -1,0 +1,127 @@
+{
+  "query_id": "Q06",
+  "review_status": "user-reviewed",
+  "reviewer_qualification": "Non-clinician manual relevance assessment",
+  "labels": [
+    {
+      "trial_id": "NCT03264352",
+      "relevance": 0,
+      "reason": "Investigates antihypertensive treatment in T2D rather than GLP-1 receptor agonist therapy.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT03878706",
+      "relevance": 2,
+      "reason": "Directly investigates GLP-1 receptor agonist therapy alone and combined with SGLT2 inhibitors in adults with T2D.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT03925714",
+      "relevance": 0,
+      "reason": "Investigates p53 and SIRT1 in diabetes development, not GLP-1 receptor agonist therapy.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04442334",
+      "relevance": 0,
+      "reason": "NAFLD registry does not investigate GLP-1 receptor agonist treatment.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04442451",
+      "relevance": 0,
+      "reason": "Studies exercise fatigability and vascular function rather than GLP-1 receptor agonist therapy.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04501406",
+      "relevance": 0,
+      "reason": "Evaluates pioglitazone for NASH; GLP-1 receptor agonists are permitted background medications rather than study treatments.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT04670666",
+      "relevance": 0,
+      "reason": "Evaluates the Madalena drug combination without evidence that GLP-1 receptor agonists are being investigated.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT05015283",
+      "relevance": 0,
+      "reason": "Compares metabolic surgery procedures; GLP-1 receptor agonists are mentioned only as possible existing diabetes medications.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT05028140",
+      "relevance": 0,
+      "reason": "Evaluates the Piemonte drug combination without evidence of a GLP-1 receptor agonist treatment component.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04869098",
+      "relevance": 0,
+      "reason": "Investigates whey protein supplementation and excludes diabetes; GLP-1 analogues appear only among excluded medications.",
+      "source_reference": "brief_summary; exclusion criteria"
+    },
+    {
+      "trial_id": "NCT03883412",
+      "relevance": 2,
+      "reason": "Directly investigates liraglutide, a GLP-1 receptor agonist, alone and combined with exercise in adults with T2D.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "relevance": 0,
+      "reason": "Investigates gut hormone changes following gastric bypass, without an explicitly studied GLP-1 receptor agonist therapy.",
+      "source_reference": "NCT01945840:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT02390973",
+      "relevance": 0,
+      "reason": "Studies bariatric surgery versus medical management for T2D remission without specifying a GLP-1 receptor agonist intervention.",
+      "source_reference": "NCT02390973:brief_summary"
+    },
+    {
+      "trial_id": "NCT02973412",
+      "relevance": 0,
+      "reason": "Examines chronotype, glycemic control and lifestyle factors rather than GLP-1 receptor agonist treatment.",
+      "source_reference": "NCT02973412:brief_summary"
+    },
+    {
+      "trial_id": "NCT03087032",
+      "relevance": 2,
+      "reason": "Directly evaluates liraglutide, a GLP-1 receptor agonist, versus insulin glargine in combination with prandial insulin for T2D.",
+      "source_reference": "NCT03087032:brief_title;brief_summary"
+    },
+    {
+      "trial_id": "NCT04024631",
+      "relevance": 0,
+      "reason": "Studies genetic risk and insulin resistance in non-diabetic participants rather than GLP-1 receptor agonist therapy.",
+      "source_reference": "NCT04024631:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT04455867",
+      "relevance": 0,
+      "reason": "Observational study of mood and cognitive complications in T2D without a GLP-1 receptor agonist intervention.",
+      "source_reference": "NCT04455867:brief_summary"
+    },
+    {
+      "trial_id": "NCT04791371",
+      "relevance": 0,
+      "reason": "Studies exercise training and microvascular insulin resistance without testing GLP-1 receptor agonist therapy.",
+      "source_reference": "NCT04791371:brief_summary"
+    },
+    {
+      "trial_id": "NCT04889053",
+      "relevance": 0,
+      "reason": "Investigates coronary artery calcification, statins and biomarkers in T2D rather than GLP-1 receptor agonists.",
+      "source_reference": "NCT04889053:brief_summary"
+    },
+    {
+      "trial_id": "NCT05124457",
+      "relevance": 0,
+      "reason": "Compares maternal insulin detemir and NPH with no GLP-1 receptor agonist treatment.",
+      "source_reference": "NCT05124457:brief_summary"
+    }
+  ]
+}

@@ -1,0 +1,145 @@
+{
+  "query_id": "Q05",
+  "review_status": "user-reviewed",
+  "reviewer_qualification": "Non-clinician manual relevance assessment",
+  "labels": [
+    {
+      "trial_id": "NCT02390973",
+      "relevance": 0,
+      "reason": "Focuses on bariatric surgery and medical management for T2D remission; lifestyle intervention is not the study focus.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT02836808",
+      "relevance": 2,
+      "reason": "Directly evaluates patient education, empowerment, self-management, and remote behavioral support for T2D.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT03811470",
+      "relevance": 1,
+      "reason": "Observational diabetes registry assessing management strategies and behavioral changes, without testing a specific lifestyle intervention.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04284943",
+      "relevance": 0,
+      "reason": "Investigates surgical reconstruction for glycemic control rather than exercise, dietary, or behavioral intervention.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04442334",
+      "relevance": 0,
+      "reason": "NAFLD registry collects lifestyle-related information but does not investigate lifestyle interventions for T2D management.",
+      "source_reference": "brief_summary; exclusion criteria"
+    },
+    {
+      "trial_id": "NCT04501406",
+      "relevance": 0,
+      "reason": "Evaluates pioglitazone for NASH rather than lifestyle interventions for diabetes management.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04670666",
+      "relevance": 0,
+      "reason": "Evaluates a pharmacological T2D treatment; prior diet and exercise guidance are enrollment background rather than study interventions.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT04869098",
+      "relevance": 0,
+      "reason": "Studies protein supplementation in night-shift workers and explicitly excludes participants with diabetes.",
+      "source_reference": "brief_summary; exclusion criteria"
+    },
+    {
+      "trial_id": "NCT05028140",
+      "relevance": 0,
+      "reason": "Evaluates a T2D drug combination; previous diet and exercise are background treatment rather than interventions being studied.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT03264352",
+      "relevance": 0,
+      "reason": "Investigates pharmacological blood pressure management, without exercise, dietary, or behavioral intervention.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT03878706",
+      "relevance": 0,
+      "reason": "Compares antidiabetic drug regimens and cardiovascular outcomes rather than lifestyle or behavioral interventions.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04024631",
+      "relevance": 0,
+      "reason": "Studies genetic diabetes risk in individuals without diabetes, without a lifestyle intervention.",
+      "source_reference": "brief_summary; exclusion criteria"
+    },
+    {
+      "trial_id": "NCT04783441",
+      "relevance": 0,
+      "reason": "Evaluates CGM for glycemic control without an explicitly described exercise, dietary, or behavioral intervention.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT03827382",
+      "relevance": 2,
+      "reason": "Directly evaluates bicycle exercise followed by intensive lifestyle intervention in adults with recently diagnosed T2D.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT04432025",
+      "relevance": 0,
+      "reason": "Investigates continuation of diabetes medications after bariatric surgery, without a dietary, exercise, or behavioral intervention.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04791371",
+      "relevance": 1,
+      "reason": "Investigates exercise training and insulin resistance in participants with or without T2D, but primarily focuses on muscle perfusion, cardiac function, and exercise capacity rather than direct diabetes management.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "relevance": 0,
+      "reason": "Examines gut hormone changes after gastric bypass rather than exercise, dietary or behavioral interventions.",
+      "source_reference": "NCT01945840:brief_summary"
+    },
+    {
+      "trial_id": "NCT02973412",
+      "relevance": 1,
+      "reason": "Examines associations between chronotype, lifestyle factors and glycemic control, but does not test a lifestyle intervention.",
+      "source_reference": "NCT02973412:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT03087032",
+      "relevance": 0,
+      "reason": "Compares pharmacological glucose-lowering regimens rather than lifestyle or behavioral interventions.",
+      "source_reference": "NCT03087032:brief_summary"
+    },
+    {
+      "trial_id": "NCT04442451",
+      "relevance": 2,
+      "reason": "Includes exercise training in people with prediabetes and T2D to investigate fatigability and support more effective diabetes exercise programs.",
+      "source_reference": "NCT04442451:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT04889053",
+      "relevance": 0,
+      "reason": "Studies coronary artery calcification, statins and biomarkers in T2D rather than lifestyle interventions.",
+      "source_reference": "NCT04889053:brief_summary"
+    },
+    {
+      "trial_id": "NCT05015283",
+      "relevance": 0,
+      "reason": "Compares bariatric surgical procedures for T2D remission, not exercise, dietary or behavioral interventions.",
+      "source_reference": "NCT05015283:brief_summary"
+    },
+    {
+      "trial_id": "NCT05124457",
+      "relevance": 0,
+      "reason": "Compares maternal insulin regimens for neonatal hypoglycemia without lifestyle intervention.",
+      "source_reference": "NCT05124457:brief_summary"
+    }
+  ]
+}

@@ -1,7 +1,6 @@
 """Run data validation, retrieval, optional training and eligibility on Vertex AI."""
 
 import argparse
-import hashlib
 import json
 import re
 from pathlib import Path
@@ -9,51 +8,11 @@ from pathlib import Path
 from google.cloud import aiplatform
 from kfp import compiler, dsl
 
+from cloud import finetuned_retrieval, retrieval_evaluation
 from cloud.eligibility import DEFAULT_MODEL, read_verified_results, verify_manifest
 from cloud.release import read_target, save_target, verify_input_manifest
 from cloud.tasks import blob
-from cloud.training_inputs import pair_hashes
-
-
-def verify_training_manifest(manifest, release_uri, output_uri, image, batch_size, expected_pairs=None):
-    """Bind training metadata to this run before writing any success markers.
-
-    Checkpoint bytes are verified by the eventual consumer; this validates the
-    producer's manifest and the aggregate digest of its per-file checksums.
-    """
-    expected = {
-        "schema_version": 1,
-        "workflow_type": "contrastive-encoder-finetune",
-        "source_release_uri": release_uri,
-        "artifact_uri": output_uri.rstrip("/") + "/model",
-        "image_uri": image,
-    }
-    if not isinstance(manifest, dict) or any(manifest.get(k) != v for k, v in expected.items()):
-        raise RuntimeError("Training manifest does not match this run's release, output or image")
-    files = manifest.get("artifact_files")
-    if (not isinstance(files, dict) or not files
-            or any(not isinstance(v, str) or not re.fullmatch(r"[0-9a-f]{64}", v)
-                   for v in files.values())):
-        raise RuntimeError("Training manifest has missing or invalid checkpoint checksums")
-    digest = hashlib.sha256(json.dumps(files, sort_keys=True).encode()).hexdigest()
-    if manifest.get("artifact_sha256") != digest:
-        raise RuntimeError("Training manifest checkpoint digest does not match its file checksums")
-    config = manifest.get("config")
-    if not isinstance(config, dict) or config.get("batch_size") != batch_size:
-        raise RuntimeError("Training manifest does not match the submitted batch size")
-    if expected_pairs is not None:
-        sources = manifest.get("pair_files")
-        built_uri = f"built-from:{release_uri}"
-        if (not isinstance(sources, list) or any(not isinstance(item, dict) for item in sources)
-                or len(sources) != len(expected_pairs) + 1
-                or {item.get("uri") for item in sources} != set(expected_pairs) | {built_uri}):
-            raise RuntimeError("Training manifest does not match the submitted pair sources")
-        for item in sources:
-            if item["uri"] == built_uri:
-                continue
-            expected = expected_pairs[item["uri"]]
-            if item.get("sha256") != expected or item.get("expected_sha256") != expected:
-                raise RuntimeError("Training manifest pair checksums do not match the submitted expectations")
+from cloud.training_inputs import pair_hashes, verify_training_manifest
 
 
 def main():
@@ -68,6 +27,10 @@ def main():
     parser.add_argument("--compile-only", action="store_true")
     parser.add_argument("--trainer-image",
                         help="Digest-pinned trainer image; adds the encoder training task")
+    parser.add_argument("--finetuned-retrieval-image",
+                        help="Digest-pinned retrieval image; ranks trials after this run's training")
+    parser.add_argument("--retrieval-evaluation", action="store_true",
+                        help="Score this run's fine-tuned rankings using C's frozen labels")
     parser.add_argument("--train-pairs", nargs="*", default=[],
                         help="Extra gs:// pair files; corpus pairs are already built from the release")
     parser.add_argument("--train-pairs-sha256", nargs="+", default=[],
@@ -85,7 +48,8 @@ def main():
     if not args.compile_only:
         # Clear old success before validating this invocation's input configuration.
         for name in ("pipeline_job.txt", "validation.json", "validated_release.txt",
-                     "validated_deployment.json", "training_manifest.json", "eligibility_manifest.json"):
+                     "validated_deployment.json", "training_manifest.json", "eligibility_manifest.json",
+                     finetuned_retrieval.MANIFEST, retrieval_evaluation.MANIFEST):
             (target.parent / name).unlink(missing_ok=True)
     try:
         expected_pairs = pair_hashes(args.train_pairs, args.train_pairs_sha256)
@@ -98,12 +62,22 @@ def main():
     eligibility_model = args.eligibility_model or DEFAULT_MODEL
     if args.trainer_image and not re.fullmatch(r"[^\s@]+@sha256:[0-9a-f]{64}", args.trainer_image):
         parser.error("--trainer-image must be pinned by a complete SHA256 digest")
+    if args.finetuned_retrieval_image and (
+        not args.trainer_image or not re.fullmatch(r"[^\s@]+@sha256:[0-9a-f]{64}", args.finetuned_retrieval_image)
+    ):
+        parser.error("--finetuned-retrieval-image requires --trainer-image and a complete image SHA256 digest")
     if args.trainer_batch_size < 1:
         parser.error("--trainer-batch-size must be positive")
     if any(not re.fullmatch(r"gs://[^/\s]+/\S+", uri) for uri in args.train_pairs):
         parser.error("--train-pairs must contain gs:// object URIs accessible to the training task")
     if (args.train_pairs or args.wandb_secret) and not args.trainer_image:
         parser.error("--train-pairs and --wandb-secret require --trainer-image")
+    if args.retrieval_evaluation and (
+        not args.finetuned_retrieval_image or not re.fullmatch(r"[^\s@]+@sha256:[0-9a-f]{64}", args.image)
+    ):
+        parser.error("--retrieval-evaluation requires --finetuned-retrieval-image and a digest-pinned workflow image")
+    if args.retrieval_evaluation:
+        evaluation_benchmark, evaluation_labels = retrieval_evaluation.load_benchmark()
 
     @dsl.container_component
     def fetch_raw(release: str, raw: dsl.Output[dsl.Dataset]):
@@ -141,6 +115,31 @@ def main():
                       "--image-uri", args.trainer_image,
                       "--batch-size", str(args.trainer_batch_size), *extra])
 
+    if args.finetuned_retrieval_image:
+        @dsl.container_component
+        def retrieve_finetuned(report: dsl.Input[dsl.Artifact], training: dsl.Input[dsl.Artifact],
+                               rankings: dsl.Output[dsl.Artifact]):
+            return dsl.ContainerSpec(image=args.finetuned_retrieval_image,
+                command=["python", "-m", "cloud.finetuned_retrieval"],
+                args=["--source", report.uri, "--training", training.uri, "--output", rankings.uri,
+                      "--image-uri", args.finetuned_retrieval_image, "--trainer-image", args.trainer_image,
+                      "--trainer-batch-size", str(args.trainer_batch_size),
+                      "--expected-pairs", json.dumps(expected_pairs, sort_keys=True)])
+
+    if args.retrieval_evaluation:
+        @dsl.container_component
+        def evaluate_retrieval(report: dsl.Input[dsl.Artifact], training: dsl.Input[dsl.Artifact],
+                               rankings: dsl.Input[dsl.Artifact], evaluation: dsl.Output[dsl.Artifact]):
+            return dsl.ContainerSpec(image=args.image,
+                command=["python", "-m", "cloud.retrieval_evaluation"],
+                args=["--source", report.uri, "--training", training.uri, "--rankings", rankings.uri,
+                      "--output", evaluation.uri, "--image-uri", args.image,
+                      "--retrieval-image", args.finetuned_retrieval_image,
+                      "--trainer-image", args.trainer_image,
+                      "--trainer-batch-size", str(args.trainer_batch_size),
+                      "--expected-pairs", json.dumps(expected_pairs, sort_keys=True),
+                      "--benchmark-sha256", evaluation_benchmark["catalog_sha256"]])
+
     @dsl.container_component
     def evaluate_eligibility(report: dsl.Input[dsl.Artifact], evaluation: dsl.Output[dsl.Artifact]):
         return dsl.ContainerSpec(image=args.image, command=["python", "-m", "cloud.eligibility"],
@@ -156,9 +155,18 @@ def main():
             "2Gi"
         ).set_env_variable("GCP_PROJECT", args.project).set_env_variable("GCP_LOCATION", "global")
         if train_encoder is not None:
-            (train_encoder(report=checked.outputs["report"]).set_cpu_limit("4")
-             .set_memory_limit("15Gi").set_accelerator_type("NVIDIA_TESLA_T4")
-             .set_accelerator_limit(1))
+            trained_task = (train_encoder(report=checked.outputs["report"]).set_cpu_limit("4")
+                            .set_memory_limit("15Gi").set_accelerator_type("NVIDIA_TESLA_T4")
+                            .set_accelerator_limit(1))
+            if args.finetuned_retrieval_image:
+                ranked_task = (retrieve_finetuned(report=checked.outputs["report"],
+                                                  training=trained_task.outputs["training"])
+                               .set_cpu_limit("4").set_memory_limit("16Gi")
+                               .set_env_variable("GCP_PROJECT", args.project))
+                if args.retrieval_evaluation:
+                    (evaluate_retrieval(report=checked.outputs["report"], training=trained_task.outputs["training"],
+                                        rankings=ranked_task.outputs["rankings"])
+                     .set_cpu_limit("1").set_memory_limit("2Gi"))
         if args.eligibility:
             (evaluate_eligibility(report=checked.outputs["report"]).set_cpu_limit("1")
              .set_memory_limit("2Gi").set_env_variable("GCP_PROJECT", args.project)
@@ -201,11 +209,33 @@ def main():
         trained = next(task for task in job.task_details if task.task_name == "train-encoder")
         training_uri = trained.outputs["training"].artifacts[0].uri.rstrip("/")
         manifest_uri = training_uri + "/training_manifest.json"
-        manifest = json.loads(blob(manifest_uri).download_as_text())
+        training_bytes = blob(manifest_uri).download_as_text().encode("utf-8")
+        manifest = json.loads(training_bytes)
         verify_training_manifest(
             manifest, expected_release, training_uri, args.trainer_image, args.trainer_batch_size,
             expected_pairs,
         )
+    retrieval_manifest = None
+    if args.finetuned_retrieval_image:
+        retrieved = next(task for task in job.task_details if task.task_name == "retrieve-finetuned")
+        ranking_uri = retrieved.outputs["rankings"].artifacts[0].uri.rstrip("/")
+        retrieval_manifest_bytes = blob(f"{ranking_uri}/{finetuned_retrieval.MANIFEST}").download_as_bytes()
+        retrieval_manifest = json.loads(retrieval_manifest_bytes)
+        contract = finetuned_retrieval.benchmark_contract(expected_release)
+        expected = finetuned_retrieval.expected_manifest(
+            report_uri, report, training_uri, training_bytes, args.finetuned_retrieval_image, contract,
+        )
+        ranking_payloads = finetuned_retrieval.read_verified_results(retrieval_manifest, expected, ranking_uri)
+    scoring_manifest = None
+    if args.retrieval_evaluation:
+        scored = next(task for task in job.task_details if task.task_name == "evaluate-retrieval")
+        scoring_uri = scored.outputs["evaluation"].artifacts[0].uri.rstrip("/")
+        scoring_manifest = json.loads(blob(f"{scoring_uri}/{retrieval_evaluation.MANIFEST}").download_as_bytes())
+        expected_scoring = retrieval_evaluation.expected_manifest(
+            expected, ranking_uri, retrieval_manifest_bytes, args.image, evaluation_benchmark,
+        )
+        expected_metrics = retrieval_evaluation.score_outputs(ranking_payloads, expected, evaluation_labels)
+        retrieval_evaluation.read_verified_results(scoring_manifest, expected_scoring, scoring_uri, expected_metrics)
     evaluation_manifest = None
     if args.eligibility:
         evaluated = next(task for task in job.task_details if task.task_name == "evaluate-eligibility")
@@ -217,6 +247,10 @@ def main():
     if build_target is not None and read_target(args.release_target) != build_target:
         raise RuntimeError("Selected build changed while the pipeline was running; rerun pipeline")
     # All enabled cloud output checks precede local publication of success markers.
+    if scoring_manifest is not None:
+        (target.parent / retrieval_evaluation.MANIFEST).write_text(json.dumps(scoring_manifest, indent=2) + "\n")
+    if retrieval_manifest is not None:
+        (target.parent / finetuned_retrieval.MANIFEST).write_text(json.dumps(retrieval_manifest, indent=2) + "\n")
     if evaluation_manifest is not None:
         (target.parent / "eligibility_manifest.json").write_text(json.dumps(evaluation_manifest, indent=2) + "\n")
     if manifest is not None:
@@ -235,6 +269,8 @@ def main():
         print(f"Training manifest: {manifest_uri}")
     if evaluation_manifest is not None:
         print(f"Eligibility manifest: {evaluation_uri}/eligibility_manifest.json")
+    if scoring_manifest is not None:
+        print(f"Retrieval evaluation manifest: {scoring_uri}/{retrieval_evaluation.MANIFEST}")
 
 
 if __name__ == "__main__":

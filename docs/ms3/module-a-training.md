@@ -11,6 +11,8 @@ flowchart LR
     F[fetch-raw] --> P[process-trials] --> V[validate-data]
     V --> R[retrieve-trials: existing Gemini rankings]
     V --> T[train-encoder: optional T4 training]
+    T --> N[retrieve-finetuned: optional current-model rankings]
+    V --> N
 ```
 
 Without either optional flag, the original four tasks remain. With `--trainer-image`, the fifth
@@ -24,6 +26,12 @@ Subsequent local integration adds an independent `--eligibility` branch for C's
 fixed-pair evaluator. Enabling both flags produces six tasks. See
 [module-a-eligibility.md](module-a-eligibility.md); C's eligibility task does not
 use the new checkpoint or evaluate its retrieval quality.
+
+The subsequent [new-model retrieval integration](module-a-finetuned-retrieval.md)
+adds `--finetuned-retrieval-image`: a separate CPU worker after training. With
+this flag the training configuration has six tasks, or seven with eligibility.
+It produces rankings for Jessie's later scoring; no human relevance score is
+computed by the new task.
 
 ## Inputs and outputs
 
@@ -156,10 +164,11 @@ eligibility and expected-pair-hash changes, using Ruff 0.17.1:
 
 ## Remaining work
 
-- No new-model retrieval task is connected yet. `retrieve-trials` continues to
-  produce Gemini rankings, independent of the training output. The next step is
-  to consume this run's model manifest, verify its checkpoint and generate new
-  rankings in an environment with the required model dependencies.
+- New-model ranking generation is now connected locally through the optional
+  `retrieve-finetuned` task, which verifies the actual checkpoint bytes before
+  loading. `retrieve-trials` continues to produce the separate Gemini rankings.
+  New image builds and integrated cloud execution remain pending; see the
+  retrieval integration linked above.
 - C's fixed-pair evaluator is now connected in the separate optional eligibility
   integration linked above. Formal retrieval scoring remains pending.
 - The five-task pipeline has not been run on Vertex. Jenny's two successful

@@ -12,7 +12,8 @@ from unittest.mock import patch
 
 import yaml
 
-from cloud import eligibility, pipeline, release
+from cloud import eligibility, finetuned_retrieval, pipeline, release, retrieval_evaluation
+from cloud.tests import retrieval_fixtures
 from cloud.tests.eligibility_fixtures import HASHES, valid_payloads
 
 
@@ -51,6 +52,8 @@ class PipelineTests(unittest.TestCase):
         (self.output / "validated_deployment.json").write_text('{"status":"PASSED"}\n')
         (self.output / "training_manifest.json").write_text('{"source_release_uri":"gs://old/release.json"}\n')
         (self.output / "eligibility_manifest.json").write_text('{"status":"PASSED","output_uri":"gs://old/evaluation"}\n')
+        (self.output / finetuned_retrieval.MANIFEST).write_text('{"status":"PASSED"}\n')
+        (self.output / retrieval_evaluation.MANIFEST).write_text('{"status":"PASSED"}\n')
 
     def bind_build(self):
         target = release.release_target(
@@ -384,7 +387,8 @@ class PipelineTests(unittest.TestCase):
 
     def assert_no_success_markers(self):
         for name in ("training_manifest.json", "validation.json", "validated_release.txt",
-                     "validated_deployment.json", "eligibility_manifest.json"):
+                     "validated_deployment.json", "eligibility_manifest.json", finetuned_retrieval.MANIFEST,
+                     retrieval_evaluation.MANIFEST):
             self.assertFalse((self.output / name).exists(), name)
 
     def test_training_success_publishes_bound_manifest_and_data_evidence(self):
@@ -620,6 +624,225 @@ class PipelineTests(unittest.TestCase):
         job.state = SimpleNamespace(name="PIPELINE_STATE_FAILED")
         with self.assertRaisesRegex(RuntimeError, "PIPELINE_STATE_FAILED"):
             self.run_pipeline("--eligibility")
+        self.assert_no_success_markers()
+
+
+    RETRIEVAL = "example/retrieval@sha256:" + "a" * 64
+
+    def test_finetuned_retrieval_depends_on_this_runs_training_and_validation(self):
+        self.argv[self.argv.index("--image") + 1] = "example/workflow@sha256:" + "f" * 64
+        for extra in ([], ["--eligibility"]):
+            with self.subTest(eligibility=bool(extra)):
+                self.run_pipeline("--compile-only", "--trainer-image", self.TRAINER,
+                                  "--finetuned-retrieval-image", self.RETRIEVAL,
+                                  "--train-pairs", "gs://test/pairs.jsonl", "--train-pairs-sha256", "c" * 64,
+                                  *extra)
+                spec = yaml.safe_load((self.output / "pipeline.yaml").read_text())
+                tasks = spec["root"]["dag"]["tasks"]
+                self.assertEqual(len(tasks), 7 if extra else 6)
+                task = tasks["retrieve-finetuned"]
+                self.assertEqual(set(task["dependentTasks"]), {"train-encoder", "validate-data"})
+                self.assertEqual(task["inputs"]["artifacts"]["training"]["taskOutputArtifact"],
+                                 {"producerTask": "train-encoder", "outputArtifactKey": "training"})
+                self.assertNotEqual(task.get("triggerPolicy", {}).get("strategy"), "ALL_UPSTREAM_TASKS_COMPLETED")
+                container = spec["deploymentSpec"]["executors"]["exec-retrieve-finetuned"]["container"]
+                self.assertEqual(container["image"], self.RETRIEVAL)
+                self.assertNotIn("accelerator", container["resources"])
+                self.assertEqual(container["command"], ["python", "-m", "cloud.finetuned_retrieval"])
+                args = container["args"]
+                self.assertEqual(json.loads(args[args.index("--expected-pairs") + 1]),
+                                 {"gs://test/pairs.jsonl": "c" * 64})
+        self.job_class.assert_not_called()
+
+    def test_finetuned_retrieval_rejects_missing_trainer_or_unpinned_image(self):
+        for extra in (["--finetuned-retrieval-image", self.RETRIEVAL],
+                      ["--trainer-image", self.TRAINER, "--finetuned-retrieval-image", "example/retrieval:latest"]):
+            with self.subTest(extra=extra), redirect_stderr(io.StringIO()):
+                self.seed_previous_success()
+                with self.assertRaises(SystemExit):
+                    self.run_pipeline(*extra)
+                self.assert_no_success_markers()
+        self.job_class.assert_not_called()
+
+    def retrieval_job(self):
+        job = self.training_job()
+        lookup = self.blob.side_effect
+        report = json.loads(self.blob.return_value.download_as_text.return_value)
+        report["source_sha256"] = HASHES
+        self.blob.return_value.download_as_text.return_value = json.dumps(report)
+        output = "gs://test-run/finetuned"
+        job.task_details.append(SimpleNamespace(task_name="retrieve-finetuned", outputs={
+            "rankings": SimpleNamespace(artifacts=[SimpleNamespace(uri=output)])}))
+        contract = retrieval_fixtures.contract()
+        self.enterContext(patch.object(finetuned_retrieval, "benchmark_contract", return_value=contract))
+        expected = finetuned_retrieval.expected_manifest("gs://test-run/report/validation.json", report,
+            "gs://test-run/training", json.dumps(self.training_manifest).encode(), self.RETRIEVAL, contract)
+        self.ranking_payloads = retrieval_fixtures.payloads(expected)
+        self.ranking_manifest = retrieval_fixtures.manifest(expected, output, self.ranking_payloads)
+
+        def objects(uri):
+            if uri == output + "/" + finetuned_retrieval.MANIFEST:
+                return SimpleNamespace(download_as_text=lambda: json.dumps(self.ranking_manifest),
+                                       download_as_bytes=lambda: json.dumps(self.ranking_manifest).encode())
+            if uri.startswith(output + "/"):
+                return SimpleNamespace(download_as_bytes=lambda: self.ranking_payloads[uri.rsplit("/", 1)[1]])
+            return lookup(uri)
+
+        self.blob.side_effect = objects
+        self.enterContext(patch.object(finetuned_retrieval, "blob", side_effect=objects))
+        return job
+
+    def run_with_retrieval(self):
+        self.run_pipeline("--trainer-image", self.TRAINER, "--finetuned-retrieval-image", self.RETRIEVAL)
+
+    def test_finetuned_retrieval_success_publishes_current_model_and_data_markers(self):
+        self.seed_previous_success()
+        self.retrieval_job()
+        self.run_with_retrieval()
+        self.assertEqual(json.loads((self.output / finetuned_retrieval.MANIFEST).read_text()), self.ranking_manifest)
+        self.assertTrue((self.output / "training_manifest.json").exists())
+        self.assertEqual((self.output / "validated_release.txt").read_text(), "gs://test-run/processed/release.json\n")
+
+    def test_foreign_retrieval_manifest_blocks_all_success_markers(self):
+        for field, value in (("source_release_uri", "gs://old/release.json"),
+                             ("training_manifest_sha256", "0" * 64), ("checkpoint_sha256", "0" * 64),
+                             ("image_uri", "example/other"), ("status", "FAILED")):
+            with self.subTest(field=field):
+                self.seed_previous_success()
+                self.retrieval_job()
+                self.ranking_manifest[field] = value
+                with self.assertRaises(RuntimeError):
+                    self.run_with_retrieval()
+                self.assert_no_success_markers()
+
+    def test_corrupt_or_missing_retrieval_outputs_block_success_markers(self):
+        for missing in (False, True):
+            with self.subTest(missing=missing):
+                self.seed_previous_success()
+                self.retrieval_job()
+                if missing:
+                    del self.ranking_payloads[finetuned_retrieval.FILES[0]]
+                else:
+                    self.ranking_payloads[finetuned_retrieval.FILES[0]] += b"modified"
+                with self.assertRaises((RuntimeError, KeyError)):
+                    self.run_with_retrieval()
+                self.assert_no_success_markers()
+
+    def test_failed_retrieval_job_clears_prior_success(self):
+        self.seed_previous_success()
+        job = self.retrieval_job()
+        job.state = SimpleNamespace(name="PIPELINE_STATE_FAILED")
+        with self.assertRaisesRegex(RuntimeError, "PIPELINE_STATE_FAILED"):
+            self.run_with_retrieval()
+        self.assert_no_success_markers()
+
+    def test_scoring_graph_consumes_current_rankings_and_uses_cpu_workflow(self):
+        self.bind_build()
+        for extra in ([], ["--eligibility"]):
+            with self.subTest(eligibility=bool(extra)):
+                self.run_pipeline("--compile-only", "--trainer-image", self.TRAINER,
+                                  "--finetuned-retrieval-image", self.RETRIEVAL, "--retrieval-evaluation", *extra)
+                spec = yaml.safe_load((self.output / "pipeline.yaml").read_text())
+                tasks = spec["root"]["dag"]["tasks"]
+                self.assertEqual(len(tasks), 8 if extra else 7)
+                scoring = tasks["evaluate-retrieval"]
+                self.assertEqual(set(scoring["dependentTasks"]), {"validate-data", "train-encoder", "retrieve-finetuned"})
+                for input_name, producer, output in (("report", "validate-data", "report"),
+                                                     ("training", "train-encoder", "training"),
+                                                     ("rankings", "retrieve-finetuned", "rankings")):
+                    self.assertEqual(scoring["inputs"]["artifacts"][input_name]["taskOutputArtifact"],
+                                     {"producerTask": producer, "outputArtifactKey": output})
+                container = spec["deploymentSpec"]["executors"]["exec-evaluate-retrieval"]["container"]
+                self.assertEqual(container["image"], self.argv[self.argv.index("--image") + 1])
+                self.assertNotIn("accelerator", container["resources"])
+                self.assertEqual(container["args"][container["args"].index("--benchmark-sha256") + 1],
+                                 retrieval_evaluation.load_benchmark()[0]["catalog_sha256"])
+        self.job_class.assert_not_called()
+
+    def test_scoring_requires_retrieval_and_pinned_workflow_before_cloud_calls(self):
+        for extra in ([], ["--trainer-image", self.TRAINER, "--finetuned-retrieval-image", self.RETRIEVAL]):
+            with self.subTest(extra=extra), redirect_stderr(io.StringIO()):
+                self.seed_previous_success()
+                with self.assertRaises(SystemExit):
+                    self.run_pipeline("--retrieval-evaluation", *extra)
+                self.assert_no_success_markers()
+        self.job_class.assert_not_called()
+
+    def scoring_job(self):
+        job = self.retrieval_job()
+        previous = self.blob.side_effect
+        self.scoring_benchmark, self.scoring_labels = retrieval_fixtures.scoring_benchmark(self.ranking_manifest)
+        self.enterContext(patch.object(retrieval_evaluation, "load_benchmark",
+                                       return_value=(self.scoring_benchmark, self.scoring_labels)))
+        output = "gs://test-run/scoring"
+        job.task_details.append(SimpleNamespace(task_name="evaluate-retrieval", outputs={
+            "evaluation": SimpleNamespace(artifacts=[SimpleNamespace(uri=output)])}))
+        expected = retrieval_evaluation.expected_manifest(self.ranking_manifest, "gs://test-run/finetuned",
+            json.dumps(self.ranking_manifest).encode(), self.argv[self.argv.index("--image") + 1], self.scoring_benchmark)
+        self.scoring_payloads = retrieval_evaluation.score_outputs(self.ranking_payloads, self.ranking_manifest,
+                                                                   self.scoring_labels)
+        self.scoring_manifest = retrieval_fixtures.manifest(expected, output, self.scoring_payloads)
+
+        def lookup(uri):
+            if uri == output + "/" + retrieval_evaluation.MANIFEST:
+                return SimpleNamespace(download_as_bytes=lambda: json.dumps(self.scoring_manifest).encode())
+            if uri.startswith(output + "/"):
+                return SimpleNamespace(download_as_bytes=lambda: self.scoring_payloads[uri.rsplit("/", 1)[1]])
+            return previous(uri)
+
+        self.blob.side_effect = lookup
+        self.enterContext(patch.object(retrieval_evaluation, "blob", side_effect=lookup))
+        return job
+
+    def run_with_scoring(self):
+        self.run_pipeline("--trainer-image", self.TRAINER, "--finetuned-retrieval-image", self.RETRIEVAL,
+                          "--retrieval-evaluation")
+
+    def test_scoring_success_verifies_and_publishes_current_run_markers(self):
+        self.seed_previous_success()
+        self.bind_build()
+        self.scoring_job()
+        self.run_with_scoring()
+        self.assertEqual(json.loads((self.output / retrieval_evaluation.MANIFEST).read_text()), self.scoring_manifest)
+        self.assertTrue((self.output / "validated_deployment.json").exists())
+
+    def test_wrong_scoring_provenance_cannot_publish_any_success(self):
+        self.bind_build()
+        for key, value in (("status", "FAILED"), ("checkpoint_sha256", "0" * 64),
+                           ("retrieval_manifest_sha256", "0" * 64), ("gold_sha256", "0" * 64),
+                           ("output_uri", "gs://old/evaluation")):
+            with self.subTest(key=key):
+                self.seed_previous_success()
+                self.scoring_job()
+                self.scoring_manifest[key] = value
+                with self.assertRaises(RuntimeError):
+                    self.run_with_scoring()
+                self.assert_no_success_markers()
+
+    def test_missing_or_forged_scoring_outputs_cannot_publish_success(self):
+        self.bind_build()
+        for case in ("missing", "wrong-hash", "wrong-metric"):
+            with self.subTest(case=case):
+                self.seed_previous_success()
+                self.scoring_job()
+                name = retrieval_evaluation.FILES[0]
+                if case == "missing":
+                    del self.scoring_payloads[name]
+                else:
+                    self.scoring_payloads[name] = b"wrong metrics"
+                    if case == "wrong-metric":
+                        self.scoring_manifest["files"][name]["sha256"] = hashlib.sha256(self.scoring_payloads[name]).hexdigest()
+                with self.assertRaises((RuntimeError, KeyError)):
+                    self.run_with_scoring()
+                self.assert_no_success_markers()
+
+    def test_scoring_failure_clears_old_success(self):
+        self.seed_previous_success()
+        self.bind_build()
+        job = self.scoring_job()
+        job.state = SimpleNamespace(name="PIPELINE_STATE_FAILED")
+        with self.assertRaisesRegex(RuntimeError, "PIPELINE_STATE_FAILED"):
+            self.run_with_scoring()
         self.assert_no_success_markers()
 
 

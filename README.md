@@ -143,6 +143,15 @@ Optional local integrations add B's encoder training (`--trainer-image`) and
 C's fixed-pair eligibility evaluation (`--eligibility`) after data validation.
 Both flags together produce six tasks. These additions have not yet been
 verified in an integrated cloud run; the cloud link above is the four-task run.
+An additional `--finetuned-retrieval-image` connects the current training output
+to Jenny's ranking script, producing six tasks with training or seven when
+eligibility is also enabled. See [new-model ranking integration](docs/ms3/module-a-finetuned-retrieval.md).
+Add `--retrieval-evaluation` to score these current-run rankings with Jessie's
+frozen pooled relevance labels: seven tasks, or eight with eligibility. The
+adapter verifies versions, reports unjudged candidates and reuses C's metric
+formulas without model calls. See [retrieval evaluation integration](docs/ms3/module-a-retrieval-evaluation.md).
+This local integration still needs an integrated cloud run. C's existing
+14-method report and reproducible scorer are preserved in `evaluation/ms3/retrieval/`.
 See [eligibility integration](docs/ms3/module-a-eligibility.md) and
 [training integration](docs/ms3/module-a-training.md) for their contracts.
 
