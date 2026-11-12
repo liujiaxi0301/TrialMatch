@@ -118,6 +118,8 @@ the existing patient data. The reproduction record is saved to
 - [Successful four-step pipeline](https://console.cloud.google.com/vertex-ai/locations/us-east1/pipelines/runs/trialmatch-data-pipeline-20261110055153?project=trialmatch-ac215-yixiao).
 - [MS3 evidence and evaluation reproduction](docs/ms3/submission-evidence.md): the selected
   14-method report, its November 10 checkpoint, and the separate November 12 integration run.
+- [Vertex run screenshots](docs/ms3/evidence/module-a/screenshots.md): the successful
+  four-task run, checksum-failure test, and seven-task run with blocked evaluation.
 
 For submission and presentation, use Jessie's existing
 [retrieval report](evaluation/ms3/retrieval/RETRIEVAL_EVALUATION_REPORT.md) with

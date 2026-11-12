@@ -12,7 +12,9 @@ stopped on ten unjudged query/trial pairs, so the overall run remains FAILED.
 Its new checkpoint has no completed benchmark scores. Supplementary labeling
 and recovery of that evaluation are deferred; the missing-label guard remains
 enabled. The existing successful four-task run and checksum-failure test retain
-their original versions and scope. The entries below record earlier stages.
+their original versions and scope. Original screenshots of all three runs are
+now archived in the [screenshot gallery](evidence/module-a/screenshots.md).
+The entries below record earlier stages.
 
 Local retrieval-evaluation update (2026-11-11 ET): C's `da31297` retrieval bundle
 is imported unchanged, with the original query path retained for compatibility.
@@ -52,7 +54,7 @@ The historical evidence below continues to describe the earlier four-node run.
 
 Status (2026-11-10): the integrated four-step data/retrieval cloud run has passed
 an offline consistency review of exported cloud records. The runtime graph was
-also reviewed in chat; its original image file still needs archiving.
+also reviewed in chat; its original image was later archived on November 12.
 The `retrieve-trials` JSON log export has been reviewed and archived; it confirms
 the task identity, release, 48 ranking rows and successful completion. The other
 nodes' log exports remain pending. Training and formal scoring are not included.
@@ -90,8 +92,9 @@ Training/formal-scoring integration remains pending.
   no entries. Later console and JSON evidence showed the correct monitored
   resource is `ml_job`; the collector used the wrong type. Eleven retrieval
   log entries are now archived and agree with the release and outputs. The
-  remaining three nodes' logs can be exported together; screenshot files still
-  need archiving. These collection gaps do not change the successful states
+  remaining three nodes' logs can be exported together; separate log screenshot
+  files still need archiving. The runtime graph is now in the screenshot gallery.
+  These collection gaps do not change the successful states
   recorded in the Vertex job or block a separate failure-verification task.
 - Next integration work: connect B's trainable model and C's formal scoring when
   their entry points are ready. Preserve runtime-graph image files for the report.
@@ -105,8 +108,8 @@ Training/formal-scoring integration remains pending.
   passed 20 consistency checks: the damaged copy, unchanged expected hash,
   concrete checksum exception and three NOT_TRIGGERED descendants agree with
   the raw records. The failure graph and checksum-error images have been reviewed
-  in chat and are optional presentation material, omitted from this commit at
-  the user's choice. This test
+  in chat. The graph PNG was later archived on November 12; the separate error-line
+  image remains unarchived, while the original worker log is available. This test
   does not cover Python-runner marker cleanup or every invalid-input scenario.
 
 ## Previous integration (2026-11-05)

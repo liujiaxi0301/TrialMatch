@@ -8,7 +8,9 @@
 `NOT_TRIGGERED`，没有开始时间或 executor job。20 项独立证据检查全部通过。
 见 [最终证据审核](evidence/module-a/negative-20261110/README.md)。
 失败流程图和 checksum 日志截图均已在对话中核对，与原始记录一致。
-按用户选择，本次提交脚本、JSON 证据及文档，两张截图留作展示材料，不阻塞提交。
+11 月 12 日已补存[失败流程图原图](evidence/module-a/negative-20261110/02-checksum-failure-test.png)。
+单独的 checksum 报错截图尚未归档；准确错误信息已保存在原始 worker 日志中。
+三次运行的图片及展示说明见[截图汇总](evidence/module-a/screenshots.md)。
 
 脚本：[verify_checksum_failure.py](../../scripts/ms3/verify_checksum_failure.py)。
 使用 Python 标准库及 Cloud Shell 已有的 `gcloud` 登录，不需要安装项目依赖。
