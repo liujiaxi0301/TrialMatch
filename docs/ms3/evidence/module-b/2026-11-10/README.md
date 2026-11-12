@@ -1,4 +1,4 @@
-# Module B training run, 2026-11-10
+# Encoder Training: November 10, 2026
 
 One contrastive fine-tuning run of `thomas-sounack/BioClinical-ModernBERT-base` on Vertex AI.
 The patients and queries in this project are synthetic or generated; nothing here is
@@ -62,12 +62,24 @@ The third attempt changed only the batch size, from 16 to 8.
 
 ## Reproduce
 
+From the repository root, follow the [credential setup](../../../../../README.md#online-screening).
+The pipeline service account needs access to the `wandb-api-key` Secret Manager
+secret. The launcher reads that secret at runtime; verify online W&B tracking in
+the output manifest. Without the key, training falls back to offline tracking.
+
 ```bash
-python -m cloud.train_job \
+export GOOGLE_APPLICATION_CREDENTIALS="$PWD/secrets/google-credentials.json"
+export GOOGLE_CLOUD_QUOTA_PROJECT=trialmatch-ac215-yixiao
+uv run --project docker/workflow --locked python -m cloud.train_job \
   --image us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/trainer@sha256:97c872638eabbf681d020d6bb1c1f534a707e3798b997d57ad435d7bd964fea9 \
   --pairs gs://trialmatch-ac215-yixiao-ms3/training/pairs/20261110/pairs.jsonl gs://trialmatch-ac215-yixiao-ms3/training/pairs/20261110/pairs_llm.jsonl \
-  --run-id <new-run-id> --batch-size 8 --evidence <directory>
+  --batch-size 8 --evidence artifacts/training/reproduction
 ```
+
+An omitted run ID is generated from the current UTC time. Use a new output directory
+for each reproduction. Add `--dry-run` to inspect the job configuration without
+submitting. The run needs T4 quota; its limit is 5,400 seconds. CPU execution can be
+requested with `--accelerator-count 0`, but the historical CPU job was not run.
 
 The command was run a second time on 2026-11-11 with the same image, pair files and seed
 (`reproduction/`, job `projects/15733748057/locations/us-east1/customJobs/7098921164591857664`,
@@ -76,3 +88,30 @@ Its manifest differs from the first only in the run name and output path. Every 
 metric is equal to the digits recorded, and the checkpoint has the same SHA256,
 `7dcec7d9c8ca3697ee60091346723130ebb37263254e81a69a0aff038dbc931c`. That is one repeat on
 the same GPU type and image; identical weights on other hardware are not implied.
+
+## Rebuilding and Data Limits
+
+The exact historical image above reproduces the saved run. For code changes, build
+`docker/trainer/cloudbuild.yaml` and use the new image digest:
+
+```bash
+gcloud builds submit . --project=trialmatch-ac215-yixiao --region=us-east1 \
+  --config=docker/trainer/cloudbuild.yaml \
+  --substitutions="_REGISTRY=us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch,_VERSION=$(git rev-parse HEAD)" \
+  --gcs-source-staging-dir=gs://trialmatch-ac215-yixiao-ms3/builds/source \
+  --service-account=projects/trialmatch-ac215-yixiao/serviceAccounts/trialmatch-build@trialmatch-ac215-yixiao.iam.gserviceaccount.com
+```
+
+Reproduce with the frozen pair files named above. The generators are
+`cloud.train_pairs` and `cloud.train_pairs_llm`; regenerating today changes some
+hard negatives because tie-breaking was fixed after the archived run.
+The optional pipeline integration requires newly built trainer/workflow images;
+the historical trainer does not accept its later extra-input checksum argument.
+See [pipeline training](../../../module-a-training.md).
+
+Training queries are templated or LLM-generated, not human relevance labels.
+Many positives are exclusion criteria, so the objective learns topical relevance,
+not eligibility direction. Lexically mined negatives can cross the training/validation
+anchor-trial split; internal validation is not an independent clinical assessment.
+The fixed 50-trial benchmark is excluded. The saved checkpoint is the last epoch,
+without early stopping. Its external retrieval report uses a separate judged pool.

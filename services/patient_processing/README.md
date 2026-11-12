@@ -55,7 +55,7 @@ uv run --locked python services/patient_processing/scripts/select_archive_cohort
   --selection-manifest /tmp/trialmatch-cohort-demo/batch25_selection.json
 ```
 
-## Handoff contract
+## Data Contract
 
 1. Consume schema 0.3 and preserve full fact IDs, codes, dates, units, raw statuses and warnings. ZIP-member fact IDs differ from path-based IDs in the four-Bundle sample. The shared RAG default input is the 25-patient JSONL.
 2. `reference_date` is the data cutoff and stored-age anchor. Any hypothetical assessment_date is separate; neither replaces real screening, consent or V1 dates.
@@ -63,4 +63,4 @@ uv run --locked python services/patient_processing/scripts/select_archive_cohort
 4. Missing records are not negative history. Requests are orders, definitions describe drug products, and dispensing/administration/statements remain separate; none alone establishes adherence or stable long-term use.
 5. Unsupported resource types and unresolved Medication references remain explicit. The extractor resolves within-Bundle Medication references and checks patient links; it does not process every clinical resource or infer diagnoses from medications.
 
-This module covers patient processing and TF-requested verification. Shared retrieval, API, UI, containers and scoring have separate owners. Shared application integration and container-run evidence belong to the consuming team delivery; this module supplies the processor, facts, schema and validation records. Presentation preparation and final team `milestone2` submission remain team actions. The former handoff and complete pre-cleanup personal patient/verification delivery are preserved in the [history archive](../../evaluation/verification/history/ms2_pre_cleanup_20261020.zip).
+This module covers patient processing and TF-requested verification. Shared retrieval, API, UI, containers and scoring have separate owners. Shared application integration and container-run evidence belong to the consuming team delivery; this module supplies the processor, facts, schema and validation records. The former handoff and complete pre-cleanup personal patient/verification delivery are preserved in the [history archive](../../evaluation/verification/history/ms2_pre_cleanup_20261020.zip).

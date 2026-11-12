@@ -1,4 +1,4 @@
-# MS3 submission evidence and evaluation reproduction
+# MS3 Submission Evidence
 
 Decision recorded November 12, 2026 (ET): present C's completed retrieval
 evaluation using its original saved rankings, 182 reviewed judgments and model
@@ -17,13 +17,13 @@ and links to the corresponding exported records.
 | Retrieval evaluation | [C's report](../../evaluation/ms3/retrieval/RETRIEVAL_EVALUATION_REPORT.md), [scorer and README](../../evaluation/ms3/retrieval/README.md) | 14 saved methods, eight queries and 182 judgments; P@3, nDCG@5 and four fine-tuning comparisons for those saved inputs. |
 | Automated workflow | [November 10 four-task Vertex evidence](evidence/module-a/gcp-20261110/README.md) | Successful fixed-data reproduction, validation and BM25/Gemini ranking generation at its recorded source/image version. |
 | Failure handling | [Checksum rejection evidence](evidence/module-a/negative-20261110/README.md) | Corrupted input fails at fetch and blocks the three downstream tasks. |
+| Deployed API | [Cloud app](https://trialmatch-15733748057.us-east1.run.app), [response screenshot](evidence/cloud-screening.jpg), [API and monitoring guide](API_MONITORING.md) | November 12 revision `trialmatch-b7738f4`: Gemini and Fine-tuned BioClinical each returned three candidates with OK and no recorded errors. |
 | Later integration | [November 12 seven-task evidence](evidence/module-a/gcp-20261112/README.md) | Six tasks succeeded; evaluation rejected ten unjudged pairs. The overall run is FAILED and has no retrieval scores. |
 
-The API continues to use the serving path documented in the root README;
-these fine-tuned checkpoints were used for benchmark rankings, not deployed
-by the reproduction described here. Deployment, live requests, access for the TF,
-Cloud Logging and API tests need their own demonstration evidence. Reproducing
-the retrieval report does not verify the current Cloud Run service.
+The app now offers Gemini and the evaluated November 10 encoder for retrieval;
+Gemini handles criterion assessment in both choices. The online response above is
+separate from benchmark reproduction. Staff need an approved IAP Google account
+or an agreed authenticated demonstration; team access alone does not establish TF access.
 
 ## Model and result identities
 
