@@ -164,6 +164,7 @@ The app loads the validated release, restores the Gemini vectors and prepares th
 trained encoder's separate Chroma index. Its snapshot is saved beside the model
 in GCS and restored on later starts. Cloud Run uses two CPUs and 4 GiB of
 memory for CPU inference, with zero minimum instances and one maximum instance.
+`cloud/setup.sh` lets the API create snapshots only in this checkpoint's `indexes/` prefix.
 The last step saves `retrieval_runs.jsonl` and its configuration to GCS. It produces
 rankings, not relevance scores or eligibility accuracy. Model training and human
 benchmark scoring are separate work. Gemini remains the deployment default.

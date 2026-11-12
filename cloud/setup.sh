@@ -35,6 +35,10 @@ for name in api build; do
     --role=roles/storage.objectViewer >/dev/null
 done
 gcloud storage buckets add-iam-policy-binding "gs://$GCS_BUCKET" \
+  --member="serviceAccount:trialmatch-api@$GCP_PROJECT.iam.gserviceaccount.com" \
+  --role=roles/storage.objectCreator \
+  --condition="expression=resource.name.startsWith(\"projects/_/buckets/$GCS_BUCKET/objects/training/train-20261110-t4-r3/indexes/\"),title=trained-index-snapshots" >/dev/null
+gcloud storage buckets add-iam-policy-binding "gs://$GCS_BUCKET" \
   --member="serviceAccount:trialmatch-pipeline@$GCP_PROJECT.iam.gserviceaccount.com" \
   --role=roles/storage.objectAdmin >/dev/null
 gcloud storage buckets add-iam-policy-binding "gs://$GCS_BUCKET" \
