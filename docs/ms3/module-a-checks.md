@@ -17,7 +17,8 @@ changes, image/build/release bindings, and structural checks of 48 rankings.
 
 The upload's `PARTIAL` status records four empty log queries. The runtime-graph
 screenshot was subsequently reviewed in chat and matches the successful run;
-its original image file still needs archiving. The subsequent retrieval-node JSON
+its original [PNG](evidence/module-a/gcp-20261110/01-pipeline-success.png) was
+archived on November 12. The subsequent retrieval-node JSON
 export has been archived and passed nine consistency checks: 11 entries match
 the actual CustomJob, seven verified files, 48 rows, six methods, the output URI
 and successful completion. Other nodes' log exports remain pending. The original
@@ -45,8 +46,10 @@ checksum exception; and all three descendants are NOT_TRIGGERED with no start
 time or executor. The workflow image/spec match the successful baseline and all
 task caches are disabled. See the [final review](evidence/module-a/negative-20261110/README.md).
 The failed-run runtime graph and checksum-error screenshots have been reviewed
-in chat and match the records. They are optional presentation material; this
-commit includes the code, JSON evidence and documentation at the user's choice.
+in chat and match the records. The [graph PNG](evidence/module-a/negative-20261110/02-checksum-failure-test.png)
+was archived on November 12; the separate error-line image remains unarchived,
+with its exact exception already preserved in the worker logs. See the
+[three-run screenshot gallery](evidence/module-a/screenshots.md).
 
 The 15 standalone local checks and 20 offline evidence checks are separate from
 the 47-test GitHub Actions result above. The experiment

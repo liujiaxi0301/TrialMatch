@@ -140,6 +140,7 @@ the existing patient data. The reproduction record is saved to
 - [Cloud app](https://trialmatch-15733748057.us-east1.run.app) (authorized Google login required).
 - [Successful four-step pipeline](https://console.cloud.google.com/vertex-ai/locations/us-east1/pipelines/runs/trialmatch-data-pipeline-20261112024908?project=trialmatch-ac215-yixiao).
 - [MS3 evidence and evaluation reproduction](docs/ms3/submission-evidence.md): the November 10 checkpoint and its completed 14-method report.
+- [Vertex run screenshots](docs/ms3/evidence/module-a/screenshots.md): successful workflow and documented failure cases.
 
 The app uses Cloud Run. Chroma runs on a separate VM with a persistent disk
 mounted at `/data` inside its container. Only the TrialMatch subnet can reach

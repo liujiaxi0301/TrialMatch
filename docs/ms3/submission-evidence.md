@@ -5,6 +5,10 @@ evaluation using its original saved rankings, 182 reviewed judgments and model
 provenance. Keep the later seven-task cloud run as a separate integration record.
 No additional training or labeling is required to reproduce the selected report.
 
+The [Vertex screenshot gallery](evidence/module-a/screenshots.md) contains the
+three original console images supplied on November 12, with run IDs, captions
+and links to the corresponding exported records.
+
 ## Selected evidence
 
 | Component | Evidence to open | What it establishes |

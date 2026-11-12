@@ -100,17 +100,21 @@ behavior, missing files, schema errors, model training or formal scoring.
 The cloud run was performed by Xuyang; this review used exported API records and
 logs rather than making new authenticated cloud calls. No additional job was
 submitted during the review. The runtime-graph and checksum-error screenshots
-have been reviewed in chat and match the archived records. At the user's choice,
-this commit includes code, JSON evidence and documentation; screenshot files are
-optional presentation material and are omitted. The review conclusion is supported
-by the archived task metadata, input bytes and logs.
+were reviewed in chat and match the archived records. The original
+[runtime-graph PNG](02-checksum-failure-test.png) was supplied and archived on
+November 12; the separate checksum-error image is still not archived. The exact
+exception remains available in the worker logs. Earlier review JSON files retain
+their original screenshot-availability notes; the current image is recorded in
+the [November 12 inventory](../screenshots-20261112.json).
 
 ## Presentation
 
 Use the graph and error line together, under **Failure Handling: Invalid Data
 Stops the Pipeline**. The graph shows the matching run name, a red `fetch-raw`,
-three grey descendants and a duration of 2 min 45 sec. The second image shows
-the exact checksum exception at 14:40:05.927 EST, matching the worker log.
+three grey descendants and a duration of 2 min 45 sec. The archived worker log
+contains the exact checksum exception at 14:40:05.927 EST. Open that log alongside
+the [graph image](02-checksum-failure-test.png); the earlier error-line image was
+reviewed in chat but is not part of this upload.
 
 Label the outcome **1 failed, 3 not triggered**. The console also shows
 `3/4 steps completed`; that counter is not evidence of three successful task

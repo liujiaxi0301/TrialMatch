@@ -1,0 +1,51 @@
+{
+  "archived_utc": "2026-11-12T20:13:28.690694+00:00",
+  "source_archive": "screenshot.zip",
+  "source_archive_sha256": "fc37d26a16b276e52634e059735f35490d064885a9acb8f2467729d5cc7baaff",
+  "review": "Original screenshots visually checked against the archived run IDs and task states. No cropping, retouching or regeneration. Failure causes are supported by the separately archived logs and diagnostics.",
+  "files": [
+    {
+      "file": "gcp-20261110/01-pipeline-success.png",
+      "source_zip_entry": "01-pipeline-success.png",
+      "sha256": "b2468eabd3ae10c19a652ea73431b1fcf686d5f898567229b781628b489b7ee2",
+      "bytes": 493654,
+      "width": 2926,
+      "height": 1506,
+      "pipeline_run_id": "trialmatch-data-pipeline-20261110055153",
+      "pipeline_state": "PIPELINE_STATE_SUCCEEDED",
+      "caption": "Four data and retrieval tasks succeeded.",
+      "matched_run_record": "gcp-20261110/review-status.json",
+      "original_bytes_preserved": true
+    },
+    {
+      "file": "negative-20261110/02-checksum-failure-test.png",
+      "source_zip_entry": "02-checksum-failure-test.png",
+      "sha256": "645cc44dbe9dc553c9f11d90453bb9a0199b85d01fa2c1f274fa656e12bd2075",
+      "bytes": 517895,
+      "width": 2876,
+      "height": 1514,
+      "pipeline_run_id": "xuyang-ms3-hash-20261110t193643z-65e00490",
+      "pipeline_state": "PIPELINE_STATE_FAILED",
+      "caption": "Expected failure test: fetch failed and all three downstream tasks were not triggered.",
+      "matched_run_record": "negative-20261110/review-status.json",
+      "original_bytes_preserved": true
+    },
+    {
+      "file": "gcp-20261112/03-training-evaluation-blocked.png",
+      "source_zip_entry": "03-training-evaluation-blocked.png",
+      "sha256": "a3f08338e9a6ee19c4ab6761d41a10db4a003987c90f58809bd6a07e60cfc109",
+      "bytes": 563201,
+      "width": 2866,
+      "height": 1580,
+      "pipeline_run_id": "trialmatch-data-pipeline-20261112172151",
+      "pipeline_state": "PIPELINE_STATE_FAILED",
+      "caption": "Six tasks succeeded; evaluation failed. Overall pipeline remains FAILED.",
+      "matched_run_record": "gcp-20261112/review.json",
+      "original_bytes_preserved": true
+    }
+  ],
+  "not_included": [
+    "Separate checksum-error log screenshot",
+    "Cloud Run service response screenshot"
+  ]
+}

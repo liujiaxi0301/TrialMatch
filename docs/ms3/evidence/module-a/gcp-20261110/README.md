@@ -4,8 +4,9 @@
 Vertex API record shows that the pipeline and its four container tasks succeeded.
 Twenty offline consistency checks passed. The runtime-graph screenshot was
 subsequently reviewed in chat: the run ID matches, all four nodes are green and
-the header shows `4/4 steps completed`. Its original image file is not yet
-available in this checkout for archiving. The subsequent `retrieve-trials` JSON
+the header shows `4/4 steps completed`. The original
+[PNG](01-pipeline-success.png) was supplied and archived on November 12; see the
+[screenshot gallery](../screenshots.md). The subsequent `retrieve-trials` JSON
 log export has now been verified and archived: 11 entries match the exact job,
 release and outputs. Logs from the other three nodes remain uncollected; see
 [audit.json](audit.json) and [review-status.json](review-status.json).
@@ -132,12 +133,14 @@ The new log export supplements them. Four-node success was already established b
 the Vertex job record; collecting every node's logs is not a prerequisite for
 that conclusion or a reason to rerun the successful pipeline.
 
-## Remaining evidence
+## Screenshot follow-up and remaining evidence
 
-1. Archive the original PNG/JPG of the screenshot already reviewed in chat. It
+1. The original [PNG](01-pipeline-success.png) is now archived. It
    shows the matching run name, four green nodes and 12 min 56 sec duration.
    Displayed times, November 10 00:51:55–01:04:51 America/New_York, agree with
-   05:51:55–06:04:51 UTC in the exported job. No image file is currently saved here.
+   05:51:55–06:04:51 UTC in the exported job. Earlier review JSON files retain the
+   screenshot availability recorded at review time; the November 12
+   [image inventory](../screenshots-20261112.json) documents this follow-up.
 2. The retrieval log export is complete. Full Logs Explorer showed 11 results with
    `resource.type="ml_job"` and `resource.labels.job_id="5535151747103719424"`,
    matching the exported retrieval CustomJob. The original collector incorrectly
@@ -149,8 +152,8 @@ that conclusion or a reason to rerun the successful pipeline.
    `validate-data` with [one query](supplemental/remaining-node-logs.lql).
    Its three job IDs come from the actual Vertex task metadata. Paste it into
    Logs Explorer and export the returned entries as JSON. Retrieval logs do not
-   establish these other nodes' log contents. Preserve original screenshots as
-   files when available; neither image is currently saved in this checkout.
+   establish these other nodes' log contents. The separate retrieval-log and
+   Logs Explorer screenshot files are still not archived; the JSON log export is.
 
 Service log messages such as `Waiting for training program to start` are generic
 CustomJob lifecycle messages. The observed application outputs establish

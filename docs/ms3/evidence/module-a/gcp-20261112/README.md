@@ -7,6 +7,11 @@ Pipeline `trialmatch-data-pipeline-20261112172151` ran at source
 
 [Open the original Vertex run](https://console.cloud.google.com/vertex-ai/locations/us-east1/pipelines/runs/trialmatch-data-pipeline-20261112172151?project=trialmatch-ac215-yixiao).
 
+The original [runtime-graph PNG](03-training-evaluation-blocked.png) is archived
+unchanged from the November 12 screenshot upload. It shows the same run ID,
+six green tasks, the failed evaluation node and 40 min 42 sec duration. See the
+[gallery and captions](../screenshots.md) and [image inventory](../screenshots-20261112.json).
+
 | Task | Recorded state |
 | --- | --- |
 | `fetch-raw` | SUCCEEDED |
