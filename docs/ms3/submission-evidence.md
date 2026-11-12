@@ -22,8 +22,9 @@ and links to the corresponding exported records.
 
 The app now offers Gemini and the evaluated November 10 encoder for retrieval;
 Gemini handles criterion assessment in both choices. The online response above is
-separate from benchmark reproduction. Staff need an approved IAP Google account
-or an agreed authenticated demonstration; team access alone does not establish TF access.
+separate from benchmark reproduction. The cloud page and API are publicly accessible
+without a Google login. W&B access is separate; the exported training charts are
+also included in the repository.
 
 ## Model and result identities
 
@@ -94,5 +95,5 @@ The earlier failed Vertex run must retain its original status.
 
 The course requires documented training, a running service/API, an automated
 Vertex workflow and monitoring. This document selects the existing evaluation
-evidence; it does not certify that every team deliverable or TF access check is
-complete. Preserve each contributor's commits in the final `milestone3` branch.
+evidence; it does not certify that every team deliverable is complete. Preserve
+each contributor's commits in the final `milestone3` branch.

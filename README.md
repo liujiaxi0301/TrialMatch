@@ -82,7 +82,7 @@ starts reuse the files. Initial model loading can make the first request slower.
 ## API
 
 Interactive documentation: http://localhost:8080/docs. The same routes are available
-on the cloud app after authentication.
+on the [cloud app](https://trialmatch-15733748057.us-east1.run.app/docs) without login.
 
 | Endpoint | Purpose |
 | --- | --- |
@@ -125,10 +125,10 @@ See the [trial data guide](services/trial_ingestion/README.md),
 Project: `trialmatch-ac215-yixiao`. Region: `us-east1`.
 Configuration: `cloud/config.env`.
 
-The [cloud app](https://trialmatch-15733748057.us-east1.run.app) uses Google login
-through IAP. An approved account is required; teaching staff must be granted access
-or agree on an authenticated demonstration before evaluation. No local setup is
-needed to use the web page. Cloud services use attached service accounts.
+The [cloud app](https://trialmatch-15733748057.us-east1.run.app) and API are public;
+no login or local setup is needed. Screening requests use the project's model
+quota. Storage buckets and cloud administration remain private. Cloud services
+use attached service accounts.
 
 Cloud Run hosts the API and page with 2 CPUs, 4 GiB memory, zero minimum instances
 and one maximum instance. Chroma runs on a separate VM with a persistent data disk;
@@ -152,8 +152,7 @@ bash cloud/deploy.sh app
 `setup.sh` is the one-time resource setup. `make live` obtains the saved input index.
 Build records exact image digests and input hashes; publication and the pipeline use
 that record. The full deployment command requires a successful matching pipeline.
-For a new project, configure IAP Google login and grant approved users access in the
-Cloud Run console. This is already configured for TrialMatch.
+The app deployment allows unauthenticated access and disables IAP login.
 
 The default pipeline restores raw data with DVC, processes it, checks its output,
 and produces BM25/Gemini rankings. Each task passes versioned files through GCS.

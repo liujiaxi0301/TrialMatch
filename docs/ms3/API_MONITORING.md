@@ -2,7 +2,7 @@
 
 The FastAPI app serves the web page and screening API locally and on
 [Cloud Run](https://trialmatch-15733748057.us-east1.run.app).
-The cloud app requires an approved Google login through IAP.
+The cloud page and API are public and require no login.
 
 ## Endpoints
 
@@ -74,11 +74,10 @@ uv run --locked python demo/ovrz/verify_ms3_api.py \
   --output artifacts/ms3-api/http.json
 ```
 
+For the public cloud app, use
+`--base-url https://trialmatch-15733748057.us-east1.run.app`; no token is needed.
 Without `--screen`, the checker does not call a model. In live mode a screening
-request uses Gemini. The checker rejects redirects so an IAP sign-in page cannot
-count as a successful API response. For automated cloud access, use an approved
-short-lived IAP token through `--token-stdin`; do not put it in command arguments
-or save it in evidence. Browser login alone does not authenticate a CLI client.
+request uses Gemini. Redirects do not count as successful API responses.
 
 ## Evidence and Limits
 
@@ -86,6 +85,10 @@ On November 12, cloud revision `trialmatch-b7738f4` returned three candidates,
 `result_status=OK` and no recorded errors for both Gemini and Fine-tuned BioClinical.
 The encoder provenance matched the evaluated November 10 checkpoint; both choices
 used Gemini for generation. [Online response screenshot](evidence/cloud-screening.jpg).
+
+After public access was enabled on November 12, the page and API documentation
+returned 200 without cookies or authorization headers. All eight HTTP checks passed,
+including one live screening request with `result_status=OK`.
 
 The original module checks are in [verification.json](evidence/module-e/verification.json),
 [offline HTTP checks](evidence/module-e/offline-http.json),

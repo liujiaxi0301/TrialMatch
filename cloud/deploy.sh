@@ -100,12 +100,12 @@ case "$action" in
     TARGET=$(python3 -m cloud.release deployment --version="$VERSION" \
       --registry="$REGISTRY" --bucket="$GCS_BUCKET" --project="$GCP_PROJECT" --region="$GCP_REGION")
     IFS=$'\t' read -r API_IMAGE RELEASE <<< "$TARGET"
-    # Deploy privately first. Enable browser login with IAP in the Cloud Run console.
+    # Allow the teaching staff to open the demo without signing in.
     gcloud run deploy "$SERVICE" --project="$GCP_PROJECT" --region="$GCP_REGION" \
       --image="$API_IMAGE" --command=python --args=-m,cloud.tasks,serve \
       --service-account="trialmatch-api@$GCP_PROJECT.iam.gserviceaccount.com" \
       --network="$NETWORK" --subnet="$SUBNET" --vpc-egress=private-ranges-only \
-      --no-allow-unauthenticated --min-instances=0 --max-instances=1 --max=1 \
+      --allow-unauthenticated --no-iap --min-instances=0 --max-instances=1 --max=1 \
       --cpu=2 --memory=4Gi --concurrency=1 --timeout=300 --port=8080 \
       --set-env-vars="TRIALMATCH_MODE=live,GCP_PROJECT=$GCP_PROJECT,GCP_LOCATION=global,RELEASE_URI=$RELEASE,CHROMADB_HOST=$CHROMA_IP,CHROMADB_PORT=8000,TRIALMATCH_ARTIFACTS=/app/artifacts,TRIALMATCH_CORS_ORIGINS="
     ;;
