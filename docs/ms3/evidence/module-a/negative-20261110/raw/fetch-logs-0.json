@@ -1,0 +1,455 @@
+{
+  "filter": "resource.type=\"ml_job\" AND resource.labels.job_id=\"6958957732422483968\"",
+  "entries": [
+    {
+      "textPayload": "Waiting for job to be provisioned.",
+      "insertId": "e6ecq4dl16m",
+      "resource": {
+        "type": "ml_job",
+        "labels": {
+          "project_id": "trialmatch-ac215-yixiao",
+          "job_id": "6958957732422483968",
+          "task_name": "service"
+        }
+      },
+      "timestamp": "2026-11-10T19:36:47.788471273Z",
+      "severity": "INFO",
+      "labels": {
+        "ml.googleapis.com/job_state": "QUEUED",
+        "ml.googleapis.com/endpoint": ""
+      },
+      "logName": "projects/trialmatch-ac215-yixiao/logs/ml.googleapis.com%2F6958957732422483968",
+      "receiveTimestamp": "2026-11-10T19:36:48.608821071Z"
+    },
+    {
+      "textPayload": "Waiting for job to be provisioned.",
+      "insertId": "e6ecq4dl16n",
+      "resource": {
+        "type": "ml_job",
+        "labels": {
+          "project_id": "trialmatch-ac215-yixiao",
+          "task_name": "service",
+          "job_id": "6958957732422483968"
+        }
+      },
+      "timestamp": "2026-11-10T19:36:47.803993441Z",
+      "severity": "INFO",
+      "labels": {
+        "ml.googleapis.com/endpoint": ""
+      },
+      "logName": "projects/trialmatch-ac215-yixiao/logs/ml.googleapis.com%2F6958957732422483968",
+      "receiveTimestamp": "2026-11-10T19:36:48.608821071Z"
+    },
+    {
+      "textPayload": "Job is running.",
+      "insertId": "e6ecq4dl1m1",
+      "resource": {
+        "type": "ml_job",
+        "labels": {
+          "project_id": "trialmatch-ac215-yixiao",
+          "job_id": "6958957732422483968",
+          "task_name": "service"
+        }
+      },
+      "timestamp": "2026-11-10T19:39:23.529082563Z",
+      "severity": "INFO",
+      "labels": {
+        "ml.googleapis.com/endpoint": ""
+      },
+      "logName": "projects/trialmatch-ac215-yixiao/logs/ml.googleapis.com%2F6958957732422483968",
+      "receiveTimestamp": "2026-11-10T19:39:24.771432129Z"
+    },
+    {
+      "textPayload": "The replica workerpool0-0 exited with a non-zero status of 1. To find out more about why your job exited please check the logs: https://console.cloud.google.com/logs/viewer?project=15733748057&resource=ml_job%2Fjob_id%2F6958957732422483968&advancedFilter=resource.type%3D%22ml_job%22%0Aresource.labels.job_id%3D%226958957732422483968%22",
+      "insertId": "e6ecq4dl1m5",
+      "resource": {
+        "type": "ml_job",
+        "labels": {
+          "task_name": "service",
+          "job_id": "6958957732422483968",
+          "project_id": "trialmatch-ac215-yixiao"
+        }
+      },
+      "timestamp": "2026-11-10T19:39:23.651490897Z",
+      "severity": "ERROR",
+      "labels": {
+        "ml.googleapis.com/endpoint": ""
+      },
+      "logName": "projects/trialmatch-ac215-yixiao/logs/ml.googleapis.com%2F6958957732422483968",
+      "receiveTimestamp": "2026-11-10T19:39:24.771432129Z"
+    },
+    {
+      "insertId": "1g6904bfdabci8",
+      "jsonPayload": {
+        "levelname": "ERROR",
+        "attrs": {
+          "tag": "workerpool0-0"
+        },
+        "message": "Traceback (most recent call last):"
+      },
+      "resource": {
+        "type": "ml_job",
+        "labels": {
+          "job_id": "6958957732422483968",
+          "project_id": "trialmatch-ac215-yixiao",
+          "task_name": "workerpool0-0"
+        }
+      },
+      "timestamp": "2026-11-10T19:40:05.927096929Z",
+      "severity": "ERROR",
+      "labels": {
+        "ml.googleapis.com/trial_id": "",
+        "ml.googleapis.com/trial_type": "",
+        "ml.googleapis.com/job_id/log_area": "root",
+        "ml.googleapis.com/tpu_worker_id": "",
+        "compute.googleapis.com/resource_id": "2026-11-10 19:40:05 +0000 [error]: #0 Failed to obtain vm_id:  error_class=OpenURI::HTTPError error=\"404 Not Found\"",
+        "compute.googleapis.com/resource_name": "a12d2d15f38f",
+        "compute.googleapis.com/zone": "2026-11-10 19:40:05 +0000 [error]: #0 Failed to obtain location:  error_class=OpenURI::HTTPError error=\"404 Not Found\""
+      },
+      "logName": "projects/trialmatch-ac215-yixiao/logs/workerpool0-0",
+      "receiveTimestamp": "2026-11-10T19:40:07.942326441Z"
+    },
+    {
+      "insertId": "1g6904bfdabci9",
+      "jsonPayload": {
+        "levelname": "ERROR",
+        "attrs": {
+          "tag": "workerpool0-0"
+        },
+        "message": "  File \"<frozen runpy>\", line 198, in _run_module_as_main"
+      },
+      "resource": {
+        "type": "ml_job",
+        "labels": {
+          "task_name": "workerpool0-0",
+          "job_id": "6958957732422483968",
+          "project_id": "trialmatch-ac215-yixiao"
+        }
+      },
+      "timestamp": "2026-11-10T19:40:05.927130878Z",
+      "severity": "ERROR",
+      "labels": {
+        "compute.googleapis.com/zone": "2026-11-10 19:40:05 +0000 [error]: #0 Failed to obtain location:  error_class=OpenURI::HTTPError error=\"404 Not Found\"",
+        "ml.googleapis.com/trial_type": "",
+        "ml.googleapis.com/job_id/log_area": "root",
+        "ml.googleapis.com/tpu_worker_id": "",
+        "ml.googleapis.com/trial_id": "",
+        "compute.googleapis.com/resource_name": "a12d2d15f38f",
+        "compute.googleapis.com/resource_id": "2026-11-10 19:40:05 +0000 [error]: #0 Failed to obtain vm_id:  error_class=OpenURI::HTTPError error=\"404 Not Found\""
+      },
+      "logName": "projects/trialmatch-ac215-yixiao/logs/workerpool0-0",
+      "receiveTimestamp": "2026-11-10T19:40:07.942326441Z"
+    },
+    {
+      "insertId": "1g6904bfdabcia",
+      "jsonPayload": {
+        "message": "  File \"<frozen runpy>\", line 88, in _run_code",
+        "levelname": "ERROR",
+        "attrs": {
+          "tag": "workerpool0-0"
+        }
+      },
+      "resource": {
+        "type": "ml_job",
+        "labels": {
+          "task_name": "workerpool0-0",
+          "project_id": "trialmatch-ac215-yixiao",
+          "job_id": "6958957732422483968"
+        }
+      },
+      "timestamp": "2026-11-10T19:40:05.927145721Z",
+      "severity": "ERROR",
+      "labels": {
+        "compute.googleapis.com/resource_id": "2026-11-10 19:40:05 +0000 [error]: #0 Failed to obtain vm_id:  error_class=OpenURI::HTTPError error=\"404 Not Found\"",
+        "ml.googleapis.com/tpu_worker_id": "",
+        "compute.googleapis.com/resource_name": "a12d2d15f38f",
+        "ml.googleapis.com/trial_id": "",
+        "compute.googleapis.com/zone": "2026-11-10 19:40:05 +0000 [error]: #0 Failed to obtain location:  error_class=OpenURI::HTTPError error=\"404 Not Found\"",
+        "ml.googleapis.com/job_id/log_area": "root",
+        "ml.googleapis.com/trial_type": ""
+      },
+      "logName": "projects/trialmatch-ac215-yixiao/logs/workerpool0-0",
+      "receiveTimestamp": "2026-11-10T19:40:07.942326441Z"
+    },
+    {
+      "insertId": "1g6904bfdabcib",
+      "jsonPayload": {
+        "attrs": {
+          "tag": "workerpool0-0"
+        },
+        "levelname": "ERROR",
+        "message": "  File \"/app/cloud/tasks.py\", line 244, in <module>"
+      },
+      "resource": {
+        "type": "ml_job",
+        "labels": {
+          "project_id": "trialmatch-ac215-yixiao",
+          "job_id": "6958957732422483968",
+          "task_name": "workerpool0-0"
+        }
+      },
+      "timestamp": "2026-11-10T19:40:05.927158669Z",
+      "severity": "ERROR",
+      "labels": {
+        "compute.googleapis.com/resource_name": "a12d2d15f38f",
+        "compute.googleapis.com/zone": "2026-11-10 19:40:05 +0000 [error]: #0 Failed to obtain location:  error_class=OpenURI::HTTPError error=\"404 Not Found\"",
+        "ml.googleapis.com/trial_id": "",
+        "ml.googleapis.com/job_id/log_area": "root",
+        "ml.googleapis.com/trial_type": "",
+        "compute.googleapis.com/resource_id": "2026-11-10 19:40:05 +0000 [error]: #0 Failed to obtain vm_id:  error_class=OpenURI::HTTPError error=\"404 Not Found\"",
+        "ml.googleapis.com/tpu_worker_id": ""
+      },
+      "logName": "projects/trialmatch-ac215-yixiao/logs/workerpool0-0",
+      "receiveTimestamp": "2026-11-10T19:40:07.942326441Z"
+    },
+    {
+      "insertId": "1g6904bfdabcic",
+      "jsonPayload": {
+        "attrs": {
+          "tag": "workerpool0-0"
+        },
+        "message": "    main()",
+        "levelname": "ERROR"
+      },
+      "resource": {
+        "type": "ml_job",
+        "labels": {
+          "project_id": "trialmatch-ac215-yixiao",
+          "task_name": "workerpool0-0",
+          "job_id": "6958957732422483968"
+        }
+      },
+      "timestamp": "2026-11-10T19:40:05.927180544Z",
+      "severity": "ERROR",
+      "labels": {
+        "compute.googleapis.com/resource_id": "2026-11-10 19:40:05 +0000 [error]: #0 Failed to obtain vm_id:  error_class=OpenURI::HTTPError error=\"404 Not Found\"",
+        "compute.googleapis.com/resource_name": "a12d2d15f38f",
+        "ml.googleapis.com/job_id/log_area": "root",
+        "compute.googleapis.com/zone": "2026-11-10 19:40:05 +0000 [error]: #0 Failed to obtain location:  error_class=OpenURI::HTTPError error=\"404 Not Found\"",
+        "ml.googleapis.com/trial_type": "",
+        "ml.googleapis.com/tpu_worker_id": "",
+        "ml.googleapis.com/trial_id": ""
+      },
+      "logName": "projects/trialmatch-ac215-yixiao/logs/workerpool0-0",
+      "receiveTimestamp": "2026-11-10T19:40:07.942326441Z"
+    },
+    {
+      "insertId": "1g6904bfdabcid",
+      "jsonPayload": {
+        "levelname": "ERROR",
+        "attrs": {
+          "tag": "workerpool0-0"
+        },
+        "message": "  File \"/app/cloud/tasks.py\", line 238, in main"
+      },
+      "resource": {
+        "type": "ml_job",
+        "labels": {
+          "project_id": "trialmatch-ac215-yixiao",
+          "task_name": "workerpool0-0",
+          "job_id": "6958957732422483968"
+        }
+      },
+      "timestamp": "2026-11-10T19:40:05.927192788Z",
+      "severity": "ERROR",
+      "labels": {
+        "compute.googleapis.com/resource_id": "2026-11-10 19:40:05 +0000 [error]: #0 Failed to obtain vm_id:  error_class=OpenURI::HTTPError error=\"404 Not Found\"",
+        "compute.googleapis.com/resource_name": "a12d2d15f38f",
+        "compute.googleapis.com/zone": "2026-11-10 19:40:05 +0000 [error]: #0 Failed to obtain location:  error_class=OpenURI::HTTPError error=\"404 Not Found\"",
+        "ml.googleapis.com/trial_id": "",
+        "ml.googleapis.com/trial_type": "",
+        "ml.googleapis.com/job_id/log_area": "root",
+        "ml.googleapis.com/tpu_worker_id": ""
+      },
+      "logName": "projects/trialmatch-ac215-yixiao/logs/workerpool0-0",
+      "receiveTimestamp": "2026-11-10T19:40:07.942326441Z"
+    },
+    {
+      "insertId": "1g6904bfdabcie",
+      "jsonPayload": {
+        "message": "    {\"fetch\": fetch, \"process\": process, \"validate\": validate, \"retrieve\": retrieve}[",
+        "levelname": "ERROR",
+        "attrs": {
+          "tag": "workerpool0-0"
+        }
+      },
+      "resource": {
+        "type": "ml_job",
+        "labels": {
+          "project_id": "trialmatch-ac215-yixiao",
+          "job_id": "6958957732422483968",
+          "task_name": "workerpool0-0"
+        }
+      },
+      "timestamp": "2026-11-10T19:40:05.927210234Z",
+      "severity": "ERROR",
+      "labels": {
+        "ml.googleapis.com/trial_type": "",
+        "ml.googleapis.com/job_id/log_area": "root",
+        "compute.googleapis.com/zone": "2026-11-10 19:40:05 +0000 [error]: #0 Failed to obtain location:  error_class=OpenURI::HTTPError error=\"404 Not Found\"",
+        "compute.googleapis.com/resource_name": "a12d2d15f38f",
+        "ml.googleapis.com/tpu_worker_id": "",
+        "compute.googleapis.com/resource_id": "2026-11-10 19:40:05 +0000 [error]: #0 Failed to obtain vm_id:  error_class=OpenURI::HTTPError error=\"404 Not Found\"",
+        "ml.googleapis.com/trial_id": ""
+      },
+      "logName": "projects/trialmatch-ac215-yixiao/logs/workerpool0-0",
+      "receiveTimestamp": "2026-11-10T19:40:07.942326441Z"
+    },
+    {
+      "insertId": "1g6904bfdabcif",
+      "jsonPayload": {
+        "levelname": "ERROR",
+        "message": "  File \"/app/cloud/tasks.py\", line 98, in fetch",
+        "attrs": {
+          "tag": "workerpool0-0"
+        }
+      },
+      "resource": {
+        "type": "ml_job",
+        "labels": {
+          "project_id": "trialmatch-ac215-yixiao",
+          "job_id": "6958957732422483968",
+          "task_name": "workerpool0-0"
+        }
+      },
+      "timestamp": "2026-11-10T19:40:05.927222826Z",
+      "severity": "ERROR",
+      "labels": {
+        "ml.googleapis.com/trial_type": "",
+        "ml.googleapis.com/tpu_worker_id": "",
+        "ml.googleapis.com/job_id/log_area": "root",
+        "compute.googleapis.com/resource_name": "a12d2d15f38f",
+        "ml.googleapis.com/trial_id": "",
+        "compute.googleapis.com/zone": "2026-11-10 19:40:05 +0000 [error]: #0 Failed to obtain location:  error_class=OpenURI::HTTPError error=\"404 Not Found\"",
+        "compute.googleapis.com/resource_id": "2026-11-10 19:40:05 +0000 [error]: #0 Failed to obtain vm_id:  error_class=OpenURI::HTTPError error=\"404 Not Found\""
+      },
+      "logName": "projects/trialmatch-ac215-yixiao/logs/workerpool0-0",
+      "receiveTimestamp": "2026-11-10T19:40:07.942326441Z"
+    },
+    {
+      "insertId": "1g6904bfdabcig",
+      "jsonPayload": {
+        "levelname": "ERROR",
+        "attrs": {
+          "tag": "workerpool0-0"
+        },
+        "message": "    download_release(release)"
+      },
+      "resource": {
+        "type": "ml_job",
+        "labels": {
+          "project_id": "trialmatch-ac215-yixiao",
+          "job_id": "6958957732422483968",
+          "task_name": "workerpool0-0"
+        }
+      },
+      "timestamp": "2026-11-10T19:40:05.927235216Z",
+      "severity": "ERROR",
+      "labels": {
+        "ml.googleapis.com/job_id/log_area": "root",
+        "compute.googleapis.com/resource_id": "2026-11-10 19:40:05 +0000 [error]: #0 Failed to obtain vm_id:  error_class=OpenURI::HTTPError error=\"404 Not Found\"",
+        "compute.googleapis.com/resource_name": "a12d2d15f38f",
+        "ml.googleapis.com/tpu_worker_id": "",
+        "ml.googleapis.com/trial_id": "",
+        "ml.googleapis.com/trial_type": "",
+        "compute.googleapis.com/zone": "2026-11-10 19:40:05 +0000 [error]: #0 Failed to obtain location:  error_class=OpenURI::HTTPError error=\"404 Not Found\""
+      },
+      "logName": "projects/trialmatch-ac215-yixiao/logs/workerpool0-0",
+      "receiveTimestamp": "2026-11-10T19:40:07.942326441Z"
+    },
+    {
+      "insertId": "1g6904bfdabcih",
+      "jsonPayload": {
+        "message": "  File \"/app/cloud/tasks.py\", line 88, in download_release",
+        "levelname": "ERROR",
+        "attrs": {
+          "tag": "workerpool0-0"
+        }
+      },
+      "resource": {
+        "type": "ml_job",
+        "labels": {
+          "task_name": "workerpool0-0",
+          "project_id": "trialmatch-ac215-yixiao",
+          "job_id": "6958957732422483968"
+        }
+      },
+      "timestamp": "2026-11-10T19:40:05.927247976Z",
+      "severity": "ERROR",
+      "labels": {
+        "compute.googleapis.com/zone": "2026-11-10 19:40:05 +0000 [error]: #0 Failed to obtain location:  error_class=OpenURI::HTTPError error=\"404 Not Found\"",
+        "ml.googleapis.com/tpu_worker_id": "",
+        "ml.googleapis.com/trial_type": "",
+        "compute.googleapis.com/resource_name": "a12d2d15f38f",
+        "compute.googleapis.com/resource_id": "2026-11-10 19:40:05 +0000 [error]: #0 Failed to obtain vm_id:  error_class=OpenURI::HTTPError error=\"404 Not Found\"",
+        "ml.googleapis.com/trial_id": "",
+        "ml.googleapis.com/job_id/log_area": "root"
+      },
+      "logName": "projects/trialmatch-ac215-yixiao/logs/workerpool0-0",
+      "receiveTimestamp": "2026-11-10T19:40:07.942326441Z"
+    },
+    {
+      "insertId": "1g6904bfdabcii",
+      "jsonPayload": {
+        "message": "    raise ValueError(f\"Checksum mismatch: {name}\")",
+        "attrs": {
+          "tag": "workerpool0-0"
+        },
+        "levelname": "ERROR"
+      },
+      "resource": {
+        "type": "ml_job",
+        "labels": {
+          "project_id": "trialmatch-ac215-yixiao",
+          "job_id": "6958957732422483968",
+          "task_name": "workerpool0-0"
+        }
+      },
+      "timestamp": "2026-11-10T19:40:05.927260100Z",
+      "severity": "ERROR",
+      "labels": {
+        "ml.googleapis.com/trial_type": "",
+        "compute.googleapis.com/resource_name": "a12d2d15f38f",
+        "compute.googleapis.com/resource_id": "2026-11-10 19:40:05 +0000 [error]: #0 Failed to obtain vm_id:  error_class=OpenURI::HTTPError error=\"404 Not Found\"",
+        "ml.googleapis.com/job_id/log_area": "root",
+        "ml.googleapis.com/tpu_worker_id": "",
+        "ml.googleapis.com/trial_id": "",
+        "compute.googleapis.com/zone": "2026-11-10 19:40:05 +0000 [error]: #0 Failed to obtain location:  error_class=OpenURI::HTTPError error=\"404 Not Found\""
+      },
+      "logName": "projects/trialmatch-ac215-yixiao/logs/workerpool0-0",
+      "receiveTimestamp": "2026-11-10T19:40:07.942326441Z"
+    },
+    {
+      "insertId": "1g6904bfdabcij",
+      "jsonPayload": {
+        "levelname": "ERROR",
+        "attrs": {
+          "tag": "workerpool0-0"
+        },
+        "message": "ValueError: Checksum mismatch: services/trial_ingestion/data/raw.dvc"
+      },
+      "resource": {
+        "type": "ml_job",
+        "labels": {
+          "project_id": "trialmatch-ac215-yixiao",
+          "task_name": "workerpool0-0",
+          "job_id": "6958957732422483968"
+        }
+      },
+      "timestamp": "2026-11-10T19:40:05.927273297Z",
+      "severity": "ERROR",
+      "labels": {
+        "ml.googleapis.com/tpu_worker_id": "",
+        "compute.googleapis.com/resource_id": "2026-11-10 19:40:05 +0000 [error]: #0 Failed to obtain vm_id:  error_class=OpenURI::HTTPError error=\"404 Not Found\"",
+        "compute.googleapis.com/zone": "2026-11-10 19:40:05 +0000 [error]: #0 Failed to obtain location:  error_class=OpenURI::HTTPError error=\"404 Not Found\"",
+        "ml.googleapis.com/job_id/log_area": "root",
+        "ml.googleapis.com/trial_id": "",
+        "ml.googleapis.com/trial_type": "",
+        "compute.googleapis.com/resource_name": "a12d2d15f38f"
+      },
+      "logName": "projects/trialmatch-ac215-yixiao/logs/workerpool0-0",
+      "receiveTimestamp": "2026-11-10T19:40:07.942326441Z"
+    }
+  ],
+  "truncated": false
+}

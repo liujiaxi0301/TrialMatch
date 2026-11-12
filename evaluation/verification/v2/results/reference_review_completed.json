@@ -1,0 +1,59 @@
+{
+  "review_completed_date": "2026-10-18",
+  "reviewer": "user",
+  "review_method": "AI-assisted, non-blinded, non-clinician review after model outputs were available",
+  "assessment_date": "2021-11-30",
+  "confirmed_reference_count": 10,
+  "reference_status_counts": {
+    "MET": 3,
+    "UNKNOWN": 6,
+    "NOT_MET": 1
+  },
+  "model_label_agreements": 8,
+  "model_label_disagreements": 2,
+  "per_pair_label_agreements": {
+    "V2P01": 4,
+    "V2P02": 4
+  },
+  "disagreement_criterion_ids": [
+    "NCT06774950_exc_002"
+  ],
+  "clinical_accuracy_computed": false,
+  "model_calls": 0,
+  "limitation": "Two selected synthetic patients, one trial, one Mode A run each; documented-history surrogate, evidence-rule disagreements, unknown actual trial dates and no clinical expert validation.",
+  "presentation_revision": {
+    "date": "2026-10-19",
+    "type": "Consolidated delivery copies; review decisions and evidence unchanged",
+    "completed_snapshot": "v2/results/reference_answers_confirmed_20261018.csv",
+    "original_completed_review_manifest_sha256": "bde985fb064253e54123b2ff5424df43454f9827bca6ff86e966708eaee5a93e",
+    "original_backup_directory": "/workspace/TrialMatch-original-records-20261019-english-conversion",
+    "note": "Historical confirmations are translated delivery copies. Original bytes and redundant working copies are preserved outside the repository; see delivery_revision.json."
+  },
+  "sources_sha256": {
+    "v2/templates/reference_answers.csv": "b4d505816ecd22a5cad10f505edd69fc5bd58cb71c6427267be38f43b9569054",
+    "v2/results/reference_answers_confirmed_20261018.csv": "b4d505816ecd22a5cad10f505edd69fc5bd58cb71c6427267be38f43b9569054",
+    "v2/results/reference_model_comparison.csv": "3eff8b4b406d0158d7fa837578929a5bdbaf1b5bbe65ecf2090a6bb41c0b4609",
+    "v2/results/precheck_results_A.csv": "c355d3b012f7b82b64780895a36772c0059da8f1e36cf2c6bd089eaf0aa2a3a9",
+    "v2/policy.json": "55c7497d7d51e9f0542aa287002ad4dc00c82a536c178b5555b5a8b1b2a32c15",
+    "v2/uploads/A/V2P01.json": "437079c9d0909f41eda0087d01196ed77b1965386cbf4d9325bc5d13a1b8ae62",
+    "v2/uploads/A/V2P02.json": "df7e07efb5e3d6711effc307026ea7a4d908ab81d41b7a580c37be02397bb8cc",
+    "v2/results/raw/A/V2P01_A_user_upload_d7942088e197.txt": "d7942088e19762e572c159a1379ad504b1699c97f884684a4b592ade38859a0c",
+    "v2/results/raw/A/V2P02_A_user_upload_4377993a11b6.txt": "4377993a11b6de6b648caea28801b9b34dcda295662885a3bd1ddcbad6add0f6",
+    "v2/results/reference_review_completed.md": "7aee3c28bf873e81d7c997fc179cec7303492f1aba1a3a2e16beeaaa609885d8"
+  },
+  "archived_sources_sha256": {
+    "v2/results/reference_review_ages.md": "60f3f523bac3fe02bc452dfecd236d33e0460019bdbaafef344ee4c7a7f9a6d7",
+    "v2/results/reference_review_comorbidities.md": "d836f3db7169d43492dd0482a421a7f445e479df9797262a84f2043367edc8bf",
+    "v2/results/reference_review_consent_capacity.md": "f58a6f0101e83aafe305c58fb160be39d7c14a6444059d13940c319d1dc77680",
+    "v2/results/reference_review_diagnosis_duration.md": "ef158f164837d9fbb7014e7152231d0e346b80781a5efc2f04dbe127a3e28ea8",
+    "v2/results/reference_review_reproductive_status.md": "85385977ddb4b409e2609da6f41de9bb559d4e762b0fe1ae50f4af720a7f5ce3",
+    "LANGUAGE_AND_PROVENANCE.md": "485e96716f72f5edf00afe37061a9992cc694aa425f2b413d72cea7bb02eb109"
+  },
+  "layout_revision": {
+    "date": "2026-10-20",
+    "pre_cleanup_manifest_sha256": "e0d4b937d65df9e532e7806c5d8a32fe078b65356f8e74a056f9502f1e986699",
+    "archive": "history/ms2_pre_cleanup_20261020.zip",
+    "archive_sha256": "b4cc52bb1d69a13bf24e9ad87adc5269782381986710a0317a1bb31f777bf310",
+    "note": "Documentation consolidated; clinical inputs, source identities, labels and original response bytes unchanged. Archived source paths resolve under evaluation/verification/ inside the ZIP."
+  }
+}

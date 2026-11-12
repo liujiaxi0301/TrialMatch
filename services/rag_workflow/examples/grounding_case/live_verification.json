@@ -1,0 +1,234 @@
+{
+  "artifact_files": {
+    "diagnostics": "artifacts/rag_workflow/grounding_case/retrieval_diagnostics.json",
+    "fixed_trial": "artifacts/rag_workflow/grounding_case/fixed_trial_response.json",
+    "full_rag": "artifacts/rag_workflow/grounding_case/full_rag_response.json",
+    "model_trace": "artifacts/rag_workflow/grounding_case/fixed_trial_model_trace.json",
+    "retrieval_trace": "artifacts/rag_workflow/grounding_case/retrieval_trace.json"
+  },
+  "automated_tests": {
+    "network_calls_during_tests": 0,
+    "passed": 47,
+    "total": 47
+  },
+  "code_base_commit": "69691ab",
+  "embedding_model": "gemini-embedding-001",
+  "end_to_end_validation_diagnostic": {
+    "criterion_id": "NCT04284943_exc_014",
+    "new_model_calls_for_diagnosis": 0,
+    "problem": "Model cited local evidence alias F1 in both attempts, but this criterion received only F0. A per-criterion source-ID validation failure abstained the six-item batch after one repair."
+  },
+  "fixed_trial": {
+    "citation_ids_valid": true,
+    "decision_counts": {
+      "MET": 1,
+      "UNKNOWN": 13
+    },
+    "error_codes": [],
+    "focus_checks": [
+      {
+        "actual_decision": "UNKNOWN",
+        "claude_baseline_decision": "NOT_MET",
+        "criterion_id": "NCT02390973_exc_005",
+        "evidence_fact_ids": [
+          "fixture:claude_synthetic_001#albumin"
+        ],
+        "expected_closed_context_decision": "UNKNOWN",
+        "method": "llm_abstain",
+        "passed": true,
+        "raw_model_proposal_before_guard": "NOT_MET",
+        "reason": "Model conclusion did not pass the evidence-support guard; additional evidence or review is required.",
+        "validation_warnings": [
+          "EXPLICIT_NEGATIVE_EVIDENCE_REQUIRED"
+        ]
+      },
+      {
+        "actual_decision": "UNKNOWN",
+        "claude_baseline_decision": "MET",
+        "criterion_id": "NCT02390973_exc_007",
+        "evidence_fact_ids": [
+          "fixture:claude_synthetic_001#prednisone"
+        ],
+        "expected_closed_context_decision": "UNKNOWN",
+        "method": "llm_abstain",
+        "passed": true,
+        "raw_model_proposal_before_guard": "MET",
+        "reason": "Model conclusion did not pass the evidence-support guard; additional evidence or review is required.",
+        "validation_warnings": [
+          "UNVERIFIED_NUMERIC_TEMPORAL_OR_SEVERITY_LOGIC"
+        ]
+      },
+      {
+        "actual_decision": "UNKNOWN",
+        "claude_baseline_decision": "NOT_MET",
+        "criterion_id": "NCT02390973_exc_010",
+        "evidence_fact_ids": [
+          "fixture:claude_synthetic_001#ibd_history"
+        ],
+        "expected_closed_context_decision": "UNKNOWN",
+        "method": "llm_abstain",
+        "passed": true,
+        "raw_model_proposal_before_guard": "NOT_MET",
+        "reason": "Model conclusion did not pass the evidence-support guard; additional evidence or review is required.",
+        "validation_warnings": [
+          "EXPLICIT_NEGATIVE_EVIDENCE_REQUIRED"
+        ]
+      }
+    ],
+    "grounding_focus_passed": true,
+    "interpretation": "Evaluate guarded outputs separately from raw model behavior. UNKNOWN-only output does not establish a useful or accurate model. Positive controls quantify abstention.",
+    "positive_controls": [
+      {
+        "actual": "UNKNOWN",
+        "criterion_id": "NCT02390973_inc_001",
+        "expected": "MET"
+      },
+      {
+        "actual": "MET",
+        "criterion_id": "NCT02390973_inc_002",
+        "expected": "MET"
+      },
+      {
+        "actual": "UNKNOWN",
+        "criterion_id": "NCT02390973_inc_003",
+        "expected": "MET"
+      },
+      {
+        "actual": "UNKNOWN",
+        "criterion_id": "NCT02390973_inc_004",
+        "expected": "MET"
+      }
+    ],
+    "positive_controls_met": 1,
+    "positive_controls_total": 4
+  },
+  "fixed_trial_coverage": {
+    "completed": 14,
+    "known": 1,
+    "screening_barriers": 0,
+    "total": 14,
+    "unknown": 13
+  },
+  "fixed_trial_match_score": 7.1,
+  "fixed_trial_metrics": {
+    "cache_hits": 0,
+    "embedding_requests": 0,
+    "generation_requests": 3,
+    "output_tokens": 1368,
+    "prompt_tokens": 26385
+  },
+  "fixed_trial_screening_status": "NEEDS_MORE_INFORMATION",
+  "full_rag": {
+    "candidate_trial_ids": [
+      "NCT04284943",
+      "NCT03827382",
+      "NCT03821636"
+    ],
+    "errors": [
+      {
+        "code": "INVALID_LLM_OUTPUT",
+        "criterion_id": "NCT04284943_exc_010",
+        "message": "Model assessment unavailable or invalid; human review required."
+      },
+      {
+        "code": "INVALID_LLM_OUTPUT",
+        "criterion_id": "NCT04284943_exc_011",
+        "message": "Model assessment unavailable or invalid; human review required."
+      },
+      {
+        "code": "INVALID_LLM_OUTPUT",
+        "criterion_id": "NCT04284943_exc_012",
+        "message": "Model assessment unavailable or invalid; human review required."
+      },
+      {
+        "code": "INVALID_LLM_OUTPUT",
+        "criterion_id": "NCT04284943_exc_013",
+        "message": "Model assessment unavailable or invalid; human review required."
+      },
+      {
+        "code": "INVALID_LLM_OUTPUT",
+        "criterion_id": "NCT04284943_exc_014",
+        "message": "Model assessment unavailable or invalid; human review required."
+      },
+      {
+        "code": "INVALID_LLM_OUTPUT",
+        "criterion_id": "NCT04284943_exc_015",
+        "message": "Model assessment unavailable or invalid; human review required."
+      }
+    ],
+    "metrics": {
+      "cache_hits": 0,
+      "candidate_count": 3,
+      "corpus_trial_count": 50,
+      "embedding_requests": 1,
+      "generation_requests": 12,
+      "latency_seconds": 25.988,
+      "output_tokens": 6389,
+      "prompt_tokens": 31079
+    },
+    "result_status": "PARTIAL",
+    "target_trial_retrieved": false
+  },
+  "generation_model": "gemini-3.1-flash-lite",
+  "limitations": [
+    "One synthetic case, not clinical validation or an accuracy benchmark.",
+    "Claude and Gemini differ in model, prompt packaging and evidence guards; no isolated causal claim about RAG superiority.",
+    "A fixed-trial pass does not establish that full retrieval selected the target trial.",
+    "Missing dates, a fixture-assigned reference date, conservative guards and normalized-input adapters affect coverage."
+  ],
+  "local_code_changes": "Removed malformed obsolete translation loop from the English tokenizer; production judgment/scoring/selection policies were unchanged.",
+  "mode": "live",
+  "overall_verification_status": "FIXED_TRIAL_GUARDS_PASS_WITH_OVER_ABSTENTION; END_TO_END_PARTIAL",
+  "raw_model_focus_responses": {
+    "NCT02390973_exc_005": {
+      "criterion_id": "NCT02390973_exc_005",
+      "decision": "NOT_MET",
+      "evidence_fact_ids": [
+        "F9"
+      ],
+      "missing_information": [],
+      "reason": "The patient's serum albumin level is 4.0 g/dL, which is not indicative of hypoalbuminemia."
+    },
+    "NCT02390973_exc_007": {
+      "criterion_id": "NCT02390973_exc_007",
+      "decision": "MET",
+      "evidence_fact_ids": [
+        "F15"
+      ],
+      "missing_information": [],
+      "reason": "The patient took oral prednisone 2 weeks ago, which is within the last month."
+    },
+    "NCT02390973_exc_010": {
+      "criterion_id": "NCT02390973_exc_010",
+      "decision": "NOT_MET",
+      "evidence_fact_ids": [
+        "F11"
+      ],
+      "missing_information": [],
+      "reason": "The patient has no known history of inflammatory bowel disease."
+    }
+  },
+  "recorded_date": "2026-10-19",
+  "ruff": "PASS",
+  "source_case": "services/rag_workflow/examples/grounding_case",
+  "source_data_sha256": {
+    "criteria": "f7701a9979eb105219407c553703752879f6a2c55fb8736240c8e7bddc96de59",
+    "patients": "33ac165b9be7c564207325ae951d40b9cfdc3b72f8fb2f56e3e58193894331a1",
+    "trials": "1678d523a1246319d4ae5ba8d2dd5d4ab1359746ad71fb7feee67b20bb07edd6"
+  },
+  "source_patient_sha256": "5f214426bdab3c442999b39f6aa37b30b5bba82427eab01d2e426ea8e58e6091",
+  "target_trial_retrieval_diagnostic": {
+    "rank": 17,
+    "retrieval": {
+      "bm25_score": 7.1556,
+      "method": "hybrid_rrf",
+      "rank_score": 0.02557876,
+      "semantic_hit": {
+        "cosine_distance": 0.206763,
+        "criterion_id": "NCT02390973_inc_002",
+        "trial_id": "NCT02390973"
+      },
+      "trial_id": "NCT02390973"
+    }
+  }
+}

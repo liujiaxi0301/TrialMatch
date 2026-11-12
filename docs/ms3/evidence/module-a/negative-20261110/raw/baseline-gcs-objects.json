@@ -1,0 +1,16 @@
+{
+  "release": {
+    "bucket": "trialmatch-ac215-yixiao-ms3",
+    "name": "releases/2c8b5da003025134/452cc045ae11c1e42d8f7071cdae565f79e1b57aa9924b3d26c2140ad89a62ad/c8627e7addd3d265a61eb137d28691c545b4786b321e9e1981a9035e748e2125/release.json",
+    "generation": "1794289893353065",
+    "size": "3046",
+    "md5Hash": "5EFst6CONyxQbyqSEYuE/Q=="
+  },
+  "raw.dvc": {
+    "bucket": "trialmatch-ac215-yixiao-ms3",
+    "name": "releases/2c8b5da003025134/452cc045ae11c1e42d8f7071cdae565f79e1b57aa9924b3d26c2140ad89a62ad/c8627e7addd3d265a61eb137d28691c545b4786b321e9e1981a9035e748e2125/services/trial_ingestion/data/raw.dvc",
+    "generation": "1794289889155378",
+    "size": "106",
+    "md5Hash": "MzjzNGV+0kNHOWbhPySr2g=="
+  }
+}

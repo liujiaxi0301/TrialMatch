@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:ce74c89e231e51782c097b83f56b2823e68754415cc12ab98f53889f39abd135",
+  "files": {
+    "services/trial_ingestion/data/raw.dvc": {
+      "uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/process-trials_4056802151026917376/processed/services/trial_ingestion/data/raw.dvc",
+      "sha256": "5246c092e13ba7c41fbc2419e4760966cb6bf882b8b1abddc1a64ec7f3c5e6e9"
+    },
+    "services/trial_ingestion/data/raw_metadata.json": {
+      "uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/process-trials_4056802151026917376/processed/services/trial_ingestion/data/raw_metadata.json",
+      "sha256": "d1e7ffdb22bba16c59590eee2ff79ac4e477a31807a6ce3a020ed782181a7502"
+    },
+    "services/trial_ingestion/data/processed/trials.jsonl": {
+      "uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/process-trials_4056802151026917376/processed/services/trial_ingestion/data/processed/trials.jsonl",
+      "sha256": "1678d523a1246319d4ae5ba8d2dd5d4ab1359746ad71fb7feee67b20bb07edd6"
+    },
+    "services/trial_ingestion/data/processed/criteria.jsonl": {
+      "uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/process-trials_4056802151026917376/processed/services/trial_ingestion/data/processed/criteria.jsonl",
+      "sha256": "f7701a9979eb105219407c553703752879f6a2c55fb8736240c8e7bddc96de59"
+    },
+    "services/patient_processing/data/processed/batch25_patients.jsonl": {
+      "uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/process-trials_4056802151026917376/processed/services/patient_processing/data/processed/batch25_patients.jsonl",
+      "sha256": "33ac165b9be7c564207325ae951d40b9cfdc3b72f8fb2f56e3e58193894331a1"
+    },
+    "services/rag_workflow/examples/demo_manifest.json": {
+      "uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/process-trials_4056802151026917376/processed/services/rag_workflow/examples/demo_manifest.json",
+      "sha256": "237fc7c91d58f99defdb520ebfe63ddc9bdf42d4972657e8d961444235f6e555"
+    },
+    "services/rag_workflow/index_snapshots/current.json": {
+      "uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/process-trials_4056802151026917376/processed/services/rag_workflow/index_snapshots/current.json",
+      "sha256": "6093058582c851a5cefd0cf6987650cd3610eb5416752c7ac4d82a94e9046de6"
+    }
+  }
+}

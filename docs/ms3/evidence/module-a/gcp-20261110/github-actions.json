@@ -1,0 +1,104 @@
+{
+  "scope": "GitHub Actions verification of merged source; not a verification of the linked GCP run.",
+  "workflow_run": {
+    "id": 42865683063,
+    "name": "Pipeline checks",
+    "head_sha": "50dc2ca0e5ff8a7a932ff96a126d3575e7f156ef",
+    "status": "completed",
+    "conclusion": "success",
+    "event": "push",
+    "created_at": "2026-11-10T17:30:39Z",
+    "updated_at": "2026-11-10T17:31:18Z",
+    "url": "https://github.com/liujiaxi0301/TrialMatch/actions/runs/42865683063"
+  },
+  "jobs": [
+    {
+      "id": 130003263660,
+      "name": "pipeline",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 42865683063,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Check out source",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Set up uv and Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Install the workflow's locked dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Lint pipeline code and tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Check deployment script syntax",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Validate the committed data snapshot",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Run pipeline regression tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Compile the pipeline without submitting a cloud job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Post Set up uv and Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Post Check out source",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        }
+      ]
+    }
+  ],
+  "regression_tests": {
+    "count": 47,
+    "summary": "Ran 47 tests in 11.046s; OK",
+    "job_id": 130003263660,
+    "logs_url": "https://github.com/liujiaxi0301/TrialMatch/actions/runs/42865683063/job/130003263660"
+  }
+}

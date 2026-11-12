@@ -1,0 +1,10 @@
+{
+  "uri": "gs://trialmatch-ac215-yixiao-ms3/negative-tests/xuyang/xuyang-ms3-hash-20261110t193643z-65e00490/release.json",
+  "sha256": "65d64acdd46b4869d5fc48be19dc9618d38d1b3d37ea053c1f819ce60c0166e8",
+  "matches_plan": true,
+  "bucket": "trialmatch-ac215-yixiao-ms3",
+  "name": "negative-tests/xuyang/xuyang-ms3-hash-20261110t193643z-65e00490/release.json",
+  "generation": "1794339404289813",
+  "size": "2929",
+  "md5Hash": "m73sw6NGrq7DqGwzE/GrOg=="
+}

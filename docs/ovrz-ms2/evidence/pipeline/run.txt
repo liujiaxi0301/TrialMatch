@@ -1,0 +1,20 @@
+[1/4] Validated source snapshots and fixed manifest
+Indexed 40/607 criterion fragments
+Indexed 80/607 criterion fragments
+Indexed 120/607 criterion fragments
+Indexed 160/607 criterion fragments
+Indexed 200/607 criterion fragments
+Indexed 240/607 criterion fragments
+Indexed 280/607 criterion fragments
+Indexed 320/607 criterion fragments
+Indexed 360/607 criterion fragments
+Indexed 400/607 criterion fragments
+Indexed 440/607 criterion fragments
+Indexed 480/607 criterion fragments
+Indexed 520/607 criterion fragments
+Indexed 560/607 criterion fragments
+Indexed 600/607 criterion fragments
+Indexed 607/607 criterion fragments
+[2/4] Chroma index verified: 607 criterion fragments
+[3/4] Retrieved 5 actual context fragments
+[4/4] Saved request, retrieval context, response, and manifest to C:\Users\ovrz4\Documents\Codex\2026-10-15\ch\outputs\TrialMatch-ovrz-ms2\artifacts\ovrz\ms2

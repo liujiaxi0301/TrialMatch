@@ -1,0 +1,38 @@
+{
+  "collected_utc": "2026-11-12T18:06:18.357834+00:00",
+  "commit": "96a1ab99463f8e3363a6b4f74a1b1eeb2df4fa59",
+  "pipeline_job": "projects/15733748057/locations/us-east1/pipelineJobs/trialmatch-data-pipeline-20261112172151",
+  "pipeline_state": "PIPELINE_STATE_FAILED",
+  "task_states": {
+    "retrieve-finetuned": "SUCCEEDED",
+    "fetch-raw": "SUCCEEDED",
+    "train-encoder": "SUCCEEDED",
+    "validate-data": "SUCCEEDED",
+    "process-trials": "SUCCEEDED",
+    "evaluate-retrieval": "FAILED",
+    "retrieve-trials": "SUCCEEDED"
+  },
+  "submitter_exit_code": 1,
+  "experiment": {
+    "mode": "online",
+    "path": "jennyyang-harvard-university/trialmatch-ms3/kv0ifsun",
+    "url": "https://forge.coreweave.com/wandb/jennyyang-harvard-university/trialmatch-ms3/runs/kv0ifsun",
+    "run_id": "kv0ifsun"
+  },
+  "collection_errors": [
+    {
+      "item": "evaluate-retrieval/retrieval_evaluation_manifest.json",
+      "error": "404 GET https://storage.googleapis.com/download/storage/v1/b/trialmatch-ac215-yixiao-ms3/o/pipelines%2F15733748057%2Ftrialmatch-data-pipeline-20261112172151%2Fevaluate-retrieval_6362645160240611328%2Fevaluation%2Fretrieval_evaluation_manifest.json?alt=media: No such object: trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/evaluate-retrieval_6362645160240611328/evaluation/retrieval_evaluation_manifest.json: ('Request failed with status code', 404, 'Expected one of', <HTTPStatus.OK: 200>, <HTTPStatus.PARTIAL_CONTENT: 206>)"
+    },
+    {
+      "item": "evaluate-retrieval/retrieval_per_query.csv",
+      "error": "404 GET https://storage.googleapis.com/download/storage/v1/b/trialmatch-ac215-yixiao-ms3/o/pipelines%2F15733748057%2Ftrialmatch-data-pipeline-20261112172151%2Fevaluate-retrieval_6362645160240611328%2Fevaluation%2Fretrieval_per_query.csv?alt=media: No such object: trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/evaluate-retrieval_6362645160240611328/evaluation/retrieval_per_query.csv: ('Request failed with status code', 404, 'Expected one of', <HTTPStatus.OK: 200>, <HTTPStatus.PARTIAL_CONTENT: 206>)"
+    },
+    {
+      "item": "evaluate-retrieval/retrieval_summary.csv",
+      "error": "404 GET https://storage.googleapis.com/download/storage/v1/b/trialmatch-ac215-yixiao-ms3/o/pipelines%2F15733748057%2Ftrialmatch-data-pipeline-20261112172151%2Fevaluate-retrieval_6362645160240611328%2Fevaluation%2Fretrieval_summary.csv?alt=media: No such object: trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/evaluate-retrieval_6362645160240611328/evaluation/retrieval_summary.csv: ('Request failed with status code', 404, 'Expected one of', <HTTPStatus.OK: 200>, <HTTPStatus.PARTIAL_CONTENT: 206>)"
+    }
+  ],
+  "verification": "PENDING_INDEPENDENT_REVIEW",
+  "scope": "Seven-node integrated training/retrieval/scoring run; no eligibility task, deployment or clinical validation"
+}

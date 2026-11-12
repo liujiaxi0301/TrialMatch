@@ -1,0 +1,257 @@
+[
+  {
+    "textPayload": "Waiting for job to be provisioned.",
+    "insertId": "e6ecq4dhqxg",
+    "resource": {
+      "type": "ml_job",
+      "labels": {
+        "project_id": "trialmatch-ac215-yixiao",
+        "job_id": "5535151747103719424",
+        "task_name": "service"
+      }
+    },
+    "timestamp": "2026-11-10T06:00:37.522594110Z",
+    "severity": "INFO",
+    "labels": {
+      "ml.googleapis.com/endpoint": "",
+      "ml.googleapis.com/job_state": "QUEUED"
+    },
+    "logName": "projects/trialmatch-ac215-yixiao/logs/ml.googleapis.com%2F5535151747103719424",
+    "receiveTimestamp": "2026-11-10T06:00:38.538956611Z"
+  },
+  {
+    "textPayload": "Waiting for training program to start.",
+    "insertId": "e6ecq4dhqxi",
+    "resource": {
+      "type": "ml_job",
+      "labels": {
+        "project_id": "trialmatch-ac215-yixiao",
+        "job_id": "5535151747103719424",
+        "task_name": "service"
+      }
+    },
+    "timestamp": "2026-11-10T06:00:37.586561022Z",
+    "severity": "INFO",
+    "labels": {
+      "ml.googleapis.com/endpoint": ""
+    },
+    "logName": "projects/trialmatch-ac215-yixiao/logs/ml.googleapis.com%2F5535151747103719424",
+    "receiveTimestamp": "2026-11-10T06:00:38.538956611Z"
+  },
+  {
+    "textPayload": "Job is preparing.",
+    "insertId": "e6ecq4dhqy5",
+    "resource": {
+      "type": "ml_job",
+      "labels": {
+        "project_id": "trialmatch-ac215-yixiao",
+        "job_id": "5535151747103719424",
+        "task_name": "service"
+      }
+    },
+    "timestamp": "2026-11-10T06:00:39.933315888Z",
+    "severity": "INFO",
+    "labels": {
+      "ml.googleapis.com/endpoint": "",
+      "ml.googleapis.com/job_state": "PREPARING"
+    },
+    "logName": "projects/trialmatch-ac215-yixiao/logs/ml.googleapis.com%2F5535151747103719424",
+    "receiveTimestamp": "2026-11-10T06:00:40.546580228Z"
+  },
+  {
+    "textPayload": "Job is running.",
+    "insertId": "e6ecq4dhrg4",
+    "resource": {
+      "type": "ml_job",
+      "labels": {
+        "job_id": "5535151747103719424",
+        "project_id": "trialmatch-ac215-yixiao",
+        "task_name": "service"
+      }
+    },
+    "timestamp": "2026-11-10T06:03:29.292164120Z",
+    "severity": "INFO",
+    "labels": {
+      "ml.googleapis.com/job_state": "RUNNING",
+      "ml.googleapis.com/endpoint": ""
+    },
+    "logName": "projects/trialmatch-ac215-yixiao/logs/ml.googleapis.com%2F5535151747103719424",
+    "receiveTimestamp": "2026-11-10T06:03:29.720290100Z"
+  },
+  {
+    "insertId": "1a2wy47fal41w1",
+    "jsonPayload": {
+      "files": 7,
+      "uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261110055153/process-trials_6552156984404082688/processed/release.json",
+      "event": "release_verified",
+      "levelname": "INFO"
+    },
+    "resource": {
+      "type": "ml_job",
+      "labels": {
+        "project_id": "trialmatch-ac215-yixiao",
+        "job_id": "5535151747103719424",
+        "task_name": "workerpool0-0"
+      }
+    },
+    "timestamp": "2026-11-10T06:04:16.637121565Z",
+    "severity": "INFO",
+    "labels": {
+      "compute.googleapis.com/resource_name": "gke-cml-1110-055156--e2-highmem-2-43e-82de94be-rbtm",
+      "ml.googleapis.com/tpu_worker_id": "",
+      "compute.googleapis.com/resource_id": "4639737277497413094",
+      "ml.googleapis.com/trial_type": "",
+      "compute.googleapis.com/zone": "us-east1-c",
+      "ml.googleapis.com/job_id/log_area": "root",
+      "ml.googleapis.com/trial_id": ""
+    },
+    "logName": "projects/trialmatch-ac215-yixiao/logs/workerpool0-0",
+    "receiveTimestamp": "2026-11-10T06:04:18.937998944Z"
+  },
+  {
+    "insertId": "1u30xdxfaaz3wq",
+    "jsonPayload": {
+      "levelname": "INFO",
+      "message": "48 rows -> artifacts/retrieval/retrieval_runs.jsonl"
+    },
+    "resource": {
+      "type": "ml_job",
+      "labels": {
+        "project_id": "trialmatch-ac215-yixiao",
+        "job_id": "5535151747103719424",
+        "task_name": "workerpool0-0"
+      }
+    },
+    "timestamp": "2026-11-10T06:04:23.820215964Z",
+    "severity": "INFO",
+    "labels": {
+      "ml.googleapis.com/tpu_worker_id": "",
+      "compute.googleapis.com/resource_name": "gke-cml-1110-055156--e2-highmem-2-43e-82de94be-rbtm",
+      "compute.googleapis.com/zone": "us-east1-c",
+      "compute.googleapis.com/resource_id": "4639737277497413094",
+      "ml.googleapis.com/trial_id": "",
+      "ml.googleapis.com/trial_type": "",
+      "ml.googleapis.com/job_id/log_area": "root"
+    },
+    "logName": "projects/trialmatch-ac215-yixiao/logs/workerpool0-0",
+    "receiveTimestamp": "2026-11-10T06:04:26.030525653Z"
+  },
+  {
+    "insertId": "1u30xdxfaaz3wr",
+    "jsonPayload": {
+      "levelname": "INFO",
+      "message": "config    -> artifacts/retrieval/retrieval_runs.config.json"
+    },
+    "resource": {
+      "type": "ml_job",
+      "labels": {
+        "task_name": "workerpool0-0",
+        "job_id": "5535151747103719424",
+        "project_id": "trialmatch-ac215-yixiao"
+      }
+    },
+    "timestamp": "2026-11-10T06:04:23.828596766Z",
+    "severity": "INFO",
+    "labels": {
+      "ml.googleapis.com/tpu_worker_id": "",
+      "ml.googleapis.com/job_id/log_area": "root",
+      "compute.googleapis.com/resource_id": "4639737277497413094",
+      "ml.googleapis.com/trial_type": "",
+      "ml.googleapis.com/trial_id": "",
+      "compute.googleapis.com/resource_name": "gke-cml-1110-055156--e2-highmem-2-43e-82de94be-rbtm",
+      "compute.googleapis.com/zone": "us-east1-c"
+    },
+    "logName": "projects/trialmatch-ac215-yixiao/logs/workerpool0-0",
+    "receiveTimestamp": "2026-11-10T06:04:26.030525653Z"
+  },
+  {
+    "insertId": "hhson4fazv3jr",
+    "jsonPayload": {
+      "scope": "Rankings only; human scoring is separate.",
+      "output": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261110055153/retrieve-trials_-2671215052450693120/rankings",
+      "levelname": "INFO",
+      "queries": 8,
+      "methods": 6,
+      "event": "retrieval_rankings_saved"
+    },
+    "resource": {
+      "type": "ml_job",
+      "labels": {
+        "task_name": "workerpool0-0",
+        "project_id": "trialmatch-ac215-yixiao",
+        "job_id": "5535151747103719424"
+      }
+    },
+    "timestamp": "2026-11-10T06:04:26.140473940Z",
+    "severity": "INFO",
+    "labels": {
+      "compute.googleapis.com/zone": "us-east1-c",
+      "ml.googleapis.com/trial_type": "",
+      "compute.googleapis.com/resource_id": "4639737277497413094",
+      "compute.googleapis.com/resource_name": "gke-cml-1110-055156--e2-highmem-2-43e-82de94be-rbtm",
+      "ml.googleapis.com/job_id/log_area": "root",
+      "ml.googleapis.com/trial_id": "",
+      "ml.googleapis.com/tpu_worker_id": ""
+    },
+    "logName": "projects/trialmatch-ac215-yixiao/logs/workerpool0-0",
+    "receiveTimestamp": "2026-11-10T06:04:28.195926302Z"
+  },
+  {
+    "textPayload": "Tearing down training program.",
+    "insertId": "e6ecq4dhrtf",
+    "resource": {
+      "type": "ml_job",
+      "labels": {
+        "job_id": "5535151747103719424",
+        "task_name": "service",
+        "project_id": "trialmatch-ac215-yixiao"
+      }
+    },
+    "timestamp": "2026-11-10T06:04:46.947478567Z",
+    "severity": "INFO",
+    "labels": {
+      "ml.googleapis.com/endpoint": ""
+    },
+    "logName": "projects/trialmatch-ac215-yixiao/logs/ml.googleapis.com%2F5535151747103719424",
+    "receiveTimestamp": "2026-11-10T06:04:47.803050528Z"
+  },
+  {
+    "textPayload": "Finished tearing down training program.",
+    "insertId": "e6ecq4dhseh",
+    "resource": {
+      "type": "ml_job",
+      "labels": {
+        "project_id": "trialmatch-ac215-yixiao",
+        "job_id": "5535151747103719424",
+        "task_name": "service"
+      }
+    },
+    "timestamp": "2026-11-10T06:07:16.102588697Z",
+    "severity": "INFO",
+    "labels": {
+      "ml.googleapis.com/endpoint": ""
+    },
+    "logName": "projects/trialmatch-ac215-yixiao/logs/ml.googleapis.com%2F5535151747103719424",
+    "receiveTimestamp": "2026-11-10T06:07:16.976888753Z"
+  },
+  {
+    "textPayload": "Job completed successfully.",
+    "insertId": "e6ecq4dhsek",
+    "resource": {
+      "type": "ml_job",
+      "labels": {
+        "job_id": "5535151747103719424",
+        "task_name": "service",
+        "project_id": "trialmatch-ac215-yixiao"
+      }
+    },
+    "timestamp": "2026-11-10T06:07:16.401610077Z",
+    "severity": "INFO",
+    "labels": {
+      "ml.googleapis.com/job_state": "SUCCEEDED",
+      "ml.googleapis.com/endpoint": ""
+    },
+    "logName": "projects/trialmatch-ac215-yixiao/logs/ml.googleapis.com%2F5535151747103719424",
+    "receiveTimestamp": "2026-11-10T06:07:16.976888753Z"
+  }
+]

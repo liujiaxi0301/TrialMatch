@@ -1,0 +1,96 @@
+name: Pipeline checks
+
+on:
+  pull_request:
+  push:
+    branches:
+      - milestone3
+      - yixiao/ms3-infra
+      - xuyang/ms3-*
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pipeline-checks-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TRIALMATCH_MODE: offline
+      ANONYMIZED_TELEMETRY: "False"
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Set up uv and Python
+        uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6
+        with:
+          version: "0.13.1"
+          python-version: "3.12"
+          enable-cache: true
+          cache-dependency-glob: docker/workflow/uv.lock
+
+      - name: Install the workflow's locked dependencies
+        run: uv sync --project docker/workflow --locked --no-dev --python 3.12
+
+      - name: Lint pipeline code and tests
+        run: uv tool run ruff==0.17.1 check cloud/pipeline.py cloud/tasks.py cloud/release.py cloud/eligibility.py cloud/train.py cloud/training_inputs.py cloud/finetuned_retrieval.py cloud/retrieval_evaluation.py cloud/tests
+
+      - name: Check deployment script syntax
+        run: bash -n cloud/deploy.sh cloud/setup.sh
+
+      - name: Validate the committed data snapshot
+        run: docker/workflow/.venv/bin/python prepare_data.py
+
+      - name: Run pipeline regression tests
+        run: docker/workflow/.venv/bin/python -m unittest discover -s cloud/tests -v
+
+      - name: Check the frozen eligibility evaluator without model calls
+        run: docker/workflow/.venv/bin/python -m unittest discover -s evaluation/ms3/eligibility/tests -v
+
+      - name: Check C's frozen retrieval evaluation without model calls
+        run: docker/workflow/.venv/bin/python -m unittest discover -s evaluation/ms3/retrieval/tests -v
+
+      - name: Compile the pipeline without submitting a cloud job
+        run: >-
+          docker/workflow/.venv/bin/python -m cloud.pipeline
+          --project=trialmatch-ci
+          --region=us-east1
+          --bucket=trialmatch-ci-data
+          --image=example/workflow:ci
+          --release=gs://trialmatch-ci-data/releases/fixed/release.json
+          --compile-only
+
+  retrieval-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      HF_HUB_OFFLINE: "1"
+      TRANSFORMERS_OFFLINE: "1"
+      ANONYMIZED_TELEMETRY: "False"
+      EMBEDDING_DEVICE: cpu
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Set up uv and Python
+        uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e
+        with:
+          version: "0.13.1"
+          python-version: "3.12"
+          enable-cache: true
+          cache-dependency-glob: docker/retrieval/uv.lock
+      - name: Install locked retrieval dependencies
+        run: uv sync --project docker/retrieval --locked --no-dev --python 3.12
+      - name: Exercise ranking interfaces and CPU checkpoint loading offline
+        run: >-
+          docker/retrieval/.venv/bin/python -m unittest
+          cloud.tests.test_finetuned_retrieval cloud.tests.test_retrieval_runtime -v

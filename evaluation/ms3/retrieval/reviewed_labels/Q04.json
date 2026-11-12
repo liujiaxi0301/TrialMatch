@@ -1,0 +1,175 @@
+{
+  "query_id": "Q04",
+  "review_status": "user-reviewed",
+  "reviewer_qualification": "Non-clinician manual relevance assessment",
+  "labels": [
+    {
+      "trial_id": "NCT02836808",
+      "relevance": 0,
+      "reason": "Evaluates T2D education and self-management; advanced kidney disease appears only as an exclusion criterion.",
+      "source_reference": "brief_summary; exclusion criteria"
+    },
+    {
+      "trial_id": "NCT03865914",
+      "relevance": 2,
+      "reason": "Directly investigates clinical and pathological characteristics of diabetic kidney disease in patients with T2D.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT03925714",
+      "relevance": 0,
+      "reason": "Studies p53 and SIRT1 in diabetes development; renal impairment is only an exclusion criterion.",
+      "source_reference": "brief_summary; exclusion criteria"
+    },
+    {
+      "trial_id": "NCT04024631",
+      "relevance": 0,
+      "reason": "Investigates genetic risk for T2D rather than kidney disease or renal function.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04284943",
+      "relevance": 0,
+      "reason": "Studies glycemic outcomes of gastric reconstruction; renal disease is mentioned only in exclusion criteria.",
+      "source_reference": "brief_summary; exclusion criteria"
+    },
+    {
+      "trial_id": "NCT04442451",
+      "relevance": 0,
+      "reason": "Focuses on exercise fatigability and vascular function rather than renal complications.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04501406",
+      "relevance": 0,
+      "reason": "Evaluates pioglitazone for NASH; kidney disease is only an exclusion concern.",
+      "source_reference": "brief_summary; exclusion criteria"
+    },
+    {
+      "trial_id": "NCT04670666",
+      "relevance": 0,
+      "reason": "Evaluates pharmacological treatment for T2D; renal impairment is only an exclusion criterion.",
+      "source_reference": "brief_summary; exclusion criteria"
+    },
+    {
+      "trial_id": "NCT04783441",
+      "relevance": 1,
+      "reason": "Studies glycemic control using CGM in T2D kidney transplant recipients, but does not directly assess renal function or kidney disease outcomes.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT04802395",
+      "relevance": 2,
+      "reason": "Directly evaluates the clinical utility of KidneyIntelX in managing patients with T2D and chronic kidney disease.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT03059069",
+      "relevance": 0,
+      "reason": "Investigates depressive mood and glycemic control in T2D; renal impairment is only an exclusion criterion.",
+      "source_reference": "brief_summary; exclusion criteria"
+    },
+    {
+      "trial_id": "NCT04874012",
+      "relevance": 0,
+      "reason": "Investigates metabolic and inflammatory outcomes; diabetic nephropathy is only preclinical background, not a study objective.",
+      "source_reference": "brief_summary; exclusion criteria"
+    },
+    {
+      "trial_id": "NCT02390973",
+      "relevance": 2,
+      "reason": "Explicitly investigates long-term renal function outcomes after bariatric surgery in a subgroup of patients with T2D.",
+      "source_reference": "brief_summary; specific aim 2"
+    },
+    {
+      "trial_id": "NCT04791371",
+      "relevance": 0,
+      "reason": "Investigates muscle perfusion, cardiac function, and exercise capacity; renal disease appears only as an exclusion criterion.",
+      "source_reference": "brief_summary; exclusion criteria"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "relevance": 0,
+      "reason": "Studies gut hormone changes after gastric bypass, without a kidney disease or renal assessment objective.",
+      "source_reference": "NCT01945840:brief_summary"
+    },
+    {
+      "trial_id": "NCT01984762",
+      "relevance": 0,
+      "reason": "Compares bariatric surgery procedures for T2D remission; end-stage renal disease is only an exclusion criterion.",
+      "source_reference": "NCT01984762:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT03087032",
+      "relevance": 0,
+      "reason": "Compares glucose-lowering treatments in T2D; creatinine clearance is used for exclusion, not renal investigation.",
+      "source_reference": "NCT03087032:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT03264352",
+      "relevance": 0,
+      "reason": "Investigates blood-pressure treatment and cardiovascular events in T2D; eGFR and urinary ACR are screening exclusions.",
+      "source_reference": "NCT03264352:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT03569735",
+      "relevance": 0,
+      "reason": "General elderly cohort collecting renal function markers, but excludes participants with diagnosed diabetes.",
+      "source_reference": "NCT03569735:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT03878706",
+      "relevance": 0,
+      "reason": "Studies cardiovascular effects of antidiabetic therapies and explicitly excludes kidney disease.",
+      "source_reference": "NCT03878706:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT04442334",
+      "relevance": 0,
+      "reason": "NAFLD registry focused on liver disease progression rather than kidney complications in T2D.",
+      "source_reference": "NCT04442334:brief_summary"
+    },
+    {
+      "trial_id": "NCT04455867",
+      "relevance": 0,
+      "reason": "Observational T2D study of mood and cognitive complications, without renal function assessment.",
+      "source_reference": "NCT04455867:brief_summary"
+    },
+    {
+      "trial_id": "NCT04621396",
+      "relevance": 0,
+      "reason": "Birth cohort examining determinants of childhood obesity and youth-onset T2D, not kidney disease.",
+      "source_reference": "NCT04621396:brief_summary"
+    },
+    {
+      "trial_id": "NCT04869098",
+      "relevance": 0,
+      "reason": "Protein supplementation study in night-shift workers; excludes diagnosed diabetes and has no renal objective.",
+      "source_reference": "NCT04869098:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT05000996",
+      "relevance": 0,
+      "reason": "Studies gut microbiota and cardiometabolic outcomes following metabolic surgery, without a stated renal research objective.",
+      "source_reference": "NCT05000996:brief_summary"
+    },
+    {
+      "trial_id": "NCT05015283",
+      "relevance": 0,
+      "reason": "Compares gastric bypass procedures for T2D remission; chronic kidney disease is an exclusion condition.",
+      "source_reference": "NCT05015283:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT05071898",
+      "relevance": 0,
+      "reason": "Studies genetic determinants of semaglutide response; excludes diabetes and uses eGFR only for screening.",
+      "source_reference": "NCT05071898:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT05124457",
+      "relevance": 0,
+      "reason": "Compares maternal insulin regimens for neonatal hypoglycemia; renal insufficiency is only an exclusion criterion.",
+      "source_reference": "NCT05124457:brief_summary;eligibility_text"
+    }
+  ]
+}

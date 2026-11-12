@@ -1,0 +1,133 @@
+{
+  "query_id": "Q07",
+  "review_status": "user-reviewed",
+  "reviewer_qualification": "Non-clinician manual relevance assessment",
+  "labels": [
+    {
+      "trial_id": "NCT01984762",
+      "relevance": 0,
+      "reason": "Compares bariatric surgery procedures for T2D outcomes; neuropathy appears only as an exclusion criterion.",
+      "source_reference": "brief_summary; exclusion criteria"
+    },
+    {
+      "trial_id": "NCT02836808",
+      "relevance": 0,
+      "reason": "Evaluates diabetes education and self-management rather than diabetic neuropathy or its treatment.",
+      "source_reference": "brief_summary; exclusion criteria"
+    },
+    {
+      "trial_id": "NCT03323216",
+      "relevance": 0,
+      "reason": "Investigates cardiac metabolism and heart failure biomarkers in T2D rather than nerve complications.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT03811470",
+      "relevance": 0,
+      "reason": "Broad diabetes registry without a specific research focus on diabetic peripheral neuropathy.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04187443",
+      "relevance": 0,
+      "reason": "Investigates diabetic retinopathy and macular edema rather than peripheral neuropathy.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT04442451",
+      "relevance": 0,
+      "reason": "Studies exercise fatigability and vascular function; neuropathy is an exclusion criterion rather than a study target.",
+      "source_reference": "brief_summary; exclusion criteria"
+    },
+    {
+      "trial_id": "NCT04501406",
+      "relevance": 0,
+      "reason": "Evaluates pioglitazone for NASH rather than diabetes-related nerve complications.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04670666",
+      "relevance": 0,
+      "reason": "Investigates pharmacological treatment of T2D without a stated neuropathy-related objective.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04687215",
+      "relevance": 2,
+      "reason": "Directly investigates spinal cord stimulation in patients with refractory painful diabetic peripheral neuropathy, including functional and vascular outcomes.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT05015283",
+      "relevance": 0,
+      "reason": "Compares metabolic surgery procedures for T2D remission rather than neuropathy treatment.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04284943",
+      "relevance": 0,
+      "reason": "Compares gastric reconstruction procedures for glycemic control without investigating diabetic neuropathy.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04874012",
+      "relevance": 0,
+      "reason": "Studies metabolic and inflammatory outcomes in T2D without investigating diabetic nerve complications.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04932928",
+      "relevance": 0,
+      "reason": "Evaluates nutritional therapy and glucose monitoring without assessing or treating diabetic neuropathy.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT03925714",
+      "relevance": 0,
+      "reason": "Investigates p53 and SIRT1 in diabetes development among prediabetic participants, without studying neuropathy.",
+      "source_reference": "brief_summary; inclusion and exclusion criteria"
+    },
+    {
+      "trial_id": "NCT04791371",
+      "relevance": 0,
+      "reason": "Investigates muscle perfusion and exercise capacity rather than nerve complications; participants with peripheral neuropathy are excluded.",
+      "source_reference": "brief_summary; exclusion criteria"
+    },
+    {
+      "trial_id": "NCT03087032",
+      "relevance": 0,
+      "reason": "Compares liraglutide and insulin glargine for glycemic control in T2D, without investigating diabetic neuropathy.",
+      "source_reference": "NCT03087032:brief_summary"
+    },
+    {
+      "trial_id": "NCT04024631",
+      "relevance": 0,
+      "reason": "Investigates genetic risk for T2D and insulin resistance, not diabetes-related nerve complications.",
+      "source_reference": "NCT04024631:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT04442334",
+      "relevance": 0,
+      "reason": "NAFLD registry focused on liver disease progression and biomarkers, not diabetic neuropathy.",
+      "source_reference": "NCT04442334:brief_summary"
+    },
+    {
+      "trial_id": "NCT04455867",
+      "relevance": 0,
+      "reason": "Investigates mood and cognitive complications in T2D without a stated peripheral neuropathy or nerve injury objective.",
+      "source_reference": "NCT04455867:brief_summary"
+    },
+    {
+      "trial_id": "NCT04869098",
+      "relevance": 0,
+      "reason": "Studies protein supplementation in night-shift workers and excludes diagnosed diabetes; no neuropathy objective.",
+      "source_reference": "NCT04869098:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT04889053",
+      "relevance": 0,
+      "reason": "Investigates coronary artery calcification and cardiovascular biomarkers in T2D, not nerve complications.",
+      "source_reference": "NCT04889053:brief_summary"
+    }
+  ]
+}

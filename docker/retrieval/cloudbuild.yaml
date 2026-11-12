@@ -1,0 +1,9 @@
+# Build only the CPU ranking worker. This does not deploy Cloud Run or start training.
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args: [build, -f, docker/retrieval/Dockerfile, --build-arg, 'SOURCE_COMMIT=${_SOURCE_COMMIT}', -t, '${_REGISTRY}/retrieval:${_VERSION}-${BUILD_ID}', .]
+images:
+  - '${_REGISTRY}/retrieval:${_VERSION}-${BUILD_ID}'
+options:
+  logging: CLOUD_LOGGING_ONLY
+timeout: 2400s

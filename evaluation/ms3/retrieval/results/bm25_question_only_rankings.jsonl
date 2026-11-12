@@ -1,0 +1,8 @@
+{"query_id": "Q01", "method": "bm25_question_only_v1", "ranked_trial_ids": ["NCT03264352", "NCT03925714", "NCT03821636", "NCT03827382", "NCT04583800"]}
+{"query_id": "Q02", "method": "bm25_question_only_v1", "ranked_trial_ids": ["NCT04284943", "NCT03087032", "NCT05015283", "NCT03811470", "NCT02390973"]}
+{"query_id": "Q03", "method": "bm25_question_only_v1", "ranked_trial_ids": ["NCT04432025", "NCT02390973", "NCT05015283", "NCT05000996", "NCT01984762"]}
+{"query_id": "Q04", "method": "bm25_question_only_v1", "ranked_trial_ids": ["NCT03865914", "NCT04783441", "NCT03925714", "NCT04802395", "NCT02836808"]}
+{"query_id": "Q05", "method": "bm25_question_only_v1", "ranked_trial_ids": ["NCT03811470", "NCT05028140", "NCT04670666", "NCT02836808", "NCT02390973"]}
+{"query_id": "Q06", "method": "bm25_question_only_v1", "ranked_trial_ids": ["NCT03878706", "NCT05015283", "NCT03264352", "NCT05028140", "NCT03925714"]}
+{"query_id": "Q07", "method": "bm25_question_only_v1", "ranked_trial_ids": ["NCT04687215", "NCT01984762", "NCT04187443", "NCT03811470", "NCT02836808"]}
+{"query_id": "Q08", "method": "bm25_question_only_v1", "ranked_trial_ids": ["NCT02836808", "NCT04932928", "NCT05129345", "NCT03811470", "NCT04783441"]}

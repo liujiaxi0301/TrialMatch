@@ -1,0 +1,63 @@
+{
+  "scope": "all JSON Bundles supplied via --input; selected sample, not the full Synthea archive",
+  "reference_date": "2021-11-30",
+  "total_patients": 4,
+  "adult_patients": 4,
+  "adult_t2d_patients": 3,
+  "t2d_identification": {
+    "resource_type": "Condition",
+    "coding_system": "http://snomed.info/sct",
+    "code": "44054006",
+    "rule": "exact coding match in retained Condition; no medication inference"
+  },
+  "relevant_observations": {
+    "HbA1c": {
+      "patients": 3,
+      "facts": 8
+    },
+    "glucose": {
+      "patients": 3,
+      "facts": 5
+    }
+  },
+  "procedure_coverage": {
+    "patients": 4,
+    "facts": 112
+  },
+  "medication_coverage": {
+    "requests": {
+      "patients": 4,
+      "facts": 18
+    },
+    "definitions": {
+      "patients": 1,
+      "facts": 2
+    },
+    "dispenses": {
+      "patients": 0,
+      "facts": 0
+    },
+    "administrations": {
+      "patients": 1,
+      "facts": 2
+    },
+    "statements": {
+      "patients": 0,
+      "facts": 0
+    }
+  },
+  "unresolved_medication_references": 0,
+  "unprocessed_resource_types": {
+    "CarePlan": 12,
+    "CareTeam": 12,
+    "Claim": 116,
+    "DiagnosticReport": 167,
+    "DocumentReference": 98,
+    "Encounter": 98,
+    "ExplanationOfBenefit": 98,
+    "Immunization": 35,
+    "Provenance": 4,
+    "AllergyIntolerance": 1
+  },
+  "warnings": 4
+}

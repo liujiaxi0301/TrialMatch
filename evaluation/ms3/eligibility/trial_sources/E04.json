@@ -1,0 +1,110 @@
+{
+  "trial": {
+    "trial_id": "NCT04802395",
+    "brief_title": "Real World Evidence Clinical Utility Study of KidneyIntelX",
+    "official_title": "Real World Evidence Clinical Utility Study of KidneyIntelX in Patients With Type 2 Diabetes and Chronic Kidney Disease",
+    "overall_status": "RECRUITING",
+    "conditions": [
+      "Chronic Kidney Diseases",
+      "Diabetic Kidney Disease"
+    ],
+    "keywords": [],
+    "mesh_terms": [
+      "Renal Insufficiency, Chronic",
+      "Diabetic Nephropathies"
+    ],
+    "study_type": "OBSERVATIONAL",
+    "phases": [],
+    "brief_summary": "The purpose of this study is to assess the impact of the KidneyIntelX assay utilized as part of the current standard of care on the management of patients seen in the primary care physician's office at Mount Sinai.",
+    "minimum_age": "23 Years",
+    "maximum_age": null,
+    "sex": "ALL",
+    "healthy_volunteers": false,
+    "eligibility_text": "Inclusion Criteria:\n\n* Individuals with Type 2 diabetes and concurrent chronic (diabetic) kidney disease (G3a-G3b or G1-G2, A2-A3) per KDIGO CKD staging.\n\nExclusion Criteria:\n\n* Patents without the appropriate characteristics as identified in the KidneyIntelX intended use population.\n* Patients with eGFR \\<30 or ≥ 60 ml/min/1.73m2 without albuminuria.\n* Patients with ESRD or on renal recovery treatments at time of enrollment.\n* Patients who are pregnant at the time of enrollment.\n* Patients who are currently hospitalized.\n* Patients without minimum 6 month pre-baseline KidneyIntelX medical history.\n* Patients who are currently on Enbrel.",
+    "locations": [
+      {
+        "facility": "Mount Sinai Health System",
+        "status": "RECRUITING",
+        "city": "New York",
+        "state": "New York",
+        "zip": "10029",
+        "country": "United States",
+        "latitude": 40.71427,
+        "longitude": -74.00597
+      }
+    ],
+    "enrollment_count": 10000,
+    "enrollment_type": "ESTIMATED",
+    "start_date": "2021-03-02",
+    "completion_date": "2026-12-01",
+    "last_update_date": "2026-08-13",
+    "source": "ClinicalTrials.gov API v2",
+    "snapshot_date": "2026-10-11"
+  },
+  "criteria": [
+    {
+      "trial_id": "NCT04802395",
+      "criterion_id": "NCT04802395_inc_001",
+      "criterion_type": "inclusion",
+      "criterion_text": "Individuals with Type 2 diabetes and concurrent chronic (diabetic) kidney disease (G3a-G3b or G1-G2, A2-A3) per KDIGO CKD staging.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04802395",
+      "criterion_id": "NCT04802395_exc_001",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patents without the appropriate characteristics as identified in the KidneyIntelX intended use population.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04802395",
+      "criterion_id": "NCT04802395_exc_002",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patients with eGFR \\<30 or ≥ 60 ml/min/1.73m2 without albuminuria.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04802395",
+      "criterion_id": "NCT04802395_exc_003",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patients with ESRD or on renal recovery treatments at time of enrollment.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04802395",
+      "criterion_id": "NCT04802395_exc_004",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patients who are pregnant at the time of enrollment.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04802395",
+      "criterion_id": "NCT04802395_exc_005",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patients who are currently hospitalized.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04802395",
+      "criterion_id": "NCT04802395_exc_006",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patients without minimum 6 month pre-baseline KidneyIntelX medical history.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    },
+    {
+      "trial_id": "NCT04802395",
+      "criterion_id": "NCT04802395_exc_007",
+      "criterion_type": "exclusion",
+      "criterion_text": "Patients who are currently on Enbrel.",
+      "parse_status": "parsed",
+      "parse_method": "deterministic"
+    }
+  ]
+}

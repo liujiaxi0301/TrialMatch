@@ -1,0 +1,64 @@
+{
+  "checked_at_utc": "2026-10-20T19:41:05.582377+00:00",
+  "scope": "Local integrated-checkout extraction replay and six existing tests using the unchanged shared uv lock.",
+  "target_base_commit": "64436278c7294681bef48c2af62807883ad7776b",
+  "cleanup_source_commit": "feae539fd89e8f4a46c50596b2ff2de2245f194e",
+  "commands": [
+    {
+      "label": "Four-patient replay",
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--offline",
+        "python",
+        "services/patient_processing/scripts/process_patients.py",
+        "--input",
+        "services/patient_processing/data/raw",
+        "--output",
+        "/tmp/trialmatch-infra-patient-dbwi2tct/patients.jsonl",
+        "--reference-date",
+        "2021-11-30"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.132,
+      "log": "services/patient_processing/evidence/sample_run.txt",
+      "log_sha256": "b1ca73623e966617c4d3623d5c339ed65179b1cf6d5c0d778f97d97709407485"
+    },
+    {
+      "label": "Patient tests",
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--offline",
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "services/patient_processing/tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.19,
+      "log": "services/patient_processing/evidence/patient_tests.txt",
+      "log_sha256": "843f462e06e1060cff448d8355732f57ac45079c7f5ac3424a6335420f09ffda"
+    }
+  ],
+  "patient_tests_passed": 6,
+  "sample_output_byte_identical": true,
+  "sample_output_sha256": "e8227c3934bafb639150fda65c58a44ebe07afefc63efed696113ece9b8876fb",
+  "cohort_sha256": "33ac165b9be7c564207325ae951d40b9cfdc3b72f8fb2f56e3e58193894331a1",
+  "full_archive_reprocessed": false,
+  "model_calls": 0,
+  "container_or_api_test": false,
+  "publication_state": "VALIDATION_COMPLETE_USER_APPROVED_FOR_PUBLICATION",
+  "prior_validation_source_commit": "feae539fd89e8f4a46c50596b2ff2de2245f194e",
+  "note": "Fresh local validation, not the historical personal-branch test record. Shared Docker, Compose, root pyproject.toml and uv.lock are unchanged. No container deployment is established.",
+  "publication_approval": {
+    "target_branch": "yixiao/infra",
+    "user_approved": true,
+    "recorded_at_utc": "2026-10-20T19:53:49.261666+00:00"
+  }
+}

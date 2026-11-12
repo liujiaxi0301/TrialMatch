@@ -1,0 +1,26 @@
+{
+  "source_url": "https://claude.ai/share/2450b3ad-ebee-4f78-afa2-ca455eee2485",
+  "is_gold_standard": false,
+  "overall_result": "NOT_ELIGIBLE",
+  "decisions": {
+    "NCT02390973_inc_001": "MET",
+    "NCT02390973_inc_002": "MET",
+    "NCT02390973_inc_003": "MET",
+    "NCT02390973_inc_004": "MET",
+    "NCT02390973_exc_001": "NOT_MET",
+    "NCT02390973_exc_002": "NOT_MET",
+    "NCT02390973_exc_003": "UNKNOWN",
+    "NCT02390973_exc_004": "NOT_MET",
+    "NCT02390973_exc_005": "NOT_MET",
+    "NCT02390973_exc_006": "UNKNOWN",
+    "NCT02390973_exc_007": "MET",
+    "NCT02390973_exc_008": "UNKNOWN",
+    "NCT02390973_exc_009": "NOT_MET",
+    "NCT02390973_exc_010": "NOT_MET"
+  },
+  "focus_reasoning": {
+    "NCT02390973_exc_005": "4.0 g/dL is within the usual normal range (about 3.5–5.0 g/dL). The trial gives no numeric cutoff, and the timing relative to surgery is not stated.",
+    "NCT02390973_exc_007": "Prednisone is a corticosteroid, and 2 weeks ago falls within the last month. The exclusion condition is present.",
+    "NCT02390973_exc_010": "Inflammatory bowel disease is documented as absent (by known history). The criterion is worded more broadly (gastro-intestinal inflammatory diseases), so other such conditions are not explicitly addressed."
+  }
+}

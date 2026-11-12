@@ -1,0 +1,42 @@
+{
+  "finding_id": "G01_CODE_SEMANTICS_CANDIDATE",
+  "tf_original_incident_identity": "USER_CONFIRMED",
+  "status": "TF-referenced incident identified; two prospective context-grounding inputs prepared; zero new model runs",
+  "finding": "Patient source text says Diabetes while model reasoning supplies a type-specific code meaning. Existing reference labels adopt the project coding rule; this is not automatically an error under historical policy. A separate strict context-only protocol can test whether the model abstains without a supplied mapping.",
+  "candidates": [
+    {
+      "pair_id": "V02",
+      "mode": "A",
+      "source_response_path": "results/raw/A/recovered_V02_A.txt",
+      "source_response_sha256": "acc2c89aaafbc58b3f07cba7e72dafbce1c862b960987bf7da09f78e7e86f42b",
+      "criterion_id": "NCT07580638_inc_002",
+      "exact_quote": "SNOMED CT 44054006 is the concept 'Diabetes mellitus type 2 (disorder)'.",
+      "original_input_identity_limitation": "Original upload bytes/prompt unavailable; reconstructed input cannot prove complete historical context."
+    },
+    {
+      "pair_id": "V2P01",
+      "mode": "A",
+      "source_response_path": "v2/results/raw/A/V2P01_A_user_upload_d7942088e197.txt",
+      "source_response_sha256": "d7942088e19762e572c159a1379ad504b1699c97f884684a4b592ade38859a0c",
+      "criterion_id": "NCT06774950_inc_001",
+      "exact_quote": "The type 2 attribution rests on the standard SNOMED CT meaning of 44054006, not on file text.",
+      "fixed_upload_path": "v2/uploads/A/V2P01.json",
+      "fixed_upload_sha256": "437079c9d0909f41eda0087d01196ed77b1965386cbf4d9325bc5d13a1b8ae62",
+      "limitation": "Earlier protocol and user references accepted a project coding interpretation; do not relabel the historical result as a confirmed closed-context failure."
+    }
+  ],
+  "patient_condition_fact_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+  "source_display": "Diabetes",
+  "source_code": "44054006",
+  "test_expectations_not_clinical_gold": {
+    "G01_NO_MAPPING": "UNKNOWN with answer insufficient information; missing code meaning must be identified",
+    "G01_WITH_MAPPING": "MET may be supported by the supplied patient Condition and mapping; cite both plus the criterion"
+  },
+  "scope_limit": "Supplied-context regression only; no actual vector retrieval, backend-enforcement or general performance claim.",
+  "user_confirmation": {
+    "confirmed_date": "2026-10-19",
+    "source": "User reply to question call_014ac95d92a347c4a9984a127620a4ef",
+    "statement_translation": "Yes, this is the case.",
+    "confirmed_scope": "Identity of the TF-referenced incident; not confirmation of a historical medical error or a passed new grounding test."
+  }
+}

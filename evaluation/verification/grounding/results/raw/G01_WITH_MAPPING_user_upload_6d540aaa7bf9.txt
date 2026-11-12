@@ -1,0 +1,120 @@
+```json
+{
+  "case_id": "G01_WITH_MAPPING",
+  "criterion_id": "NCT07580638_inc_002",
+  "criterion_type": "inclusion",
+  "criterion_text": "Diagnosis of Type 2 Diabetes Mellitus (T2DM) .",
+  "precheck_status": "MET",
+  "answer": "Supported for this diagnosis-only precheck: the patient has a Condition coded http://snomed.info/sct 44054006 (clinical status 'active', verification status 'confirmed'), and the supplied mapping project-policy:SNOMED-44054006-T2D gives that code the meaning 'Type 2 Diabetes Mellitus (T2DM)'. This does not establish current disease status at the reference date, the true first diagnosis date, any other criterion, or eligibility.",
+  "criterion_source_id": "repository:NCT07580638:2026-10-11:NCT07580638_inc_002",
+  "evidence": [
+    {
+      "source_type": "criterion",
+      "source_id": "repository:NCT07580638:2026-10-11:NCT07580638_inc_002",
+      "field_path": "/trial_criterion/criterion_text",
+      "quoted_value": "Diagnosis of Type 2 Diabetes Mellitus (T2DM) ."
+    },
+    {
+      "source_type": "criterion",
+      "source_id": "repository:NCT07580638:2026-10-11:NCT07580638_inc_002",
+      "field_path": "/trial_criterion/criterion_type",
+      "quoted_value": "inclusion"
+    },
+    {
+      "source_type": "patient",
+      "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+      "field_path": "/patient/conditions/14/subject_reference",
+      "quoted_value": "urn:uuid:475803f3-ae29-ba8d-bdd1-25145a94eaee"
+    },
+    {
+      "source_type": "patient",
+      "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+      "field_path": "/patient/conditions/14/code/coding/0/system",
+      "quoted_value": "http://snomed.info/sct"
+    },
+    {
+      "source_type": "patient",
+      "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+      "field_path": "/patient/conditions/14/code/coding/0/code",
+      "quoted_value": "44054006"
+    },
+    {
+      "source_type": "patient",
+      "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+      "field_path": "/patient/conditions/14/code/coding/0/display",
+      "quoted_value": "Diabetes"
+    },
+    {
+      "source_type": "patient",
+      "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+      "field_path": "/patient/conditions/14/raw_clinical_status/coding/0/code",
+      "quoted_value": "active"
+    },
+    {
+      "source_type": "patient",
+      "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+      "field_path": "/patient/conditions/14/raw_verification_status/coding/0/code",
+      "quoted_value": "confirmed"
+    },
+    {
+      "source_type": "patient",
+      "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+      "field_path": "/patient/conditions/14/onset_date",
+      "quoted_value": "2017-12-11T19:37:30-05:00"
+    },
+    {
+      "source_type": "patient",
+      "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+      "field_path": "/patient/conditions/14/abatement_date",
+      "quoted_value": null
+    },
+    {
+      "source_type": "patient",
+      "source_id": "synthea_sample_data_fhir_r4_nov2021.zip!fhir/Cleveland582_Dach178_475803f3-ae29-ba8d-bdd1-25145a94eaee.json#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47",
+      "field_path": "/patient/conditions/14/status_at_reference_date",
+      "quoted_value": "undetermined"
+    },
+    {
+      "source_type": "terminology_mapping",
+      "source_id": "project-policy:SNOMED-44054006-T2D",
+      "field_path": "/allowed_terminology_mappings/0/system",
+      "quoted_value": "http://snomed.info/sct"
+    },
+    {
+      "source_type": "terminology_mapping",
+      "source_id": "project-policy:SNOMED-44054006-T2D",
+      "field_path": "/allowed_terminology_mappings/0/code",
+      "quoted_value": "44054006"
+    },
+    {
+      "source_type": "terminology_mapping",
+      "source_id": "project-policy:SNOMED-44054006-T2D",
+      "field_path": "/allowed_terminology_mappings/0/meaning",
+      "quoted_value": "Type 2 Diabetes Mellitus (T2DM)"
+    },
+    {
+      "source_type": "terminology_mapping",
+      "source_id": "project-policy:SNOMED-44054006-T2D",
+      "field_path": "/allowed_terminology_mappings/0/scope",
+      "quoted_value": "Interpretation of this code for the diagnosis-only precheck; no proof of current disease status, true first diagnosis date, other criteria or actual enrollment."
+    }
+  ],
+  "reasoning": "1) The criterion (repository:NCT07580638:2026-10-11:NCT07580638_inc_002, /trial_criterion/criterion_text) requires a diagnosis of Type 2 Diabetes Mellitus (T2DM). 2) Condition fact ...#Condition/0f2e975a-ba64-1b75-a602-7d9436c7fb47 belongs to this patient (subject_reference 'urn:uuid:475803f3-ae29-ba8d-bdd1-25145a94eaee' string-matches /patient/patient_id) and carries code system 'http://snomed.info/sct', code '44054006'. Its display 'Diabetes' alone does not specify a subtype and is not relied on for subtype. 3) Mapping project-policy:SNOMED-44054006-T2D has system 'http://snomed.info/sct' and code '44054006', exact string matches to the patient coding, and supplies the meaning 'Type 2 Diabetes Mellitus (T2DM)'. Its scope explicitly covers interpretation for this diagnosis-only precheck. 4) The source record shows raw clinical status 'active', verification status 'confirmed', onset_date '2017-12-11T19:37:30-05:00' and abatement_date null. Under the supplied mapping and the diagnosis-only criterion logic, a confirmed recorded diagnosis mapped to T2DM supports MET. 5) Per rule 3 and the mapping scope, these raw statuses are source values, not a reconstructed status at reference_date 2021-11-30. The package's own status_at_reference_date is 'undetermined'. The onset_date is a recorded date, not proof of the true first diagnosis date. 6) No other evidence was used. Metformin MedicationRequests, HbA1c/glucose observations, and the 'Hyperglycemia (disorder)' and 'Prediabetes' conditions were not used to infer or confirm subtype, because they have no supplied mapping and the evidence policy prohibits inference from labs or medications. 7) This result covers only NCT07580638_inc_002 and is not a complete trial screening or an eligibility decision.",
+  "missing_information": [
+    "Not required for this diagnosis-only MET, but unresolved: disease status at the reference date 2021-11-30 (package field status_at_reference_date = 'undetermined').",
+    "Not required, but unresolved: the true first diagnosis date. The recorded onset_date is a source value only.",
+    "Not required, but unresolved: independent confirmation of the code meaning. The T2DM meaning rests solely on the user-confirmed project rule project-policy:SNOMED-44054006-T2D, not on a terminology-server query.",
+    "Actual screening, consent and V1 dates are null in the package and were not supplied."
+  ],
+  "search_status": "NOT_USED",
+  "context_limitations": [
+    "Package read from the inline attachment content in this conversation. No vector retrieval occurred (context_origin.actual_vector_retrieval = false).",
+    "No web search, browsing, external terminology lookup or code execution was used. This is self-reported, not an independently verified tool trace.",
+    "Unrelated personal memory context was present in the session but was not used for this evaluation.",
+    "The package omits several resource types as outside first-pass scope: CarePlan 1, CareTeam 1, Claim 20, DiagnosticReport 42, DocumentReference 15, Encounter 15, ExplanationOfBenefit 15, Immunization 11, Provenance 1. Their contents were unavailable and were not assessed.",
+    "The mapping's source_kind is a user-confirmed project coding rule. Its source_record (evaluation/verification/templates/reference_answers.csv#V02/NCT07580638_inc_002) was not available to verify."
+  ],
+  "actual_trial_dates": {"screening_date": null, "consent_date": null, "V1_date": null},
+  "overall_enrollment_decision": null
+}
+```

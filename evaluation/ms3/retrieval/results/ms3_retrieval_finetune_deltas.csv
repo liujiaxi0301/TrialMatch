@@ -1,0 +1,5 @@
+scope,frozen_method,finetuned_method,frozen_p_at_3,finetuned_p_at_3,delta_p_at_3,frozen_ndcg_at_5,finetuned_ndcg_at_5,delta_ndcg_at_5
+report_Q03_Q08,bioclinical_dense_question,finetuned_dense_question,0.0,0.388889,0.388889,0.031823,0.471223,0.4394
+report_Q03_Q08,bioclinical_dense_patient,finetuned_dense_patient,0.0,0.055556,0.055556,0.030257,0.100578,0.070321
+report_Q03_Q08,bioclinical_hybrid_question,finetuned_hybrid_question,0.222222,0.555556,0.333334,0.244813,0.619958,0.375145
+report_Q03_Q08,bioclinical_hybrid_patient,finetuned_hybrid_patient,0.0,0.0,0.0,0.021868,0.152036,0.130168

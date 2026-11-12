@@ -1,0 +1,67 @@
+{
+  "mode": "local_vector_baseline",
+  "patient_id": "060e72d3-912e-55cd-0c92-5faa6cb7a6db",
+  "question": "Which type 2 diabetes trials may suit this patient, and what information needs review?",
+  "retrieval_query": "Which type 2 diabetes trials may suit this patient, and what information needs review? age 52 male Diabetes Neuropathy due to type 2 diabetes mellitus (disorder) Received higher education (finding) Full-time employment (finding) Stress (finding) Social isolation (finding) Anemia (disorder) Part-time employment (finding) Viral sinusitis (disorder) Chronic low back pain (finding) Victim of intimate partner abuse (finding) Diabetes Neuropathy due to type 2 diabetes mellitus (disorder) Hypertension Not in labor force (finding) Hypertriglyceridemia (disorder) Metabolic syndrome X (disorder) Vitamin B 12 5 MG/ML Injectable Solution Amoxicillin 250 MG / Clavulanate 125 MG Oral Tablet lisinopril 10 MG Oral Tablet amLODIPine 2.5 MG Oral Tablet Naproxen sodium 220 MG Oral Tablet insulin human, isophane 70 UNT/ML / Regular Insulin, Human 30 UNT/ML Injectable Suspension [Humulin] Body Mass Index  {\"type\": \"Quantity\", \"data\": {\"value\": 26.67, \"unit\": \"kg/m2\", \"system\": \"http://unitsofmeasure.org\", \"code\": \"kg/m2\"}} Glucose  {\"type\": \"Quantity\", \"data\": {\"value\": 114.33, \"unit\": \"mg/dL\", \"system\": \"http://unitsofmeasure.org\", \"code\": \"mg/dL\"}} Hemoglobin A1c/Hemoglobin.total in Blood  {\"type\": \"Quantity\", \"data\": {\"value\": 3.6, \"unit\": \"%\", \"system\": \"http://unitsofmeasure.org\", \"code\": \"%\"}}",
+  "embedding_model": "local-signed-tokenhash-sha256-v1",
+  "collection": "trialmatch-c9f6ef7981cbfaece986",
+  "vector_count": 607,
+  "source_hashes": {
+    "trials": "1678d523a1246319d4ae5ba8d2dd5d4ab1359746ad71fb7feee67b20bb07edd6",
+    "criteria": "f7701a9979eb105219407c553703752879f6a2c55fb8736240c8e7bddc96de59",
+    "patients": "33ac165b9be7c564207325ae951d40b9cfdc3b72f8fb2f56e3e58193894331a1"
+  },
+  "chunks": [
+    {
+      "chunk_id": "NCT04284943_inc_003__0",
+      "text": "Type 2 diabetes and HbA1c ≥ 6.5%",
+      "distance": 0.6269214749336243,
+      "snapshot_date": "2026-10-11",
+      "parse_status": "parsed",
+      "trial_id": "NCT04284943",
+      "criterion_type": "inclusion",
+      "criterion_id": "NCT04284943_inc_003"
+    },
+    {
+      "chunk_id": "NCT04442451_inc_004__0",
+      "text": "Type 2 Diabetes Mellitus \\[elevated glycosylated hemoglobin (HbA1c) \\>6.5% and \\<10%\\]",
+      "distance": 0.6327215433120728,
+      "trial_id": "NCT04442451",
+      "criterion_type": "inclusion",
+      "criterion_id": "NCT04442451_inc_004",
+      "parse_status": "parsed",
+      "snapshot_date": "2026-10-11"
+    },
+    {
+      "chunk_id": "NCT04783441_inc_003__0",
+      "text": "Person with Type 2 Diabetes and on insulin",
+      "distance": 0.6748617887496948,
+      "criterion_id": "NCT04783441_inc_003",
+      "parse_status": "parsed",
+      "criterion_type": "inclusion",
+      "trial_id": "NCT04783441",
+      "snapshot_date": "2026-10-11"
+    },
+    {
+      "chunk_id": "NCT05071898_exc_002__0",
+      "text": "History of diabetes (HbA1c \\> 6.5% or random glucose \\>200 mg/dL)",
+      "distance": 0.6979726552963257,
+      "criterion_id": "NCT05071898_exc_002",
+      "snapshot_date": "2026-10-11",
+      "parse_status": "parsed",
+      "trial_id": "NCT05071898",
+      "criterion_type": "exclusion"
+    },
+    {
+      "chunk_id": "NCT05015283_inc_003__0",
+      "text": "Type 2 diabetes duration ≥6 months",
+      "distance": 0.7031907439231873,
+      "trial_id": "NCT05015283",
+      "criterion_type": "inclusion",
+      "criterion_id": "NCT05015283_inc_003",
+      "parse_status": "parsed",
+      "snapshot_date": "2026-10-11"
+    }
+  ],
+  "note": "Real Chroma cosine retrieval using lexical hash vectors. No LLM, no Gemini embeddings, and no eligibility decision."
+}

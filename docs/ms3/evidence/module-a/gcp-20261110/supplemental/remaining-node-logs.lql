@@ -1,0 +1,8 @@
+resource.type="ml_job"
+(
+  resource.labels.job_id="1284316648819392512" OR
+  resource.labels.job_id="7957666134163980288" OR
+  resource.labels.job_id="7526868682308321280"
+)
+timestamp>="2026-11-10T05:45:00Z"
+timestamp<="2026-11-10T06:15:00Z"

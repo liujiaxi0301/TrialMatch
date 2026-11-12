@@ -1,0 +1,99 @@
+{
+  "cache": "frozen-encoder document vectors reused from the prepared experiment store; fine-tuned document vectors are encoded once into a separate store",
+  "code_commit": "96a1ab99463f8e3363a6b4f74a1b1eeb2df4fa59",
+  "generated_utc": "2026-11-12T17:59:34+00:00",
+  "manifest": "services/rag_workflow/examples/demo_manifest.json",
+  "methods": {
+    "bm25_patient": {
+      "encoder": null,
+      "fusion": null,
+      "query_construction": "patient",
+      "retrieval": "BM25 over trial title + conditions + brief summary + all criteria"
+    },
+    "bm25_question": {
+      "encoder": null,
+      "fusion": null,
+      "query_construction": "question",
+      "retrieval": "BM25 over trial title + conditions + brief summary + all criteria"
+    },
+    "finetuned_dense_patient": {
+      "checkpoint_sha256": "7dd900ba458da9156de2fdac75e9bce934839e7169d81135f4225cc4aae18f98",
+      "checkpoint_uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/train-encoder_-554883867400470528/training/model",
+      "collection": "trialmatch-b92bb419326974c13d9e",
+      "dimension": 768,
+      "encoder": "thomas-sounack/BioClinical-ModernBERT-base",
+      "encoder_revision": "c3648aa87af95837c809e6f0c5f85d08160db437",
+      "fusion": null,
+      "indexed_text": "criterion-level fragments; best criterion hit per trial",
+      "query_construction": "patient",
+      "similarity": "cosine",
+      "training_code_commit": "source-version:96a1ab99463f8e3363a6b4f74a1b1eeb2df4fa59",
+      "training_data": "corpus-derived and LLM-written query/criterion pairs from trials outside this benchmark universe",
+      "training_run": "https://forge.coreweave.com/wandb/jennyyang-harvard-university/trialmatch-ms3/runs/kv0ifsun",
+      "training_workflow": "contrastive-encoder-finetune"
+    },
+    "finetuned_dense_question": {
+      "checkpoint_sha256": "7dd900ba458da9156de2fdac75e9bce934839e7169d81135f4225cc4aae18f98",
+      "checkpoint_uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/train-encoder_-554883867400470528/training/model",
+      "collection": "trialmatch-b92bb419326974c13d9e",
+      "dimension": 768,
+      "encoder": "thomas-sounack/BioClinical-ModernBERT-base",
+      "encoder_revision": "c3648aa87af95837c809e6f0c5f85d08160db437",
+      "fusion": null,
+      "indexed_text": "criterion-level fragments; best criterion hit per trial",
+      "query_construction": "question",
+      "similarity": "cosine",
+      "training_code_commit": "source-version:96a1ab99463f8e3363a6b4f74a1b1eeb2df4fa59",
+      "training_data": "corpus-derived and LLM-written query/criterion pairs from trials outside this benchmark universe",
+      "training_run": "https://forge.coreweave.com/wandb/jennyyang-harvard-university/trialmatch-ms3/runs/kv0ifsun",
+      "training_workflow": "contrastive-encoder-finetune"
+    },
+    "finetuned_hybrid_patient": {
+      "checkpoint_sha256": "7dd900ba458da9156de2fdac75e9bce934839e7169d81135f4225cc4aae18f98",
+      "checkpoint_uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/train-encoder_-554883867400470528/training/model",
+      "collection": "trialmatch-b92bb419326974c13d9e",
+      "dimension": 768,
+      "encoder": "thomas-sounack/BioClinical-ModernBERT-base",
+      "encoder_revision": "c3648aa87af95837c809e6f0c5f85d08160db437",
+      "fusion": "reciprocal rank fusion, k=60, over [BM25, dense]",
+      "indexed_text": "criterion-level fragments; best criterion hit per trial",
+      "query_construction": "patient",
+      "similarity": "cosine",
+      "training_code_commit": "source-version:96a1ab99463f8e3363a6b4f74a1b1eeb2df4fa59",
+      "training_data": "corpus-derived and LLM-written query/criterion pairs from trials outside this benchmark universe",
+      "training_run": "https://forge.coreweave.com/wandb/jennyyang-harvard-university/trialmatch-ms3/runs/kv0ifsun",
+      "training_workflow": "contrastive-encoder-finetune"
+    },
+    "finetuned_hybrid_question": {
+      "checkpoint_sha256": "7dd900ba458da9156de2fdac75e9bce934839e7169d81135f4225cc4aae18f98",
+      "checkpoint_uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/train-encoder_-554883867400470528/training/model",
+      "collection": "trialmatch-b92bb419326974c13d9e",
+      "dimension": 768,
+      "encoder": "thomas-sounack/BioClinical-ModernBERT-base",
+      "encoder_revision": "c3648aa87af95837c809e6f0c5f85d08160db437",
+      "fusion": "reciprocal rank fusion, k=60, over [BM25, dense]",
+      "indexed_text": "criterion-level fragments; best criterion hit per trial",
+      "query_construction": "question",
+      "similarity": "cosine",
+      "training_code_commit": "source-version:96a1ab99463f8e3363a6b4f74a1b1eeb2df4fa59",
+      "training_data": "corpus-derived and LLM-written query/criterion pairs from trials outside this benchmark universe",
+      "training_run": "https://forge.coreweave.com/wandb/jennyyang-harvard-university/trialmatch-ms3/runs/kv0ifsun",
+      "training_workflow": "contrastive-encoder-finetune"
+    }
+  },
+  "patients": "services/patient_processing/data/processed/batch25_patients.jsonl",
+  "queries_file": "evaluation/ms3/retrieval_queries.jsonl",
+  "queries_sha256": "1fa5bf9163cb065b7c000f04a13ae32737c849b2c288d0ca2680ffd1f74c8a06",
+  "query_construction": {
+    "patient": "unmodified production patient_query(patient, question)",
+    "question": "the benchmark question text only"
+  },
+  "query_count": 8,
+  "source_sha256": {
+    "criteria": "f7701a9979eb105219407c553703752879f6a2c55fb8736240c8e7bddc96de59",
+    "patients": "33ac165b9be7c564207325ae951d40b9cfdc3b72f8fb2f56e3e58193894331a1",
+    "trials": "1678d523a1246319d4ae5ba8d2dd5d4ab1359746ad71fb7feee67b20bb07edd6"
+  },
+  "top_k": 5,
+  "trial_universe": 50
+}

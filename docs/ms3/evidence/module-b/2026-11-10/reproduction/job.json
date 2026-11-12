@@ -1,0 +1,86 @@
+{
+  "display_name": "trialmatch-train-20261110-t4-repro",
+  "project": "trialmatch-ac215-yixiao",
+  "region": "us-east1",
+  "service_account": "trialmatch-pipeline@trialmatch-ac215-yixiao.iam.gserviceaccount.com",
+  "max_run_seconds": 5400,
+  "output": "gs://trialmatch-ac215-yixiao-ms3/training/train-20261110-t4-repro",
+  "code_commit": "f16f3e83402a80d63ef3941849800859e496738a",
+  "worker_pool_specs": [
+    {
+      "machine_spec": {
+        "machine_type": "n1-standard-4",
+        "accelerator_type": "NVIDIA_TESLA_T4",
+        "accelerator_count": 1
+      },
+      "replica_count": 1,
+      "container_spec": {
+        "image_uri": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/trainer@sha256:97c872638eabbf681d020d6bb1c1f534a707e3798b997d57ad435d7bd964fea9",
+        "command": [
+          "python",
+          "-m",
+          "cloud.train"
+        ],
+        "args": [
+          "--pairs",
+          "gs://trialmatch-ac215-yixiao-ms3/training/pairs/20261110/pairs.jsonl",
+          "gs://trialmatch-ac215-yixiao-ms3/training/pairs/20261110/pairs_llm.jsonl",
+          "--output",
+          "gs://trialmatch-ac215-yixiao-ms3/training/train-20261110-t4-repro",
+          "--epochs",
+          "3",
+          "--batch-size",
+          "8",
+          "--lr",
+          "2e-05",
+          "--temperature",
+          "0.05",
+          "--max-length",
+          "256",
+          "--max-negatives",
+          "4",
+          "--seed",
+          "0",
+          "--wandb-project",
+          "trialmatch-ms3",
+          "--run-name",
+          "train-20261110-t4-repro",
+          "--image-uri",
+          "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/trainer@sha256:97c872638eabbf681d020d6bb1c1f534a707e3798b997d57ad435d7bd964fea9",
+          "--wandb-secret",
+          "projects/trialmatch-ac215-yixiao/secrets/wandb-api-key/versions/latest"
+        ],
+        "env": [
+          {
+            "name": "CODE_COMMIT",
+            "value": "f16f3e83402a80d63ef3941849800859e496738a"
+          }
+        ]
+      }
+    }
+  ],
+  "resource_name": "projects/15733748057/locations/us-east1/customJobs/7098921164591857664",
+  "state": "JOB_STATE_SUCCEEDED",
+  "error": "",
+  "create_time": "2026-11-11 04:46:31.398132+00:00",
+  "end_time": "2026-11-11 05:06:04+00:00",
+  "console": "https://console.cloud.google.com/vertex-ai/locations/us-east1/training/7098921164591857664?project=trialmatch-ac215-yixiao",
+  "checkpoint": {
+    "artifact_uri": "gs://trialmatch-ac215-yixiao-ms3/training/train-20261110-t4-repro/model",
+    "files": {
+      "config.json": "b320e3a43a2afa28418177378d24e84fc5196b4cb11ffd383100cd7468e74e08",
+      "model.safetensors": "c586324db9f7d811ae3b11e458c74adcd87a2b96466e1e981e73c020ef6524c0",
+      "special_tokens_map.json": "ea97ecdbcc73713039d8d64dbb05e3689495c96657fbd9a18f5bed381be81049",
+      "tokenizer.json": "a4285a69e0471620769dce979c70a6994eb7ff1554da8fb4bdbc7ad3eb5ad666",
+      "tokenizer_config.json": "2966a59b9e9cf122279aec1249e22e5bc7ad8430c754e95031b13fd128d4e560"
+    },
+    "artifact_sha256": "7dcec7d9c8ca3697ee60091346723130ebb37263254e81a69a0aff038dbc931c",
+    "matches_manifest": true
+  },
+  "wandb": {
+    "mode": "online",
+    "path": "jennyyang-harvard-university/trialmatch-ms3/9bwyr4mr",
+    "url": "https://forge.coreweave.com/wandb/jennyyang-harvard-university/trialmatch-ms3/runs/9bwyr4mr",
+    "run_id": "9bwyr4mr"
+  }
+}

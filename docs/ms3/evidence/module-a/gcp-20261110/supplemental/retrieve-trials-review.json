@@ -1,0 +1,35 @@
+{
+  "status": "PASSED",
+  "reviewed_utc": "2026-11-10T19:18:08.221283+00:00",
+  "source_filename": "downloaded-logs-20261110-141610.json",
+  "archived_file": "supplemental/retrieve-trials-logs.json",
+  "sha256": "fa3c98a4a74a2e689859b18834e64f0751f36e27a89064f9c1d88663aa139b1b",
+  "bytes": 8596,
+  "entries": 11,
+  "pipeline_job": "projects/15733748057/locations/us-east1/pipelineJobs/trialmatch-data-pipeline-20261110055153",
+  "node": "retrieve-trials",
+  "custom_job": "projects/15733748057/locations/us-east1/customJobs/5535151747103719424",
+  "checks": {
+    "entry_count_matches_console": true,
+    "all_entries_match_project_job_and_resource": true,
+    "release_event_matches_processed_output": true,
+    "ranking_event_matches_configuration": true,
+    "row_count_and_config_messages_match_artifacts": true,
+    "application_entries_within_node_execution": true,
+    "timestamps_within_console_query": true,
+    "service_success_present": true,
+    "no_error_severity_in_export": true
+  },
+  "time_range_utc": {
+    "first": "2026-11-10T06:00:37.522594110Z",
+    "last": "2026-11-10T06:07:16.401610077Z"
+  },
+  "scope": "Independent offline consistency check of user-exported retrieval logs; no cloud job submitted.",
+  "notes": [
+    "Four application log events occur within node execution; later service teardown and success messages extend beyond the pipeline node end timestamp.",
+    "All 11 exported entries have INFO severity. This does not establish absence of errors in unexported logs.",
+    "Original collector used the wrong resource type; exported resource.type is ml_job.",
+    "Retrieval output only; log scope explicitly says human scoring is separate. Generic service training-program text does not establish model training.",
+    "Original archive and its empty log responses are preserved unchanged."
+  ]
+}

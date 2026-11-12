@@ -1,0 +1,169 @@
+{
+  "query_id": "Q08",
+  "review_status": "user-reviewed",
+  "reviewer_qualification": "Non-clinician manual relevance assessment",
+  "labels": [
+    {
+      "trial_id": "NCT02836808",
+      "relevance": 0,
+      "reason": "Evaluates T2D education and self-management, but does not explicitly investigate continuous glucose monitoring.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT03811470",
+      "relevance": 0,
+      "reason": "Broad diabetes management registry without a specific continuous glucose monitoring intervention or assessment.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04284943",
+      "relevance": 0,
+      "reason": "Investigates surgical reconstruction for glycemic control rather than continuous glucose monitoring.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04501406",
+      "relevance": 0,
+      "reason": "Evaluates pioglitazone for NASH without a continuous glucose monitoring component.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04670666",
+      "relevance": 0,
+      "reason": "Evaluates pharmacological treatment of T2D without evidence of a continuous glucose monitoring component.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04783441",
+      "relevance": 2,
+      "reason": "Directly investigates continuous glucose monitoring for glycemic control in T2D kidney transplant recipients, using time in range as an outcome.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT04869098",
+      "relevance": 0,
+      "reason": "Investigates protein supplementation in night-shift workers, excludes individuals with diabetes, and does not study continuous glucose monitoring.",
+      "source_reference": "brief_summary; exclusion criteria"
+    },
+    {
+      "trial_id": "NCT04932928",
+      "relevance": 2,
+      "reason": "Directly evaluates FreeStyle Libre glucose monitoring to support nutritional and lifestyle management in adults with T2D.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT05129345",
+      "relevance": 0,
+      "reason": "Investigates cardiometabolic self-management support in people living with HIV, without a specific continuous glucose monitoring component.",
+      "source_reference": "brief_summary; inclusion criteria"
+    },
+    {
+      "trial_id": "NCT03264352",
+      "relevance": 0,
+      "reason": "Investigates pharmacological blood pressure management without using continuous glucose monitoring.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT03878706",
+      "relevance": 0,
+      "reason": "Studies cardiovascular effects of antidiabetic medications without describing CGM use.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT04442451",
+      "relevance": 0,
+      "reason": "Studies exercise fatigability and blood flow restriction training without using CGM for glucose management.",
+      "source_reference": "brief_summary; eligibility criteria"
+    },
+    {
+      "trial_id": "NCT02037867",
+      "relevance": 0,
+      "reason": "Investigates liver disease screening, biomarkers, and lifestyle changes without using CGM for glucose management.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT03821636",
+      "relevance": 0,
+      "reason": "Compares gastric bypass procedures for T2D remission without describing CGM use.",
+      "source_reference": "brief_summary"
+    },
+    {
+      "trial_id": "NCT01945840",
+      "relevance": 0,
+      "reason": "Studies gut hormone changes after gastric bypass without continuous glucose monitoring.",
+      "source_reference": "NCT01945840:brief_summary"
+    },
+    {
+      "trial_id": "NCT02973412",
+      "relevance": 0,
+      "reason": "Examines chronotype and glycemic control without a stated CGM component.",
+      "source_reference": "NCT02973412:brief_summary"
+    },
+    {
+      "trial_id": "NCT03087032",
+      "relevance": 0,
+      "reason": "Compares glucose-lowering medications without evidence of CGM-based management.",
+      "source_reference": "NCT03087032:brief_summary"
+    },
+    {
+      "trial_id": "NCT03156478",
+      "relevance": 0,
+      "reason": "Tests digital lifestyle interventions for diabetes prevention, excludes diagnosed diabetes, and does not specify CGM.",
+      "source_reference": "NCT03156478:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT04024631",
+      "relevance": 0,
+      "reason": "Studies genetic risk and insulin resistance in non-diabetic participants without CGM.",
+      "source_reference": "NCT04024631:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT04442334",
+      "relevance": 0,
+      "reason": "NAFLD registry focused on liver disease progression without CGM-based diabetes management.",
+      "source_reference": "NCT04442334:brief_summary"
+    },
+    {
+      "trial_id": "NCT04455867",
+      "relevance": 0,
+      "reason": "Studies mood and cognitive complications in T2D without a stated CGM component.",
+      "source_reference": "NCT04455867:brief_summary"
+    },
+    {
+      "trial_id": "NCT04791371",
+      "relevance": 0,
+      "reason": "Investigates exercise training and microvascular insulin resistance without CGM.",
+      "source_reference": "NCT04791371:brief_summary"
+    },
+    {
+      "trial_id": "NCT04880005",
+      "relevance": 0,
+      "reason": "Uses digital lifestyle coaching and clinical decision support for T2D, but does not establish use of continuous glucose monitoring.",
+      "source_reference": "NCT04880005:brief_summary"
+    },
+    {
+      "trial_id": "NCT04889053",
+      "relevance": 0,
+      "reason": "Investigates coronary artery calcification and biomarkers in T2D without CGM.",
+      "source_reference": "NCT04889053:brief_summary"
+    },
+    {
+      "trial_id": "NCT05028140",
+      "relevance": 0,
+      "reason": "Evaluates T2D treatment efficacy and safety without a stated CGM component.",
+      "source_reference": "NCT05028140:brief_summary"
+    },
+    {
+      "trial_id": "NCT05071898",
+      "relevance": 0,
+      "reason": "Studies pharmacogenetic responses to semaglutide, excludes diagnosed diabetes, and does not use CGM in the provided description.",
+      "source_reference": "NCT05071898:brief_summary;eligibility_text"
+    },
+    {
+      "trial_id": "NCT05124457",
+      "relevance": 0,
+      "reason": "Compares maternal insulin regimens for neonatal hypoglycemia without a CGM-based intervention.",
+      "source_reference": "NCT05124457:brief_summary"
+    }
+  ]
+}

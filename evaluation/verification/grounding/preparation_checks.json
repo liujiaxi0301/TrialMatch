@@ -1,0 +1,16 @@
+{
+  "checked_date": "2026-10-19",
+  "scope": "Grounding test preparation only; no new model runs",
+  "patient_objects_match_unchanged_source": true,
+  "criterion_matches_source_verbatim": true,
+  "controlled_difference_only_case_id_and_mapping_list": true,
+  "fixed_hashes_verified": true,
+  "incident_identity_user_confirmed": true,
+  "original_quotes_verified": true,
+  "review_rows_unrun": 2,
+  "existing_v2_reference_count_unchanged": 10,
+  "new_model_runs": 0,
+  "actual_vector_retrieval": false,
+  "backend_enforcement_tested": false,
+  "grounding_pass_claimed": false
+}

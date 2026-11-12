@@ -1,0 +1,42 @@
+[
+  {
+    "kind": "storage#object",
+    "id": "trialmatch-ac215-yixiao-ms3/negative-tests/xuyang/xuyang-ms3-hash-20261110t193643z-65e00490/bad-raw.dvc/1794339404094358",
+    "selfLink": "https://www.googleapis.com/storage/v1/b/trialmatch-ac215-yixiao-ms3/o/negative-tests%2Fxuyang%2Fxuyang-ms3-hash-20261110t193643z-65e00490%2Fbad-raw.dvc",
+    "mediaLink": "https://storage.googleapis.com/download/storage/v1/b/trialmatch-ac215-yixiao-ms3/o/negative-tests%2Fxuyang%2Fxuyang-ms3-hash-20261110t193643z-65e00490%2Fbad-raw.dvc?generation=1794339404094358&alt=media",
+    "name": "negative-tests/xuyang/xuyang-ms3-hash-20261110t193643z-65e00490/bad-raw.dvc",
+    "bucket": "trialmatch-ac215-yixiao-ms3",
+    "generation": "1794339404094358",
+    "metageneration": "1",
+    "contentType": "application/octet-stream",
+    "storageClass": "STANDARD",
+    "size": "107",
+    "md5Hash": "hR3M+8/Ea1lxcEA0wGkgzA==",
+    "crc32c": "c8yiUA==",
+    "etag": "CJa3ppaT/pcDEAE=",
+    "timeCreated": "2026-11-10T19:36:44.162Z",
+    "updated": "2026-11-10T19:36:44.162Z",
+    "timeStorageClassUpdated": "2026-11-10T19:36:44.162Z",
+    "timeFinalized": "2026-11-10T19:36:44.162Z"
+  },
+  {
+    "kind": "storage#object",
+    "id": "trialmatch-ac215-yixiao-ms3/negative-tests/xuyang/xuyang-ms3-hash-20261110t193643z-65e00490/release.json/1794339404289813",
+    "selfLink": "https://www.googleapis.com/storage/v1/b/trialmatch-ac215-yixiao-ms3/o/negative-tests%2Fxuyang%2Fxuyang-ms3-hash-20261110t193643z-65e00490%2Frelease.json",
+    "mediaLink": "https://storage.googleapis.com/download/storage/v1/b/trialmatch-ac215-yixiao-ms3/o/negative-tests%2Fxuyang%2Fxuyang-ms3-hash-20261110t193643z-65e00490%2Frelease.json?generation=1794339404289813&alt=media",
+    "name": "negative-tests/xuyang/xuyang-ms3-hash-20261110t193643z-65e00490/release.json",
+    "bucket": "trialmatch-ac215-yixiao-ms3",
+    "generation": "1794339404289813",
+    "metageneration": "1",
+    "contentType": "application/octet-stream",
+    "storageClass": "STANDARD",
+    "size": "2929",
+    "md5Hash": "m73sw6NGrq7DqGwzE/GrOg==",
+    "crc32c": "1JMR3g==",
+    "etag": "CJWuspaT/pcDEAE=",
+    "timeCreated": "2026-11-10T19:36:44.297Z",
+    "updated": "2026-11-10T19:36:44.297Z",
+    "timeStorageClassUpdated": "2026-11-10T19:36:44.297Z",
+    "timeFinalized": "2026-11-10T19:36:44.297Z"
+  }
+]

@@ -1,0 +1,200 @@
+{
+  "matching_builds": [
+    {
+      "id": "f6edb1ef-dbb1-4389-b014-9b7f1b48ff82",
+      "status": "SUCCESS",
+      "source": {
+        "storageSource": {
+          "bucket": "trialmatch-ac215-yixiao-ms3",
+          "object": "builds/source/1794289669.151665-d8d1c349ca7e4da5aaffa5aab0318740.tgz",
+          "generation": "1794289670623990"
+        }
+      },
+      "createTime": "2026-11-10T05:47:50.832476783Z",
+      "startTime": "2026-11-10T05:47:51.289397704Z",
+      "finishTime": "2026-11-10T05:50:12.168508Z",
+      "results": {
+        "images": [
+          {
+            "name": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/api:2c8b5da003025134-f6edb1ef-dbb1-4389-b014-9b7f1b48ff82",
+            "digest": "sha256:4c55f284945f8d910581b84b25d566b8e8b22854686fc6aee234ec9385219164",
+            "pushTiming": {
+              "startTime": "2026-11-10T05:49:05.930244582Z",
+              "endTime": "2026-11-10T05:49:27.486796345Z"
+            },
+            "artifactRegistryPackage": "projects/trialmatch-ac215-yixiao/locations/us-east1/repositories/trialmatch/packages/api/versions/sha256:4c55f284945f8d910581b84b25d566b8e8b22854686fc6aee234ec9385219164"
+          },
+          {
+            "name": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/chroma:2c8b5da003025134-f6edb1ef-dbb1-4389-b014-9b7f1b48ff82",
+            "digest": "sha256:339c25436a2addd08313fd9d928c41e306136f3919dce8f9a5db589d7e517f99",
+            "pushTiming": {
+              "startTime": "2026-11-10T05:49:27.488589149Z",
+              "endTime": "2026-11-10T05:49:46.173242229Z"
+            },
+            "artifactRegistryPackage": "projects/trialmatch-ac215-yixiao/locations/us-east1/repositories/trialmatch/packages/chroma/versions/sha256:339c25436a2addd08313fd9d928c41e306136f3919dce8f9a5db589d7e517f99"
+          },
+          {
+            "name": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow:2c8b5da003025134-f6edb1ef-dbb1-4389-b014-9b7f1b48ff82",
+            "digest": "sha256:452cc045ae11c1e42d8f7071cdae565f79e1b57aa9924b3d26c2140ad89a62ad",
+            "pushTiming": {
+              "startTime": "2026-11-10T05:49:46.174906430Z",
+              "endTime": "2026-11-10T05:50:11.888048406Z"
+            },
+            "artifactRegistryPackage": "projects/trialmatch-ac215-yixiao/locations/us-east1/repositories/trialmatch/packages/workflow/versions/sha256:452cc045ae11c1e42d8f7071cdae565f79e1b57aa9924b3d26c2140ad89a62ad"
+          }
+        ],
+        "buildStepImages": [
+          "sha256:fbc05705e6f24467e40ae8a4097ab9b8fae1116551f838fa2c55f4367427fc36",
+          "sha256:fbc05705e6f24467e40ae8a4097ab9b8fae1116551f838fa2c55f4367427fc36",
+          "sha256:fbc05705e6f24467e40ae8a4097ab9b8fae1116551f838fa2c55f4367427fc36"
+        ],
+        "buildStepOutputs": [
+          "",
+          "",
+          ""
+        ],
+        "resourceUsage": {
+          "totalCpuDuration": "169.190s",
+          "averageCpuUtilization": 0.6151611,
+          "peakCpuUtilization": 1,
+          "averageMemoryUtilization": 0.09243788,
+          "peakMemoryUtilization": 0.11663333
+        }
+      },
+      "steps": [
+        {
+          "name": "gcr.io/cloud-builders/docker",
+          "args": [
+            "build",
+            "-f",
+            "docker/rag-api/Dockerfile",
+            "-t",
+            "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/api:2c8b5da003025134-f6edb1ef-dbb1-4389-b014-9b7f1b48ff82",
+            "."
+          ],
+          "timing": {
+            "startTime": "2026-11-10T05:47:55.227687491Z",
+            "endTime": "2026-11-10T05:48:21.136190177Z"
+          },
+          "status": "SUCCESS",
+          "pullTiming": {
+            "startTime": "2026-11-10T05:47:55.227687491Z",
+            "endTime": "2026-11-10T05:47:55.235386132Z"
+          }
+        },
+        {
+          "name": "gcr.io/cloud-builders/docker",
+          "args": [
+            "build",
+            "-f",
+            "docker/chromadb/Dockerfile",
+            "-t",
+            "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/chroma:2c8b5da003025134-f6edb1ef-dbb1-4389-b014-9b7f1b48ff82",
+            "."
+          ],
+          "timing": {
+            "startTime": "2026-11-10T05:48:21.136417718Z",
+            "endTime": "2026-11-10T05:48:39.076242149Z"
+          },
+          "status": "SUCCESS",
+          "pullTiming": {
+            "startTime": "2026-11-10T05:48:21.136417718Z",
+            "endTime": "2026-11-10T05:48:21.138102489Z"
+          }
+        },
+        {
+          "name": "gcr.io/cloud-builders/docker",
+          "args": [
+            "build",
+            "-f",
+            "docker/workflow/Dockerfile",
+            "--build-arg",
+            "SOURCE_COMMIT=6cae15b387cb4de2e344b49864b68f7d0b24ab6a",
+            "-t",
+            "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow:2c8b5da003025134-f6edb1ef-dbb1-4389-b014-9b7f1b48ff82",
+            "."
+          ],
+          "timing": {
+            "startTime": "2026-11-10T05:48:39.076622997Z",
+            "endTime": "2026-11-10T05:49:05.790068095Z"
+          },
+          "status": "SUCCESS",
+          "pullTiming": {
+            "startTime": "2026-11-10T05:48:39.076622997Z",
+            "endTime": "2026-11-10T05:48:39.082305305Z"
+          }
+        }
+      ],
+      "timeout": "1200s",
+      "images": [
+        "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/api:2c8b5da003025134-f6edb1ef-dbb1-4389-b014-9b7f1b48ff82",
+        "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/chroma:2c8b5da003025134-f6edb1ef-dbb1-4389-b014-9b7f1b48ff82",
+        "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow:2c8b5da003025134-f6edb1ef-dbb1-4389-b014-9b7f1b48ff82"
+      ],
+      "projectId": "trialmatch-ac215-yixiao",
+      "sourceProvenance": {
+        "resolvedStorageSource": {
+          "bucket": "trialmatch-ac215-yixiao-ms3",
+          "object": "builds/source/1794289669.151665-d8d1c349ca7e4da5aaffa5aab0318740.tgz",
+          "generation": "1794289670623990"
+        },
+        "fileHashes": {
+          "gs://trialmatch-ac215-yixiao-ms3/builds/source/1794289669.151665-d8d1c349ca7e4da5aaffa5aab0318740.tgz#1794289670623990": {
+            "fileHash": [
+              {
+                "type": "MD5",
+                "value": "GKAbEt5AjXpTZFxyLQJsqw=="
+              },
+              {
+                "type": "SHA256",
+                "value": "zLIqiHLwe9GGWiI91X7SLw92v1CyNAfS/8wIcf+NAwk="
+              }
+            ]
+          }
+        }
+      },
+      "options": {
+        "logging": "CLOUD_LOGGING_ONLY",
+        "pool": {},
+        "workerRelease": "legacy"
+      },
+      "logUrl": "https://console.cloud.google.com/cloud-build/builds;region=us-east1/f6edb1ef-dbb1-4389-b014-9b7f1b48ff82?project=15733748057",
+      "substitutions": {
+        "_REGISTRY": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch",
+        "_SOURCE_COMMIT": "6cae15b387cb4de2e344b49864b68f7d0b24ab6a",
+        "_VERSION": "2c8b5da003025134"
+      },
+      "timing": {
+        "BUILD": {
+          "startTime": "2026-11-10T05:47:54.691377854Z",
+          "endTime": "2026-11-10T05:49:05.930030779Z"
+        },
+        "FETCHSOURCE": {
+          "startTime": "2026-11-10T05:47:51.311240904Z",
+          "endTime": "2026-11-10T05:47:54.691085575Z"
+        },
+        "PUSH": {
+          "startTime": "2026-11-10T05:49:05.930225620Z",
+          "endTime": "2026-11-10T05:50:11.889669089Z"
+        },
+        "STORAGE_SOURCE": {
+          "startTime": "2026-11-10T05:47:51.311240904Z",
+          "endTime": "2026-11-10T05:47:54.691085575Z"
+        }
+      },
+      "artifacts": {
+        "images": [
+          "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/api:2c8b5da003025134-f6edb1ef-dbb1-4389-b014-9b7f1b48ff82",
+          "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/chroma:2c8b5da003025134-f6edb1ef-dbb1-4389-b014-9b7f1b48ff82",
+          "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow:2c8b5da003025134-f6edb1ef-dbb1-4389-b014-9b7f1b48ff82"
+        ]
+      },
+      "queueTtl": "3600s",
+      "serviceAccount": "projects/trialmatch-ac215-yixiao/serviceAccounts/trialmatch-build@trialmatch-ac215-yixiao.iam.gserviceaccount.com",
+      "name": "projects/15733748057/locations/us-east1/builds/f6edb1ef-dbb1-4389-b014-9b7f1b48ff82"
+    }
+  ],
+  "scanned_count": 9,
+  "search_has_more_pages": false,
+  "note": "Digest matches are candidates; confirm commit, timestamps and release before assigning a build ID."
+}
