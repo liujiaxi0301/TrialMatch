@@ -1,5 +1,19 @@
 # Module A: baseline and integration plan
 
+Submission decision, 2026-11-12 (ET): use C's existing 14-method retrieval report
+with the original 182-label version and Jenny's November 10 checkpoint. The four
+output files reproduce byte-for-byte; six C tests pass. No new training or
+label expansion is needed to reproduce that report. See the
+[submission evidence guide](submission-evidence.md).
+
+The [November 12 seven-task run](evidence/module-a/gcp-20261112/README.md) at
+`96a1ab9` completed data processing, training and both retrieval branches. Scoring
+stopped on ten unjudged query/trial pairs, so the overall run remains FAILED.
+Its new checkpoint has no completed benchmark scores. Supplementary labeling
+and recovery of that evaluation are deferred; the missing-label guard remains
+enabled. The existing successful four-task run and checksum-failure test retain
+their original versions and scope. The entries below record earlier stages.
+
 Local retrieval-evaluation update (2026-11-11 ET): C's `da31297` retrieval bundle
 is imported unchanged, with the original query path retained for compatibility.
 `--retrieval-evaluation` adds CPU scoring after this run's fine-tuned rankings,

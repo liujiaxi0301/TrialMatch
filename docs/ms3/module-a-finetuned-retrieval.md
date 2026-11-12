@@ -1,13 +1,19 @@
 # Module A: rankings from the current training run
 
-Status: local implementation for review, 2026-11-11, on top of `6053b7d`.
+Status update, 2026-11-12: this ranking task succeeded in the
+[seven-node cloud run](evidence/module-a/gcp-20261112/README.md), producing 48
+rows bound to that run's new checkpoint. Its subsequent evaluation failed on
+ten missing labels. The [selected submission evaluation](submission-evidence.md)
+uses the earlier report and its original model, not these new rankings.
+
+The implementation below was prepared on 2026-11-11, on top of `6053b7d`.
 Jenny owns `evaluation/ms3/run_retrieval.py` and the trained encoder. A reuses
 that entry point and adds the Vertex dependency, verified inputs, isolated
 runtime, GCS outputs and failure checks. Jessie's retrieval labels and scoring
 are not prerequisites for producing these rankings. The subsequent local
 [`--retrieval-evaluation` integration](module-a-retrieval-evaluation.md) now adds
-scoring of these current-run outputs using C's frozen bundle; cloud verification
-remains pending.
+scoring of these current-run outputs using C's frozen bundle. Completion of
+scoring for the November 12 checkpoint remains pending and is deferred.
 
 ## Execution graph
 
@@ -138,13 +144,14 @@ Local results on 2026-11-11:
   11 task/runtime checks then passed inside the image with network access disabled.
 - Jenny's training/ranking implementation and C's evaluator/labels are unchanged.
 
-The new CI job is prepared but has not run on GitHub for these uncommitted
-changes. No registry image was published and no Vertex job was submitted.
-Production checkpoint latency, memory use and integrated cloud artifacts remain
-to be verified.
+Subsequent verification at `96a1ab9`: [GitHub CI passed](https://github.com/liujiaxi0301/TrialMatch/actions/runs/43162301627),
+the three images were built and published, and the November 12 seven-task Vertex
+run completed training and retrieval from the actual checkpoint. Its selected
+cloud records are archived in the [run evidence](evidence/module-a/gcp-20261112/README.md).
+This establishes execution of that configuration; it is not a serving latency
+or memory-capacity benchmark.
 
-Next: review and commit the implementation, build/publish the reviewed images,
-run the integrated Vertex graph, and archive the actual outputs. The optional
-evaluation node consumes the ranking file plus config/manifest; incomplete
-judgments block scoring with a diagnostic. Ranking generation alone makes no
-retrieval-score or clinical-quality claim.
+The evaluation node consumed the ranking file and its provenance, then blocked
+scoring because ten pairs were unjudged. Completing those scores is deferred;
+the selected submission uses the existing historical report. Ranking generation
+alone makes no retrieval-score or clinical-quality claim.

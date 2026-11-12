@@ -116,6 +116,7 @@ the existing patient data. The reproduction record is saved to
 
 - [Cloud app](https://trialmatch-15733748057.us-east1.run.app) (authorized Google login required).
 - [Successful four-step pipeline](https://console.cloud.google.com/vertex-ai/locations/us-east1/pipelines/runs/trialmatch-data-pipeline-20261112024908?project=trialmatch-ac215-yixiao).
+- [MS3 evidence and evaluation reproduction](docs/ms3/submission-evidence.md): the November 10 checkpoint and its completed 14-method report.
 
 The app uses Cloud Run. Chroma runs on a separate VM with a persistent disk
 mounted at `/data` inside its container. Only the TrialMatch subnet can reach
@@ -154,6 +155,12 @@ eligibility evaluation found six `INVALID_LLM_OUTPUT` predictions among 115
 criteria. These block a passing end-to-end evaluation.
 The [eight-task run](https://console.cloud.google.com/vertex-ai/locations/us-east1/pipelines/runs/trialmatch-data-pipeline-20261112023318?project=trialmatch-ac215-yixiao)
 contains the task outcomes and artifacts.
+
+For submission, use the existing [retrieval report](evaluation/ms3/retrieval/RETRIEVAL_EVALUATION_REPORT.md)
+with its original November 10 model, saved rankings and 182 judgments. Its four
+result files reproduce byte-for-byte. The [separate seven-task run](docs/ms3/evidence/module-a/gcp-20261112/README.md)
+also completed training and retrieval but stopped on ten unjudged pairs; it did
+not include eligibility evaluation. Neither new checkpoint inherits the older report's scores.
 
 Details: [training](docs/ms3/module-a-training.md),
 [new-model rankings](docs/ms3/module-a-finetuned-retrieval.md),

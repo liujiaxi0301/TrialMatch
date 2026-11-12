@@ -1,7 +1,12 @@
 # Module A: current-run retrieval evaluation
 
-Local implementation for review, 2026-11-11 (ET). No integrated Vertex execution
-or new GitHub CI result is claimed here.
+Updated 2026-11-12 (ET): the integrated Vertex run reached scoring and stopped on
+ten unjudged pairs; six preceding tasks succeeded. See the
+[cloud evidence](evidence/module-a/gcp-20261112/README.md). The selected submission
+results are C's existing 14-method report, reproduced from its original saved
+rankings and 182 labels. See [reproduction and version mapping](submission-evidence.md).
+The November 12 checkpoint has no completed retrieval scores. This decision does
+not replace the inputs of the current-run adapter or suppress its missing-label guard.
 
 ## Ownership and preserved evidence
 
@@ -140,7 +145,11 @@ Local verification on 2026-11-11 (ET):
 - Ruff, syntax and whitespace checks pass. No cloud job, registry publication,
   Git commit or push was performed for this implementation.
 
-Remaining release gates: review/commit, GitHub CI, publish reviewed image digests,
-execute the integrated Vertex graph and archive the resulting manifests/metrics,
-task logs and runtime graph. The earlier four-node success and checksum-failure
-runs do not establish that this new training/retrieval/scoring graph has run.
+Subsequent execution at `96a1ab9`: the three image builds succeeded and the
+seven-node Vertex graph ran on November 12. Its final scoring task failed with
+`UnjudgedResults` for ten pairs. Metadata, ranking outputs and the diagnostic are
+archived separately; there are no scoring CSVs or scoring success manifest for
+that run. Completing its evaluation requires reviewed additional labels and a
+new benchmark version. That work is deferred for the selected submission, which
+uses the unchanged historical report. The original failed run is not relabeled
+as successful, and no replacement training job is requested.

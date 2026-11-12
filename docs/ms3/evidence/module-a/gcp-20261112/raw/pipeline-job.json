@@ -1,0 +1,1561 @@
+{
+  "name": "projects/15733748057/locations/us-east1/pipelineJobs/trialmatch-data-pipeline-20261112172151",
+  "displayName": "trialmatch-data-pipeline",
+  "createTime": "2026-11-12T17:21:52.697482Z",
+  "startTime": "2026-11-12T17:21:53.477999Z",
+  "endTime": "2026-11-12T18:02:35.368175Z",
+  "updateTime": "2026-11-12T18:02:35.368175Z",
+  "pipelineSpec": {
+    "deploymentConfig": {
+      "@type": "type.googleapis.com/ml_pipelines.PipelineDeploymentConfig",
+      "executors": {
+        "exec-fetch-raw": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:ce74c89e231e51782c097b83f56b2823e68754415cc12ab98f53889f39abd135",
+            "resources": {
+              "memoryLimit": 2.147483648,
+              "cpuLimit": 1.0,
+              "resourceMemoryLimit": "2Gi",
+              "resourceCpuLimit": "1"
+            },
+            "command": [
+              "python",
+              "-m",
+              "cloud.tasks"
+            ],
+            "args": [
+              "fetch",
+              "--source",
+              "{{$.inputs.parameters['release']}}",
+              "--output",
+              "{{$.outputs.artifacts['raw'].uri}}"
+            ]
+          }
+        },
+        "exec-evaluate-retrieval": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:ce74c89e231e51782c097b83f56b2823e68754415cc12ab98f53889f39abd135",
+            "resources": {
+              "memoryLimit": 2.147483648,
+              "cpuLimit": 1.0,
+              "resourceMemoryLimit": "2Gi",
+              "resourceCpuLimit": "1"
+            },
+            "command": [
+              "python",
+              "-m",
+              "cloud.retrieval_evaluation"
+            ],
+            "args": [
+              "--source",
+              "{{$.inputs.artifacts['report'].uri}}",
+              "--training",
+              "{{$.inputs.artifacts['training'].uri}}",
+              "--rankings",
+              "{{$.inputs.artifacts['rankings'].uri}}",
+              "--output",
+              "{{$.outputs.artifacts['evaluation'].uri}}",
+              "--image-uri",
+              "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:ce74c89e231e51782c097b83f56b2823e68754415cc12ab98f53889f39abd135",
+              "--retrieval-image",
+              "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/retrieval@sha256:e5c6f23007514ef9713f9c50eb1cc7267f1b55f20e9a48ade45281b76e17c487",
+              "--trainer-image",
+              "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/trainer@sha256:8b2a2cb9bbcf88a1d9456e21d26ae70bd1ce1aecaec42f01bd6daf6172d9e97f",
+              "--trainer-batch-size",
+              "8",
+              "--expected-pairs",
+              "{\"gs://trialmatch-ac215-yixiao-ms3/training/pairs/20261110/pairs_llm.jsonl\": \"94ae0f0193b2a7715625d4227c76d1cbfacce8ef0b2b53faa3b449e77d93994c\"}",
+              "--benchmark-sha256",
+              "981402d2618aa3faf3a06efe5ce978f5d4832db078e2c708c22f270bba259580"
+            ]
+          }
+        },
+        "exec-retrieve-finetuned": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/retrieval@sha256:e5c6f23007514ef9713f9c50eb1cc7267f1b55f20e9a48ade45281b76e17c487",
+            "env": [
+              {
+                "name": "GCP_PROJECT",
+                "value": "trialmatch-ac215-yixiao"
+              }
+            ],
+            "resources": {
+              "memoryLimit": 17.179869184,
+              "cpuLimit": 4.0,
+              "resourceMemoryLimit": "16Gi",
+              "resourceCpuLimit": "4"
+            },
+            "command": [
+              "python",
+              "-m",
+              "cloud.finetuned_retrieval"
+            ],
+            "args": [
+              "--source",
+              "{{$.inputs.artifacts['report'].uri}}",
+              "--training",
+              "{{$.inputs.artifacts['training'].uri}}",
+              "--output",
+              "{{$.outputs.artifacts['rankings'].uri}}",
+              "--image-uri",
+              "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/retrieval@sha256:e5c6f23007514ef9713f9c50eb1cc7267f1b55f20e9a48ade45281b76e17c487",
+              "--trainer-image",
+              "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/trainer@sha256:8b2a2cb9bbcf88a1d9456e21d26ae70bd1ce1aecaec42f01bd6daf6172d9e97f",
+              "--trainer-batch-size",
+              "8",
+              "--expected-pairs",
+              "{\"gs://trialmatch-ac215-yixiao-ms3/training/pairs/20261110/pairs_llm.jsonl\": \"94ae0f0193b2a7715625d4227c76d1cbfacce8ef0b2b53faa3b449e77d93994c\"}"
+            ]
+          }
+        },
+        "exec-validate-data": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:ce74c89e231e51782c097b83f56b2823e68754415cc12ab98f53889f39abd135",
+            "resources": {
+              "memoryLimit": 2.147483648,
+              "cpuLimit": 1.0,
+              "resourceMemoryLimit": "2Gi",
+              "resourceCpuLimit": "1"
+            },
+            "command": [
+              "python",
+              "-m",
+              "cloud.tasks"
+            ],
+            "args": [
+              "validate",
+              "--source",
+              "{{$.inputs.artifacts['processed'].uri}}",
+              "--output",
+              "{{$.outputs.artifacts['report'].uri}}"
+            ]
+          }
+        },
+        "exec-process-trials": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:ce74c89e231e51782c097b83f56b2823e68754415cc12ab98f53889f39abd135",
+            "resources": {
+              "memoryLimit": 2.147483648,
+              "cpuLimit": 1.0,
+              "resourceMemoryLimit": "2Gi",
+              "resourceCpuLimit": "1"
+            },
+            "command": [
+              "python",
+              "-m",
+              "cloud.tasks"
+            ],
+            "args": [
+              "process",
+              "--source",
+              "{{$.inputs.artifacts['raw'].uri}}",
+              "--output",
+              "{{$.outputs.artifacts['processed'].uri}}"
+            ]
+          }
+        },
+        "exec-retrieve-trials": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:ce74c89e231e51782c097b83f56b2823e68754415cc12ab98f53889f39abd135",
+            "env": [
+              {
+                "name": "GCP_PROJECT",
+                "value": "trialmatch-ac215-yixiao"
+              },
+              {
+                "name": "GCP_LOCATION",
+                "value": "global"
+              }
+            ],
+            "resources": {
+              "memoryLimit": 2.147483648,
+              "cpuLimit": 1.0,
+              "resourceMemoryLimit": "2Gi",
+              "resourceCpuLimit": "1"
+            },
+            "command": [
+              "python",
+              "-m",
+              "cloud.tasks"
+            ],
+            "args": [
+              "retrieve",
+              "--source",
+              "{{$.inputs.artifacts['report'].uri}}",
+              "--output",
+              "{{$.outputs.artifacts['rankings'].uri}}"
+            ]
+          }
+        },
+        "exec-train-encoder": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/trainer@sha256:8b2a2cb9bbcf88a1d9456e21d26ae70bd1ce1aecaec42f01bd6daf6172d9e97f",
+            "resources": {
+              "memoryLimit": 16.10612736,
+              "cpuLimit": 4.0,
+              "accelerator": {
+                "resourceType": "NVIDIA_TESLA_T4",
+                "count": "1",
+                "resourceCount": "1",
+                "type": "NVIDIA_TESLA_T4"
+              },
+              "resourceCpuLimit": "4",
+              "resourceMemoryLimit": "15Gi"
+            },
+            "command": [
+              "python",
+              "-m",
+              "cloud.train"
+            ],
+            "args": [
+              "--validated-report",
+              "{{$.inputs.artifacts['report'].uri}}",
+              "--output",
+              "{{$.outputs.artifacts['training'].uri}}",
+              "--image-uri",
+              "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/trainer@sha256:8b2a2cb9bbcf88a1d9456e21d26ae70bd1ce1aecaec42f01bd6daf6172d9e97f",
+              "--batch-size",
+              "8",
+              "--pairs",
+              "gs://trialmatch-ac215-yixiao-ms3/training/pairs/20261110/pairs_llm.jsonl",
+              "--pairs-sha256",
+              "94ae0f0193b2a7715625d4227c76d1cbfacce8ef0b2b53faa3b449e77d93994c",
+              "--wandb-secret",
+              "projects/15733748057/secrets/wandb-api-key/versions/1"
+            ]
+          }
+        }
+      }
+    },
+    "components": {
+      "comp-retrieve-trials": {
+        "inputDefinitions": {
+          "artifacts": {
+            "report": {
+              "artifactType": {
+                "schemaVersion": "0.0.1",
+                "schemaTitle": "system.Artifact"
+              }
+            }
+          }
+        },
+        "outputDefinitions": {
+          "artifacts": {
+            "rankings": {
+              "artifactType": {
+                "schemaVersion": "0.0.1",
+                "schemaTitle": "system.Artifact"
+              }
+            }
+          }
+        },
+        "executorLabel": "exec-retrieve-trials"
+      },
+      "comp-train-encoder": {
+        "inputDefinitions": {
+          "artifacts": {
+            "report": {
+              "artifactType": {
+                "schemaVersion": "0.0.1",
+                "schemaTitle": "system.Artifact"
+              }
+            }
+          }
+        },
+        "outputDefinitions": {
+          "artifacts": {
+            "training": {
+              "artifactType": {
+                "schemaVersion": "0.0.1",
+                "schemaTitle": "system.Artifact"
+              }
+            }
+          }
+        },
+        "executorLabel": "exec-train-encoder"
+      },
+      "comp-retrieve-finetuned": {
+        "inputDefinitions": {
+          "artifacts": {
+            "training": {
+              "artifactType": {
+                "schemaVersion": "0.0.1",
+                "schemaTitle": "system.Artifact"
+              }
+            },
+            "report": {
+              "artifactType": {
+                "schemaVersion": "0.0.1",
+                "schemaTitle": "system.Artifact"
+              }
+            }
+          }
+        },
+        "outputDefinitions": {
+          "artifacts": {
+            "rankings": {
+              "artifactType": {
+                "schemaVersion": "0.0.1",
+                "schemaTitle": "system.Artifact"
+              }
+            }
+          }
+        },
+        "executorLabel": "exec-retrieve-finetuned"
+      },
+      "comp-evaluate-retrieval": {
+        "inputDefinitions": {
+          "artifacts": {
+            "training": {
+              "artifactType": {
+                "schemaVersion": "0.0.1",
+                "schemaTitle": "system.Artifact"
+              }
+            },
+            "report": {
+              "artifactType": {
+                "schemaVersion": "0.0.1",
+                "schemaTitle": "system.Artifact"
+              }
+            },
+            "rankings": {
+              "artifactType": {
+                "schemaVersion": "0.0.1",
+                "schemaTitle": "system.Artifact"
+              }
+            }
+          }
+        },
+        "outputDefinitions": {
+          "artifacts": {
+            "evaluation": {
+              "artifactType": {
+                "schemaVersion": "0.0.1",
+                "schemaTitle": "system.Artifact"
+              }
+            }
+          }
+        },
+        "executorLabel": "exec-evaluate-retrieval"
+      },
+      "comp-process-trials": {
+        "inputDefinitions": {
+          "artifacts": {
+            "raw": {
+              "artifactType": {
+                "schemaVersion": "0.0.1",
+                "schemaTitle": "system.Dataset"
+              }
+            }
+          }
+        },
+        "outputDefinitions": {
+          "artifacts": {
+            "processed": {
+              "artifactType": {
+                "schemaVersion": "0.0.1",
+                "schemaTitle": "system.Dataset"
+              }
+            }
+          }
+        },
+        "executorLabel": "exec-process-trials"
+      },
+      "comp-validate-data": {
+        "inputDefinitions": {
+          "artifacts": {
+            "processed": {
+              "artifactType": {
+                "schemaVersion": "0.0.1",
+                "schemaTitle": "system.Dataset"
+              }
+            }
+          }
+        },
+        "outputDefinitions": {
+          "artifacts": {
+            "report": {
+              "artifactType": {
+                "schemaVersion": "0.0.1",
+                "schemaTitle": "system.Artifact"
+              }
+            }
+          }
+        },
+        "executorLabel": "exec-validate-data"
+      },
+      "comp-fetch-raw": {
+        "inputDefinitions": {
+          "parameters": {
+            "release": {
+              "parameterType": "STRING"
+            }
+          }
+        },
+        "outputDefinitions": {
+          "artifacts": {
+            "raw": {
+              "artifactType": {
+                "schemaVersion": "0.0.1",
+                "schemaTitle": "system.Dataset"
+              }
+            }
+          }
+        },
+        "executorLabel": "exec-fetch-raw"
+      }
+    },
+    "schemaVersion": "2.1.0",
+    "sdkVersion": "kfp-2.16.1",
+    "root": {
+      "inputDefinitions": {
+        "parameters": {
+          "release": {
+            "parameterType": "STRING"
+          }
+        }
+      },
+      "dag": {
+        "tasks": {
+          "retrieve-trials": {
+            "componentRef": {
+              "name": "comp-retrieve-trials"
+            },
+            "taskInfo": {
+              "name": "retrieve-trials"
+            },
+            "dependentTasks": [
+              "validate-data"
+            ],
+            "cachingOptions": {},
+            "inputs": {
+              "artifacts": {
+                "report": {
+                  "taskOutputArtifact": {
+                    "outputArtifactKey": "report",
+                    "producerTask": "validate-data"
+                  }
+                }
+              }
+            }
+          },
+          "process-trials": {
+            "componentRef": {
+              "name": "comp-process-trials"
+            },
+            "taskInfo": {
+              "name": "process-trials"
+            },
+            "dependentTasks": [
+              "fetch-raw"
+            ],
+            "cachingOptions": {},
+            "inputs": {
+              "artifacts": {
+                "raw": {
+                  "taskOutputArtifact": {
+                    "outputArtifactKey": "raw",
+                    "producerTask": "fetch-raw"
+                  }
+                }
+              }
+            }
+          },
+          "validate-data": {
+            "componentRef": {
+              "name": "comp-validate-data"
+            },
+            "taskInfo": {
+              "name": "validate-data"
+            },
+            "dependentTasks": [
+              "process-trials"
+            ],
+            "cachingOptions": {},
+            "inputs": {
+              "artifacts": {
+                "processed": {
+                  "taskOutputArtifact": {
+                    "outputArtifactKey": "processed",
+                    "producerTask": "process-trials"
+                  }
+                }
+              }
+            }
+          },
+          "retrieve-finetuned": {
+            "componentRef": {
+              "name": "comp-retrieve-finetuned"
+            },
+            "taskInfo": {
+              "name": "retrieve-finetuned"
+            },
+            "dependentTasks": [
+              "train-encoder",
+              "validate-data"
+            ],
+            "cachingOptions": {},
+            "inputs": {
+              "artifacts": {
+                "training": {
+                  "taskOutputArtifact": {
+                    "outputArtifactKey": "training",
+                    "producerTask": "train-encoder"
+                  }
+                },
+                "report": {
+                  "taskOutputArtifact": {
+                    "outputArtifactKey": "report",
+                    "producerTask": "validate-data"
+                  }
+                }
+              }
+            }
+          },
+          "fetch-raw": {
+            "componentRef": {
+              "name": "comp-fetch-raw"
+            },
+            "taskInfo": {
+              "name": "fetch-raw"
+            },
+            "cachingOptions": {},
+            "inputs": {
+              "parameters": {
+                "release": {
+                  "componentInputParameter": "release"
+                }
+              }
+            }
+          },
+          "evaluate-retrieval": {
+            "componentRef": {
+              "name": "comp-evaluate-retrieval"
+            },
+            "taskInfo": {
+              "name": "evaluate-retrieval"
+            },
+            "dependentTasks": [
+              "retrieve-finetuned",
+              "train-encoder",
+              "validate-data"
+            ],
+            "cachingOptions": {},
+            "inputs": {
+              "artifacts": {
+                "training": {
+                  "taskOutputArtifact": {
+                    "outputArtifactKey": "training",
+                    "producerTask": "train-encoder"
+                  }
+                },
+                "report": {
+                  "taskOutputArtifact": {
+                    "outputArtifactKey": "report",
+                    "producerTask": "validate-data"
+                  }
+                },
+                "rankings": {
+                  "taskOutputArtifact": {
+                    "outputArtifactKey": "rankings",
+                    "producerTask": "retrieve-finetuned"
+                  }
+                }
+              }
+            }
+          },
+          "train-encoder": {
+            "componentRef": {
+              "name": "comp-train-encoder"
+            },
+            "taskInfo": {
+              "name": "train-encoder"
+            },
+            "dependentTasks": [
+              "validate-data"
+            ],
+            "cachingOptions": {},
+            "inputs": {
+              "artifacts": {
+                "report": {
+                  "taskOutputArtifact": {
+                    "outputArtifactKey": "report",
+                    "producerTask": "validate-data"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "pipelineInfo": {
+      "name": "trialmatch-data-pipeline"
+    },
+    "deploymentSpec": {
+      "executors": {
+        "exec-fetch-raw": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:ce74c89e231e51782c097b83f56b2823e68754415cc12ab98f53889f39abd135",
+            "resources": {
+              "memoryLimit": 2.147483648,
+              "cpuLimit": 1.0,
+              "resourceMemoryLimit": "2Gi",
+              "resourceCpuLimit": "1"
+            },
+            "command": [
+              "python",
+              "-m",
+              "cloud.tasks"
+            ],
+            "args": [
+              "fetch",
+              "--source",
+              "{{$.inputs.parameters['release']}}",
+              "--output",
+              "{{$.outputs.artifacts['raw'].uri}}"
+            ]
+          }
+        },
+        "exec-evaluate-retrieval": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:ce74c89e231e51782c097b83f56b2823e68754415cc12ab98f53889f39abd135",
+            "resources": {
+              "memoryLimit": 2.147483648,
+              "cpuLimit": 1.0,
+              "resourceMemoryLimit": "2Gi",
+              "resourceCpuLimit": "1"
+            },
+            "command": [
+              "python",
+              "-m",
+              "cloud.retrieval_evaluation"
+            ],
+            "args": [
+              "--source",
+              "{{$.inputs.artifacts['report'].uri}}",
+              "--training",
+              "{{$.inputs.artifacts['training'].uri}}",
+              "--rankings",
+              "{{$.inputs.artifacts['rankings'].uri}}",
+              "--output",
+              "{{$.outputs.artifacts['evaluation'].uri}}",
+              "--image-uri",
+              "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:ce74c89e231e51782c097b83f56b2823e68754415cc12ab98f53889f39abd135",
+              "--retrieval-image",
+              "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/retrieval@sha256:e5c6f23007514ef9713f9c50eb1cc7267f1b55f20e9a48ade45281b76e17c487",
+              "--trainer-image",
+              "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/trainer@sha256:8b2a2cb9bbcf88a1d9456e21d26ae70bd1ce1aecaec42f01bd6daf6172d9e97f",
+              "--trainer-batch-size",
+              "8",
+              "--expected-pairs",
+              "{\"gs://trialmatch-ac215-yixiao-ms3/training/pairs/20261110/pairs_llm.jsonl\": \"94ae0f0193b2a7715625d4227c76d1cbfacce8ef0b2b53faa3b449e77d93994c\"}",
+              "--benchmark-sha256",
+              "981402d2618aa3faf3a06efe5ce978f5d4832db078e2c708c22f270bba259580"
+            ]
+          }
+        },
+        "exec-retrieve-finetuned": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/retrieval@sha256:e5c6f23007514ef9713f9c50eb1cc7267f1b55f20e9a48ade45281b76e17c487",
+            "env": [
+              {
+                "name": "GCP_PROJECT",
+                "value": "trialmatch-ac215-yixiao"
+              }
+            ],
+            "resources": {
+              "memoryLimit": 17.179869184,
+              "cpuLimit": 4.0,
+              "resourceMemoryLimit": "16Gi",
+              "resourceCpuLimit": "4"
+            },
+            "command": [
+              "python",
+              "-m",
+              "cloud.finetuned_retrieval"
+            ],
+            "args": [
+              "--source",
+              "{{$.inputs.artifacts['report'].uri}}",
+              "--training",
+              "{{$.inputs.artifacts['training'].uri}}",
+              "--output",
+              "{{$.outputs.artifacts['rankings'].uri}}",
+              "--image-uri",
+              "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/retrieval@sha256:e5c6f23007514ef9713f9c50eb1cc7267f1b55f20e9a48ade45281b76e17c487",
+              "--trainer-image",
+              "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/trainer@sha256:8b2a2cb9bbcf88a1d9456e21d26ae70bd1ce1aecaec42f01bd6daf6172d9e97f",
+              "--trainer-batch-size",
+              "8",
+              "--expected-pairs",
+              "{\"gs://trialmatch-ac215-yixiao-ms3/training/pairs/20261110/pairs_llm.jsonl\": \"94ae0f0193b2a7715625d4227c76d1cbfacce8ef0b2b53faa3b449e77d93994c\"}"
+            ]
+          }
+        },
+        "exec-validate-data": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:ce74c89e231e51782c097b83f56b2823e68754415cc12ab98f53889f39abd135",
+            "resources": {
+              "memoryLimit": 2.147483648,
+              "cpuLimit": 1.0,
+              "resourceMemoryLimit": "2Gi",
+              "resourceCpuLimit": "1"
+            },
+            "command": [
+              "python",
+              "-m",
+              "cloud.tasks"
+            ],
+            "args": [
+              "validate",
+              "--source",
+              "{{$.inputs.artifacts['processed'].uri}}",
+              "--output",
+              "{{$.outputs.artifacts['report'].uri}}"
+            ]
+          }
+        },
+        "exec-process-trials": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:ce74c89e231e51782c097b83f56b2823e68754415cc12ab98f53889f39abd135",
+            "resources": {
+              "memoryLimit": 2.147483648,
+              "cpuLimit": 1.0,
+              "resourceMemoryLimit": "2Gi",
+              "resourceCpuLimit": "1"
+            },
+            "command": [
+              "python",
+              "-m",
+              "cloud.tasks"
+            ],
+            "args": [
+              "process",
+              "--source",
+              "{{$.inputs.artifacts['raw'].uri}}",
+              "--output",
+              "{{$.outputs.artifacts['processed'].uri}}"
+            ]
+          }
+        },
+        "exec-retrieve-trials": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/workflow@sha256:ce74c89e231e51782c097b83f56b2823e68754415cc12ab98f53889f39abd135",
+            "env": [
+              {
+                "name": "GCP_PROJECT",
+                "value": "trialmatch-ac215-yixiao"
+              },
+              {
+                "name": "GCP_LOCATION",
+                "value": "global"
+              }
+            ],
+            "resources": {
+              "memoryLimit": 2.147483648,
+              "cpuLimit": 1.0,
+              "resourceMemoryLimit": "2Gi",
+              "resourceCpuLimit": "1"
+            },
+            "command": [
+              "python",
+              "-m",
+              "cloud.tasks"
+            ],
+            "args": [
+              "retrieve",
+              "--source",
+              "{{$.inputs.artifacts['report'].uri}}",
+              "--output",
+              "{{$.outputs.artifacts['rankings'].uri}}"
+            ]
+          }
+        },
+        "exec-train-encoder": {
+          "container": {
+            "image": "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/trainer@sha256:8b2a2cb9bbcf88a1d9456e21d26ae70bd1ce1aecaec42f01bd6daf6172d9e97f",
+            "resources": {
+              "memoryLimit": 16.10612736,
+              "cpuLimit": 4.0,
+              "accelerator": {
+                "resourceType": "NVIDIA_TESLA_T4",
+                "count": "1",
+                "resourceCount": "1",
+                "type": "NVIDIA_TESLA_T4"
+              },
+              "resourceCpuLimit": "4",
+              "resourceMemoryLimit": "15Gi"
+            },
+            "command": [
+              "python",
+              "-m",
+              "cloud.train"
+            ],
+            "args": [
+              "--validated-report",
+              "{{$.inputs.artifacts['report'].uri}}",
+              "--output",
+              "{{$.outputs.artifacts['training'].uri}}",
+              "--image-uri",
+              "us-east1-docker.pkg.dev/trialmatch-ac215-yixiao/trialmatch/trainer@sha256:8b2a2cb9bbcf88a1d9456e21d26ae70bd1ce1aecaec42f01bd6daf6172d9e97f",
+              "--batch-size",
+              "8",
+              "--pairs",
+              "gs://trialmatch-ac215-yixiao-ms3/training/pairs/20261110/pairs_llm.jsonl",
+              "--pairs-sha256",
+              "94ae0f0193b2a7715625d4227c76d1cbfacce8ef0b2b53faa3b449e77d93994c",
+              "--wandb-secret",
+              "projects/15733748057/secrets/wandb-api-key/versions/1"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "state": "PIPELINE_STATE_FAILED",
+  "jobDetail": {
+    "pipelineContext": {
+      "name": "projects/15733748057/locations/us-east1/metadataStores/default/contexts/trialmatch-data-pipeline",
+      "displayName": "trialmatch-data-pipeline",
+      "etag": "1794504113628",
+      "createTime": "2026-10-28T09:28:42.470Z",
+      "updateTime": "2026-11-12T17:21:53.628Z",
+      "schemaTitle": "system.Pipeline",
+      "schemaVersion": "0.0.1",
+      "metadata": {}
+    },
+    "pipelineRunContext": {
+      "name": "projects/15733748057/locations/us-east1/metadataStores/default/contexts/trialmatch-data-pipeline-20261112172151",
+      "displayName": "trialmatch-data-pipeline-20261112172151",
+      "etag": "1794504113716",
+      "createTime": "2026-11-12T17:21:53.716Z",
+      "updateTime": "2026-11-12T17:21:53.716Z",
+      "parentContexts": [
+        "projects/15733748057/locations/us-east1/metadataStores/default/contexts/trialmatch-data-pipeline"
+      ],
+      "schemaTitle": "system.PipelineRun",
+      "schemaVersion": "0.0.1",
+      "metadata": {}
+    },
+    "taskDetails": [
+      {
+        "taskId": "-5166569885827858432",
+        "taskName": "retrieve-finetuned",
+        "createTime": "2026-11-12T17:21:54.042143Z",
+        "startTime": "2026-11-12T17:55:35.507429Z",
+        "endTime": "2026-11-12T18:00:11.148013Z",
+        "executorDetail": {
+          "containerDetail": {
+            "mainJob": "projects/15733748057/locations/us-east1/customJobs/3148543011760111616"
+          }
+        },
+        "state": "SUCCEEDED",
+        "execution": {
+          "name": "projects/15733748057/locations/us-east1/metadataStores/default/executions/15045757170989120466",
+          "displayName": "retrieve-finetuned",
+          "state": "COMPLETE",
+          "etag": "1794506411123",
+          "createTime": "2026-11-12T17:55:35.208Z",
+          "updateTime": "2026-11-12T18:00:11.123Z",
+          "schemaTitle": "system.ContainerExecution",
+          "schemaVersion": "0.0.1",
+          "metadata": {
+            "vmlmd_lineage_integration": {
+              "pipeline_run_component": {
+                "parent_task_names": [
+                  "trialmatch-data-pipeline-20261112172151"
+                ],
+                "location_id": "us-east1",
+                "pipeline_run_id": "trialmatch-data-pipeline-20261112172151",
+                "project_id": "trialmatch-ac215-yixiao",
+                "task_name": "retrieve-finetuned"
+              }
+            },
+            "vertex-ai-pipelines-artifact-argument-binding": {
+              "output:rankings": [
+                "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/11129206957032566581"
+              ],
+              "input:report": [
+                "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/14506999633491830718"
+              ],
+              "input:training": [
+                "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/7844532134274864384"
+              ]
+            }
+          }
+        },
+        "inputs": {
+          "training": {
+            "artifacts": [
+              {
+                "name": "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/7844532134274864384",
+                "displayName": "training",
+                "uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/train-encoder_-554883867400470528/training",
+                "etag": "1794506134899",
+                "createTime": "2026-11-12T17:30:58.350Z",
+                "updateTime": "2026-11-12T17:55:34.899Z",
+                "state": "LIVE",
+                "schemaTitle": "system.Artifact",
+                "schemaVersion": "0.0.1",
+                "metadata": {}
+              }
+            ]
+          },
+          "report": {
+            "artifacts": [
+              {
+                "name": "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/14506999633491830718",
+                "displayName": "report",
+                "uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/validate-data_309807261054664704/report",
+                "etag": "1794504657885",
+                "createTime": "2026-11-12T17:28:34.622Z",
+                "updateTime": "2026-11-12T17:30:57.885Z",
+                "state": "LIVE",
+                "schemaTitle": "system.Artifact",
+                "schemaVersion": "0.0.1",
+                "metadata": {}
+              }
+            ]
+          }
+        },
+        "outputs": {
+          "rankings": {
+            "artifacts": [
+              {
+                "name": "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/11129206957032566581",
+                "displayName": "rankings",
+                "uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/retrieve-finetuned_-5166569885827858432/rankings",
+                "etag": "1794506411097",
+                "createTime": "2026-11-12T17:55:35.416Z",
+                "updateTime": "2026-11-12T18:00:11.097Z",
+                "state": "LIVE",
+                "schemaTitle": "system.Artifact",
+                "schemaVersion": "0.0.1",
+                "metadata": {}
+              }
+            ]
+          }
+        },
+        "parentTaskId": "-2266251725801259008",
+        "pipelineTaskStatus": [
+          {
+            "updateTime": "2026-11-12T18:00:10.904236019Z",
+            "state": "SUCCEEDED"
+          }
+        ],
+        "taskUniqueName": "retrieve-finetuned"
+      },
+      {
+        "taskId": "-2860726876614164480",
+        "taskName": "fetch-raw",
+        "createTime": "2026-11-12T17:21:54.042143Z",
+        "startTime": "2026-11-12T17:21:54.664082Z",
+        "endTime": "2026-11-12T17:25:09.050394Z",
+        "executorDetail": {
+          "containerDetail": {
+            "mainJob": "projects/15733748057/locations/us-east1/customJobs/213040479644680192"
+          }
+        },
+        "state": "SUCCEEDED",
+        "execution": {
+          "name": "projects/15733748057/locations/us-east1/metadataStores/default/executions/13120943504248267013",
+          "displayName": "fetch-raw",
+          "state": "COMPLETE",
+          "etag": "1794504309033",
+          "createTime": "2026-11-12T17:21:54.241Z",
+          "updateTime": "2026-11-12T17:25:09.033Z",
+          "schemaTitle": "system.ContainerExecution",
+          "schemaVersion": "0.0.1",
+          "metadata": {
+            "vmlmd_lineage_integration": {
+              "pipeline_run_component": {
+                "parent_task_names": [
+                  "trialmatch-data-pipeline-20261112172151"
+                ],
+                "pipeline_run_id": "trialmatch-data-pipeline-20261112172151",
+                "location_id": "us-east1",
+                "project_id": "trialmatch-ac215-yixiao",
+                "task_name": "fetch-raw"
+              }
+            },
+            "input:release": "gs://trialmatch-ac215-yixiao-ms3/releases/96a1ab99463f8e3363a6b4f74a1b1eeb2df4fa59/ce74c89e231e51782c097b83f56b2823e68754415cc12ab98f53889f39abd135/c8627e7addd3d265a61eb137d28691c545b4786b321e9e1981a9035e748e2125/release.json",
+            "vertex-ai-pipelines-artifact-argument-binding": {
+              "output:raw": [
+                "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/13959673587432903350"
+              ]
+            }
+          }
+        },
+        "outputs": {
+          "raw": {
+            "artifacts": [
+              {
+                "name": "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/13959673587432903350",
+                "displayName": "raw",
+                "uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/fetch-raw_-2860726876614164480/raw",
+                "etag": "1794504309013",
+                "createTime": "2026-11-12T17:21:54.531Z",
+                "updateTime": "2026-11-12T17:25:09.013Z",
+                "state": "LIVE",
+                "schemaTitle": "system.Dataset",
+                "schemaVersion": "0.0.1",
+                "metadata": {}
+              }
+            ]
+          }
+        },
+        "parentTaskId": "-2266251725801259008",
+        "pipelineTaskStatus": [
+          {
+            "updateTime": "2026-11-12T17:25:08.886732875Z",
+            "state": "SUCCEEDED"
+          }
+        ],
+        "taskUniqueName": "fetch-raw"
+      },
+      {
+        "taskId": "-2266251725801259008",
+        "taskName": "trialmatch-data-pipeline-20261112172151",
+        "createTime": "2026-11-12T17:21:53.477999Z",
+        "startTime": "2026-11-12T17:21:54.042143Z",
+        "endTime": "2026-11-12T18:02:35.352810Z",
+        "executorDetail": {},
+        "state": "FAILED",
+        "execution": {
+          "name": "projects/15733748057/locations/us-east1/metadataStores/default/executions/6251824690837383032",
+          "displayName": "trialmatch-data-pipeline-20261112172151",
+          "state": "FAILED",
+          "etag": "1794506555332",
+          "createTime": "2026-11-12T17:21:53.968Z",
+          "updateTime": "2026-11-12T18:02:35.332Z",
+          "schemaTitle": "system.Run",
+          "schemaVersion": "0.0.1",
+          "metadata": {
+            "vmlmd_lineage_integration": {
+              "pipeline_run_component": {
+                "parent_task_names": [],
+                "location_id": "us-east1",
+                "pipeline_run_id": "trialmatch-data-pipeline-20261112172151",
+                "project_id": "trialmatch-ac215-yixiao",
+                "task_name": "trialmatch-data-pipeline-20261112172151"
+              }
+            },
+            "input:release": "gs://trialmatch-ac215-yixiao-ms3/releases/96a1ab99463f8e3363a6b4f74a1b1eeb2df4fa59/ce74c89e231e51782c097b83f56b2823e68754415cc12ab98f53889f39abd135/c8627e7addd3d265a61eb137d28691c545b4786b321e9e1981a9035e748e2125/release.json"
+          }
+        },
+        "error": {
+          "code": 9,
+          "message": " The DAG failed because some tasks failed. The failed tasks are: [evaluate-retrieval]."
+        },
+        "pipelineTaskStatus": [
+          {
+            "updateTime": "2026-11-12T18:02:35.181060395Z",
+            "state": "FAILED",
+            "error": {
+              "code": 9,
+              "message": " The DAG failed because some tasks failed. The failed tasks are: [evaluate-retrieval]."
+            }
+          }
+        ],
+        "taskUniqueName": "trialmatch-data-pipeline-20261112172151"
+      },
+      {
+        "taskId": "-554883867400470528",
+        "taskName": "train-encoder",
+        "createTime": "2026-11-12T17:21:54.042143Z",
+        "startTime": "2026-11-12T17:30:58.466598Z",
+        "endTime": "2026-11-12T17:55:34.943473Z",
+        "executorDetail": {
+          "containerDetail": {
+            "mainJob": "projects/15733748057/locations/us-east1/customJobs/2645547228378169344"
+          }
+        },
+        "state": "SUCCEEDED",
+        "execution": {
+          "name": "projects/15733748057/locations/us-east1/metadataStores/default/executions/11974445973799368506",
+          "displayName": "train-encoder",
+          "state": "COMPLETE",
+          "etag": "1794506134922",
+          "createTime": "2026-11-12T17:30:58.116Z",
+          "updateTime": "2026-11-12T17:55:34.922Z",
+          "schemaTitle": "system.ContainerExecution",
+          "schemaVersion": "0.0.1",
+          "metadata": {
+            "vmlmd_lineage_integration": {
+              "pipeline_run_component": {
+                "parent_task_names": [
+                  "trialmatch-data-pipeline-20261112172151"
+                ],
+                "location_id": "us-east1",
+                "pipeline_run_id": "trialmatch-data-pipeline-20261112172151",
+                "project_id": "trialmatch-ac215-yixiao",
+                "task_name": "train-encoder"
+              }
+            },
+            "vertex-ai-pipelines-artifact-argument-binding": {
+              "input:report": [
+                "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/14506999633491830718"
+              ],
+              "output:training": [
+                "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/7844532134274864384"
+              ]
+            }
+          }
+        },
+        "inputs": {
+          "report": {
+            "artifacts": [
+              {
+                "name": "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/14506999633491830718",
+                "displayName": "report",
+                "uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/validate-data_309807261054664704/report",
+                "etag": "1794504657885",
+                "createTime": "2026-11-12T17:28:34.622Z",
+                "updateTime": "2026-11-12T17:30:57.885Z",
+                "state": "LIVE",
+                "schemaTitle": "system.Artifact",
+                "schemaVersion": "0.0.1",
+                "metadata": {}
+              }
+            ]
+          }
+        },
+        "outputs": {
+          "training": {
+            "artifacts": [
+              {
+                "name": "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/7844532134274864384",
+                "displayName": "training",
+                "uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/train-encoder_-554883867400470528/training",
+                "etag": "1794506134899",
+                "createTime": "2026-11-12T17:30:58.350Z",
+                "updateTime": "2026-11-12T17:55:34.899Z",
+                "state": "LIVE",
+                "schemaTitle": "system.Artifact",
+                "schemaVersion": "0.0.1",
+                "metadata": {}
+              }
+            ]
+          }
+        },
+        "parentTaskId": "-2266251725801259008",
+        "pipelineTaskStatus": [
+          {
+            "updateTime": "2026-11-12T17:55:34.749293906Z",
+            "state": "SUCCEEDED"
+          }
+        ],
+        "taskUniqueName": "train-encoder"
+      },
+      {
+        "taskId": "309807261054664704",
+        "taskName": "validate-data",
+        "createTime": "2026-11-12T17:21:54.042143Z",
+        "startTime": "2026-11-12T17:28:34.717336Z",
+        "endTime": "2026-11-12T17:30:57.928667Z",
+        "executorDetail": {
+          "containerDetail": {
+            "mainJob": "projects/15733748057/locations/us-east1/customJobs/2203068564989018112"
+          }
+        },
+        "state": "SUCCEEDED",
+        "execution": {
+          "name": "projects/15733748057/locations/us-east1/metadataStores/default/executions/11801584920484210482",
+          "displayName": "validate-data",
+          "state": "COMPLETE",
+          "etag": "1794504657909",
+          "createTime": "2026-11-12T17:28:34.367Z",
+          "updateTime": "2026-11-12T17:30:57.909Z",
+          "schemaTitle": "system.ContainerExecution",
+          "schemaVersion": "0.0.1",
+          "metadata": {
+            "vmlmd_lineage_integration": {
+              "pipeline_run_component": {
+                "parent_task_names": [
+                  "trialmatch-data-pipeline-20261112172151"
+                ],
+                "pipeline_run_id": "trialmatch-data-pipeline-20261112172151",
+                "location_id": "us-east1",
+                "task_name": "validate-data",
+                "project_id": "trialmatch-ac215-yixiao"
+              }
+            },
+            "vertex-ai-pipelines-artifact-argument-binding": {
+              "output:report": [
+                "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/14506999633491830718"
+              ],
+              "input:processed": [
+                "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/6298856438618171265"
+              ]
+            }
+          }
+        },
+        "inputs": {
+          "processed": {
+            "artifacts": [
+              {
+                "name": "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/6298856438618171265",
+                "displayName": "processed",
+                "uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/process-trials_4056802151026917376/processed",
+                "etag": "1794504514126",
+                "createTime": "2026-11-12T17:25:09.455Z",
+                "updateTime": "2026-11-12T17:28:34.126Z",
+                "state": "LIVE",
+                "schemaTitle": "system.Dataset",
+                "schemaVersion": "0.0.1",
+                "metadata": {}
+              }
+            ]
+          }
+        },
+        "outputs": {
+          "report": {
+            "artifacts": [
+              {
+                "name": "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/14506999633491830718",
+                "displayName": "report",
+                "uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/validate-data_309807261054664704/report",
+                "etag": "1794504657885",
+                "createTime": "2026-11-12T17:28:34.622Z",
+                "updateTime": "2026-11-12T17:30:57.885Z",
+                "state": "LIVE",
+                "schemaTitle": "system.Artifact",
+                "schemaVersion": "0.0.1",
+                "metadata": {}
+              }
+            ]
+          }
+        },
+        "parentTaskId": "-2266251725801259008",
+        "pipelineTaskStatus": [
+          {
+            "updateTime": "2026-11-12T17:30:57.748746166Z",
+            "state": "SUCCEEDED"
+          }
+        ],
+        "taskUniqueName": "validate-data"
+      },
+      {
+        "taskId": "4056802151026917376",
+        "taskName": "process-trials",
+        "createTime": "2026-11-12T17:21:54.042143Z",
+        "startTime": "2026-11-12T17:25:09.585904Z",
+        "endTime": "2026-11-12T17:28:34.163114Z",
+        "executorDetail": {
+          "containerDetail": {
+            "mainJob": "projects/15733748057/locations/us-east1/customJobs/8465323846847692800"
+          }
+        },
+        "state": "SUCCEEDED",
+        "execution": {
+          "name": "projects/15733748057/locations/us-east1/metadataStores/default/executions/7401623586225658585",
+          "displayName": "process-trials",
+          "state": "COMPLETE",
+          "etag": "1794504514144",
+          "createTime": "2026-11-12T17:25:09.255Z",
+          "updateTime": "2026-11-12T17:28:34.144Z",
+          "schemaTitle": "system.ContainerExecution",
+          "schemaVersion": "0.0.1",
+          "metadata": {
+            "vmlmd_lineage_integration": {
+              "pipeline_run_component": {
+                "parent_task_names": [
+                  "trialmatch-data-pipeline-20261112172151"
+                ],
+                "location_id": "us-east1",
+                "pipeline_run_id": "trialmatch-data-pipeline-20261112172151",
+                "task_name": "process-trials",
+                "project_id": "trialmatch-ac215-yixiao"
+              }
+            },
+            "vertex-ai-pipelines-artifact-argument-binding": {
+              "output:processed": [
+                "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/6298856438618171265"
+              ],
+              "input:raw": [
+                "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/13959673587432903350"
+              ]
+            }
+          }
+        },
+        "inputs": {
+          "raw": {
+            "artifacts": [
+              {
+                "name": "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/13959673587432903350",
+                "displayName": "raw",
+                "uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/fetch-raw_-2860726876614164480/raw",
+                "etag": "1794504309013",
+                "createTime": "2026-11-12T17:21:54.531Z",
+                "updateTime": "2026-11-12T17:25:09.013Z",
+                "state": "LIVE",
+                "schemaTitle": "system.Dataset",
+                "schemaVersion": "0.0.1",
+                "metadata": {}
+              }
+            ]
+          }
+        },
+        "outputs": {
+          "processed": {
+            "artifacts": [
+              {
+                "name": "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/6298856438618171265",
+                "displayName": "processed",
+                "uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/process-trials_4056802151026917376/processed",
+                "etag": "1794504514126",
+                "createTime": "2026-11-12T17:25:09.455Z",
+                "updateTime": "2026-11-12T17:28:34.126Z",
+                "state": "LIVE",
+                "schemaTitle": "system.Dataset",
+                "schemaVersion": "0.0.1",
+                "metadata": {}
+              }
+            ]
+          }
+        },
+        "parentTaskId": "-2266251725801259008",
+        "pipelineTaskStatus": [
+          {
+            "updateTime": "2026-11-12T17:28:33.955619643Z",
+            "state": "SUCCEEDED"
+          }
+        ],
+        "taskUniqueName": "process-trials"
+      },
+      {
+        "taskId": "6362645160240611328",
+        "taskName": "evaluate-retrieval",
+        "createTime": "2026-11-12T17:21:54.042143Z",
+        "startTime": "2026-11-12T18:00:11.912969Z",
+        "endTime": "2026-11-12T18:02:35.096090Z",
+        "executorDetail": {
+          "containerDetail": {
+            "mainJob": "projects/15733748057/locations/us-east1/customJobs/5859709987437150208"
+          }
+        },
+        "state": "FAILED",
+        "execution": {
+          "name": "projects/15733748057/locations/us-east1/metadataStores/default/executions/7017630136615927530",
+          "displayName": "evaluate-retrieval",
+          "state": "FAILED",
+          "etag": "1794506555078",
+          "createTime": "2026-11-12T18:00:11.543Z",
+          "updateTime": "2026-11-12T18:02:35.078Z",
+          "schemaTitle": "system.ContainerExecution",
+          "schemaVersion": "0.0.1",
+          "metadata": {
+            "vmlmd_lineage_integration": {
+              "pipeline_run_component": {
+                "parent_task_names": [
+                  "trialmatch-data-pipeline-20261112172151"
+                ],
+                "location_id": "us-east1",
+                "pipeline_run_id": "trialmatch-data-pipeline-20261112172151",
+                "task_name": "evaluate-retrieval",
+                "project_id": "trialmatch-ac215-yixiao"
+              }
+            },
+            "vertex-ai-pipelines-artifact-argument-binding": {
+              "output:evaluation": [
+                "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/11408984947191267112"
+              ],
+              "input:report": [
+                "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/14506999633491830718"
+              ],
+              "input:rankings": [
+                "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/11129206957032566581"
+              ],
+              "input:training": [
+                "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/7844532134274864384"
+              ]
+            }
+          }
+        },
+        "error": {
+          "code": 3,
+          "message": "The replica workerpool0-0 exited with a non-zero status of 1. To find out more about why your job exited please check the logs: https://console.cloud.google.com/logs/viewer?project=15733748057&resource=ml_job%2Fjob_id%2F5859709987437150208&advancedFilter=resource.type%3D%22ml_job%22%0Aresource.labels.job_id%3D%225859709987437150208%22"
+        },
+        "inputs": {
+          "training": {
+            "artifacts": [
+              {
+                "name": "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/7844532134274864384",
+                "displayName": "training",
+                "uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/train-encoder_-554883867400470528/training",
+                "etag": "1794506134899",
+                "createTime": "2026-11-12T17:30:58.350Z",
+                "updateTime": "2026-11-12T17:55:34.899Z",
+                "state": "LIVE",
+                "schemaTitle": "system.Artifact",
+                "schemaVersion": "0.0.1",
+                "metadata": {}
+              }
+            ]
+          },
+          "report": {
+            "artifacts": [
+              {
+                "name": "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/14506999633491830718",
+                "displayName": "report",
+                "uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/validate-data_309807261054664704/report",
+                "etag": "1794504657885",
+                "createTime": "2026-11-12T17:28:34.622Z",
+                "updateTime": "2026-11-12T17:30:57.885Z",
+                "state": "LIVE",
+                "schemaTitle": "system.Artifact",
+                "schemaVersion": "0.0.1",
+                "metadata": {}
+              }
+            ]
+          },
+          "rankings": {
+            "artifacts": [
+              {
+                "name": "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/11129206957032566581",
+                "displayName": "rankings",
+                "uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/retrieve-finetuned_-5166569885827858432/rankings",
+                "etag": "1794506411097",
+                "createTime": "2026-11-12T17:55:35.416Z",
+                "updateTime": "2026-11-12T18:00:11.097Z",
+                "state": "LIVE",
+                "schemaTitle": "system.Artifact",
+                "schemaVersion": "0.0.1",
+                "metadata": {}
+              }
+            ]
+          }
+        },
+        "outputs": {
+          "evaluation": {
+            "artifacts": [
+              {
+                "name": "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/11408984947191267112",
+                "displayName": "evaluation",
+                "uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/evaluate-retrieval_6362645160240611328/evaluation",
+                "etag": "1794506411784",
+                "createTime": "2026-11-12T18:00:11.784Z",
+                "updateTime": "2026-11-12T18:00:11.784Z",
+                "state": "PENDING",
+                "schemaTitle": "system.Artifact",
+                "schemaVersion": "0.0.1",
+                "metadata": {}
+              }
+            ]
+          }
+        },
+        "parentTaskId": "-2266251725801259008",
+        "pipelineTaskStatus": [
+          {
+            "updateTime": "2026-11-12T18:02:35.018752341Z",
+            "state": "FAILED"
+          }
+        ],
+        "taskUniqueName": "evaluate-retrieval"
+      },
+      {
+        "taskId": "8668488169454305280",
+        "taskName": "retrieve-trials",
+        "createTime": "2026-11-12T17:21:54.042143Z",
+        "startTime": "2026-11-12T17:30:58.401006Z",
+        "endTime": "2026-11-12T17:34:42.893022Z",
+        "executorDetail": {
+          "containerDetail": {
+            "mainJob": "projects/15733748057/locations/us-east1/customJobs/209944254900862976"
+          }
+        },
+        "state": "SUCCEEDED",
+        "execution": {
+          "name": "projects/15733748057/locations/us-east1/metadataStores/default/executions/11153717368304503178",
+          "displayName": "retrieve-trials",
+          "state": "COMPLETE",
+          "etag": "1794504882875",
+          "createTime": "2026-11-12T17:30:58.115Z",
+          "updateTime": "2026-11-12T17:34:42.875Z",
+          "schemaTitle": "system.ContainerExecution",
+          "schemaVersion": "0.0.1",
+          "metadata": {
+            "vmlmd_lineage_integration": {
+              "pipeline_run_component": {
+                "parent_task_names": [
+                  "trialmatch-data-pipeline-20261112172151"
+                ],
+                "location_id": "us-east1",
+                "pipeline_run_id": "trialmatch-data-pipeline-20261112172151",
+                "project_id": "trialmatch-ac215-yixiao",
+                "task_name": "retrieve-trials"
+              }
+            },
+            "vertex-ai-pipelines-artifact-argument-binding": {
+              "output:rankings": [
+                "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/9619223259221479749"
+              ],
+              "input:report": [
+                "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/14506999633491830718"
+              ]
+            }
+          }
+        },
+        "inputs": {
+          "report": {
+            "artifacts": [
+              {
+                "name": "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/14506999633491830718",
+                "displayName": "report",
+                "uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/validate-data_309807261054664704/report",
+                "etag": "1794504657885",
+                "createTime": "2026-11-12T17:28:34.622Z",
+                "updateTime": "2026-11-12T17:30:57.885Z",
+                "state": "LIVE",
+                "schemaTitle": "system.Artifact",
+                "schemaVersion": "0.0.1",
+                "metadata": {}
+              }
+            ]
+          }
+        },
+        "outputs": {
+          "rankings": {
+            "artifacts": [
+              {
+                "name": "projects/15733748057/locations/us-east1/metadataStores/default/artifacts/9619223259221479749",
+                "displayName": "rankings",
+                "uri": "gs://trialmatch-ac215-yixiao-ms3/pipelines/15733748057/trialmatch-data-pipeline-20261112172151/retrieve-trials_8668488169454305280/rankings",
+                "etag": "1794504882856",
+                "createTime": "2026-11-12T17:30:58.317Z",
+                "updateTime": "2026-11-12T17:34:42.856Z",
+                "state": "LIVE",
+                "schemaTitle": "system.Artifact",
+                "schemaVersion": "0.0.1",
+                "metadata": {}
+              }
+            ]
+          }
+        },
+        "parentTaskId": "-2266251725801259008",
+        "pipelineTaskStatus": [
+          {
+            "updateTime": "2026-11-12T17:34:42.716966117Z",
+            "state": "SUCCEEDED"
+          }
+        ],
+        "taskUniqueName": "retrieve-trials"
+      }
+    ]
+  },
+  "error": {
+    "code": 9,
+    "message": " The DAG failed because some tasks failed. The failed tasks are: [evaluate-retrieval].; Job (project_id = trialmatch-ac215-yixiao, job_id = 6535838788738875392) is failed due to the above error.; Failed to handle the job: {project_number = 15733748057, job_id = 6535838788738875392}"
+  },
+  "labels": {
+    "vertex-ai-pipelines-run-billing-id": "6535838788738875392"
+  },
+  "runtimeConfig": {
+    "gcsOutputDirectory": "gs://trialmatch-ac215-yixiao-ms3/pipelines",
+    "parameterValues": {
+      "release": "gs://trialmatch-ac215-yixiao-ms3/releases/96a1ab99463f8e3363a6b4f74a1b1eeb2df4fa59/ce74c89e231e51782c097b83f56b2823e68754415cc12ab98f53889f39abd135/c8627e7addd3d265a61eb137d28691c545b4786b321e9e1981a9035e748e2125/release.json"
+    }
+  },
+  "serviceAccount": "trialmatch-pipeline@trialmatch-ac215-yixiao.iam.gserviceaccount.com"
+}
