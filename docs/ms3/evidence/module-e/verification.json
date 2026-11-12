@@ -1,0 +1,135 @@
+{
+  "recorded_at": "2026-11-11T23:51:13.170570+00:00",
+  "baseline": "50dc2ca0e5ff8a7a932ff96a126d3575e7f156ef",
+  "branch": "ovrz/ms3-api-monitoring-testing",
+  "scope": "Functional API integration and operational logging, not clinical accuracy",
+  "module_e_tests": {
+    "passed": 25,
+    "total": 25,
+    "test_names": [
+      "test_bioclinical_identity_and_nested_counts_without_loading_model",
+      "test_cloud_trace_correlation",
+      "test_gemini_metrics_remain_distinct_from_retrieval_encoder",
+      "test_invalid_requests_have_422_and_request_ids",
+      "test_invalid_server_manifest_is_503_not_invalid_patient",
+      "test_json_formatter_writes_one_parseable_line",
+      "test_live_health_does_not_imply_ready",
+      "test_live_index_diagnostics_are_cached_and_do_not_call_models",
+      "test_malformed_diagnostics_cannot_break_screening_or_leak_payloads",
+      "test_missing_data_readiness_503",
+      "test_missing_data_screening_503",
+      "test_offline_logging_does_not_claim_model_use",
+      "test_offline_ready_without_model_or_index",
+      "test_openapi_and_static_frontend_still_available",
+      "test_partial_results_remain_explicit",
+      "test_patient_route_logs_template_not_identifier",
+      "test_provider_error_result_is_503_not_barrier",
+      "test_raised_provider_failure_is_503",
+      "test_request_ids_are_unique_and_cannot_be_injected",
+      "test_smoke_checks_reject_false_readiness_and_nonobject_screen",
+      "test_success_contract_and_request_log",
+      "test_timeout_is_504_not_eligibility",
+      "test_unavailable_database_readiness_503",
+      "test_unexpected_error_is_sanitized_and_logged",
+      "test_unknown_patient_has_no_eligibility_result"
+    ]
+  },
+  "http_checks": {
+    "offline": {
+      "passed": 8,
+      "total": 8,
+      "report": "offline-http.json"
+    },
+    "live": {
+      "passed": 8,
+      "total": 8,
+      "report": "live-http.json"
+    }
+  },
+  "live_run": {
+    "run_id": "ee124849fb2b42d6bb55197865a37deb",
+    "request_id": "f7d26d4e218743c187a3bfd8daf81533",
+    "result_status": "OK",
+    "latency_seconds": 13.375,
+    "embedding_requests": 1,
+    "generation_requests": 5,
+    "cache_hits": 0,
+    "source": "Public official Synthea synthetic sample and public trial criteria"
+  },
+  "lint": "PASS: all five Module E Python files",
+  "upstream_compatibility": [
+    {
+      "ref": "origin/yixiao/ms3-infra",
+      "revision": "50dc2ca0e5ff8a7a932ff96a126d3575e7f156ef",
+      "configuration": "default Gemini / offline tests",
+      "upstream_api_unchanged": true,
+      "exit_code": 0,
+      "passed": true,
+      "test_count": 25,
+      "log_file": "yixiao-50dc2ca0-compat-tests.txt"
+    },
+    {
+      "ref": "origin/jenny/ms3-training",
+      "revision": "55e88bac01a722d9f44de7a73cb4441e20321b9d",
+      "configuration": "default Gemini / offline tests",
+      "upstream_api_unchanged": true,
+      "exit_code": 0,
+      "passed": true,
+      "test_count": 25,
+      "log_file": "jenny-55e88bac-compat-tests.txt"
+    }
+  ],
+  "broader_rag_regression": {
+    "total": 97,
+    "passed": 77,
+    "errors": 18,
+    "skipped": 2,
+    "status": "FAILED_WINDOWS_FILESYSTEM_ERRORS",
+    "description": "DVC cache deletion permission and Chroma temporary-file locks. No assertion failure. Optional Torch tests skipped.",
+    "error_tests": [
+      "test_old_pointer_recovers_original_bytes_from_local_remote",
+      "test_encoder_config_changes_index_identity_and_snapshot_roundtrip",
+      "test_cli_restore_status_export_require_no_cloud_credentials",
+      "test_corrupt_snapshot_is_rejected_before_collection_creation",
+      "test_http_readiness_manifest_is_separate_from_embedded_manifest",
+      "test_incompatible_source_model_dimension_subset_and_chunker_rejected",
+      "test_interrupted_restore_can_resume_matching_partial_records",
+      "test_invalid_dimensions_and_nonfinite_vectors_rejected",
+      "test_legacy_manifest_upgrades_without_reembedding",
+      "test_matching_checksum_does_not_allow_duplicate_ids_or_foreign_source",
+      "test_ready_manifest_alone_does_not_populate_new_backend",
+      "test_repeated_build_is_immutable_and_needs_no_provider",
+      "test_same_count_source_tampering_is_detected",
+      "test_same_count_vector_tampering_is_detected_and_not_overwritten",
+      "test_two_versions_coexist_and_old_snapshot_can_be_restored_again",
+      "test_vector_restore_query_and_deterministic_export",
+      "test_wrong_distance_collection_is_rejected_before_build_or_restore",
+      "test_real_chroma_persistence_upsert_and_model_version"
+    ],
+    "log_sha256": "019bbdecce5f5685c91da5154768a278888a9ba453e32eff05b341eeebd4ddcd"
+  },
+  "cloud": {
+    "checked_at": "2026-11-11T23:48:39.856666+00:00",
+    "metadata_http_status": 200,
+    "revision": "projects/trialmatch-ac215-yixiao/locations/us-east1/services/trialmatch/revisions/trialmatch-00004-hpk",
+    "iap_enabled": true,
+    "terminal_condition": "CONDITION_SUCCEEDED",
+    "anonymous_api_statuses": [
+      401
+    ],
+    "authenticated_e_api_verified": false,
+    "e_revision_deployed": false
+  },
+  "not_exercised": [
+    "BioClinical frozen/trained encoder inference and checkpoint loading",
+    "Updated Docker image build and authenticated E Cloud Run API/logs",
+    "Overall request deadline or backend cancellation"
+  ],
+  "source_sha256_canonical_lf": {
+    "services/rag_workflow/api.py": "af2faf18e0432f12c1187a1641ff6164c2940ab096ae70b1ac87281c78078d71",
+    "services/rag_workflow/observability.py": "cec5bf05750aa8d2a33a48d4e1fe9296d4167f80dc337a684d00afca79507a62",
+    "services/rag_workflow/readiness.py": "c10c63f388b8c4f25385f8236804f5f4ca70511f6a34e96454ae303f3960bfa1",
+    "services/rag_workflow/tests/test_api_operations.py": "5f980034ce3c58c3abe2206b56448c1729975d9979f58a73541fad6a0dd4fe5d",
+    "demo/ovrz/verify_ms3_api.py": "e3548d02e1df01c7fb5b56c854e47ea9e45d3dde4b9999580808c66b0b9f1e78"
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "checked_at": "2026-11-11T23:47:40.727685+00:00",
+  "base_url": "http://127.0.0.1:8088",
+  "mode": "live",
+  "authentication": "none",
+  "operations_present": true,
+  "scope": "HTTP integration, not clinical accuracy; no authentication material saved",
+  "screening_requested": true,
+  "checks": [
+    {
+      "path": "/health",
+      "expected_status": 200,
+      "status_code": 200,
+      "request_id": "38af4af8b1214d429c3a20d64707eaed",
+      "passed": true,
+      "latency_ms": 266.0
+    },
+    {
+      "path": "/patients",
+      "expected_status": 200,
+      "status_code": 200,
+      "request_id": "d45c0c7defd5409aa70f3037e8ce8548",
+      "passed": true,
+      "latency_ms": 31.0
+    },
+    {
+      "path": "/openapi.json",
+      "expected_status": 200,
+      "status_code": 200,
+      "request_id": "b45f1d41184d42e2a7d928724d842a4f",
+      "passed": true,
+      "latency_ms": 16.0
+    },
+    {
+      "path": "/screen",
+      "expected_status": 422,
+      "status_code": 422,
+      "request_id": "50be002cdcf64ebe839a32adfa7176a7",
+      "passed": true,
+      "latency_ms": 15.0
+    },
+    {
+      "path": "/screen",
+      "expected_status": 404,
+      "status_code": 404,
+      "request_id": "820df8b9e61743f3a5b17be52586e533",
+      "passed": true,
+      "latency_ms": 0.0
+    },
+    {
+      "path": "/screen",
+      "expected_status": 422,
+      "status_code": 422,
+      "request_id": "07f858d0049f4513afd78e72b3b691e7",
+      "passed": true,
+      "latency_ms": 16.0
+    },
+    {
+      "path": "/ready",
+      "expected_status": 200,
+      "status_code": 200,
+      "request_id": "195e626b42d14716886d2e51c38beb13",
+      "passed": true,
+      "latency_ms": 703.0
+    },
+    {
+      "path": "/screen",
+      "expected_status": 200,
+      "status_code": 200,
+      "request_id": "f7d26d4e218743c187a3bfd8daf81533",
+      "passed": true,
+      "latency_ms": 13391.0,
+      "result_status": "OK"
+    }
+  ],
+  "passed": true,
+  "readiness": {
+    "ready": true,
+    "mode": "live",
+    "check_scope": "data_and_index",
+    "checked_at": "2026-11-11T23:47:26.646685+00:00",
+    "cache_ttl_seconds": 30,
+    "model_access": "NOT_PROBED",
+    "note": "Readiness does not prove Gemini permissions, quota or inference availability.",
+    "checks": {
+      "data": {
+        "status": "PASS"
+      },
+      "index": {
+        "status": "PASS",
+        "index_version": "8a7004181d978a705d94",
+        "vector_count": 607
+      }
+    }
+  },
+  "screening": {
+    "run_id": "ee124849fb2b42d6bb55197865a37deb",
+    "result_status": "OK",
+    "metrics": {
+      "latency_seconds": 13.375,
+      "candidate_count": 1,
+      "corpus_trial_count": 50,
+      "embedding_requests": 1,
+      "generation_requests": 5,
+      "cache_hits": 0,
+      "prompt_tokens": 55487,
+      "output_tokens": 3073
+    },
+    "candidates": [
+      {
+        "trial_id": "NCT04501406",
+        "screening_status": "NEEDS_MORE_INFORMATION",
+        "assessment_coverage": {
+          "total": 23,
+          "completed": 20,
+          "known": 1,
+          "unknown": 22,
+          "screening_barriers": 0
+        }
+      }
+    ]
+  }
+}
