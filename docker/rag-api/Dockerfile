@@ -23,7 +23,6 @@ COPY --chown=app:app services/rag_workflow/*.py ./services/rag_workflow/
 COPY --chown=app:app services/rag_workflow/prompts/ ./services/rag_workflow/prompts/
 COPY --chown=app:app services/frontend/__init__.py services/frontend/app.py services/frontend/vector_demo.py ./services/frontend/
 COPY --chown=app:app services/frontend/static/ ./services/frontend/static/
-COPY --chown=app:app demo/ovrz/verify_http.py ./demo/ovrz/
 
 USER app
 CMD ["python", "-m", "uvicorn", "services.frontend.app:app", "--host", "0.0.0.0", "--port", "8080"]
