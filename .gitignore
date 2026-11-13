@@ -231,3 +231,6 @@ secrets/
 # macOS
 .DS_Store
 **/.DS_Store
+
+# Local AI assistant instructions
+/CLAUDE.md

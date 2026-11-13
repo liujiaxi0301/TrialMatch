@@ -8,7 +8,7 @@ nothing here computes a metric or inspects Q03-Q08 relevance.
   The 48 rows of the six earlier methods are unchanged, line for line.
 - Method configuration: [`retrieval_runs.config.json`](retrieval_runs.config.json) —
   code commit, encoder and revision, indexed text, fusion settings and cache use.
-- Runner: [`run_retrieval.py`](run_retrieval.py).
+- Runner: [`run_retrieval.py`](../run_retrieval.py).
 
 All returned IDs are checked against the 50-trial manifest universe before the
 file is written; the run fails rather than emitting an out-of-universe ID.
@@ -41,7 +41,7 @@ difference between the two families.
 - Checkpoint: `gs://trialmatch-ac215-yixiao-ms3/training/train-20261110-t4-r3/model`,
   SHA256 `7dcec7d9c8ca3697ee60091346723130ebb37263254e81a69a0aff038dbc931c`, verified
   locally before indexing.
-- Training evidence: [`docs/ms3/evidence/module-b/2026-11-10/`](../../docs/ms3/evidence/module-b/2026-11-10/README.md).
+- Training evidence: [`docs/ms3/evidence/module-b/2026-11-10/`](../../../docs/ms3/evidence/module-b/2026-11-10/README.md).
 - Training data: 5,137 query/criterion pairs, part corpus-templated and part written by
   an LLM, from trials outside the 50-trial universe. The trainer asserts that no
   universe trial is in the pairs. No benchmark query, patient or label was used.

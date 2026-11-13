@@ -251,5 +251,4 @@ HTTP success do not establish clinical accuracy.
 
 ![Online trained-encoder screening response](docs/ms3/evidence/cloud-screening.jpg)
 
-Final course submission uses the **milestone3** branch and its full commit hash on
-Canvas. This integration branch is `yixiao/ms3-infra`; it does not submit to Canvas.
+The submission branch is **milestone3**. Submit its full commit hash on Canvas.
