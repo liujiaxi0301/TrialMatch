@@ -1,9 +1,0 @@
-Creating temporary archive of 246 file(s) totalling 51.3 MiB before compression.
-Uploading tarball of [.] to [gs://trialmatch-ac215-yixiao-ms3/builds/source/1793911611.157706-e36d8ace5d6d4feabed2cee85fdd4675.tgz]
-Created [https://cloudbuild.googleapis.com/v1/projects/trialmatch-ac215-yixiao/locations/us-east1/builds/55298693-4647-4890-b5eb-bf0a22f2fae0].
-Logs are available at [ https://console.cloud.google.com/cloud-build/builds;region=us-east1/55298693-4647-4890-b5eb-bf0a22f2fae0?project=15733748057 ].
-
-gcloud builds submit only displays logs from Cloud Storage. To view logs from Cloud Logging, run:
-gcloud beta builds submit
-
-Waiting for build to complete. Polling interval: 1 second(s).

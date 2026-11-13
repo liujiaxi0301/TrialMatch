@@ -12,7 +12,7 @@ Convert official Synthea FHIR R4 Bundles into source-linked **schema 0.3 patient
 | Shared RAG input | [25-patient JSONL](data/processed/batch25_patients.jsonl) |
 | Exact source and selected patients | [Source manifest](data/sample_source.json), [cohort selection](data/processed/batch25_selection.json) |
 | Patient-stage evidence | [Validation record](evidence/patient_delivery_checks.json), [test log](evidence/patient_tests.txt), [sample replay](evidence/sample_run.txt) |
-| TF-requested verification | [Verification entry point](../../evaluation/verification/README.md) |
+| MS3 evaluation | [Eligibility benchmark](../../evaluation/ms3/eligibility/README.md) |
 
 ## Source and cohort
 
@@ -63,4 +63,5 @@ uv run --locked python services/patient_processing/scripts/select_archive_cohort
 4. Missing records are not negative history. Requests are orders, definitions describe drug products, and dispensing/administration/statements remain separate; none alone establishes adherence or stable long-term use.
 5. Unsupported resource types and unresolved Medication references remain explicit. The extractor resolves within-Bundle Medication references and checks patient links; it does not process every clinical resource or infer diagnoses from medications.
 
-This module covers patient processing and TF-requested verification. Shared retrieval, API, UI, containers and scoring have separate owners. Shared application integration and container-run evidence belong to the consuming team delivery; this module supplies the processor, facts, schema and validation records. The former handoff and complete pre-cleanup personal patient/verification delivery are preserved in the [history archive](../../evaluation/verification/history/ms2_pre_cleanup_20261020.zip).
+This module supplies the processor, patient facts, schema and source validation records.
+The current eligibility benchmark is documented under [evaluation/ms3](../../evaluation/ms3/README.md).

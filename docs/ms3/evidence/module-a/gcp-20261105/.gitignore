@@ -1,2 +1,0 @@
-# Preserve the supplied logs only within this reviewed evidence directory.
-!*.log

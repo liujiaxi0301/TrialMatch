@@ -121,7 +121,7 @@ be replaced by mock results. [Logging and error handling](../../docs/ms3/API_MON
 uv run --locked python -m unittest discover -s services/rag_workflow/tests -v
 ```
 
-Tests use local data and mocks unless explicitly configured otherwise. Historical MS2
-examples remain under `examples/`; they are not current cloud verification.
+Tests use local data and mocks unless explicitly configured otherwise. Required
+index examples and evidence-guard fixtures remain under `examples/`.
 MS3 benchmarks and their limitations are documented in
 [evaluation/ms3](../../evaluation/ms3/README.md).

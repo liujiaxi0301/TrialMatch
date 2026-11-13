@@ -243,6 +243,9 @@ HTTP success do not establish clinical accuracy.
 
 ## Submission Evidence
 
+This branch contains the MS3 submission. Earlier MS2 materials remain in the
+[`milestone2` branch](https://github.com/liujiaxi0301/TrialMatch/tree/milestone2).
+
 - [Presentation slides](docs/ms3/TrialMatch-MS3.pptx).
 - [Training run and W&B charts](docs/ms3/evidence/module-b/2026-11-10/README.md).
 - [Vertex pipeline screenshots](docs/ms3/evidence/module-a/screenshots.md).

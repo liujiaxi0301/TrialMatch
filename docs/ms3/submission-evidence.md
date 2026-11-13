@@ -72,11 +72,9 @@ Expected files in the new `results` directory:
 | `ms3_retrieval_finetune_deltas.csv` | Four frozen/fine-tuned comparisons |
 | `ms3_retrieval_evaluation_manifest.json` | Input hashes, label version and scoring protocol |
 
-[Reproduction verification](evidence/module-a/retrieval-reproduction-20261112.json)
-records all four files matching the committed originals byte-for-byte, all 30 C
-files unchanged from the source commit, matching historical checkpoint identities,
-and six passing C tests. The check compared bytes and schemas automatically; it
-did not manually inspect held-out scores or assign new labels.
+The scoring commands above use the committed rankings and labels. The original
+November 10 checkpoint identity is preserved in the training manifest and ranking
+configuration. Historical cloud outcomes remain separate from local scoring.
 
 ## Presentation scope
 
