@@ -243,6 +243,7 @@ HTTP success do not establish clinical accuracy.
 
 ## Submission Evidence
 
+- [Presentation slides](docs/ms3/TrialMatch-MS3.pptx).
 - [Training run and W&B charts](docs/ms3/evidence/module-b/2026-11-10/README.md).
 - [Vertex pipeline screenshots](docs/ms3/evidence/module-a/screenshots.md).
 - [Evidence summary and evaluation provenance](docs/ms3/submission-evidence.md).
