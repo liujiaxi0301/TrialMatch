@@ -54,8 +54,9 @@ format-check: dirs
 		ruff format --check --no-cache --config ruff.toml $(PYTHON_PATHS)
 
 lock-check:
+	# Each service selects its own Python, independent of the CI runner default.
 	@for project_file in docker/*/pyproject.toml; do \
-		uv lock --check --project "$${project_file%/*}" || exit $$?; \
+		env -u UV_PYTHON uv lock --check --project "$${project_file%/*}" || exit $$?; \
 	done
 
 # Fast local checks run automatically before a commit after make hooks.
