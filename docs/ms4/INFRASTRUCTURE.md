@@ -125,6 +125,7 @@ collection and removes that collection after verification, preserving other inde
 | `playwright-report/index.html`, `browser-results.xml` | Browser test results |
 | `browser-results/` | Failure screenshots and traces |
 | `screening.png` | Successful browser flow screenshot |
+| `ci.log` | Complete application build and test output |
 | `containers.txt`, `containers.log` | Service status and logs, collected by CI |
 
 `.github/workflows/pipeline-checks.yml` runs on pushes and pull requests. The

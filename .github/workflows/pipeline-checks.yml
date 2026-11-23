@@ -30,7 +30,10 @@ jobs:
           version: "0.13.1"
           python-version: "3.12"
       - name: Build, check code and format, test coverage and exercise the browser
-        run: make ci
+        run: |
+          mkdir -p artifacts/ms4
+          set -o pipefail
+          make ci 2>&1 | tee artifacts/ms4/ci.log
       - name: Collect service status and logs
         if: always()
         run: |
