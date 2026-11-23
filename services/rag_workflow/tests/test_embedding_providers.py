@@ -84,8 +84,9 @@ class PoolingTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "without EMBEDDING_CHECKPOINT"):
             bio_settings(embedding_checkpoint_sha256="c" * 64).validate()
         frozen = bio_settings()
-        tuned = bio_settings(embedding_checkpoint="/models/run",
-                             embedding_checkpoint_sha256="c" * 64)
+        tuned = bio_settings(
+            embedding_checkpoint="/models/run", embedding_checkpoint_sha256="c" * 64
+        )
         other = replace(tuned, embedding_checkpoint_sha256="d" * 64)
         moved = replace(tuned, embedding_checkpoint="gs://bucket/training/run/model")
         self.assertNotIn("checkpoint_sha256", encoder_identity(frozen))
@@ -111,8 +112,9 @@ class PoolingTests(unittest.TestCase):
             (model / "model.safetensors").write_bytes(b"weights")
             digest, files = checkpoint_digest(model)
             self.assertEqual(set(files), {"config.json", "model.safetensors"})
-            settings = bio_settings(embedding_checkpoint=str(model),
-                                    embedding_checkpoint_sha256=digest)
+            settings = bio_settings(
+                embedding_checkpoint=str(model), embedding_checkpoint_sha256=digest
+            )
             self.assertEqual(resolve_checkpoint(settings), model)
             (model / "model.safetensors").write_bytes(b"tampered")
             with self.assertRaises(ProviderError) as caught:

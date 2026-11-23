@@ -6,7 +6,17 @@ TrialMatch uses synthetic patient records to find type 2 diabetes trials and rev
 eligibility criteria. Responses include source evidence, screening barriers and missing
 information. This is a research demo, not a clinical eligibility decision.
 
-## New since MS2
+## New in MS4
+
+- Separate frontend and API containers, with one-command local startup.
+- Pre-commit checks formatting, code, config files and dependency locks before a commit.
+- GitHub Actions repeats the checks, builds images and tests the real browser-to-API flow.
+- Backend coverage must reach 50%; test failures also fail CI. Reports are saved as CI artifacts.
+- A container recreation test verifies Chroma persistence.
+
+See [local setup, CI and integration notes](docs/ms4/INFRASTRUCTURE.md).
+
+## MS3 Foundation
 
 | MS3 component | Implementation and evidence |
 | --- | --- |
@@ -15,7 +25,7 @@ information. This is a research demo, not a clinical eligibility decision.
 | Automated workflow | Four-step Vertex pipeline for data recovery, processing, validation and retrieval; [screenshots](docs/ms3/evidence/module-a/screenshots.md). |
 | Monitoring and API | Structured Cloud Logging, request IDs, readiness checks and API tests; [API guide](docs/ms3/API_MONITORING.md). |
 | Model comparison | Gemini or the evaluated fine-tuned encoder in the app; [retrieval benchmark](evaluation/ms3/retrieval/README.md). |
-| Containers | Each image has its own Dockerfile, pyproject.toml and uv.lock. |
+| Containers | Each Python service has its own Dockerfile, pyproject.toml and uv.lock. |
 
 ## Modules
 
@@ -24,7 +34,7 @@ information. This is a research demo, not a clinical eligibility decision.
 | `services/trial_ingestion/` | ClinicalTrials.gov data and eligibility criteria. |
 | `services/patient_processing/` | Synthea FHIR records converted into patient facts. |
 | `services/rag_workflow/` | Retrieval, criterion assessment and evidence validation. |
-| `services/frontend/` | Web page and integrated FastAPI application. |
+| `services/frontend/` | Static web page, browser tests and the application API adapter. |
 | `cloud/`, `docker/` | Training, Vertex pipeline, containers and deployment. |
 | `evaluation/ms3/` | Separate retrieval and eligibility benchmarks. |
 
@@ -46,15 +56,24 @@ credentials. Unsupported or missing information remains UNKNOWN.
 | `make live` | Restore the Gemini index, prepare the trained encoder index and start online screening. |
 | `make down` | Stop the containers and keep the saved database. |
 | `make reproduce` | Restore raw trials with DVC, rebuild and verify processed files, then start the offline app. |
+| `make hooks` | Install the local pre-commit hook (requires uv). |
+| `make check` | Check Python code and format, then run pytest with coverage. |
+| `make fmt` | Apply the shared Python formatting rules. |
+| `make ci` | Build, repeat pre-commit checks, start the app, verify Chroma persistence and run browser tests (requires uv). |
+| `make coverage` | Run backend/API tests and enforce the 50% coverage gate. |
+| `make e2e` | Test the running local app in Chromium. Run `make up` first. |
 
-Compose defines three services: `trial-processing`, `rag-api` and `rag-chromadb`.
-Their build files are under the matching directories in `docker/`. The backend also
-serves the web page. It starts after processing finishes and Chroma is healthy.
+Compose defines four services: `trial-processing`, `rag-api`, `frontend` and `rag-chromadb`.
+Their build files are under the matching directories in `docker/`. Nginx serves the
+page at port 8080 and proxies API requests to the backend. The API starts after
+processing finishes and Chroma is healthy; the frontend waits for the API.
+The API is also available directly at http://localhost:8081/docs.
 Chroma stores its data in the `rag-chroma-data` volume at `/data`.
 
-Python dependencies, uv and DVC run in Docker. Local Compose mounts module source
+Application dependencies and DVC run in Docker. Local Compose mounts module source
 read-only and reloads backend changes; cloud images contain the code. Each service
-installs only its own locked dependencies. `docker/workflow/`, `docker/trainer/` and
+installs only its own locked dependencies. The static frontend uses pinned Nginx;
+its browser-test image has a separate npm lockfile. `docker/workflow/`, `docker/trainer/` and
 `docker/retrieval/` provide the separate cloud job environments.
 Processed data stays in `services/`; generated files stay in ignored `artifacts/`.
 
@@ -232,18 +251,23 @@ Use `jsonPayload.message="screening_completed"` for model summaries or add
 `jsonPayload.status_code>=400` for HTTP errors. Cloud Run also shows request and latency
 metrics. [Logging fields and HTTP verification](docs/ms3/API_MONITORING.md).
 
-Run the existing API tests inside the backend container:
+Run the backend/API tests and coverage check in the test container:
 
 ```bash
-docker compose exec -T rag-api python -m unittest services.rag_workflow.tests.test_api_operations -v
+make coverage
 ```
+
+For development, install uv and run `make hooks` once per clone. Commits then
+check credentials, configuration, Python formatting and tests. `make fmt` fixes
+formatting; `make pre-commit` checks all tracked files. Tests run through pytest;
+the existing unittest-style test cases remain supported.
 
 Other module tests and protocols are linked from their READMEs. Local tests and
 HTTP success do not establish clinical accuracy.
 
-## Submission Evidence
+## MS3 Submission Evidence
 
-This branch contains the MS3 submission. Earlier MS2 materials remain in the
+The following evidence comes from the MS3 submission. Earlier MS2 materials remain in the
 [`milestone2` branch](https://github.com/liujiaxi0301/TrialMatch/tree/milestone2).
 
 - [Presentation slides](docs/ms3/TrialMatch-MS3.pptx).
@@ -255,4 +279,5 @@ This branch contains the MS3 submission. Earlier MS2 materials remain in the
 
 ![Online trained-encoder screening response](docs/ms3/evidence/cloud-screening.jpg)
 
-The submission branch is **milestone3**. Submit its full commit hash on Canvas.
+The frozen MS3 submission is on **milestone3**. MS4 development continues separately;
+the final MS4 submission must use the **milestone4** branch.

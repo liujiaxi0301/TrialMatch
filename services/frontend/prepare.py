@@ -5,7 +5,6 @@ import platform
 import time
 import urllib.request
 from datetime import datetime, timezone
-from pathlib import Path
 
 from services.rag_workflow.config import Settings
 from services.rag_workflow.schemas import ScreenRequest
@@ -19,7 +18,9 @@ def main():
     output.mkdir(parents=True, exist_ok=True)
     workflow = ScreeningWorkflow(settings)
     patient_id = "060e72d3-912e-55cd-0c92-5faa6cb7a6db"
-    question = "Which type 2 diabetes trials may suit this patient, and what information needs review?"
+    question = (
+        "Which type 2 diabetes trials may suit this patient, and what information needs review?"
+    )
     request = ScreenRequest(patient_id=patient_id, question=question, top_k=3)
     print("[1/4] Validated source snapshots and fixed manifest", flush=True)
     if settings.chroma_host:
@@ -48,9 +49,11 @@ def main():
         "screen_response.json": result,
         "run_manifest.json": {
             "generated_at_utc": datetime.now(timezone.utc).isoformat(),
-            "python": platform.python_version(), "mode": settings.mode,
+            "python": platform.python_version(),
+            "mode": settings.mode,
             "source_hashes": workflow.store.hashes,
-            "patients": len(workflow.store.patients), "trials": len(workflow.store.trials),
+            "patients": len(workflow.store.patients),
+            "trials": len(workflow.store.trials),
             "subset_trials": len(workflow.manifest["trial_ids"]),
             "vector_model": "local-signed-tokenhash-sha256-v1",
             "local_vector_collection": index["collection"],

@@ -1,6 +1,5 @@
-"""Optional real DVC + Git history test, using a temporary LOCAL remote only."""
+"""Real DVC + Git history test, using a temporary LOCAL remote only."""
 
-import importlib.util
 import json
 import os
 import shutil
@@ -11,9 +10,6 @@ import unittest
 from pathlib import Path
 
 
-@unittest.skipUnless(
-    importlib.util.find_spec("dvc") and shutil.which("git"), "Install versioning group"
-)
 class DvcSnapshotTests(unittest.TestCase):
     def test_old_pointer_recovers_original_bytes_from_local_remote(self):
         with tempfile.TemporaryDirectory() as temporary:

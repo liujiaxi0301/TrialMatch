@@ -1,5 +1,6 @@
 services:
   trial-processing:
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
     build:
       context: .
       dockerfile: docker/trial-processing/Dockerfile
@@ -18,6 +19,7 @@ services:
       - ./secrets:/secrets:ro
 
   rag-api:
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
     build:
       context: .
       dockerfile: docker/rag-api/Dockerfile
@@ -36,6 +38,8 @@ services:
       - --reload-dir
       - /app/services/frontend
     environment:
+      TRIALMATCH_SERVE_UI: "false"
+      ANONYMIZED_TELEMETRY: "False"
       TRIALMATCH_MODE: ${TRIALMATCH_MODE:-offline}
       GCP_PROJECT: ${GCP_PROJECT:-}
       GCP_LOCATION: ${GCP_LOCATION:-global}
@@ -52,7 +56,7 @@ services:
       CHROMADB_PORT: "8000"
       TRIALMATCH_CORS_ORIGINS: ${TRIALMATCH_CORS_ORIGINS:-http://localhost:3000,http://localhost:5173}
     ports:
-      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:${API_PORT:-8081}:8080"
     volumes:
       - ./services/rag_workflow:/app/services/rag_workflow:ro
       - ./services/frontend:/app/services/frontend:ro
@@ -77,6 +81,19 @@ services:
       interval: 5s
       timeout: 10s
       retries: 18
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+      target: runtime
+    ports:
+      - "127.0.0.1:${APP_PORT:-8080}:8080"
+    volumes:
+      - ./services/frontend/static:/usr/share/nginx/html:ro
+    depends_on:
+      rag-api:
+        condition: service_healthy
 
   rag-chromadb:
     build:

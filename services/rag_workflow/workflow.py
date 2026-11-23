@@ -293,8 +293,13 @@ class ScreeningWorkflow:
                 "created_at": datetime.now(UTC).isoformat(),
                 "source_sha256": self.store.hashes,
                 "patient_input": "inline" if request.patient else "cohort",
-                "retrieval_model": ("bm25" if settings.mode == "offline" else
-                                    "finetuned" if settings.embedding_checkpoint else settings.embedding_provider),
+                "retrieval_model": (
+                    "bm25"
+                    if settings.mode == "offline"
+                    else "finetuned"
+                    if settings.embedding_checkpoint
+                    else settings.embedding_provider
+                ),
                 "embedding_model": settings.embedding_model if provider else None,
                 "embedding_configuration": encoder_identity(settings) if provider else None,
                 "generation_model": settings.generation_model if provider else None,

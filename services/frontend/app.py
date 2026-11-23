@@ -1,6 +1,7 @@
-"""Serve Part 5 UI and Part 3 API on one origin; no duplicated screening logic."""
+"""Application API, with optional static hosting for the Cloud Run deployment."""
 
 import logging
+import os
 from functools import lru_cache
 from pathlib import Path
 
@@ -19,10 +20,10 @@ STATIC = Path(__file__).parent / "static"
 logger = logging.getLogger(__name__)
 
 
-def create_app(settings=None):
+def create_app(settings=None, *, serve_ui=True):
     config = settings or Settings()
     app = create_rag_app(config)
-    app.title = "TrialMatch MS2 Application"
+    app.title = "TrialMatch API"
 
     @lru_cache(maxsize=1)
     def store():
@@ -53,34 +54,42 @@ def create_app(settings=None):
             raise HTTPException(422, str(exc)) from exc
         except Exception as exc:
             logger.exception("Vector store unavailable")
-            raise HTTPException(503, "Vector database unavailable. Run the preparation step and check the database service.") from exc
+            raise HTTPException(
+                503,
+                "Vector database unavailable. Run the preparation step and check the database service.",
+            ) from exc
 
     @app.get("/metadata")
     def metadata():
         data = store()
         manifest = data.manifest()
         return {
-            "mode": config.mode, "synthetic_patients": True,
-            "patient_count": len(data.patients), "trial_count": len(data.trials),
+            "mode": config.mode,
+            "synthetic_patients": True,
+            "patient_count": len(data.patients),
+            "trial_count": len(data.trials),
             "screening_subset_count": len(manifest["trial_ids"]),
             "source_hashes": data.hashes,
-            "patient_reference_dates": sorted({p["reference_date"] for p in data.patients.values()}),
+            "patient_reference_dates": sorted(
+                {p["reference_date"] for p in data.patients.values()}
+            ),
             "trial_snapshot_dates": sorted({t["snapshot_date"] for t in data.trials.values()}),
             "vector_demo_model": "local-signed-tokenhash-sha256-v1",
             "health_scope": "Data and manifest only; /health does not verify cloud access or vector readiness.",
         }
 
-    @app.get("/", include_in_schema=False)
-    def home():
-        # Check the IAP session on page load instead of reusing cached HTML.
-        return FileResponse(STATIC / "index.html", headers={"Cache-Control": "no-store"})
+    if serve_ui:
 
-    @app.get("/en.html", include_in_schema=False)
-    def english_alias():
-        return FileResponse(STATIC / "index.html", headers={"Cache-Control": "no-store"})
+        @app.get("/", include_in_schema=False)
+        def home():
+            return FileResponse(STATIC / "index.html", headers={"Cache-Control": "no-store"})
 
-    app.mount("/assets", StaticFiles(directory=STATIC), name="assets")
+        @app.get("/en.html", include_in_schema=False)
+        def english_alias():
+            return FileResponse(STATIC / "index.html", headers={"Cache-Control": "no-store"})
+
+        app.mount("/assets", StaticFiles(directory=STATIC), name="assets")
     return app
 
 
-app = create_app()
+app = create_app(serve_ui=os.environ.get("TRIALMATCH_SERVE_UI", "true").lower() == "true")

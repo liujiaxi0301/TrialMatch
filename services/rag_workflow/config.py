@@ -81,19 +81,27 @@ class Settings:
         if model is None:
             return self
         if model == "gemini":
-            return replace(self, embedding_provider="gemini",
-                           embedding_model="gemini-embedding-001", dimension=256,
-                           embedding_revision="", embedding_checkpoint="",
-                           embedding_checkpoint_sha256="")
+            return replace(
+                self,
+                embedding_provider="gemini",
+                embedding_model="gemini-embedding-001",
+                dimension=256,
+                embedding_revision="",
+                embedding_checkpoint="",
+                embedding_checkpoint_sha256="",
+            )
         if model == "finetuned":
             # November 10 checkpoint used in the completed MS3 retrieval report.
             return replace(
-                self, embedding_provider="bioclinical",
-                embedding_model="thomas-sounack/BioClinical-ModernBERT-base", dimension=768,
+                self,
+                embedding_provider="bioclinical",
+                embedding_model="thomas-sounack/BioClinical-ModernBERT-base",
+                dimension=768,
                 embedding_revision="c3648aa87af95837c809e6f0c5f85d08160db437",
                 embedding_checkpoint="gs://trialmatch-ac215-yixiao-ms3/training/train-20261110-t4-r3/model",
                 embedding_checkpoint_sha256="7dcec7d9c8ca3697ee60091346723130ebb37263254e81a69a0aff038dbc931c",
-                embedding_max_tokens=2048, embedding_device="cpu",
+                embedding_max_tokens=2048,
+                embedding_device="cpu",
             )
         raise ValueError("Unknown retrieval model")
 

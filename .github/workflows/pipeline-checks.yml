@@ -1,12 +1,8 @@
-name: Pipeline checks
+name: TrialMatch checks
 
 on:
   pull_request:
   push:
-    branches:
-      - milestone3
-      - yixiao/ms3-infra
-      - xuyang/ms3-*
   workflow_dispatch:
 
 permissions:
@@ -17,6 +13,42 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  application:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      COMPOSE_PROJECT_NAME: trialmatch-ci
+      COVERAGE_MIN: "50"
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Set up uv for pre-commit
+        uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e
+        with:
+          version: "0.13.1"
+          python-version: "3.12"
+      - name: Build, check code and format, test coverage and exercise the browser
+        run: make ci
+      - name: Collect service status and logs
+        if: always()
+        run: |
+          mkdir -p artifacts/ms4
+          docker compose ps -a > artifacts/ms4/containers.txt
+          docker compose logs --no-color > artifacts/ms4/containers.log
+      - name: Save coverage and browser reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ms4-application-reports
+          path: artifacts/ms4/
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Remove CI containers and volumes
+        if: always()
+        run: docker compose -f docker-compose.yml -f docker-compose.test.yml down --volumes --remove-orphans
+
   pipeline:
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -38,10 +70,10 @@ jobs:
           cache-dependency-glob: docker/workflow/uv.lock
 
       - name: Install the workflow's locked dependencies
-        run: uv sync --project docker/workflow --locked --no-dev --python 3.12
+        run: uv sync --project docker/workflow --locked --python 3.12
 
       - name: Lint pipeline code and tests
-        run: uv tool run ruff==0.17.1 check cloud/pipeline.py cloud/tasks.py cloud/release.py cloud/eligibility.py cloud/train.py cloud/training_inputs.py cloud/finetuned_retrieval.py cloud/retrieval_evaluation.py cloud/tests
+        run: uv tool run ruff==0.17.1 check --select E4,E7,E9,F cloud/pipeline.py cloud/tasks.py cloud/release.py cloud/eligibility.py cloud/train.py cloud/training_inputs.py cloud/finetuned_retrieval.py cloud/retrieval_evaluation.py cloud/tests
 
       - name: Check deployment script syntax
         run: bash -n cloud/deploy.sh cloud/setup.sh
@@ -50,13 +82,16 @@ jobs:
         run: docker/workflow/.venv/bin/python prepare_data.py
 
       - name: Run pipeline regression tests
-        run: docker/workflow/.venv/bin/python -m unittest discover -s cloud/tests -v
+        run: >-
+          docker/workflow/.venv/bin/python -m pytest -ra --import-mode=importlib
+          cloud/tests --ignore=cloud/tests/test_retrieval_runtime.py
+          -k "not PoolingTests"
 
       - name: Check the frozen eligibility evaluator without model calls
-        run: docker/workflow/.venv/bin/python -m unittest discover -s evaluation/ms3/eligibility/tests -v
+        run: docker/workflow/.venv/bin/python -m pytest -ra --import-mode=importlib evaluation/ms3/eligibility/tests
 
       - name: Check C's frozen retrieval evaluation without model calls
-        run: docker/workflow/.venv/bin/python -m unittest discover -s evaluation/ms3/retrieval/tests -v
+        run: docker/workflow/.venv/bin/python -m pytest -ra --import-mode=importlib evaluation/ms3/retrieval/tests
 
       - name: Compile the pipeline without submitting a cloud job
         run: >-
@@ -89,8 +124,9 @@ jobs:
           enable-cache: true
           cache-dependency-glob: docker/retrieval/uv.lock
       - name: Install locked retrieval dependencies
-        run: uv sync --project docker/retrieval --locked --no-dev --python 3.12
+        run: uv sync --project docker/retrieval --locked --python 3.12
       - name: Exercise ranking interfaces and CPU checkpoint loading offline
         run: >-
-          docker/retrieval/.venv/bin/python -m unittest
-          cloud.tests.test_finetuned_retrieval cloud.tests.test_retrieval_runtime -v
+          docker/retrieval/.venv/bin/python -m pytest -ra --import-mode=importlib
+          cloud/tests/test_finetuned_retrieval.py cloud/tests/test_retrieval_runtime.py
+          cloud/tests/test_train.py::PoolingTests

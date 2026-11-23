@@ -1,0 +1,42 @@
+services:
+  api-tests:
+    profiles: [test]
+    build:
+      context: .
+      dockerfile: docker/rag-api/Dockerfile
+      target: test
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
+    environment:
+      TRIALMATCH_MODE: offline
+      TRIALMATCH_SERVE_UI: "false"
+      PYTHONDONTWRITEBYTECODE: "1"
+      ANONYMIZED_TELEMETRY: "False"
+      HF_HUB_OFFLINE: "1"
+      TRANSFORMERS_OFFLINE: "1"
+      COVERAGE_FILE: /tmp/ms4.coverage
+    volumes:
+      - ./services:/app/services:ro
+      - ./demo:/app/demo:ro
+      - ./scripts/ms4:/app/scripts/ms4:ro
+      - ./ruff.toml:/app/ruff.toml:ro
+      - ./artifacts/ms4:/app/artifacts/ms4
+    command: [bash, scripts/ms4/check_coverage.sh, --container]
+
+  browser-tests:
+    profiles: [test]
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+      target: test
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
+    init: true
+    shm_size: 1gb
+    environment:
+      BASE_URL: http://frontend:8080
+      CI: "true"
+      npm_config_cache: /tmp/npm-cache
+    volumes:
+      - ./artifacts/ms4:/reports
+    depends_on:
+      frontend:
+        condition: service_healthy

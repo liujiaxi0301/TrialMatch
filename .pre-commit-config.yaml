@@ -1,0 +1,27 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: detect-private-key
+      - id: check-yaml
+      - id: check-toml
+      - id: check-merge-conflict
+  - repo: local
+    hooks:
+      - id: no-credentials
+        name: Keep credentials out of Git
+        entry: Do not commit .env files, secrets or credential JSON files.
+        language: fail
+        files: '(^|/)(\.env$|secrets/)|(^|/)[^/]*(credentials|service-account)[^/]*\.json$'
+      - id: locked-dependencies
+        name: Check service dependency locks
+        entry: make lock-check
+        language: system
+        pass_filenames: false
+        files: '^docker/[^/]+/(pyproject\.toml|uv\.lock)$'
+      - id: application-checks
+        name: Application lint, format and pytest
+        entry: make check
+        language: system
+        pass_filenames: false
+        files: '^(services/(rag_workflow|frontend)/|scripts/ms4/|docker/|docker-compose.*\.yml$|ruff\.toml$|Makefile$|\.pre-commit-config\.yaml$|\.github/workflows/)'

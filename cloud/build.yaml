@@ -1,6 +1,6 @@
 steps:
   - name: gcr.io/cloud-builders/docker
-    args: [build, -f, docker/rag-api/Dockerfile, -t, '${_REGISTRY}/api:${_VERSION}-${BUILD_ID}', .]
+    args: [build, -f, docker/rag-api/Dockerfile, --target, standalone, -t, '${_REGISTRY}/api:${_VERSION}-${BUILD_ID}', .]
   - name: gcr.io/cloud-builders/docker
     args: [build, -f, docker/chromadb/Dockerfile, -t, '${_REGISTRY}/chroma:${_VERSION}-${BUILD_ID}', .]
   - name: gcr.io/cloud-builders/docker

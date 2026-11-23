@@ -7,5 +7,9 @@
 **/*credentials*.json
 artifacts
 **/.ruff_cache
+**/.pytest_cache
 **/.dvc
 **/index_snapshots
+**/node_modules
+**/playwright-report
+**/test-results

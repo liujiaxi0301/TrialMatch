@@ -51,9 +51,7 @@ class LocalVectorDemo:
         status = self.index.status()
         patient = self.store.patient(patient_id)
         query = patient_query(patient, question)
-        collection = self.index.client.get_collection(
-            self.index.name, embedding_function=None
-        )
+        collection = self.index.client.get_collection(self.index.name, embedding_function=None)
         result = collection.query(
             query_embeddings=[self.provider.embed(query)],
             n_results=min(top_k, status["vector_count"]),
@@ -62,15 +60,21 @@ class LocalVectorDemo:
         chunks = [
             {"chunk_id": key, "text": text, "distance": distance, **metadata}
             for key, text, distance, metadata in zip(
-                result["ids"][0], result["documents"][0],
-                result["distances"][0], result["metadatas"][0],
+                result["ids"][0],
+                result["documents"][0],
+                result["distances"][0],
+                result["metadatas"][0],
             )
         ]
         return {
-            "mode": "local_vector_baseline", "patient_id": patient_id,
-            "question": question, "retrieval_query": query,
+            "mode": "local_vector_baseline",
+            "patient_id": patient_id,
+            "question": question,
+            "retrieval_query": query,
             "embedding_model": self.config.embedding_model,
-            "collection": self.index.name, "vector_count": status["vector_count"],
-            "source_hashes": self.store.hashes, "chunks": chunks,
+            "collection": self.index.name,
+            "vector_count": status["vector_count"],
+            "source_hashes": self.store.hashes,
+            "chunks": chunks,
             "note": "Real Chroma cosine retrieval using lexical hash vectors. No LLM, no Gemini embeddings, and no eligibility decision.",
         }
