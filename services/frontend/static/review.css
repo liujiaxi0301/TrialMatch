@@ -1,0 +1,41 @@
+.human-review-banner {
+  margin: 18px 0;
+  padding: 20px;
+  border: 1px solid rgba(110, 190, 169, .35);
+  border-radius: 16px;
+  background: rgba(110, 190, 169, .07);
+}
+.human-review-banner h3 { margin: 0 0 10px; }
+.human-review-banner p { line-height: 1.6; }
+.human-review-count, .trial-review-count { font-weight: 600; }
+.human-review { margin-top: 16px; border-top: 1px solid rgba(135, 160, 155, .25); }
+.human-review > summary { padding: 14px 0; cursor: pointer; }
+.human-review-fields { min-width: 0; margin: 0; padding: 12px 0; border: 0; }
+.human-review-fields legend { font-size: .8rem; opacity: .75; overflow-wrap: anywhere; }
+.human-review-fields label { display: block; margin: 12px 0; }
+.human-review-fields select, .human-review-fields textarea {
+  display: block;
+  box-sizing: border-box;
+  max-width: 100%;
+  margin-top: 8px;
+  padding: 10px 12px;
+  color: inherit;
+  font: inherit;
+  border: 1px solid rgba(135, 160, 155, .5);
+  border-radius: 8px;
+  background: transparent;
+}
+.human-review-fields select { min-width: 160px; }
+.human-review-fields option { background: #17282b; color: #e7f2ee; }
+.human-review-fields textarea { width: 100%; min-height: 90px; resize: vertical; }
+.human-review-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.human-review-fields button:disabled { opacity: .45; cursor: not-allowed; }
+.human-review-status { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.6; }
+.human-review-error:empty, .human-review-status:empty { display: none; }
+.has-human-review { box-shadow: inset 3px 0 rgba(110, 190, 169, .7); padding-left: 14px; }
+[data-theme="light"] .human-review-fields option { background: #fff; color: #17282b; }
+.human-review-fields :focus-visible { outline: 2px solid #71bfa8; outline-offset: 3px; }
+@media (max-width: 600px) {
+  .human-review-banner { padding: 14px; }
+  .human-review-actions button { width: 100%; }
+}
