@@ -20,20 +20,20 @@ The configured Python coverage gate is **50%** (`COVERAGE_MIN=50`). Any test fai
 
 ## 2. Test matrix
 
-All cases below are implemented in the verified revision. Different rows represent test areas, not independent test counts.
+The matrix maps acceptance conditions to automated checks in the verified revision. A row denotes a **test area**, not a separate test count.
 
-| Area | Expected behavior | Automated evidence |
-| --- | --- | --- |
-| API and input validation | Invalid requests, missing patients and unavailable services return appropriate errors without fabricated screening results | `test_api_operations.py`, `test_application.py` |
-| Screening logic | Retrieved trials receive criterion assessments; unsupported information remains `UNKNOWN` | `test_workflow.py`, `test_evidence_rules.py`, `test_evidence_support.py` |
-| Evidence grounding | Returned evidence identifiers agree with the patient and assessment context | `test_grounding_case.py`, `test_evidence_support.py` |
-| Index integrity | Snapshot identity, checksums, corrupted vectors and version restoration are validated | `test_index_versions.py`, `test_embedding_providers.py` |
-| Source-data integrity | Duplicate trial, patient or criterion IDs and orphan criteria are rejected | `test_ms4_system_validation.py` |
-| Screening provenance | Trial, criterion and cited patient-fact references match the selected source records | `test_ms4_provenance.py` |
-| Frontend and API | Patient records, offline screening response and error codes work together | `test_application.py` |
-| Browser flow | Patient selection, screening, evidence/JSON review, blank question and invalid request handling | `screening.spec.js` (3 Playwright tests) |
-| Vector persistence | A test Chroma collection remains queryable after the database container is recreated | `make system-test` |
-| Data/pipeline and retrieval | Source hashes, pipeline regressions, frozen evaluations and CPU checkpoint interfaces | `cloud/tests/`, `evaluation/ms3/`, CI `pipeline` and `retrieval-runtime` jobs |
+| Level / area | Acceptance condition | Automated test or command | Result |
+| --- | --- | --- | --- |
+| Unit — screening rules | Criteria with supported evidence are assessed consistently; unsupported information remains `UNKNOWN` | `test_evidence_rules.py`, `test_evidence_support.py` | Passed |
+| Unit — retrieval and index | Embedding interfaces, snapshot identities, checksums and restoration reject incompatible or corrupted data | `test_embedding_providers.py`, `test_index_versions.py` | Passed |
+| Integration — API | Invalid inputs, missing patients, dependency failures and readiness states produce appropriate HTTP responses | `test_api_operations.py`, `test_application.py` | Passed |
+| Integration — screening | Offline retrieval returns criterion assessments and consistent status/response fields | `test_workflow.py`, `test_grounding_case.py` | Passed |
+| System — source integrity | Duplicate trial/patient/criterion IDs and orphan criteria are rejected | `test_ms4_system_validation.py` (SV-01) | Passed |
+| System — provenance | Selected patient, trial, criterion and evidence references agree with the source records | `test_ms4_provenance.py` (SV-02) | Passed |
+| System — vector persistence | A Chroma test collection remains queryable after container recreation | `make system-test` | Passed |
+| E2E — browser/API | Chromium can select a patient, submit screening, inspect evidence/JSON and display input validation | `services/frontend/e2e/screening.spec.js` | 3 passed |
+| CI — data and pipeline | Versioned data, pipeline regressions and frozen evaluations pass offline checks | GitHub Actions `pipeline` job | Passed |
+| CI — retrieval runtime | CPU retrieval and checkpoint interfaces pass without model-service calls | GitHub Actions `retrieval-runtime` job | Passed |
 
 ### System-validation cases
 
@@ -50,13 +50,14 @@ The following results correspond to revision `06ebddd`, not to a later integrati
 | Backend Python tests | **100 passed**, including SV-01 and SV-02 |
 | Frontend/API Python tests | **6 passed** |
 | Combined application Python suite | **106 passed** |
-| Application Python statement coverage | **83%** (1,612 / 1,931 statements covered) |
+| API/backend Python statement coverage | **85%** (1,529 / 1,790 statements covered; derived from the same file-level report) |
+| Combined application Python statement coverage | **83%** (1,612 / 1,931 statements covered) |
 | Coverage gate | **Passed** (required ≥50%) |
 | Playwright browser tests | **3 passed** in GitHub Actions |
 | Chroma persistence | **Passed** after container recreation |
 | GitHub Actions | **All 3 jobs passed**: `application`, `pipeline`, `retrieval-runtime` |
 
-The **83%** measurement is from the local coverage run and applies only to Python source under `services/rag_workflow/` and `services/frontend/`, excluding test files. It does **not** cover all repository code, browser JavaScript, or model/clinical accuracy. The GitHub run independently passed the configured 50% gate. The CI application job executed the pre-commit checks, including Python tests and coverage, and the browser/persistence tests.
+Coverage is measured by `coverage.py` at the Python **statement** level, with tests excluded. The **85% API/backend** figure is calculated from the `services/rag_workflow/` rows in the same report; the configured CI gate evaluates the **83% combined** `services/rag_workflow/` and `services/frontend/` scope. Both exceed the required 50% API/backend threshold. These percentages do **not** measure the full repository, browser JavaScript, or clinical/model accuracy. The GitHub run also passed the configured coverage gate and executed the browser/persistence checks.
 
 **Evidence:** [Successful GitHub Actions run #45912304011](https://github.com/liujiaxi0301/TrialMatch/actions/runs/45912304011); artifact `ms4-application-reports` contains coverage, JUnit, browser and container reports (subject to GitHub artifact retention). The workflow definition is [`.github/workflows/pipeline-checks.yml`](../../.github/workflows/pipeline-checks.yml).
 
@@ -96,6 +97,8 @@ Use `make lint` and `make format-check` for code checks, or `make ci` for the br
 A manual smoke check follows the same user journey: select a synthetic patient, enter a type 2 diabetes screening question, run screening, expand criterion/evidence details, and inspect the response JSON. An empty question should display a validation message without submitting a screening request.
 
 ## 5. Scope and limitations
+
+The CI workflow covers the application Python suites, three browser tests, the configured pipeline/evaluation suite and retrieval runtime. The repository also contains `services/patient_processing/tests/test_process_patients.py`; that standalone suite is **not included in the current CI commands**. Browser tests do not yet explicitly exercise the UI's response to an unavailable backend.
 
 - Automated browser tests exercise the **offline** application; they do not prove Gemini/Vertex permissions, live model responses or cloud deployment availability.
 - The provenance test checks three synthetic patients and two returned trials per patient; the corruption test checks four defined mutations. Neither is exhaustive fuzzing or clinical validation.
