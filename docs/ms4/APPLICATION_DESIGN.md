@@ -12,19 +12,25 @@ The reproducible demonstration contains **25 synthetic patients** and a selected
 
 ### Interface design and primary user flow
 
-The desktop workspace separates patient context on the left from screening on the right. The implemented interface offers patient search and selection, a screening question, a candidate-trial count, visible offline/live mode information, and expandable result evidence. It also provides empty, loading and error states.
+The desktop interface follows the MS2 concept of keeping patient context separate from the screening workspace. It supports patient selection, screening questions, candidate-trial review, and criterion-level evidence inspection. The implemented MS4 application also provides loading indicators and visible error and empty states.
 
-![TrialMatch MS4 local interface before screening](images/ms4-local-workspace.png)
+**Historical UI design (MS2).**
 
-*Figure 1. Implemented MS4 workspace in offline mode (before screening).* The application runs locally at `http://localhost:8080`.
+![Original TrialMatch UI mock-up from MS2](images/ms2-original-ui-mockup.png)
 
-The primary user flow is: **select a synthetic patient → enter a screening question → run screening → review candidate trials → expand criterion assessments and supporting patient evidence**. The results view also provides structured response JSON for inspection.
+*Figure 1. Original MS2 interface mock-up, showing patient selection, a screening question, and the planned trial and evidence review workflow.*
 
-<!-- UI MATERIALS TO INSERT BEFORE FINAL SUBMISSION (remove this comment when complete):
-1. Insert a legible screenshot of an ORIGINAL MS1/MS2 UI wireframe or mockup here, with a caption identifying the historical milestone. Do not use the low-resolution 344×283 copy; export from the original source if possible.
-2. Insert an MS4 screenshot showing a SUCCESSFUL screening result with at least one trial's criteria/evidence expanded. Caption it as actual browser-to-API output. The current figure shows only the pre-screening interface.
-Keep both figures close to this primary user-flow description and verify that all images resolve on GitHub.
--->
+**Implemented workspace (MS4).**
+
+![TrialMatch MS4 local workspace before screening](images/ms4-local-workspace.png)
+
+*Figure 2. Current MS4 local interface in offline mode before submitting a screening request.* The browser interface is available at `http://localhost:8080` in the Docker Compose setup.
+
+**Primary user flow and screening result.** A user selects a synthetic patient and reviews the patient context, enters or selects a screening question, chooses the number of candidate trials, and runs screening. The application returns candidate trials with criterion-level `MET`, `NOT_MET`, or `UNKNOWN` decisions. The user can expand **Criteria & evidence** to review supporting patient facts and inspect the structured JSON response.
+
+![Actual MS4 screening result with expanded criteria and evidence](images/ms4-screening-results-evidence.png)
+
+*Figure 3. Actual MS4 browser-to-API screening result in local offline mode, with a trial's criterion assessments and patient evidence expanded.* The screenshot documents an HTTP-backed local screening flow, not live-model inference or cloud deployment.
 
 ## 2. System architecture
 
@@ -112,7 +118,7 @@ sequenceDiagram
     WF->>RET: Rank candidate trials
     alt Offline
         RET-->>WF: BM25 results
-        WF->>Judge: Apply rules; abstain if unsupported
+        WF->>Judge: Apply rules and abstain if unsupported
     else Live
         RET-->>WF: Hybrid BM25 / vector results
         WF->>Judge: Apply rules and optional Gemini judgments
