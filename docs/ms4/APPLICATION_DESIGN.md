@@ -10,27 +10,21 @@ TrialMatch is a research application for exploring type 2 diabetes clinical tria
 
 The reproducible demonstration contains **25 synthetic patients** and a selected subset of **50 trial records**. Offline mode uses BM25 retrieval and deterministic evidence rules without external model calls. Live mode can use Gemini or the fine-tuned BioClinical retrieval encoder with a configured vector index, with Gemini available for criterion interpretation.
 
-### Interface layout
+### Interface design and primary user flow
 
-The current browser interface separates patient context from screening and evidence review:
+The desktop workspace separates patient context on the left from screening on the right. The implemented interface offers patient search and selection, a screening question, a candidate-trial count, visible offline/live mode information, and expandable result evidence. It also provides empty, loading and error states.
 
-```text
-+----------------------------+---------------------------------------------------+
-| Patient context            | Trial screening                                   |
-|                            |                                                   |
-| Search / select patient    | Screening question                                |
-| Patient summary            | Trial count (1–5)  [Retrieval: live mode]         |
-| View patient record        |                           [ Run screening ]       |
-| Dataset details            |                                                   |
-|                            | Mode / status / validation message                |
-|                            | Candidate trial cards                            |
-|                            |   Screening status and summary                   |
-|                            |   Expandable criteria and source evidence        |
-|                            |   Response JSON viewer / download                |
-+----------------------------+---------------------------------------------------+
-```
+![TrialMatch MS4 local interface before screening](images/ms4-local-workspace.png)
 
-The interface also includes question suggestions, progress/status messaging and an empty-results workspace. These elements are present in [`services/frontend/static/index.html`](../../services/frontend/static/index.html); automated browser coverage is described in [Test Documentation](TEST_DOCUMENTATION.md).
+*Figure 1. Implemented MS4 workspace in offline mode (before screening).* The application runs locally at `http://localhost:8080`.
+
+The primary user flow is: **select a synthetic patient → enter a screening question → run screening → review candidate trials → expand criterion assessments and supporting patient evidence**. The results view also provides structured response JSON for inspection.
+
+<!-- UI MATERIALS TO INSERT BEFORE FINAL SUBMISSION (remove this comment when complete):
+1. Insert a legible screenshot of an ORIGINAL MS1/MS2 UI wireframe or mockup here, with a caption identifying the historical milestone. Do not use the low-resolution 344×283 copy; export from the original source if possible.
+2. Insert an MS4 screenshot showing a SUCCESSFUL screening result with at least one trial's criteria/evidence expanded. Caption it as actual browser-to-API output. The current figure shows only the pre-screening interface.
+Keep both figures close to this primary user-flow description and verify that all images resolve on GitHub.
+-->
 
 ## 2. System architecture
 
@@ -59,28 +53,42 @@ flowchart LR
 | Assessment | Evidence rules, optional model judgments and explicit uncertainty | `evidence_rules.py`, `judge.py`, `rules.py` |
 | Runtime | Independent containers, dependency locks and persistent Chroma storage | `docker/`, `docker-compose.yml`, `Makefile` |
 
+**Technology choices.** The frontend uses HTML, CSS and vanilla JavaScript served by Nginx; the backend uses Python, FastAPI and Pydantic. Retrieval uses BM25 with optional Chroma-backed vector search and Gemini-based assessment in live mode. Docker Compose runs independently locked service environments, while pytest, Playwright, Ruff and GitHub Actions provide automated checks.
+
 The existing Cloud Run deployment uses a separate single-service configuration; it is not the same as the local split-container Compose setup.
 
 ## 3. Data flow and provenance
 
-ClinicalTrials.gov trial snapshots and Synthea FHIR records are normalized into trial, criterion and patient JSONL files. `DataStore` rejects duplicate/orphan identifiers and invalid patient facts, computes SHA-256 hashes, and verifies the selected demo manifest against the stored inputs.
+ClinicalTrials.gov trial snapshots and Synthea FHIR records are normalized into trial, criterion and patient JSONL files. The selected demo manifest records 50 trial IDs, 25 patient IDs and source SHA-256 hashes. `DataStore` rejects duplicate or orphan identifiers and invalid patient facts, and verifies that the manifest matches the input files before screening.
 
 ```mermaid
 flowchart TD
-    trials[ClinicalTrials.gov snapshot] --> ingest[Trial ingestion]
-    synthea[Synthea FHIR records] --> normalize[Patient processing]
-    ingest --> files1[Trials and criteria JSONL]
-    normalize --> files2[Patient JSONL]
-    files1 --> validation[DataStore validation]
-    files2 --> validation
-    manifest[Demo manifest and SHA-256 hashes] --> validation
-    validation --> screening[Trial retrieval and criterion assessment]
-    screening --> result[Screening response with source references]
+    subgraph Preparation["Data preparation"]
+        CTG["ClinicalTrials.gov snapshot"] --> ING["Trial ingestion"]
+        FHIR["Synthea FHIR records"] --> PP["Patient processing"]
+        ING --> TC["Trials and criteria JSONL"]
+        PP --> P["Patient JSONL"]
+        TC --> CHECK["Validate records and source SHA-256"]
+        P --> CHECK
+        MAN["Demo manifest"] --> CHECK
+    end
+    subgraph Runtime["Local screening request"]
+        USER["User"] --> UI["Browser UI"]
+        UI --> NGINX["Nginx proxy"]
+        NGINX --> API["FastAPI POST /screen"]
+        API --> WF["Screening workflow"]
+        STORE["Validated DataStore"] --> WF
+        WF --> RET["BM25 retrieval / optional vector search"]
+        RET --> JUDGE["Evidence rules / optional Gemini"]
+        JUDGE --> RESULT["ScreenResponse: trials, criteria, evidence, provenance"]
+        RESULT --> API
+        API --> NGINX
+        NGINX --> UI
+    end
+    CHECK --> STORE
 ```
 
-The manifest identifies the 50-trial screening subset and 25 patient IDs. Responses preserve patient ID and reference date, trial IDs and snapshot dates, criterion IDs/text/types, evidence `fact_id`s and source-file hash provenance. These references allow screening outputs to be checked against source records.
-
-The synthetic patient reference date (**2021-11-30**) differs from the trial snapshot date (**2026-10-11**); results are historical demonstrations, not current recruitment recommendations.
+Screening responses preserve patient identity/reference date, trial IDs/snapshot dates, criterion IDs/text/types, evidence `fact_id`s and source-file hashes. These allow results to be traced back to the selected input records. The synthetic patient reference date (**2021-11-30**) differs from the trial snapshot date (**2026-10-11**); the output is a historical research demonstration, not a current recruitment recommendation.
 
 ## 4. Screening request sequence
 
@@ -120,21 +128,19 @@ Each criterion may be `MET`, `NOT_MET`, or `UNKNOWN`. Trial-level outcomes inclu
 
 ## 5. API contract
 
-| Endpoint | Function |
-| --- | --- |
-| `GET /health` | Data/application health; does not verify cloud-model access |
-| `GET /ready` | Data and retrieval-index readiness checks |
-| `GET /metadata` | Dataset counts and source hashes |
-| `GET /patients` | List synthetic patients |
-| `GET /patients/{patient_id}` | Return one normalized patient record |
-| `POST /screen` | Retrieve trials and return criterion-level screening assessments |
-| `POST /retrieve` | Separate local vector-demo retrieval endpoint |
+| Method | Endpoint | Request | Response |
+| --- | --- | --- | --- |
+| GET | `/health` | None | Service status, mode and data counts |
+| GET | `/ready` | Optional `retrieval_model` | Readiness status and data/index checks |
+| GET | `/metadata` | None | Dataset counts, source hashes and metadata |
+| GET | `/patients` | None | Synthetic patient summaries |
+| GET | `/patients/{patient_id}` | Path `patient_id` | Normalized patient record |
+| POST | `/screen` | `ScreenRequest` | `ScreenResponse` with candidates, assessments, evidence and provenance |
+| POST | `/retrieve` | Patient ID, question and `top_k` | Local vector-demo retrieval chunks |
 
-**Screening request:** Exactly one of `patient_id` or normalized inline `patient`; a nonblank `question`; `top_k` between 1 and 5; and optional `retrieval_model` (`gemini` or `finetuned` in live mode).
+`ScreenRequest` requires exactly one of `patient_id` or an inline normalized `patient`, a nonblank `question` and `top_k` from 1–5. In live mode, `retrieval_model` can select `gemini` or `finetuned`. `ScreenResponse` includes `run_id`, `result_status`, patient identity/reference date, `candidate_trials`, `warnings`, `errors`, `provenance` and `metrics`; each candidate includes criterion assessments and cited evidence. Input errors return HTTP 422, missing patients 404, unavailable dependencies 503, and timeouts 504 where applicable. A successful HTTP response is **not** a clinical eligibility determination.
 
-**Screening response:** `run_id`, patient identity/reference date, `result_status`, `candidate_trials`, `warnings`, `errors`, `provenance`, and `metrics`. Candidate results contain status, criteria, evidence, missing information, warnings and trial source URLs. Request validation uses HTTP 422; missing patients use 404; unavailable data/dependencies can return 503; timeouts can return 504. Workflow results distinguish `OK`, `PARTIAL`, `ERROR`, and `NO_CANDIDATES` where applicable.
-
-**Source of truth:** [`schemas.py`](../../services/rag_workflow/schemas.py), [`api.py`](../../services/rag_workflow/api.py), and [`app.py`](../../services/frontend/app.py). The local API exposes interactive documentation at `http://localhost:8081/docs` after startup.
+The schema source is [`schemas.py`](../../services/rag_workflow/schemas.py); routes are implemented in [`api.py`](../../services/rag_workflow/api.py) and [`app.py`](../../services/frontend/app.py). Interactive OpenAPI documentation is available at `http://localhost:8081/docs` when running locally.
 
 ## 6. Design decisions and limitations
 
