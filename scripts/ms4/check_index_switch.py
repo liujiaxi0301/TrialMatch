@@ -49,36 +49,93 @@ for name, evaluated in (("check-a", True), ("check-b", False), ("check-c", True)
     directory = tmp / name
     directory.mkdir()
     (directory / "model.safetensors").write_bytes(name.encode())
-    catalog[name] = EncoderVersion(name, str(directory), checkpoint_digest(directory)[0],
-                                   "ms4-part-b-http-check", "a" * 40, 768, 2048, evaluated, "check")
+    catalog[name] = EncoderVersion(
+        name,
+        str(directory),
+        checkpoint_digest(directory)[0],
+        "ms4-part-b-http-check",
+        "a" * 40,
+        768,
+        2048,
+        evaluated,
+        "check",
+    )
 fakes = {name: Fake(name) for name in catalog}
 names = []
-with patch.object(encoders, "ENCODERS", MappingProxyType(catalog)), \
-        patch.object(encoders, "DEFAULT_FINETUNED", "check-a"), redirect_stderr(io.StringIO()):
+with (
+    patch.object(encoders, "ENCODERS", MappingProxyType(catalog)),
+    patch.object(encoders, "DEFAULT_FINETUNED", "check-a"),
+    redirect_stderr(io.StringIO()),
+):
     try:
-        default = VectorIndex(apply_encoder(settings, catalog["check-a"]), store, manifest, fakes["check-a"])
-        names = [VectorIndex(apply_encoder(settings, e), store, manifest).name for e in catalog.values()]
+        default = VectorIndex(
+            apply_encoder(settings, catalog["check-a"]), store, manifest, fakes["check-a"]
+        )
+        names = [
+            VectorIndex(apply_encoder(settings, e), store, manifest).name for e in catalog.values()
+        ]
         default.build()
-        show("backend", {"chroma_host": settings.chroma_host,
-                         "selection_record": str(selection_path(settings).relative_to(tmp))})
-        r = switch_encoder(settings, store, manifest, "check-c", provider_factory=lambda s: fakes["check-c"])
+        show(
+            "backend",
+            {
+                "chroma_host": settings.chroma_host,
+                "selection_record": str(selection_path(settings).relative_to(tmp)),
+            },
+        )
+        r = switch_encoder(
+            settings, store, manifest, "check-c", provider_factory=lambda s: fakes["check-c"]
+        )
+        assert r["status"] == "SWITCHED" and r["active"] == "check-c"
         show("switch", {k: r[k] for k in ("status", "active", "previous")})
         before = selection_path(settings).read_bytes()
         try:
-            switch_encoder(settings, store, manifest, "check-b", allow_unevaluated=True,
-                           provider_factory=lambda s: Fake("check-b", fail_after=16))
+            switch_encoder(
+                settings,
+                store,
+                manifest,
+                "check-b",
+                allow_unevaluated=True,
+                provider_factory=lambda s: Fake("check-b", fail_after=16),
+            )
         except ProviderError as exc:
+            assert exc.code == "TEST_ENCODER_FAILURE"
+            assert selection_path(settings).read_bytes() == before
             current = VectorIndex(apply_encoder(settings, catalog["check-c"]), store, manifest)
-            show("failed_switch", {"error": exc.code,
-                                   "record_unchanged": selection_path(settings).read_bytes() == before,
-                                   "live_index": current.status()["status"]})
+            show(
+                "failed_switch",
+                {
+                    "error": exc.code,
+                    "record_unchanged": selection_path(settings).read_bytes() == before,
+                    "live_index": current.status()["status"],
+                },
+            )
+            assert current.status()["status"] == "VERIFIED"
+        else:
+            raise AssertionError("The simulated encoder failure must reject the switch")
         calls = sum(f.calls for f in fakes.values())
         r = rollback_encoder(settings, store, manifest)
-        show("rollback", {"status": r["status"], "active": r["active"], "previous": r["previous"],
-                          "encoder_calls_during_rollback": sum(f.calls for f in fakes.values()) - calls})
+        assert r["status"] == "ROLLED_BACK" and r["active"] == "check-a"
+        assert sum(f.calls for f in fakes.values()) == calls
+        show(
+            "rollback",
+            {
+                "status": r["status"],
+                "active": r["active"],
+                "previous": r["previous"],
+                "encoder_calls_during_rollback": sum(f.calls for f in fakes.values()) - calls,
+            },
+        )
         s = selection_status(settings, store, manifest)
-        show("status", {"active": s["active"]["name"], "active_index": s["active"]["index_status"],
-                        "previous": s["previous"]["name"], "previous_index": s["previous"]["index_status"]})
+        assert s["active"]["index_status"] == s["previous"]["index_status"] == "VERIFIED"
+        show(
+            "status",
+            {
+                "active": s["active"]["name"],
+                "active_index": s["active"]["index_status"],
+                "previous": s["previous"]["name"],
+                "previous_index": s["previous"]["index_status"],
+            },
+        )
     finally:
         removed = 0
         for name in names:

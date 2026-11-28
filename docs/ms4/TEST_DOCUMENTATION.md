@@ -2,7 +2,7 @@
 
 **Team:** Orange Chicken  
 **Milestone:** MS4  
-**Verified revision:** [`06ebddd`](https://github.com/liujiaxi0301/TrialMatch/commit/06ebddd46c51524e70116377f895f2e635b98875) · November 26, 2026
+**Local integration verified:** November 27, 2026. Remote CI evidence below refers to an earlier commit.
 
 ## 1. Testing approach
 
@@ -12,15 +12,15 @@ TrialMatch uses automated tests at the component, API, system, and browser level
 | --- | --- | --- |
 | Component | Evidence rules, retrieval, assessment aggregation, embedding interfaces, index snapshots | `pytest` / `unittest`; `services/rag_workflow/tests/` |
 | API integration | Request validation, HTTP errors, readiness, offline screening and returned evidence | FastAPI `TestClient`; `services/rag_workflow/tests/`, `services/frontend/tests/` |
-| System | Invalid source records, multi-patient provenance, Chroma persistence after container recreation | `test_ms4_system_validation.py`, `test_ms4_provenance.py`, `make system-test` |
-| Browser E2E | Real Chromium → Nginx → FastAPI screening, evidence inspection and input errors | Playwright; `services/frontend/e2e/screening.spec.js` |
+| System | Invalid source records, multi-patient provenance, Chroma persistence, index switching and rollback | `test_ms4_system_validation.py`, `test_ms4_provenance.py`, `make system-test` |
+| Browser E2E | Real Chromium → Nginx → FastAPI screening, evidence inspection and input errors | Playwright; `services/frontend/e2e/` |
 | CI regression | Container startup, lint/format, Python coverage, pipeline checks and retrieval runtime | `.github/workflows/pipeline-checks.yml` |
 
 The configured Python coverage gate is **50%** (`COVERAGE_MIN=50`). Any test failure or coverage below this threshold fails the relevant check.
 
 ## 2. Test matrix
 
-The matrix maps acceptance conditions to automated checks in the verified revision. A row denotes a **test area**, not a separate test count.
+The matrix maps acceptance conditions to automated checks in the integrated code. A row denotes a **test area**, not a separate test count.
 
 | Level / area | Acceptance condition | Automated test or command | Result |
 | --- | --- | --- | --- |
@@ -31,9 +31,14 @@ The matrix maps acceptance conditions to automated checks in the verified revisi
 | System — source integrity | Duplicate trial/patient/criterion IDs and orphan criteria are rejected | `test_ms4_system_validation.py` (SV-01) | Passed |
 | System — provenance | Selected patient, trial, criterion and evidence references agree with the source records | `test_ms4_provenance.py` (SV-02) | Passed |
 | System — vector persistence | A Chroma test collection remains queryable after container recreation | `make system-test` | Passed |
-| E2E — browser/API | Chromium can select a patient, submit screening, inspect evidence/JSON and display input validation | `services/frontend/e2e/screening.spec.js` | 3 passed |
-| CI — data and pipeline | Versioned data, pipeline regressions and frozen evaluations pass offline checks | GitHub Actions `pipeline` job | Passed |
-| CI — retrieval runtime | CPU retrieval and checkpoint interfaces pass without model-service calls | GitHub Actions `retrieval-runtime` job | Passed |
+| E2E — browser/API | Chromium screens patients, inspects evidence, edits/exports reviews and handles empty/error/cancel/timeout states | `services/frontend/e2e/` | 13 passed |
+| Pipeline regression | Versioned data, pipeline regressions and frozen evaluations pass offline checks | Same test suites as the Actions `pipeline` job | Passed locally |
+| Retrieval runtime | CPU retrieval and checkpoint interfaces pass without model-service calls | Same suite as the Actions `retrieval-runtime` job | Passed locally |
+
+Index tests additionally cover failed builds, model/version isolation, rollback and
+malformed selection records. API regressions verify that readiness follows a
+switch/rollback without restarting and returns 503 for an invalid selection record.
+The HTTP Chroma cycle is included in `make system-test`.
 
 ### System-validation cases
 
@@ -43,23 +48,29 @@ The matrix maps acceptance conditions to automated checks in the verified revisi
 
 ## 3. Execution and results
 
-The following results correspond to revision `06ebddd`, not to a later integration commit.
+The integrated local checks cover the three merged modules plus the readiness fix.
+`make ci` passed; after extending malformed-record handling, `make check` passed
+again against the final application code.
 
-| Check | Verified result |
+| Check | Local result |
 | --- | --- |
-| Backend Python tests | **100 passed**, including SV-01 and SV-02 |
-| Frontend/API Python tests | **6 passed** |
-| Combined application Python suite | **106 passed** |
-| API/backend Python statement coverage | **85%** (1,529 / 1,790 statements covered; derived from the same file-level report) |
-| Combined application Python statement coverage | **83%** (1,612 / 1,931 statements covered) |
-| Coverage gate | **Passed** (required ≥50%) |
-| Playwright browser tests | **3 passed** in GitHub Actions |
-| Chroma persistence | **Passed** after container recreation |
-| GitHub Actions | **All 3 jobs passed**: `application`, `pipeline`, `retrieval-runtime` |
+| Backend / frontend Python tests | 116 + 6 passed; 0 failures, 0 skipped |
+| Combined Python statement coverage | **86.73%** (1811 / 2088); threshold 50% |
+| Browser E2E through Nginx and FastAPI | **13 passed** |
+| Chroma persistence and HTTP index switching | Passed; failed switches preserved the active index and rollback made no encoder calls |
+| Pipeline, frozen evaluation and patient-processing suites | 150 passed |
+| CPU retrieval/checkpoint and retrieval utility suites | 17 passed |
+| Build, lint, format and dependency-lock checks | Passed |
 
-Coverage is measured by `coverage.py` at the Python **statement** level, with tests excluded. The **85% API/backend** figure is calculated from the `services/rag_workflow/` rows in the same report; the configured CI gate evaluates the **83% combined** `services/rag_workflow/` and `services/frontend/` scope. Both exceed the required 50% API/backend threshold. These percentages do **not** measure the full repository, browser JavaScript, or clinical/model accuracy. The GitHub run also passed the configured coverage gate and executed the browser/persistence checks.
+Coverage includes Python source in `services/rag_workflow/` and `services/frontend/`,
+excluding tests. It does not measure browser JavaScript, cloud training code or model
+quality. Test counts across the last two suites overlap in shared retrieval tests;
+they are not an additive repository-wide count.
 
-**Evidence:** [Successful GitHub Actions run #45912304011](https://github.com/liujiaxi0301/TrialMatch/actions/runs/45912304011); artifact `ms4-application-reports` contains coverage, JUnit, browser and container reports (subject to GitHub artifact retention). The workflow definition is [`.github/workflows/pipeline-checks.yml`](../../.github/workflows/pipeline-checks.yml).
+Reports are generated under ignored `artifacts/ms4/`; CI uploads them as
+`ms4-application-reports`. No remote CI or cloud deployment is claimed for this local
+integration. The earlier [successful Actions run](https://github.com/liujiaxi0301/TrialMatch/actions/runs/45912304011)
+verified `06ebddd`; rerun Actions after publishing the integrated branch.
 
 ### CI verification path
 
@@ -98,11 +109,11 @@ A manual smoke check follows the same user journey: select a synthetic patient, 
 
 ## 5. Scope and limitations
 
-The CI workflow covers the application Python suites, three browser tests, the configured pipeline/evaluation suite and retrieval runtime. The repository also contains `services/patient_processing/tests/test_process_patients.py`; that standalone suite is **not included in the current CI commands**. Browser tests do not yet explicitly exercise the UI's response to an unavailable backend.
+The CI workflow covers the application Python suites, 13 browser tests, Chroma persistence/switching, pipeline/evaluation suites and retrieval runtime. The repository also contains `services/patient_processing/tests/test_process_patients.py`; that standalone suite is **not included in the current CI commands**. Browser failure cases deliberately intercept `/screen`; they verify UI behavior rather than an actual provider outage.
 
 - Automated browser tests exercise the **offline** application; they do not prove Gemini/Vertex permissions, live model responses or cloud deployment availability.
 - The provenance test checks three synthetic patients and two returned trials per patient; the corruption test checks four defined mutations. Neither is exhaustive fuzzing or clinical validation.
 - The dataset consists of synthetic patients dated **2021-11-30** and trial snapshots dated **2026-10-11**. Screening results require human review and are not current enrollment decisions.
 - `UNKNOWN` means insufficient support, not a negative criterion assessment; match scores are not enrollment probabilities.
 
-Results and diagrams in this document describe the explicitly linked, tested revision. The same verification commands can be rerun for subsequent revisions.
+Repeat these commands after subsequent integration changes; old reports do not verify new code.

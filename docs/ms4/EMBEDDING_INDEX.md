@@ -12,7 +12,7 @@ retrieval quality or clinical accuracy. No encoder was retrained for MS4.
 | CLI commands | `services/rag_workflow/cli.py`: `switch-index`, `rollback-index`, `index-status` |
 | Automated tests | `services/rag_workflow/tests/test_index_switching.py`, plus the existing `test_index_versions.py` and `test_embedding_providers.py` |
 | Migration and rollback runbook | [`services/rag_workflow/INDEX_VERSIONING.md`](../../services/rag_workflow/INDEX_VERSIONING.md) |
-| Evidence | [`docs/ms4/evidence/part-b/`](evidence/part-b/) |
+| HTTP Chroma verification | [`scripts/ms4/check_index_switch.py`](../../scripts/ms4/check_index_switch.py), included in `make system-test` |
 
 ---
 
@@ -30,11 +30,11 @@ unchanged: `retrieval_model ∈ {null, "gemini", "finetuned"}`.
 | `"gemini"` | `gemini-embedding-001`, 256 dimensions | None |
 | `"finetuned"` | The **active** fine-tuned encoder for this Chroma backend | Reads the selection record. Without one, the result is identical, field for field, to MS3 (`train-20261110-t4-r3`) |
 
-**Switching does not change the API.** The routes, request schema and response schema are
-unchanged. `/screen` re-reads the selection on every request, so a switch applies to the next
-screening request. `/ready` caches one `ReadinessProbe` per `retrieval_model` for the life of
-the process (`api.py:48`), so **restart `rag-api` after a switch or rollback** to keep
-`/ready` consistent with `/screen` (see the proposal in §1.4).
+**Switching does not change the API.** Routes and request/response schemas remain
+unchanged. Both `/screen` and `/ready` resolve the selection on each request.
+Readiness caches only the most recently resolved settings; switching or rolling
+back starts a fresh probe without restarting the API. A malformed selection record
+returns `503 ENCODER_SELECTION_INVALID`, without exposing its contents or local path.
 
 **`/ready?retrieval_model=…`** checks the data and manifest, then, in live mode only, the
 index of the selected encoder (manifest, collection, IDs, text, metadata, dimension and
@@ -95,7 +95,7 @@ dependencies were added.
 | Status | `docker compose exec -T rag-api python -m services.rag_workflow.cli --retrieval-model finetuned index-status` |
 | Switch | `docker compose exec -T rag-api python -m services.rag_workflow.cli --retrieval-model finetuned switch-index --to <name> [--allow-unevaluated] [--snapshot <file>]` |
 | Roll back | `docker compose exec -T rag-api python -m services.rag_workflow.cli --retrieval-model finetuned rollback-index` |
-| After a switch or rollback | `docker compose restart rag-api` |
+| After a switch or rollback | Check `/ready?retrieval_model=finetuned`; no restart required |
 | Tests | `make coverage` (runs `test_index_switching.py` with the other backend tests; offline, no new dependencies) |
 
 **Cloud note.** `cloud/setup.sh` only lets `trialmatch-api` create objects under
@@ -136,53 +136,11 @@ The readiness manifest also records `schema_version`, `collection`, `vector_coun
 | Level / area | Acceptance condition | Automated test or command | Result |
 | --- | --- | --- | --- |
 | Integration — index switching | Encoder versions use separate collections; unknown encoders and tampered checkpoints are rejected; a failed candidate build leaves the selection and the live index unchanged; rollback needs no re-encoding and refuses a damaged previous index; record writes are atomic; a damaged record is an error; without a record the MS3 settings are unchanged | `test_index_switching.py` (14 tests) | 14 passed |
-| System — HTTP Chroma switching | Switch, failed switch and rollback against the Compose Chroma server | `docs/ms4/evidence/part-b/http_switch_check.py` | Passed |
+| System — HTTP Chroma switching | Switch, failed switch and rollback against the Compose Chroma server | `scripts/ms4/check_index_switch.py` | Passed |
 
 See §3 for the full results.
 
-### 1.4 Proposed change for Part C (not applied)
-
-With a damaged selection record, `/screen` correctly returns
-`503 ENCODER_SELECTION_INVALID`. However, `/ready?retrieval_model=finetuned` returns
-**`500 INTERNAL_ERROR`**, because `api.py` builds the probe outside its error handling. The
-`lru_cache` also keeps the pre-switch settings. A minimal fix, for Part C to accept or adapt:
-
-```diff
--    @lru_cache(maxsize=3)
--    def readiness(retrieval_model=None):
--        return ReadinessProbe(config.for_retrieval(retrieval_model), workflow)
-+    @lru_cache(maxsize=8)
-+    def probe_for(settings):
-+        return ReadinessProbe(settings, workflow)
-+
-+    def readiness(retrieval_model=None):
-+        # Keyed by resolved settings, so a switch/rollback is picked up without a restart.
-+        return probe_for(config.for_retrieval(retrieval_model))
-
-     @app.get("/ready", tags=["Operations"])
-     def ready(retrieval_model: RetrievalModel | None = None):
--        report = readiness(retrieval_model).check()
-+        try:
-+            report = readiness(retrieval_model).check()
-+        except ProviderError as exc:
-+            report = {
-+                "ready": False,
-+                "mode": config.mode,
-+                "check_scope": "encoder_selection",
-+                "checks": {"encoder_selection": {"status": "FAIL", "code": safe_code(exc.code)}},
-+            }
-         emit("readiness_checked", ready=report["ready"], check_scope=report["check_scope"])
-         return JSONResponse(status_code=200 if report["ready"] else 503, content=report)
-```
-
-`Settings` is a frozen dataclass and therefore hashable. Exposing the active encoder name in
-`/ready` or `/metadata` is a separate Part C decision. Until then, `index-status` reports it.
-
----
-
 ## 2. Embedding and Index Architecture
-
-*This section is intended for `APPLICATION_DESIGN.md`.*
 
 ### 2.1 Two retrieval paths
 
@@ -231,7 +189,7 @@ flowchart TD
     S5 -- fails --> F5["Stop: INDEX_SMOKE_FAILED<br/>record unchanged"]
     S5 -- ok --> S6["Atomic write of selection record<br/>temp file, fsync, os.replace<br/>active = NAME, previous = old"]
     S6 -- fails --> F6["Stop: ENCODER_SELECTION_WRITE_FAILED<br/>old record intact"]
-    S6 --> L["Live: restart rag-api"]
+    S6 --> L["Next screening and readiness request selects the new encoder"]
     L --> R0["rollback-index"]
     R0 --> R1{"previous recorded?"}
     R1 -- no --> F7["Stop: ENCODER_ROLLBACK_UNAVAILABLE"]
@@ -253,7 +211,7 @@ because the only step that changes what is served is the final atomic `os.replac
 | Candidate fails verification | `INDEX_*` | None | Run `restore-index` from a known snapshot into a fresh artifacts directory, or investigate |
 | Smoke query fails | `INDEX_SMOKE_FAILED` | None | Investigate the Chroma server; retry |
 | Record write fails (disk full, permissions) | `ENCODER_SELECTION_WRITE_FAILED` | None; the old record is byte-identical | Fix the disk or permissions; rerun |
-| Selection record damaged | `ENCODER_SELECTION_INVALID` | Fine-tuned requests fail with 503; Gemini and offline are unaffected | Inspect the file, then move it aside: the backend returns to the default encoder |
+| Selection record damaged | `ENCODER_SELECTION_INVALID` | Fine-tuned requests fail with 503; requests without a fine-tuned selection are unaffected | Inspect the file, then move it aside: the backend returns to the default encoder |
 | Previous index damaged or missing at rollback | `ROLLBACK_TARGET_NOT_READY` | None; still on the current encoder | `restore-index` the previous snapshot, then roll back again |
 | Live collection tampered after activation | `INDEX_CONTENT_MISMATCH` (and others) | Fine-tuned retrieval fails closed | `rollback-index`, or restore the snapshot into a fresh database |
 
@@ -285,18 +243,11 @@ restored there.
 
 ---
 
-## 3. Verification results (2026-11-27, branch `jenny/ms4-index`)
+## 3. Verification
 
-| Check | Baseline `91f163f` | After Part B |
-| --- | --- | --- |
-| `make lint` | Passed | Passed |
-| Backend Python tests | 98 passed | **112 passed** (+14 in `test_index_switching.py`) |
-| Frontend/API Python tests | 6 passed | 6 passed |
-| API/backend statement coverage | 85% (1,526 / 1,790) | **87%** (1,719 / 1,987) |
-| Combined statement coverage | 83% (1,609 / 1,931) | **85%** (1,802 / 2,128) |
-| `make system-test` | — | Passed |
-| HTTP Chroma switch/rollback check | — | Passed (`evidence/part-b/http-switch-check.txt`) |
-
-Part E's 106-test figure includes SV-01 and SV-02, which are on `jiaxi/ms4-validation` and not
-on the infrastructure base. Everything in this table ran offline. It used no checkpoint
-download and no model or Gemini call.
+`make coverage` includes the 14 index-switching tests, the data/provenance checks
+and the API regressions for selection changes, rollback and damaged records.
+`make system-test` verifies Chroma persistence and executes the switching cycle
+against the Compose HTTP service with local test checkpoints and fake encoders.
+No model download or paid inference is needed. The HTTP test removes only its own
+test collections. Current results belong in [Test Documentation](TEST_DOCUMENTATION.md).

@@ -97,7 +97,7 @@ TRIALMATCH_ARTIFACTS=artifacts/rag_workflow_restore_check CHROMADB_HOST= \
 
 Expected: `RESTORED`, then `VERIFIED`, both with 607 vectors. No GCP credentials are required. A restore checks the snapshot schema/checksum and matching source/configuration before inserting anything. It refuses conflicting target records, preserves existing collections, and can resume an interrupted restore if all existing records match. For conflicts, use a fresh dedicated database/path; the tool never deletes collections or volumes.
 
-For an older version, select the Git revision containing its source data, code/configuration, trial-subset manifest and `.dvc` pointer, then run DVC checkout/pull before restoring. Merely changing a pointer while keeping incompatible source data is rejected. Selecting the corresponding source/configuration selects the historical collection; there is no independent global "active collection" switch.
+For an older version, select the Git revision containing its source data, code/configuration, trial-subset manifest and `.dvc` pointer, then run DVC checkout/pull before restoring. Merely changing a pointer while keeping incompatible source data is rejected. Selecting the corresponding source/configuration selects the historical collection. Fine-tuned encoder selection is separate runtime state, described below.
 
 ## 5. Shared storage
 
@@ -229,11 +229,8 @@ CLI arguments apply to an embedded database.
    `ALREADY_ACTIVE` with the record unchanged. Any error exits with status 1 and a JSON
    `{"error": CODE}`, and the record is unchanged.
 
-3. Restart the API so the cached readiness probe uses the new encoder:
-
-   ```bash
-   docker compose restart rag-api
-   ```
+3. Check `/ready?retrieval_model=finetuned`. Both screening and readiness select
+   the new encoder on the next request; no API restart is needed.
 
 Building a fine-tuned index downloads the checkpoint (about 600 MB) and encodes every criterion
 fragment on CPU. It needs Google credentials with read access to the checkpoint bucket.
@@ -243,8 +240,6 @@ fragment on CPU. It needs Google credentials with read access to the checkpoint 
 ```bash
 docker compose exec -T rag-api python -m services.rag_workflow.cli \
   --retrieval-model finetuned rollback-index
-
-docker compose restart rag-api
 ```
 
 Rollback re-verifies the previous encoder's collection and swaps `active` and `previous`. It
@@ -281,9 +276,8 @@ mv artifacts/infra/rag_workflow/indexes/http-66ed9a0e94e2/active-finetuned.json 
 | Identity | Source, subset, model, dimension, chunker | The same, plus encoder revision, pooling, token budget and checkpoint SHA-256 |
 | Credentials | Vertex AI for building; none to restore | GCS read for the checkpoint; none to restore a snapshot or roll back |
 
-**Verification.** `services/rag_workflow/tests/test_index_switching.py` (14 tests, part of
-`make coverage`) runs switch, failed switch, rollback and recovery on embedded Chroma, using
-local test checkpoints and fake encoders. `docs/ms4/evidence/part-b/` holds the same cycle
-against the Compose Chroma server, together with the CLI refusals and the recovery commands
-above, as run in Compose. A switch to a real GCS checkpoint has **not** been run yet, because
-it needs credentials and a 600 MB download.
+**Verification.** `services/rag_workflow/tests/test_index_switching.py` covers switch,
+failed switch, rollback and recovery on embedded Chroma. `make system-test` also
+runs `scripts/ms4/check_index_switch.py` against the Compose Chroma server. Both
+use local test checkpoints and fake encoders. Actual GCS checkpoint loading and
+live inference still require credentials and are not part of offline CI.

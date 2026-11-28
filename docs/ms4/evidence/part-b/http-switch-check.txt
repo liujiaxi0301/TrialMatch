@@ -1,9 +1,0 @@
-# docker compose exec -T rag-api python - < docs/ms4/evidence/part-b/http_switch_check.py
-# Recorded 2026-11-27 on branch jenny/ms4-index against `make up` (HTTP Chroma), fake encoders and local test checkpoints.
-
-{"chroma_host": "rag-chromadb", "selection_record": "artifacts/indexes/http-66ed9a0e94e2/active-finetuned.json", "step": "backend"}
-{"active": "check-c", "previous": "check-a", "status": "SWITCHED", "step": "switch"}
-{"error": "TEST_ENCODER_FAILURE", "live_index": "VERIFIED", "record_unchanged": true, "step": "failed_switch"}
-{"active": "check-a", "encoder_calls_during_rollback": 0, "previous": "check-c", "status": "ROLLED_BACK", "step": "rollback"}
-{"active": "check-a", "active_index": "VERIFIED", "previous": "check-c", "previous_index": "VERIFIED", "step": "status"}
-{"removed_test_collections": 3, "step": "cleanup"}

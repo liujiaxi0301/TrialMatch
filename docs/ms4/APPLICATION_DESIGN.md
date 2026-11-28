@@ -2,7 +2,7 @@
 
 **Team:** Orange Chicken  
 **Milestone:** MS4  
-**Implementation reference:** [`06ebddd`](https://github.com/liujiaxi0301/TrialMatch/commit/06ebddd46c51524e70116377f895f2e635b98875)
+**Scope:** Integrated MS4 frontend, index management, validation and Docker/CI.
 
 ## 1. Purpose and user experience
 
@@ -26,7 +26,7 @@ The desktop interface follows the MS2 concept of keeping patient context separat
 
 *Figure 2. Current MS4 local interface in offline mode before submitting a screening request.* The browser interface is available at `http://localhost:8080` in the Docker Compose setup.
 
-**Primary user flow and screening result.** A user selects a synthetic patient and reviews the patient context, enters or selects a screening question, chooses the number of candidate trials, and runs screening. The application returns candidate trials with criterion-level `MET`, `NOT_MET`, or `UNKNOWN` decisions. The user can expand **Criteria & evidence** to review supporting patient facts and inspect the structured JSON response.
+**Primary user flow and screening result.** A user selects a synthetic patient and reviews the patient context, enters or selects a screening question, chooses the number of candidate trials, and runs screening. The application returns candidate trials with criterion-level `MET`, `NOT_MET`, or `UNKNOWN` decisions. The user can expand **Criteria & evidence** to review supporting patient facts and inspect the structured JSON response. A criterion can receive a human assessment with a reason, be restored to its original judgment, and be exported as review JSON. Reviews stay in the current page session; they do not overwrite backend scores or evidence.
 
 ![Actual MS4 screening result with expanded criteria and evidence](images/ms4-screening-results-evidence.png)
 
@@ -55,13 +55,19 @@ flowchart LR
 | FastAPI | HTTP endpoints, schema validation, errors, health/readiness | `services/frontend/app.py`, `services/rag_workflow/api.py` |
 | Screening | Retrieval, assessment, status aggregation and provenance | `services/rag_workflow/workflow.py` |
 | Data | Load normalized files; validate identities, patient facts and checksums | `services/rag_workflow/data.py` |
-| Retrieval / index | Offline BM25; optional hybrid lexical/vector retrieval and versioned snapshots | `services/rag_workflow/retrieve.py`, `index.py`, `index_versions.py` |
+| Retrieval / index | Offline BM25; hybrid retrieval, versioned snapshots, validated encoder switching and rollback | `retrieve.py`, `index.py`, `index_versions.py`, `encoders.py`, `index_switching.py` under `services/rag_workflow/` |
 | Assessment | Evidence rules, optional model judgments and explicit uncertainty | `evidence_rules.py`, `judge.py`, `rules.py` |
 | Runtime | Independent containers, dependency locks and persistent Chroma storage | `docker/`, `docker-compose.yml`, `Makefile` |
 
 **Technology choices.** The frontend uses HTML, CSS and vanilla JavaScript served by Nginx; the backend uses Python, FastAPI and Pydantic. Retrieval uses BM25 with optional Chroma-backed vector search and Gemini-based assessment in live mode. Docker Compose runs independently locked service environments, while pytest, Playwright, Ruff and GitHub Actions provide automated checks.
 
 The existing Cloud Run deployment uses a separate single-service configuration; it is not the same as the local split-container Compose setup.
+
+The [index architecture](EMBEDDING_INDEX.md) covers checkpoint isolation, switching
+and rollback. The evaluated November 10 checkpoint remains the default. Both
+screening and readiness resolve the current selection without a restart; malformed
+selection records return 503. Human-review behavior is described in the
+[frontend guide](FRONTEND.md).
 
 ## 3. Data flow and provenance
 
@@ -170,7 +176,7 @@ services/rag_workflow/          Data store, retrieval, assessment, API and tests
 services/frontend/              UI, API adapter and browser tests
 cloud/                          Vertex pipeline, training and release tools
 docker/                         Service images and locked dependencies
-scripts/ms4/                    Coverage and Chroma-persistence checks
+scripts/ms4/                    Coverage, Chroma persistence and index-switch checks
 docs/ms4/                       Design, testing and infrastructure documentation
 ```
 

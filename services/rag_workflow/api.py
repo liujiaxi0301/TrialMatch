@@ -45,13 +45,22 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     def workflow():
         return ScreeningWorkflow(config)
 
-    @lru_cache(maxsize=3)
-    def readiness(retrieval_model=None):
-        return ReadinessProbe(config.for_retrieval(retrieval_model), workflow)
+    @lru_cache(maxsize=1)
+    def readiness(selected):
+        # Resolve settings before caching; switching or rolling back starts a fresh probe.
+        return ReadinessProbe(selected, workflow)
 
     @app.get("/ready", tags=["Operations"])
     def ready(retrieval_model: RetrievalModel | None = None):
-        report = readiness(retrieval_model).check()
+        try:
+            report = readiness(config.for_retrieval(retrieval_model)).check()
+        except ProviderError as exc:
+            report = {
+                "ready": False,
+                "mode": config.mode,
+                "check_scope": "encoder_selection",
+                "checks": {"encoder_selection": {"status": "FAIL", "code": safe_code(exc.code)}},
+            }
         emit("readiness_checked", ready=report["ready"], check_scope=report["check_scope"])
         return JSONResponse(status_code=200 if report["ready"] else 503, content=report)
 

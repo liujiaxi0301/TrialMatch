@@ -8,13 +8,18 @@ information. This is a research demo, not a clinical eligibility decision.
 
 ## New in MS4
 
+- Criterion-level human review with reasons, restore and JSON export; original model output stays visible.
+- Fine-tuned index switching and rollback with checkpoint checks and immediate readiness refresh.
+- Data/provenance validation, browser review tests and application design documentation.
 - Separate frontend and API containers, with one-command local startup.
 - Pre-commit checks formatting, code, config files and dependency locks before a commit.
 - GitHub Actions repeats the checks, builds images and tests the real browser-to-API flow.
 - Backend coverage must reach 50%; test failures also fail CI. Reports are saved as CI artifacts.
 - A container recreation test verifies Chroma persistence.
 
-See [local setup, CI and integration notes](docs/ms4/INFRASTRUCTURE.md).
+See [local setup and CI](docs/ms4/INFRASTRUCTURE.md),
+[application design](docs/ms4/APPLICATION_DESIGN.md) and
+[test documentation](docs/ms4/TEST_DOCUMENTATION.md).
 
 ## System
 
@@ -92,11 +97,13 @@ BM25 and vector search. The choice changes the embedding model and its Chroma
 collection; Gemini still assesses criteria in both cases. The response identifies
 the model actually used. Offline mode remains BM25 only.
 
-The trained option uses the evaluated November 10 checkpoint at
+By default, the trained option uses the evaluated November 10 checkpoint at
 `gs://trialmatch-ac215-yixiao-ms3/training/train-20261110-t4-r3/model`.
-Its SHA256 is pinned in `services/rag_workflow/config.py`. It runs on CPU without
+Its SHA256 is pinned in `services/rag_workflow/encoders.py`. It runs on CPU without
 retraining. The first local start downloads the model and builds its index; later
 starts reuse the files. Initial model loading can make the first request slower.
+Index switching and rollback are described in the [index guide](services/rag_workflow/INDEX_VERSIONING.md).
+Both screening and readiness follow the selected encoder without a restart.
 
 ## API
 

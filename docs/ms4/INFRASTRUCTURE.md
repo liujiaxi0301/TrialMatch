@@ -91,7 +91,7 @@ make check        # Lint, format check and pytest with coverage
 make pre-commit   # Run all hooks against tracked files
 make coverage     # Backend/API tests; fail below 50% or on any test failure
 make up
-make system-test  # Write/query vectors across Chroma container recreation
+make system-test  # Verify persistence, index switching and rollback with HTTP Chroma
 make e2e          # Chromium -> frontend -> actual offline backend
 make ci           # Build, pre-commit checks, startup, persistence and browser tests
 make down         # Keep the local vector database
@@ -107,6 +107,8 @@ The browser suite covers patient selection, a real screening request, returned
 trial IDs, criterion details, JSON evidence review, empty input and proxied API
 validation errors. It does not mock the API. The Chroma test uses a reserved test
 collection and removes that collection after verification, preserving other indexes.
+It also verifies index switching, failed-switch recovery and rollback through
+`scripts/ms4/check_index_switch.py`, with fake encoders and disposable test collections.
 
 | Output under `artifacts/ms4/` | Contents |
 | --- | --- |

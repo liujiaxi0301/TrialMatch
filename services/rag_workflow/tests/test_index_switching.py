@@ -307,7 +307,10 @@ class SwitchingTests(unittest.TestCase):
         valid = json.loads(self.record_bytes())
         for label, content in (
             ("truncated", self.record_bytes()[:40]),
+            ("invalid UTF-8", b"\xff"),
             ("not an object", b"[]"),
+            ("active type", json.dumps({**valid, "active": []}).encode()),
+            ("previous type", json.dumps({**valid, "previous": {}}).encode()),
             ("schema", json.dumps({**valid, "schema_version": 2}).encode()),
             ("same previous", json.dumps({**valid, "previous": "enc-c"}).encode()),
             ("bad version", json.dumps({**valid, "index_version": "../x"}).encode()),

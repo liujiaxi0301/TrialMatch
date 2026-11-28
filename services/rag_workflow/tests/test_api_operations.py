@@ -13,6 +13,7 @@ from unittest.mock import Mock, patch
 from fastapi.testclient import TestClient
 
 from services.frontend.app import create_app
+from services.rag_workflow import encoders
 from services.rag_workflow.config import Settings
 from services.rag_workflow.observability import JsonFormatter, log_screening
 from services.rag_workflow.providers import ProviderError
@@ -331,6 +332,91 @@ class ApiOperationsTests(unittest.TestCase):
         self.assertEqual(response.status_code, 503)
         self.assertEqual(response.json()["checks"]["index"]["code"], "DEPENDENCY_UNAVAILABLE")
         self.assertNotIn("credential-marker", response.text)
+
+    def test_readiness_follows_selection_switch_and_rollback_without_restart(self):
+        with tempfile.TemporaryDirectory() as directory:
+            settings = replace(
+                self.settings,
+                mode="live",
+                project="trialmatch-test",
+                chroma_host="database.example",
+                artifacts=Path(directory),
+            )
+            original = encoders.DEFAULT_FINETUNED
+            candidate = "pipeline-20261112"
+            observed = []
+
+            def index_for(selected, store, manifest):
+                version = selected.embedding_checkpoint_sha256[:20]
+                observed.append(version)
+                return SimpleNamespace(
+                    status=lambda: {"index_version": version, "vector_count": 607}
+                )
+
+            with (
+                patch("services.rag_workflow.readiness.VectorIndex", side_effect=index_for),
+                TestClient(create_app(settings)) as client,
+            ):
+
+                def ready_for(name):
+                    response = client.get("/ready?retrieval_model=finetuned")
+                    self.assertEqual(response.status_code, 200)
+                    self.assertEqual(
+                        response.json()["checks"]["index"]["index_version"],
+                        encoders.ENCODERS[name].checkpoint_sha256[:20],
+                    )
+
+                ready_for(original)
+                ready_for(original)  # Unchanged settings still reuse the 30-second cache.
+                record = None
+                for action, active, previous in (
+                    ("switch", candidate, original),
+                    ("rollback", original, candidate),
+                ):
+                    record = encoders.next_selection(
+                        record,
+                        action=action,
+                        active=active,
+                        previous=previous,
+                        index_version=encoders.ENCODERS[active].checkpoint_sha256[:20],
+                        previous_index_version=encoders.ENCODERS[previous].checkpoint_sha256[:20],
+                    )
+                    encoders.write_selection(settings, record)
+                    ready_for(active)
+
+            self.assertEqual(
+                observed,
+                [
+                    encoders.ENCODERS[name].checkpoint_sha256[:20]
+                    for name in (original, candidate, original)
+                ],
+            )
+
+    def test_damaged_selection_returns_safe_503_even_after_cached_readiness(self):
+        with tempfile.TemporaryDirectory() as directory:
+            settings = replace(self.settings, artifacts=Path(directory))
+            path = encoders.selection_path(settings)
+            path.parent.mkdir(parents=True)
+            with TestClient(create_app(settings)) as client:
+                self.assertEqual(client.get("/ready?retrieval_model=finetuned").status_code, 200)
+                for damaged in (
+                    b"private-selection-marker: not JSON",
+                    b"\xff",
+                    b'{"schema_version":1,"retrieval_model":"finetuned","active":[]}',
+                ):
+                    with self.subTest(damaged=damaged):
+                        path.write_bytes(damaged)
+                        response = client.get("/ready?retrieval_model=finetuned")
+                        self.assertEqual(response.status_code, 503)
+                        self.assertEqual(
+                            response.json()["checks"]["encoder_selection"]["code"],
+                            "ENCODER_SELECTION_INVALID",
+                        )
+                        self.assertNotIn("private-selection-marker", response.text)
+                        self.assertNotIn(str(path), response.text)
+                self.assertEqual(client.get("/ready?retrieval_model=gemini").status_code, 200)
+                path.unlink()
+                self.assertEqual(client.get("/ready?retrieval_model=finetuned").status_code, 200)
 
     def test_request_ids_are_unique_and_cannot_be_injected(self):
         with ThreadPoolExecutor(max_workers=2) as pool:

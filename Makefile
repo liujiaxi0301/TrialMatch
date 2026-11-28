@@ -81,6 +81,7 @@ system-test:
 	docker compose exec -T rag-api python - write < scripts/ms4/check_chroma.py
 	docker compose up --no-deps --force-recreate --wait --wait-timeout 180 -d rag-chromadb
 	docker compose exec -T rag-api python - read < scripts/ms4/check_chroma.py
+	docker compose exec -T rag-api python - < scripts/ms4/check_index_switch.py
 
 # The application must already be healthy (make up).
 e2e: dirs

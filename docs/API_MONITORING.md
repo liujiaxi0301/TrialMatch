@@ -9,7 +9,7 @@ hosts the page and API together using the standalone image target.
 | Endpoint | Behavior |
 | --- | --- |
 | `GET /health`, `GET /metadata` | Service mode, data and manifest information. |
-| `GET /ready` | 200 when data/index checks pass, otherwise 503. Cached for 30 seconds. |
+| `GET /ready` | 200 when data/index checks pass, otherwise 503. Checks cache for 30 seconds while the selected settings stay unchanged. |
 | `GET /patients`, `GET /patients/{patient_id}` | Patient list and selected record. |
 | `POST /screen` | Candidate trials, assessments, evidence and provenance. |
 | `GET /docs`, `GET /openapi.json` | Interactive documentation and schema. |
@@ -17,6 +17,9 @@ hosts the page and API together using the standalone image target.
 Live requests accept `retrieval_model=gemini` or `finetuned` in the JSON body.
 `/ready` accepts it as a query parameter. Readiness checks do not call Gemini or
 verify inference quota; `model_access=NOT_PROBED` reflects that limit.
+The fine-tuned encoder selection is re-read per request; switching or rollback
+starts a fresh readiness probe. A damaged selection record returns 503 with
+`ENCODER_SELECTION_INVALID`. No restart is needed.
 See the [request and response guide](../services/rag_workflow/README.md#api-contract).
 
 Each response includes `X-Request-ID`. Screening responses also have a separate
