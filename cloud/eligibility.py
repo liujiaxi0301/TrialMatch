@@ -13,11 +13,19 @@ from cloud.tasks import ROOT, blob, download_release, log, write_json
 
 DEFAULT_MODEL = "gemini-3.1-flash-lite"
 PREFIX = "all_vertex_pipeline"
-RESULT_FILES = tuple(f"{PREFIX}_{suffix}" for suffix in (
-    "predictions.jsonl", "metadata.json", "metrics.json", "disagreements.csv",
-))
+RESULT_FILES = tuple(
+    f"{PREFIX}_{suffix}"
+    for suffix in (
+        "predictions.jsonl",
+        "metadata.json",
+        "metrics.json",
+        "disagreements.csv",
+    )
+)
 CASE_IDS = [f"E{i:02d}" for i in range(1, 9)]
-SCOPE = "Fixed-pair eligibility engineering evaluation; no retrieval scoring or clinical validation."
+SCOPE = (
+    "Fixed-pair eligibility engineering evaluation; no retrieval scoring or clinical validation."
+)
 
 
 def verify_results(payloads, source_hashes, model):
@@ -30,20 +38,27 @@ def verify_results(payloads, source_hashes, model):
     expected = {"provider": "vertex", "split": "all", "model": model}
     if any(meta.get(k) != v or scores.get(k) != v for k, v in expected.items()):
         raise RuntimeError("Eligibility provider, split or model does not match this run")
-    if (scores.get("official_reporting_ready") is not True
-            or scores.get("inference_failures", {}).get("count") != 0
-            or meta.get("prediction_errors") != 0
-            or any(row.get("error_code") for row in rows)):
+    if (
+        scores.get("official_reporting_ready") is not True
+        or scores.get("inference_failures", {}).get("count") != 0
+        or meta.get("prediction_errors") != 0
+        or any(row.get("error_code") for row in rows)
+    ):
         raise RuntimeError("Eligibility inference failed or is not ready for reporting")
-    if (len(rows) != 115 or meta.get("prediction_count") != 115
-            or meta.get("case_ids") != CASE_IDS
-            or set(scores.get("by_case", {})) != set(CASE_IDS)
-            or scores.get("criterion_metrics_all_outputs_including_failures", {}).get("n") != 115):
+    if (
+        len(rows) != 115
+        or meta.get("prediction_count") != 115
+        or meta.get("case_ids") != CASE_IDS
+        or set(scores.get("by_case", {})) != set(CASE_IDS)
+        or scores.get("criterion_metrics_all_outputs_including_failures", {}).get("n") != 115
+    ):
         raise RuntimeError("Eligibility must cover all 8 cases and 115 criteria")
     digest = hashlib.sha256(predictions).hexdigest()
-    if (meta.get("source_sha256") != source_hashes
-            or meta.get("predictions_sha256") != digest
-            or scores.get("prediction_sha256") != digest):
+    if (
+        meta.get("source_sha256") != source_hashes
+        or meta.get("predictions_sha256") != digest
+        or scores.get("prediction_sha256") != digest
+    ):
         raise RuntimeError("Eligibility predictions or source hashes do not match")
     return scores
 
@@ -51,10 +66,16 @@ def verify_results(payloads, source_hashes, model):
 def verify_manifest(manifest, release_uri, report_uri, output_uri, image, model, source_hashes):
     """Bind an output manifest to the exact task whose results the submitter reads."""
     expected = {
-        "schema_version": 1, "status": "PASSED", "workflow_type": "fixed-pair-eligibility",
-        "source_release_uri": release_uri, "validation_report_uri": report_uri,
-        "output_uri": output_uri.rstrip("/"), "image_uri": image, "model": model,
-        "provider": "vertex", "source_sha256": source_hashes,
+        "schema_version": 1,
+        "status": "PASSED",
+        "workflow_type": "fixed-pair-eligibility",
+        "source_release_uri": release_uri,
+        "validation_report_uri": report_uri,
+        "output_uri": output_uri.rstrip("/"),
+        "image_uri": image,
+        "model": model,
+        "provider": "vertex",
+        "source_sha256": source_hashes,
     }
     if not isinstance(manifest, dict) or any(manifest.get(k) != v for k, v in expected.items()):
         raise RuntimeError("Eligibility manifest does not match this run")
@@ -62,9 +83,12 @@ def verify_manifest(manifest, release_uri, report_uri, output_uri, image, model,
     if not isinstance(files, dict) or set(files) != set(RESULT_FILES):
         raise RuntimeError("Eligibility manifest is missing result files")
     for name, item in files.items():
-        if (not isinstance(item, dict) or item.get("uri") != f"{output_uri.rstrip('/')}/{name}"
-                or not isinstance(item.get("sha256"), str)
-                or not re.fullmatch(r"[0-9a-f]{64}", item["sha256"])):
+        if (
+            not isinstance(item, dict)
+            or item.get("uri") != f"{output_uri.rstrip('/')}/{name}"
+            or not isinstance(item.get("sha256"), str)
+            or not re.fullmatch(r"[0-9a-f]{64}", item["sha256"])
+        ):
             raise RuntimeError("Eligibility manifest has invalid output paths or checksums")
 
 
@@ -98,9 +122,15 @@ def run(source, output, image, model=DEFAULT_MODEL):
     output = output.rstrip("/")
     report_uri = source.rstrip("/") + "/validation.json"
     manifest = {
-        "schema_version": 1, "status": "FAILED", "workflow_type": "fixed-pair-eligibility",
-        "validation_report_uri": report_uri, "output_uri": output, "image_uri": image,
-        "provider": "vertex", "model": model, "code_commit": os.environ.get("SOURCE_COMMIT"),
+        "schema_version": 1,
+        "status": "FAILED",
+        "workflow_type": "fixed-pair-eligibility",
+        "validation_report_uri": report_uri,
+        "output_uri": output,
+        "image_uri": image,
+        "provider": "vertex",
+        "model": model,
+        "code_commit": os.environ.get("SOURCE_COMMIT"),
         "scope": SCOPE,
     }
     directory = ROOT / "artifacts/eligibility"
@@ -111,17 +141,29 @@ def run(source, output, image, model=DEFAULT_MODEL):
         previous_results = evaluator.RESULTS
         try:
             report = json.loads(blob(report_uri).download_as_text())
-            if report.get("status") != "PASSED" or not str(report.get("release_uri", "")).startswith("gs://"):
-                raise ValueError("Eligibility requires a PASSED validation report with a GCS release")
-            manifest.update(source_release_uri=report["release_uri"], source_sha256=report["source_sha256"])
+            if report.get("status") != "PASSED" or not str(
+                report.get("release_uri", "")
+            ).startswith("gs://"):
+                raise ValueError(
+                    "Eligibility requires a PASSED validation report with a GCS release"
+                )
+            manifest.update(
+                source_release_uri=report["release_uri"], source_sha256=report["source_sha256"]
+            )
             cohort = json.loads((evaluator.BASE / "cohort_manifest.json").read_text())
             if report["source_sha256"] != cohort["source_sha256"]:
                 raise ValueError("Validated data does not match C's frozen eligibility cohort")
             download_release(report["release_uri"])
             evaluator.RESULTS = results
-            prediction_path = evaluator.run_predictions(SimpleNamespace(
-                split="all", provider="vertex", model=model, tag="pipeline", overwrite=False,
-            ))
+            prediction_path = evaluator.run_predictions(
+                SimpleNamespace(
+                    split="all",
+                    provider="vertex",
+                    model=model,
+                    tag="pipeline",
+                    overwrite=False,
+                )
+            )
             evaluator.evaluate_predictions(prediction_path)
             payloads = {name: (results / name).read_bytes() for name in RESULT_FILES}
             verify_results(payloads, report["source_sha256"], model)
@@ -142,7 +184,9 @@ def run(source, output, image, model=DEFAULT_MODEL):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", required=True, help="Vertex validation report artifact URI")
-    parser.add_argument("--output", required=True, help="This task's unique Vertex output artifact URI")
+    parser.add_argument(
+        "--output", required=True, help="This task's unique Vertex output artifact URI"
+    )
     parser.add_argument("--image-uri", required=True)
     parser.add_argument("--model", default=DEFAULT_MODEL)
     args = parser.parse_args()

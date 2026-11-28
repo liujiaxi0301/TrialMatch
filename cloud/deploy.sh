@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Cloud actions. Local Compose and its four Make commands remain unchanged.
+# Cloud build, publication, pipeline and deployment commands.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 set -a

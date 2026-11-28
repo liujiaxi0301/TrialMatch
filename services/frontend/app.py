@@ -1,6 +1,5 @@
 """Application API, with optional static hosting for the Cloud Run deployment."""
 
-import logging
 import os
 from functools import lru_cache
 from pathlib import Path
@@ -12,12 +11,8 @@ from fastapi.staticfiles import StaticFiles
 from services.rag_workflow.api import create_app as create_rag_app
 from services.rag_workflow.config import Settings
 from services.rag_workflow.data import DataStore
-from services.rag_workflow.providers import ProviderError
-from services.rag_workflow.schemas import ScreenRequest
-from .vector_demo import LocalVectorDemo
 
 STATIC = Path(__file__).parent / "static"
-logger = logging.getLogger(__name__)
 
 
 def create_app(settings=None, *, serve_ui=True):
@@ -29,35 +24,12 @@ def create_app(settings=None, *, serve_ui=True):
     def store():
         return DataStore(config)
 
-    @lru_cache(maxsize=1)
-    def vector():
-        return LocalVectorDemo(config)
-
     @app.get("/patients/{patient_id}")
     def patient(patient_id: str):
         try:
             return store().patient(patient_id)
         except KeyError as exc:
             raise HTTPException(404, "Patient not found") from exc
-
-    @app.post("/retrieve")
-    def retrieve(request: ScreenRequest):
-        if request.patient_id is None:
-            raise HTTPException(422, "This demo retrieval endpoint requires a built-in patient_id")
-        try:
-            return vector().retrieve(request.patient_id, request.question, request.top_k)
-        except KeyError as exc:
-            raise HTTPException(404, "Patient not found") from exc
-        except ProviderError as exc:
-            raise HTTPException(503, {"code": exc.code, "message": str(exc)}) from exc
-        except ValueError as exc:
-            raise HTTPException(422, str(exc)) from exc
-        except Exception as exc:
-            logger.exception("Vector store unavailable")
-            raise HTTPException(
-                503,
-                "Vector database unavailable. Run the preparation step and check the database service.",
-            ) from exc
 
     @app.get("/metadata")
     def metadata():
@@ -74,7 +46,6 @@ def create_app(settings=None, *, serve_ui=True):
                 {p["reference_date"] for p in data.patients.values()}
             ),
             "trial_snapshot_dates": sorted({t["snapshot_date"] for t in data.trials.values()}),
-            "vector_demo_model": "local-signed-tokenhash-sha256-v1",
             "health_scope": "Data and manifest only; /health does not verify cloud access or vector readiness.",
         }
 

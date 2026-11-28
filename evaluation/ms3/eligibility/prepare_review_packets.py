@@ -16,9 +16,7 @@ def write_frozen(path, content):
 
     if path.exists():
         if path.read_text(encoding="utf-8") != content:
-            raise RuntimeError(
-                f"Existing file differs; refusing overwrite: {path}"
-            )
+            raise RuntimeError(f"Existing file differs; refusing overwrite: {path}")
         return False
 
     with path.open("x", encoding="utf-8") as f:
@@ -39,8 +37,7 @@ def main():
     store = DataStore(Settings())
     cases = [
         json.loads(line)
-        for line in (BASE / "eligibility_cases.jsonl")
-        .read_text(encoding="utf-8").splitlines()
+        for line in (BASE / "eligibility_cases.jsonl").read_text(encoding="utf-8").splitlines()
         if line.strip()
     ]
 
@@ -60,15 +57,17 @@ def main():
         facts = patient_facts(patient)
         assert len({f["fact_id"] for f in facts}) == len(facts)
 
-        facts_text = "".join(
-            json.dumps(f, ensure_ascii=False) + "\n"
-            for f in facts
-        )
+        facts_text = "".join(json.dumps(f, ensure_ascii=False) + "\n" for f in facts)
 
-        trial_text = json_text({
-            "trial": trial,
-            "criteria": criteria,
-        }) + "\n"
+        trial_text = (
+            json_text(
+                {
+                    "trial": trial,
+                    "criteria": criteria,
+                }
+            )
+            + "\n"
+        )
 
         # Source-only evidence previews, not model predictions.
         selector = ContextSelector(patient, limit=5)
@@ -107,67 +106,66 @@ def main():
         for index, criterion in enumerate(criteria, 1):
             cid = criterion["criterion_id"]
 
-            lines.extend([
-                f"## {index}. {cid}",
-                "",
-                f"**Type:** {criterion['criterion_type']}",
-                "",
-                "**Original criterion:**",
-                "",
-                criterion["criterion_text"],
-                "",
-                "**Potentially relevant patient facts (navigation preview only):**",
-                "",
-            ])
+            lines.extend(
+                [
+                    f"## {index}. {cid}",
+                    "",
+                    f"**Type:** {criterion['criterion_type']}",
+                    "",
+                    "**Original criterion:**",
+                    "",
+                    criterion["criterion_text"],
+                    "",
+                    "**Potentially relevant patient facts (navigation preview only):**",
+                    "",
+                ]
+            )
 
             previews = selector.select(criterion)
 
             if previews:
                 for fact in previews:
-                    lines.append(
-                        "- `" + fact["fact_id"] + "`"
-                    )
+                    lines.append("- `" + fact["fact_id"] + "`")
                     lines.append("")
                     lines.append(
-                        "  " + json.dumps(
-                            {
-                                k: v
-                                for k, v in fact.items()
-                                if k != "fact_id"
-                            },
+                        "  "
+                        + json.dumps(
+                            {k: v for k, v in fact.items() if k != "fact_id"},
                             ensure_ascii=False,
                         )
                     )
                     lines.append("")
             else:
-                lines.append(
-                    "No preview facts selected. Check the complete source."
-                )
+                lines.append("No preview facts selected. Check the complete source.")
                 lines.append("")
 
-            lines.extend([
-                "**Manual review:**",
-                "",
-                "- Gold decision (MET/NOT_MET/UNKNOWN):",
-                "- Reason:",
-                "- Supporting fact IDs:",
-                "- Missing information:",
-                "- Review notes:",
-                "",
-                "---",
-                "",
-            ])
+            lines.extend(
+                [
+                    "**Manual review:**",
+                    "",
+                    "- Gold decision (MET/NOT_MET/UNKNOWN):",
+                    "- Reason:",
+                    "- Supporting fact IDs:",
+                    "- Missing information:",
+                    "- Review notes:",
+                    "",
+                    "---",
+                    "",
+                ]
+            )
 
-            labels.append({
-                "criterion_id": cid,
-                "criterion_type": criterion["criterion_type"],
-                "criterion_text": criterion["criterion_text"],
-                "gold_decision": None,
-                "reason": "",
-                "supporting_fact_ids": [],
-                "missing_information": [],
-                "review_notes": "",
-            })
+            labels.append(
+                {
+                    "criterion_id": cid,
+                    "criterion_type": criterion["criterion_type"],
+                    "criterion_text": criterion["criterion_text"],
+                    "gold_decision": None,
+                    "reason": "",
+                    "supporting_fact_ids": [],
+                    "missing_information": [],
+                    "review_notes": "",
+                }
+            )
 
         review_template = {
             "case_id": case_id,
@@ -175,8 +173,7 @@ def main():
             "trial_id": case["trial_id"],
             "split": case["split"],
             "review_status": "pending",
-            "reviewer_qualification":
-                "Non-clinician evidence-based reference assessment",
+            "reviewer_qualification": "Non-clinician evidence-based reference assessment",
             "labels": labels,
         }
 
@@ -203,17 +200,12 @@ def main():
         for path, content in outputs:
             if path.exists():
                 if path.read_text(encoding="utf-8") != content:
-                    raise RuntimeError(
-                        f"Existing file differs: {path}"
-                    )
+                    raise RuntimeError(f"Existing file differs: {path}")
 
         for path, content in outputs:
             write_frozen(path, content)
 
-        print(
-            f"{case_id}: {len(criteria)} criteria, "
-            f"{len(facts)} patient facts"
-        )
+        print(f"{case_id}: {len(criteria)} criteria, {len(facts)} patient facts")
 
     assert total_criteria == 115
 

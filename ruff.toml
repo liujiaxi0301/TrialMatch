@@ -1,5 +1,11 @@
 target-version = "py312"
 line-length = 100
+# Preserve evaluators whose exact bytes are pinned by the saved benchmarks.
+extend-exclude = [
+    "evaluation/ms3/retrieval/evaluate_retrieval_complete.py",
+    "evaluation/ms3/eligibility/run_eligibility.py",
+    "evaluation/ms3/gemini_developer_provider.py",
+]
 
 [lint]
 # Ruff's standard correctness rules; formatting is checked separately.

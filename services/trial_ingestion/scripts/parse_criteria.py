@@ -12,9 +12,7 @@ CRITERIA_PATH = PROCESSED_DIR / "criteria.jsonl"
 # Section parsing
 # ---------------------------------------------------------------------
 
-INCLUSION_PATTERN = re.compile(
-    r"(?im)^\s*(?:Main\s+)?Inclusion Criteria\s*:?\s*$"
-)
+INCLUSION_PATTERN = re.compile(r"(?im)^\s*(?:Main\s+)?Inclusion Criteria\s*:?\s*$")
 
 EXCLUSION_PATTERN = re.compile(
     r"(?im)^\s*(?:Main\s+)?(?:"
@@ -51,13 +49,9 @@ def split_sections(eligibility_text: str):
         if inclusion_match.start() > exclusion_match.start():
             return None
 
-        inclusion_text = eligibility_text[
-            inclusion_match.end():exclusion_match.start()
-        ].strip()
+        inclusion_text = eligibility_text[inclusion_match.end() : exclusion_match.start()].strip()
 
-        exclusion_text = eligibility_text[
-            exclusion_match.end():
-        ].strip()
+        exclusion_text = eligibility_text[exclusion_match.end() :].strip()
 
         return {
             "inclusion": inclusion_text,
@@ -66,9 +60,7 @@ def split_sections(eligibility_text: str):
 
     # Inclusion section only.
     if inclusion_match:
-        inclusion_text = eligibility_text[
-            inclusion_match.end():
-        ].strip()
+        inclusion_text = eligibility_text[inclusion_match.end() :].strip()
 
         return {
             "inclusion": inclusion_text,
@@ -76,9 +68,7 @@ def split_sections(eligibility_text: str):
         }
 
     # Exclusion section only.
-    exclusion_text = eligibility_text[
-        exclusion_match.end():
-    ].strip()
+    exclusion_text = eligibility_text[exclusion_match.end() :].strip()
 
     return {
         "inclusion": None,
@@ -89,6 +79,7 @@ def split_sections(eligibility_text: str):
 # ---------------------------------------------------------------------
 # Criterion parsing
 # ---------------------------------------------------------------------
+
 
 def is_empty_placeholder(text: str):
     """
@@ -125,11 +116,7 @@ def looks_like_single_criterion(text: str):
     if not text:
         return False
 
-    lines = [
-        line.strip()
-        for line in text.splitlines()
-        if line.strip()
-    ]
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
 
     if len(lines) != 1:
         return False
@@ -188,13 +175,9 @@ def split_criteria(section_text: str):
     # 1\. criterion
     # -------------------------------------------------------------
 
-    numbered_pattern = re.compile(
-        r"(?m)^\s*(?:\*\s*)?\d+\\?\.\s+"
-    )
+    numbered_pattern = re.compile(r"(?m)^\s*(?:\*\s*)?\d+\\?\.\s+")
 
-    numbered_matches = list(
-        numbered_pattern.finditer(section_text)
-    )
+    numbered_matches = list(numbered_pattern.finditer(section_text))
 
     if numbered_matches:
         criteria = []
@@ -223,9 +206,7 @@ def split_criteria(section_text: str):
     # \- criterion
     # -------------------------------------------------------------
 
-    bullet_pattern = re.compile(
-        r"^\s*(?:\*|\\?-)\s+(.+?)\s*$"
-    )
+    bullet_pattern = re.compile(r"^\s*(?:\*|\\?-)\s+(.+?)\s*$")
 
     bullet_criteria = []
 
@@ -256,6 +237,7 @@ def split_criteria(section_text: str):
 # Output record construction
 # ---------------------------------------------------------------------
 
+
 def build_parsed_records(
     trial_id: str,
     criterion_type: str,
@@ -269,14 +251,16 @@ def build_parsed_records(
     records = []
 
     for i, criterion in enumerate(criteria, start=1):
-        records.append({
-            "trial_id": trial_id,
-            "criterion_id": f"{trial_id}_{prefix}_{i:03d}",
-            "criterion_type": criterion_type,
-            "criterion_text": criterion,
-            "parse_status": "parsed",
-            "parse_method": "deterministic",
-        })
+        records.append(
+            {
+                "trial_id": trial_id,
+                "criterion_id": f"{trial_id}_{prefix}_{i:03d}",
+                "criterion_type": criterion_type,
+                "criterion_text": criterion,
+                "parse_status": "parsed",
+                "parse_method": "deterministic",
+            }
+        )
 
     return records
 
@@ -306,6 +290,7 @@ def build_ambiguous_record(
 # ---------------------------------------------------------------------
 # Trial-level parsing
 # ---------------------------------------------------------------------
+
 
 def parse_known_section(
     trial_id: str,
@@ -385,6 +370,7 @@ def parse_trial_criteria(trial: dict):
 # Save output
 # ---------------------------------------------------------------------
 
+
 def save_criteria(records: list):
     PROCESSED_DIR.mkdir(
         parents=True,
@@ -393,33 +379,17 @@ def save_criteria(records: list):
 
     with open(CRITERIA_PATH, "w") as f:
         for record in records:
-            f.write(
-                json.dumps(record)
-                + "\n"
-            )
+            f.write(json.dumps(record) + "\n")
 
-    parsed_count = sum(
-        record["parse_status"] == "parsed"
-        for record in records
-    )
+    parsed_count = sum(record["parse_status"] == "parsed" for record in records)
 
-    ambiguous_count = sum(
-        record["parse_status"] == "ambiguous"
-        for record in records
-    )
+    ambiguous_count = sum(record["parse_status"] == "ambiguous" for record in records)
 
-    print(
-        f"Saved {len(records)} criteria "
-        f"to {CRITERIA_PATH}"
-    )
+    print(f"Saved {len(records)} criteria to {CRITERIA_PATH}")
 
-    print(
-        f"Parsed: {parsed_count}"
-    )
+    print(f"Parsed: {parsed_count}")
 
-    print(
-        f"Ambiguous: {ambiguous_count}"
-    )
+    print(f"Ambiguous: {ambiguous_count}")
 
 
 # ---------------------------------------------------------------------
@@ -438,12 +408,8 @@ if __name__ == "__main__":
 
             trial = json.loads(line)
 
-            records = parse_trial_criteria(
-                trial
-            )
+            records = parse_trial_criteria(trial)
 
-            all_records.extend(
-                records
-            )
+            all_records.extend(records)
 
     save_criteria(all_records)

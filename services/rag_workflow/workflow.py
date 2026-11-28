@@ -313,7 +313,7 @@ class ScreeningWorkflow:
 def screen_patient(
     patient: dict, question: str, top_k: int = 3, settings: Settings | None = None
 ) -> dict:
-    """Oliver can call this with one Part 2 normalized patient object and a question."""
+    """Screen one normalized patient object with the same workflow as the API."""
     return (
         ScreeningWorkflow(settings)
         .screen(ScreenRequest(patient=patient, question=question, top_k=top_k))

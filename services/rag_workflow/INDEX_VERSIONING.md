@@ -248,7 +248,8 @@ versions. If the previous encoder is unevaluated, add `--allow-unevaluated`.
 
 ## 11. Recovering from failures
 
-The full failure-mode table is in `docs/ms4/EMBEDDING_INDEX.md` §2.4. Until the final record
+The architecture and failure behavior are summarized in
+[Embedding and index management](../../docs/ms4/EMBEDDING_INDEX.md). Until the final record
 write, every failure leaves the served index unchanged.
 
 | Symptom | Recovery |

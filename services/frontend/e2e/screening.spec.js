@@ -4,7 +4,7 @@ const path = require('node:path');
 // Real browser -> Nginx -> FastAPI -> offline screening. No intercepted APIs.
 test('patient selection, screening and evidence review', async ({ page }) => {
   const errors = [];
-  page.on('pageerror', error => errors.push(error.message));
+  page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
   await expect(page.locator('#runBtn')).toBeEnabled();
   await expect(page.locator('#modeBanner')).toContainText(/offline/i);
@@ -13,7 +13,7 @@ test('patient selection, screening and evidence review', async ({ page }) => {
   await page.locator('#question').fill('Which type 2 diabetes trials may suit this patient?');
   await page.locator('#topK').selectOption('3');
   const responsePromise = page.waitForResponse(
-    response => response.url().endsWith('/screen') && response.request().method() === 'POST'
+    (response) => response.url().endsWith('/screen') && response.request().method() === 'POST',
   );
   await page.locator('#runBtn').click();
   const response = await responsePromise;
@@ -35,7 +35,10 @@ test('patient selection, screening and evidence review', async ({ page }) => {
   expect(exported.candidate_trials).toEqual(body.candidate_trials);
   await page.locator('#closeDialog').click();
   await page.locator('summary').filter({ hasText: 'Criteria & evidence' }).first().click();
-  await page.screenshot({ path: path.join(process.env.REPORT_DIR || '/reports', 'screening.png'), fullPage: true });
+  await page.screenshot({
+    path: path.join(process.env.REPORT_DIR || '/reports', 'screening.png'),
+    fullPage: true,
+  });
   expect(errors).toEqual([]);
 });
 
@@ -43,7 +46,7 @@ test('empty question is explained before submitting', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('#runBtn')).toBeEnabled();
   let submissions = 0;
-  page.on('request', request => {
+  page.on('request', (request) => {
     if (request.method() === 'POST' && request.url().endsWith('/screen')) submissions++;
   });
   await page.locator('#question').fill('');

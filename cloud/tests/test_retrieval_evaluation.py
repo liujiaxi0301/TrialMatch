@@ -36,25 +36,40 @@ class ScoringTests(unittest.TestCase):
             self.enterContext(patch.object(module, "blob", side_effect=self.lookup))
         self.contract = fixtures.contract()
         self.enterContext(patch.object(retrieval, "benchmark_contract", return_value=self.contract))
-        self.report = {"status": "PASSED", "release_uri": "gs://new-run/processed/release.json",
-                       "source_sha256": dict.fromkeys(("trials", "criteria", "patients"), "e" * 64)}
+        self.report = {
+            "status": "PASSED",
+            "release_uri": "gs://new-run/processed/release.json",
+            "source_sha256": dict.fromkeys(("trials", "criteria", "patients"), "e" * 64),
+        }
         checksums = {"model.safetensors": "d" * 64}
         self.training = {
-            "schema_version": 1, "workflow_type": "contrastive-encoder-finetune",
-            "source_release_uri": self.report["release_uri"], "image_uri": self.TRAINER,
-            "artifact_uri": self.TRAINING + "/model", "artifact_files": checksums,
+            "schema_version": 1,
+            "workflow_type": "contrastive-encoder-finetune",
+            "source_release_uri": self.report["release_uri"],
+            "image_uri": self.TRAINER,
+            "artifact_uri": self.TRAINING + "/model",
+            "artifact_files": checksums,
             "artifact_sha256": retrieval.sha256(json.dumps(checksums, sort_keys=True).encode()),
-            "config": {"batch_size": 8}, "pair_files": [{"uri": "built-from:" + self.report["release_uri"]}],
+            "config": {"batch_size": 8},
+            "pair_files": [{"uri": "built-from:" + self.report["release_uri"]}],
         }
         self.training_bytes = json.dumps(self.training).encode()
         self.objects[self.SOURCE + "/validation.json"] = json.dumps(self.report).encode()
         self.objects[self.TRAINING + "/training_manifest.json"] = self.training_bytes
-        self.expected = retrieval.expected_manifest(self.SOURCE + "/validation.json", self.report,
-            self.TRAINING, self.training_bytes, self.RETRIEVAL_IMAGE, self.contract)
+        self.expected = retrieval.expected_manifest(
+            self.SOURCE + "/validation.json",
+            self.report,
+            self.TRAINING,
+            self.training_bytes,
+            self.RETRIEVAL_IMAGE,
+            self.contract,
+        )
         self.payloads = fixtures.payloads(self.expected)
         self.refresh_rankings()
         self.benchmark, self.labels = fixtures.scoring_benchmark(self.expected)
-        self.enterContext(patch.object(evaluation, "load_benchmark", return_value=(self.benchmark, self.labels)))
+        self.enterContext(
+            patch.object(evaluation, "load_benchmark", return_value=(self.benchmark, self.labels))
+        )
 
     def refresh_rankings(self):
         self.ranking_manifest = fixtures.manifest(self.expected, self.RANKINGS, self.payloads)
@@ -64,13 +79,22 @@ class ScoringTests(unittest.TestCase):
             self.objects[self.RANKINGS + "/" + name] = value
 
     def run_task(self):
-        return evaluation.run(self.SOURCE, self.TRAINING, self.RANKINGS, self.OUTPUT, self.IMAGE,
-                              self.RETRIEVAL_IMAGE, self.TRAINER, self.benchmark["catalog_sha256"])
+        return evaluation.run(
+            self.SOURCE,
+            self.TRAINING,
+            self.RANKINGS,
+            self.OUTPUT,
+            self.IMAGE,
+            self.RETRIEVAL_IMAGE,
+            self.TRAINER,
+            self.benchmark["catalog_sha256"],
+        )
 
     def test_current_rankings_are_scored_with_c_formulas_and_versioned(self):
         record = self.run_task()
-        expected = evaluation.expected_manifest(self.expected, self.RANKINGS, self.ranking_bytes,
-                                                 self.IMAGE, self.benchmark)
+        expected = evaluation.expected_manifest(
+            self.expected, self.RANKINGS, self.ranking_bytes, self.IMAGE, self.benchmark
+        )
         results = evaluation.score_outputs(self.payloads, self.expected, self.labels)
         evaluation.read_verified_results(record, expected, self.OUTPUT, results)
         rows = list(csv.DictReader(io.StringIO(results[evaluation.FILES[0]].decode())))
@@ -90,9 +114,15 @@ class ScoringTests(unittest.TestCase):
         self.payloads[retrieval.FILES[0]] = "".join(json.dumps(r) + "\n" for r in rows).encode()
         self.refresh_rankings()
         self.run_task()
-        scores = list(csv.DictReader(io.StringIO(self.objects[self.OUTPUT + "/" + evaluation.FILES[0]].decode())))
+        scores = list(
+            csv.DictReader(
+                io.StringIO(self.objects[self.OUTPUT + "/" + evaluation.FILES[0]].decode())
+            )
+        )
         by_key = {(r["query_id"], r["method"]): r for r in scores}
-        self.assertAlmostEqual(float(by_key[(rows[0]["query_id"], rows[0]["method"])]["p_at_3"]), 1 / 3, places=6)
+        self.assertAlmostEqual(
+            float(by_key[(rows[0]["query_id"], rows[0]["method"])]["p_at_3"]), 1 / 3, places=6
+        )
         self.assertEqual(float(by_key[(rows[1]["query_id"], rows[1]["method"])]["p_at_3"]), 0)
 
     def test_zero_quality_is_a_completed_evaluation(self):
@@ -105,15 +135,23 @@ class ScoringTests(unittest.TestCase):
         del self.labels["Q03"][self.expected["trial_ids"][0]]
         with self.assertRaises(evaluation.UnjudgedResults):
             self.run_task()
-        output_keys = {uri.removeprefix(self.OUTPUT + "/") for uri in self.objects if uri.startswith(self.OUTPUT)}
+        output_keys = {
+            uri.removeprefix(self.OUTPUT + "/")
+            for uri in self.objects
+            if uri.startswith(self.OUTPUT)
+        }
         self.assertEqual(output_keys, {"unjudged_pairs.json"})
         diagnostic = json.loads(self.objects[self.OUTPUT + "/unjudged_pairs.json"])
         self.assertEqual(diagnostic["status"], "BLOCKED_UNJUDGED")
-        self.assertEqual(diagnostic["pairs"], [{"query_id": "Q03", "trial_id": self.expected["trial_ids"][0]}])
+        self.assertEqual(
+            diagnostic["pairs"], [{"query_id": "Q03", "trial_id": self.expected["trial_ids"][0]}]
+        )
 
     def test_foreign_model_manifest_fails_before_scoring(self):
         self.ranking_manifest["checkpoint_uri"] = "gs://old-run/model"
-        self.objects[self.RANKINGS + "/" + retrieval.MANIFEST] = json.dumps(self.ranking_manifest).encode()
+        self.objects[self.RANKINGS + "/" + retrieval.MANIFEST] = json.dumps(
+            self.ranking_manifest
+        ).encode()
         with patch.object(evaluation, "score_outputs") as score, self.assertRaises(RuntimeError):
             self.run_task()
         score.assert_not_called()
@@ -139,15 +177,18 @@ class ScoringTests(unittest.TestCase):
         self.assertFalse(any(uri.startswith(self.OUTPUT) for uri in self.objects))
 
     def test_upload_failure_cannot_publish_success_manifest(self):
-        with (patch.object(MemoryBlob, "upload_from_string", side_effect=OSError("upload failure")),
-              self.assertRaises(OSError)):
+        with (
+            patch.object(MemoryBlob, "upload_from_string", side_effect=OSError("upload failure")),
+            self.assertRaises(OSError),
+        ):
             self.run_task()
         self.assertNotIn(self.OUTPUT + "/" + evaluation.MANIFEST, self.objects)
 
     def test_wrong_metrics_fail_even_if_their_new_hash_matches(self):
         record = self.run_task()
-        expected = evaluation.expected_manifest(self.expected, self.RANKINGS, self.ranking_bytes,
-                                                 self.IMAGE, self.benchmark)
+        expected = evaluation.expected_manifest(
+            self.expected, self.RANKINGS, self.ranking_bytes, self.IMAGE, self.benchmark
+        )
         results = evaluation.score_outputs(self.payloads, self.expected, self.labels)
         name = evaluation.FILES[0]
         bad = self.objects[self.OUTPUT + "/" + name].replace(b"0.666667", b"1.000000")
@@ -170,20 +211,29 @@ class FrozenBenchmarkTests(unittest.TestCase):
                 target.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(evaluation.ROOT / name, target)
             (root / evaluation.BASE / "retrieval_labels.csv").write_bytes(b"tampered")
-            with patch.object(evaluation, "ROOT", root), self.assertRaisesRegex(ValueError, "checksum mismatch"):
+            with (
+                patch.object(evaluation, "ROOT", root),
+                self.assertRaisesRegex(ValueError, "checksum mismatch"),
+            ):
                 evaluation.load_benchmark(benchmark["catalog_sha256"])
 
     def test_original_c_command_reproduces_all_four_outputs_without_model_calls(self):
         # Compare bytes only; do not inspect held-out labels or scores during A integration.
         base = evaluation.ROOT / evaluation.BASE
         with tempfile.TemporaryDirectory() as tmp:
-            result = subprocess.run([sys.executable, str(base / "evaluate_retrieval_complete.py"),
-                                     "--output-dir", tmp], check=False, capture_output=True, text=True)
+            result = subprocess.run(
+                [sys.executable, str(base / "evaluate_retrieval_complete.py"), "--output-dir", tmp],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
             self.assertEqual(result.returncode, 0, result.stderr)
             outputs = list(Path(tmp).iterdir())
             self.assertEqual(len(outputs), 4)
             for output in outputs:
-                self.assertEqual(output.read_bytes(), (base / "results" / output.name).read_bytes(), output.name)
+                self.assertEqual(
+                    output.read_bytes(), (base / "results" / output.name).read_bytes(), output.name
+                )
 
 
 if __name__ == "__main__":

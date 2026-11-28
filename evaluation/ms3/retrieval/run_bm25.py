@@ -47,11 +47,13 @@ for query in queries:
     assert len(trial_ids) == len(set(trial_ids))
     assert all(t in manifest["trial_ids"] for t in trial_ids)
 
-    rankings.append({
-        "query_id": query_id,
-        "method": "bm25_v1",
-        "ranked_trial_ids": trial_ids,
-    })
+    rankings.append(
+        {
+            "query_id": query_id,
+            "method": "bm25_v1",
+            "ranked_trial_ids": trial_ids,
+        }
+    )
 
     print(f"\n=== {query_id}: BM25 Top 5 ===")
 
@@ -59,13 +61,15 @@ for query in queries:
         trial_id = hit["trial_id"]
         title = store.trials[trial_id].get("brief_title", "")
 
-        candidate_rows.append({
-            "query_id": query_id,
-            "rank": rank,
-            "trial_id": trial_id,
-            "title": title,
-            "bm25_score": hit["bm25_score"],
-        })
+        candidate_rows.append(
+            {
+                "query_id": query_id,
+                "rank": rank,
+                "trial_id": trial_id,
+                "title": title,
+                "bm25_score": hit["bm25_score"],
+            }
+        )
 
         print(f"{rank}. {trial_id} | {title}")
 
@@ -80,10 +84,7 @@ candidate_path = RESULTS / "bm25_candidates.csv"
 with candidate_path.open("w", newline="", encoding="utf-8") as f:
     writer = csv.DictWriter(
         f,
-        fieldnames=[
-            "query_id", "rank", "trial_id",
-            "title", "bm25_score"
-        ],
+        fieldnames=["query_id", "rank", "trial_id", "title", "bm25_score"],
     )
     writer.writeheader()
     writer.writerows(candidate_rows)

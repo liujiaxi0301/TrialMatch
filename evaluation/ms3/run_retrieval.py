@@ -36,10 +36,16 @@ def build_finetuned_index(store, manifest, checkpoint, sha256):
     different name from the frozen one and the two sets of vectors cannot be mixed.
     """
     settings = replace(
-        Settings(), artifacts=STORES / f"finetuned-{sha256[:12]}", chroma_host="", mode="live",
-        embedding_provider="bioclinical", embedding_model=BIO_MODEL,
-        embedding_revision=BIO_REVISION, dimension=768,
-        embedding_checkpoint=checkpoint, embedding_checkpoint_sha256=sha256,
+        Settings(),
+        artifacts=STORES / f"finetuned-{sha256[:12]}",
+        chroma_host="",
+        mode="live",
+        embedding_provider="bioclinical",
+        embedding_model=BIO_MODEL,
+        embedding_revision=BIO_REVISION,
+        dimension=768,
+        embedding_checkpoint=checkpoint,
+        embedding_checkpoint_sha256=sha256,
         embedding_device=os.environ.get("EMBEDDING_DEVICE", "auto"),
     )
     index = VectorIndex(settings, store, manifest, create_embedding_provider(settings))
@@ -53,16 +59,32 @@ def build_finetuned_index(store, manifest, checkpoint, sha256):
 def build_index(encoder, store, manifest):
     """Reuse the existing experiment store; never re-embed or write to the shared index."""
     settings = replace(
-        Settings(), artifacts=STORES / encoder, chroma_host="", mode="live",
-        **({"embedding_provider": "bioclinical", "embedding_model": BIO_MODEL,
-            "embedding_revision": BIO_REVISION, "dimension": 768}
-           if encoder == "bioclinical" else
-           {"embedding_provider": "gemini", "embedding_model": "gemini-embedding-001",
-            "embedding_revision": "", "dimension": 256}),
+        Settings(),
+        artifacts=STORES / encoder,
+        chroma_host="",
+        mode="live",
+        **(
+            {
+                "embedding_provider": "bioclinical",
+                "embedding_model": BIO_MODEL,
+                "embedding_revision": BIO_REVISION,
+                "dimension": 768,
+            }
+            if encoder == "bioclinical"
+            else {
+                "embedding_provider": "gemini",
+                "embedding_model": "gemini-embedding-001",
+                "embedding_revision": "",
+                "dimension": 256,
+            }
+        ),
     )
     index = VectorIndex(settings, store, manifest, create_embedding_provider(settings))
-    source = (ROOT / "services/rag_workflow/index_snapshots/current.json"
-              if encoder == "gemini" else SNAPSHOTS[encoder])
+    source = (
+        ROOT / "services/rag_workflow/index_snapshots/current.json"
+        if encoder == "gemini"
+        else SNAPSHOTS[encoder]
+    )
     if not source.exists():
         raise SystemExit(f"Missing {encoder} snapshot: {source}")
     try:
@@ -86,15 +108,24 @@ def dense_trials(index, query, provider):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--encoders", nargs="*", default=["bioclinical"],
-                        choices=["gemini", "bioclinical"])
-    parser.add_argument("--queries", type=Path, default=HERE / "retrieval" / "retrieval_queries.jsonl")
-    parser.add_argument("--output", type=Path, default=ROOT / "artifacts/embedding_eval/retrieval_runs.jsonl")
+    parser.add_argument(
+        "--encoders", nargs="*", default=["bioclinical"], choices=["gemini", "bioclinical"]
+    )
+    parser.add_argument(
+        "--queries", type=Path, default=HERE / "retrieval" / "retrieval_queries.jsonl"
+    )
+    parser.add_argument(
+        "--output", type=Path, default=ROOT / "artifacts/embedding_eval/retrieval_runs.jsonl"
+    )
     parser.add_argument("--top-k", type=int, default=5)
-    parser.add_argument("--finetuned-manifest", type=Path,
-                        help="training_manifest.json of the checkpoint to add as finetuned_*")
-    parser.add_argument("--finetuned-checkpoint",
-                        help="Override the manifest's artifact_uri with a local copy")
+    parser.add_argument(
+        "--finetuned-manifest",
+        type=Path,
+        help="training_manifest.json of the checkpoint to add as finetuned_*",
+    )
+    parser.add_argument(
+        "--finetuned-checkpoint", help="Override the manifest's artifact_uri with a local copy"
+    )
     args = parser.parse_args()
     args.output, args.queries = args.output.resolve(), args.queries.resolve()
     encoders = list(args.encoders)
@@ -109,13 +140,13 @@ def main():
     cases = read_jsonl(args.queries)
     commit = os.environ.get("SOURCE_COMMIT", "")
     if not commit:
-        commit = subprocess.run(["git", "rev-parse", "HEAD"], check=False, cwd=ROOT,
-                                capture_output=True, text=True).stdout.strip()
+        commit = subprocess.run(
+            ["git", "rev-parse", "HEAD"], check=False, cwd=ROOT, capture_output=True, text=True
+        ).stdout.strip()
 
     def modes(case):
         patient = store.patient(case["patient_id"])
-        return {"question": case["question"],
-                "patient": patient_query(patient, case["question"])}
+        return {"question": case["question"], "patient": patient_query(patient, case["question"])}
 
     rows, methods = [], {}
     # BM25 does not depend on the encoder, so emit it once.
@@ -125,35 +156,57 @@ def main():
         for mode, query in modes(case).items():
             ranking = [key for key, _ in retriever.lexical.rank(query)]
             lexical_cache[(case["query_id"], mode)] = ranking
-            rows.append({"query_id": case["query_id"], "method": f"bm25_{mode}",
-                         "ranked_trial_ids": ranking[: args.top_k]})
+            rows.append(
+                {
+                    "query_id": case["query_id"],
+                    "method": f"bm25_{mode}",
+                    "ranked_trial_ids": ranking[: args.top_k],
+                }
+            )
     for mode in ("question", "patient"):
         methods[f"bm25_{mode}"] = {
             "retrieval": "BM25 over trial title + conditions + brief summary + all criteria",
-            "query_construction": mode, "encoder": None, "fusion": None,
+            "query_construction": mode,
+            "encoder": None,
+            "fusion": None,
         }
 
     frozen_name = None
     for encoder in encoders:
         if encoder == "finetuned":
             settings, index = build_finetuned_index(
-                store, manifest, args.finetuned_checkpoint or training["artifact_uri"],
-                training["artifact_sha256"])
+                store,
+                manifest,
+                args.finetuned_checkpoint or training["artifact_uri"],
+                training["artifact_sha256"],
+            )
             if index.name == frozen_name:
                 raise SystemExit("Fine-tuned and frozen encoders resolved to one collection")
         else:
             settings, index = build_index(encoder, store, manifest)
             if encoder == "bioclinical":
                 frozen_name = index.name
-        provider = index.provider if hasattr(index, "provider") else create_embedding_provider(settings)
+        provider = (
+            index.provider if hasattr(index, "provider") else create_embedding_provider(settings)
+        )
         for case in cases:
             for mode, query in modes(case).items():
                 dense = dense_trials(index, query, provider)
                 hybrid = rrf([lexical_cache[(case["query_id"], mode)], dense])
-                rows.append({"query_id": case["query_id"], "method": f"{encoder}_dense_{mode}",
-                             "ranked_trial_ids": dense[: args.top_k]})
-                rows.append({"query_id": case["query_id"], "method": f"{encoder}_hybrid_{mode}",
-                             "ranked_trial_ids": hybrid[: args.top_k]})
+                rows.append(
+                    {
+                        "query_id": case["query_id"],
+                        "method": f"{encoder}_dense_{mode}",
+                        "ranked_trial_ids": dense[: args.top_k],
+                    }
+                )
+                rows.append(
+                    {
+                        "query_id": case["query_id"],
+                        "method": f"{encoder}_hybrid_{mode}",
+                        "ranked_trial_ids": hybrid[: args.top_k],
+                    }
+                )
         for mode in ("question", "patient"):
             common = {
                 "query_construction": mode,
@@ -165,19 +218,23 @@ def main():
                 "collection": index.name,
             }
             if encoder == "finetuned":
-                common.update({
-                    "checkpoint_sha256": training["artifact_sha256"],
-                    "checkpoint_uri": training["artifact_uri"],
-                    "training_workflow": training["workflow_type"],
-                    "training_code_commit": training["code_commit"],
-                    "training_run": training["experiment"].get("url")
-                    or training["experiment"].get("path"),
-                    "training_data": "corpus-derived and LLM-written query/criterion pairs "
-                                     "from trials outside this benchmark universe",
-                })
+                common.update(
+                    {
+                        "checkpoint_sha256": training["artifact_sha256"],
+                        "checkpoint_uri": training["artifact_uri"],
+                        "training_workflow": training["workflow_type"],
+                        "training_code_commit": training["code_commit"],
+                        "training_run": training["experiment"].get("url")
+                        or training["experiment"].get("path"),
+                        "training_data": "corpus-derived and LLM-written query/criterion pairs "
+                        "from trials outside this benchmark universe",
+                    }
+                )
             methods[f"{encoder}_dense_{mode}"] = {**common, "fusion": None}
             methods[f"{encoder}_hybrid_{mode}"] = {
-                **common, "fusion": "reciprocal rank fusion, k=60, over [BM25, dense]"}
+                **common,
+                "fusion": "reciprocal rank fusion, k=60, over [BM25, dense]",
+            }
 
     unknown = {t for row in rows for t in row["ranked_trial_ids"]} - universe
     if unknown:
@@ -203,7 +260,7 @@ def main():
             "patient": "unmodified production patient_query(patient, question)",
         },
         "cache": "frozen-encoder document vectors reused from the prepared experiment store; "
-                 "fine-tuned document vectors are encoded once into a separate store",
+        "fine-tuned document vectors are encoded once into a separate store",
         "methods": methods,
     }
     config_path = args.output.with_suffix(".config.json")

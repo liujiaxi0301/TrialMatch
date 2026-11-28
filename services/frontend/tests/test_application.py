@@ -6,7 +6,6 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from services.frontend.app import create_app
-from services.frontend.vector_demo import LocalVectorDemo, TokenHashProvider
 from services.rag_workflow.config import Settings
 
 
@@ -68,30 +67,6 @@ class ApplicationTests(unittest.TestCase):
             self.assertEqual(
                 self.client.post("/screen", json={**self.request, **change}).status_code, status
             )
-
-    def test_chroma_context_and_persistence(self):
-        demo = LocalVectorDemo(self.settings)
-        index = demo.build()
-        self.assertEqual(index["vector_count"], 607)
-        first = self.client.post("/retrieve", json=self.request)
-        self.assertEqual(first.status_code, 200)
-        body = first.json()
-        self.assertEqual(len(body["chunks"]), 2)
-        actual = {key: text for key, text, _ in demo.index.fragments()}
-        for chunk in body["chunks"]:
-            self.assertEqual(chunk["text"], actual[chunk["chunk_id"]])
-        restored = LocalVectorDemo(self.settings).retrieve(
-            self.patient_id, self.request["question"], 2
-        )
-        self.assertEqual(
-            [x["chunk_id"] for x in body["chunks"]], [x["chunk_id"] for x in restored["chunks"]]
-        )
-
-    def test_hash_vectors_are_stable_and_normalized(self):
-        provider = TokenHashProvider()
-        vector = provider.embed("type 2 diabetes HbA1c")
-        self.assertEqual(vector, provider.embed("type 2 diabetes HbA1c"))
-        self.assertAlmostEqual(sum(x * x for x in vector), 1.0)
 
 
 if __name__ == "__main__":

@@ -6,8 +6,18 @@ from contextlib import redirect_stderr
 
 from cloud import train_job
 
-BASE = ["--project", "p", "--bucket", "b", "--image", "r/trainer@sha256:" + "a" * 64,
-        "--pairs", "gs://b/pairs.jsonl", "--run-id", "train-test"]
+BASE = [
+    "--project",
+    "p",
+    "--bucket",
+    "b",
+    "--image",
+    "r/trainer@sha256:" + "a" * 64,
+    "--pairs",
+    "gs://b/pairs.jsonl",
+    "--run-id",
+    "train-test",
+]
 
 
 def spec(*extra):
@@ -18,13 +28,19 @@ def spec(*extra):
 class WorkerPoolTests(unittest.TestCase):
     def test_the_default_job_asks_for_one_t4(self):
         machine = spec()["machine_spec"]
-        self.assertEqual(machine, {"machine_type": "n1-standard-4",
-                                   "accelerator_type": "NVIDIA_TESLA_T4",
-                                   "accelerator_count": 1})
+        self.assertEqual(
+            machine,
+            {
+                "machine_type": "n1-standard-4",
+                "accelerator_type": "NVIDIA_TESLA_T4",
+                "accelerator_count": 1,
+            },
+        )
 
     def test_a_cpu_job_names_no_accelerator(self):
-        pool = spec("--accelerator-count", "0", "--machine-type", "n1-standard-16",
-                    "--max-negatives", "2")
+        pool = spec(
+            "--accelerator-count", "0", "--machine-type", "n1-standard-16", "--max-negatives", "2"
+        )
         self.assertEqual(pool["machine_spec"], {"machine_type": "n1-standard-16"})
         args = pool["container_spec"]["args"]
         self.assertEqual(args[args.index("--max-negatives") + 1], "2")

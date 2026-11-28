@@ -50,14 +50,14 @@ The HTTP Chroma cycle is included in `make system-test`.
 
 ## 3. Execution and results
 
-The integrated local checks cover the three merged modules plus the readiness fix.
-`make ci` passed; after extending malformed-record handling, `make check` passed
-again against the final application code.
+The integrated checks cover the frontend, screening API, index switching,
+data preparation and evaluation tools. Local verification uses `make ci` plus
+the pipeline and CPU retrieval suites from GitHub Actions.
 
 | Check | Local result |
 | --- | --- |
-| Backend / frontend Python tests | 116 + 6 passed; 0 failures, 0 skipped |
-| Combined Python statement coverage | **86.73%** (1811 / 2088); threshold 50% |
+| Backend / frontend Python tests | 116 + 4 passed; 0 failures, 0 skipped |
+| Combined Python statement coverage | **86.88%** (1762 / 2028); threshold 50% |
 | Browser E2E through Nginx and FastAPI | **13 passed** |
 | Chroma persistence and HTTP index switching | Passed; failed switches preserved the active index and rollback made no encoder calls |
 | Pipeline, frozen evaluation and patient-processing suites | 150 passed |
@@ -70,15 +70,55 @@ quality. Test counts across the last two suites overlap in shared retrieval test
 they are not an additive repository-wide count.
 
 Reports are generated under ignored `artifacts/ms4/`; CI uploads them as
-`ms4-application-reports`. The [successful integration run](https://github.com/liujiaxi0301/TrialMatch/actions/runs/46101327301)
-verified `d47fad1`: all three jobs passed, including application, pipeline and retrieval
-runtime. That run predates the two standalone test steps below.
-
-CI now also runs all six patient-processing tests in the `pipeline` job and all three
-retrieval-metric tests in `retrieval-runtime`. For the latest verification, open
+`ms4-application-reports`. For remote verification, open
 [this branch's Actions runs](https://github.com/liujiaxi0301/TrialMatch/actions?query=branch%3Ayixiao%2Fms4-infra)
-and select the run matching the commit being reviewed. Both new steps must pass;
-their pytest counts appear in the job logs. CI does not redeploy the cloud app.
+and select the run matching the commit being reviewed. The `application`, `pipeline`
+and `retrieval-runtime` jobs must all pass. Patient-processing and retrieval-metric
+tests have separate steps with counts in the logs. CI does not redeploy the cloud app.
+
+### Local live demo
+
+Verified on **November 27, 2026, 22:40–22:41 ET**, after `make live` restored the
+Gemini snapshot and prepared the trained encoder's separate index. Chromium called
+the actual Nginx frontend and FastAPI backend; no responses were mocked.
+
+Both checks selected synthetic patient `060e72d3-912e-55cd-0c92-5faa6cb7a6db`
+and requested one trial. The browser displayed candidate criteria and patient
+evidence, exported the response, and added/exported/restored a human review without
+JavaScript errors.
+
+| Observed value | Gemini retrieval | Fine-tuned BioClinical retrieval |
+| --- | --- | --- |
+| HTTP / response status | 200 / `OK` | 200 / `OK` |
+| Run ID | `e16f55f53bc643ea9c49812bcace9802` | `7b10869ca962401fba8db1c6f55ca1e4` |
+| Encoder | `gemini-embedding-001` | `BioClinical-ModernBERT-base`, evaluated November 10 checkpoint |
+| Fresh embedding calls | 1 Vertex request | 1 local CPU request |
+| Fresh Gemini assessment calls | 5 | 6 |
+| Cached assessment calls | 0 | 0 |
+| Reported latency | 16.695 s | 17.202 s |
+| Returned trial | `NCT04501406` | `NCT04501406` |
+| Criterion outcomes | 1 known, 22 `UNKNOWN` | 1 known, 22 `UNKNOWN` |
+
+The Gemini question was “Find type 2 diabetes trials with HbA1c and age eligibility
+criteria for this patient.” The trained-model question was “For this patient, find
+type 2 diabetes trials and explain which age or HbA1c criteria need review.” Different
+questions avoided cached judgments; these timings are functional observations,
+not a controlled comparison of model speed or accuracy. Both choices still use
+`gemini-3.1-flash-lite` for model-based assessment. The trained response reports
+checkpoint SHA-256 `7dcec7d9c8ca3697ee60091346723130ebb37263254e81a69a0aff038dbc931c`.
+
+![Local live screening with Gemini retrieval](images/ms4-live-gemini.png)
+
+*Gemini retrieval: the live browser displays the actual screening response.*
+
+![Local live screening with the trained BioClinical encoder](images/ms4-live-finetuned.png)
+
+*Trained retrieval: the selected model and returned model identity agree.*
+
+The screenshots preserve the actual “More information needed” outcome. Successful
+integration does not resolve missing patient evidence: 22 of 23 criteria remained
+`UNKNOWN` in each response. Raw local responses and verification output remain in
+ignored `artifacts/ms4/live/`; the repository keeps these selected demo screenshots.
 
 ### CI verification path
 
@@ -128,6 +168,7 @@ A manual smoke check follows the same user journey: select a synthetic patient, 
 The CI workflow covers the application Python suites, 13 browser tests, Chroma persistence/switching, patient processing, pipeline/evaluation suites, retrieval runtime and retrieval metrics. Browser success and human-review cases call the actual local API. Failure cases deliberately intercept `/screen`; they verify UI behavior rather than an actual provider outage.
 
 - Automated browser tests exercise the **offline** application; they do not prove Gemini/Vertex permissions, live model responses or cloud deployment availability.
+- The separate live demo above verifies both local model choices with one patient and one candidate each. It is not an exhaustive model-quality or cloud-availability test.
 - The provenance test checks three synthetic patients and two returned trials per patient; the corruption test checks four defined mutations. Neither is exhaustive fuzzing or clinical validation.
 - The dataset consists of synthetic patients dated **2021-11-30** and trial snapshots dated **2026-10-11**. Screening results require human review and are not current enrollment decisions.
 - `UNKNOWN` means insufficient support, not a negative criterion assessment; match scores are not enrollment probabilities.

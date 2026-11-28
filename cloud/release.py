@@ -25,7 +25,9 @@ def input_hashes(root):
             with (root / name).open("rb") as stream:
                 hashes[name] = hashlib.file_digest(stream, "sha256").hexdigest()
         except OSError as error:
-            raise ValueError(f"Cannot read publication input: {name}; restore the fixed data") from error
+            raise ValueError(
+                f"Cannot read publication input: {name}; restore the fixed data"
+            ) from error
     return hashes
 
 
@@ -44,8 +46,11 @@ def check_input_hashes(actual, expected):
     data_fingerprint(actual)
     changed = [name for name in FILES if actual[name] != expected[name]]
     if changed:
-        raise ValueError("Publication inputs changed since build: " + ", ".join(changed)
-                         + "; restore the original data or rebuild")
+        raise ValueError(
+            "Publication inputs changed since build: "
+            + ", ".join(changed)
+            + "; restore the original data or rebuild"
+        )
 
 
 def verify_input_manifest(manifest, target):
@@ -91,12 +96,20 @@ def target_from_build(build, version, registry, bucket, hashes):
     digests = {}
     for name in ("workflow", "api"):
         tag = f"{registry}/{name}:{tag_suffix}"
-        images = [item for item in build.get("results", {}).get("images", []) if item["name"] == tag]
+        images = [
+            item for item in build.get("results", {}).get("images", []) if item["name"] == tag
+        ]
         if len(images) != 1:
             raise ValueError(f"Cloud Build must return exactly one matching {name} image")
         digests[name] = images[0].get("digest")
     return release_target(
-        version, registry, bucket, digests["workflow"], digests["api"], build.get("id"), hashes,
+        version,
+        registry,
+        bucket,
+        digests["workflow"],
+        digests["api"],
+        build.get("id"),
+        hashes,
     )
 
 
@@ -105,13 +118,20 @@ def read_target(path):
         raise ValueError("Missing release target; run bash cloud/deploy.sh build first")
     target = json.loads(path.read_text())
     if not isinstance(target, dict) or target.get("schema_version") != 4:
-        raise ValueError("Release target requires schema 4 with a build-specific tag; run bash cloud/deploy.sh build again")
+        raise ValueError(
+            "Release target requires schema 4 with a build-specific tag; run bash cloud/deploy.sh build again"
+        )
     try:
         registry, digest = target["workflow_image"].split("/workflow@")
         bucket = target["release_uri"].split("/")[2]
         expected = release_target(
-            target["source_version"], registry, bucket, digest,
-            target["api_image"].partition("@")[2], target["build_id"], target["input_sha256"],
+            target["source_version"],
+            registry,
+            bucket,
+            digest,
+            target["api_image"].partition("@")[2],
+            target["build_id"],
+            target["input_sha256"],
         )
     except (KeyError, IndexError, AttributeError, TypeError) as error:
         raise ValueError("Invalid release target; rebuild") from error
@@ -123,11 +143,18 @@ def read_target(path):
 def load_target(path, version, registry, bucket):
     target = read_target(path)
     expected = release_target(
-        version, registry, bucket, target["workflow_image"].partition("@")[2],
-        target["api_image"].partition("@")[2], target["build_id"], target["input_sha256"],
+        version,
+        registry,
+        bucket,
+        target["workflow_image"].partition("@")[2],
+        target["api_image"].partition("@")[2],
+        target["build_id"],
+        target["input_sha256"],
     )
     if target != expected:
-        raise ValueError("Release target does not match the current version/registry/bucket; rebuild")
+        raise ValueError(
+            "Release target does not match the current version/registry/bucket; rebuild"
+        )
     return target
 
 
@@ -143,16 +170,22 @@ def load_deployment(path, target, project, region):
         or record.get("project") != project
         or record.get("region") != region
     ):
-        raise ValueError("Deployment validation does not match this build/environment; rerun pipeline")
+        raise ValueError(
+            "Deployment validation does not match this build/environment; rerun pipeline"
+        )
     job = record.get("pipeline_job")
     output = record.get("validated_release_uri")
     if (
         not isinstance(job, str)
-        or not re.fullmatch(r"projects/[^/\s]+/locations/" + re.escape(region) + r"/pipelineJobs/[^/\s]+", job)
+        or not re.fullmatch(
+            r"projects/[^/\s]+/locations/" + re.escape(region) + r"/pipelineJobs/[^/\s]+", job
+        )
         or not isinstance(output, str)
         or not re.fullmatch(r"gs://[^/\s]+/\S+/release\.json", output)
     ):
-        raise ValueError("Deployment validation lacks a valid pipeline job/output release; rerun pipeline")
+        raise ValueError(
+            "Deployment validation lacks a valid pipeline job/output release; rerun pipeline"
+        )
     return record
 
 
@@ -170,15 +203,18 @@ def save_target(path, target):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=["capture-inputs", "record", "resolve", "image-tag", "deployment"])
+    parser.add_argument(
+        "action", choices=["capture-inputs", "record", "resolve", "image-tag", "deployment"]
+    )
     parser.add_argument("--version")
     parser.add_argument("--registry")
     parser.add_argument("--bucket")
     parser.add_argument("--input-manifest", type=Path)
     parser.add_argument("--build-result", type=Path)
     parser.add_argument("--record", type=Path, default=Path("artifacts/cloud/release_target.json"))
-    parser.add_argument("--deployment-record", type=Path,
-                        default=Path("artifacts/cloud/validated_deployment.json"))
+    parser.add_argument(
+        "--deployment-record", type=Path, default=Path("artifacts/cloud/validated_deployment.json")
+    )
     parser.add_argument("--project")
     parser.add_argument("--region")
     args = parser.parse_args()
@@ -188,14 +224,20 @@ def main():
         save_target(args.input_manifest, input_hashes(Path.cwd()))
         return
     if not args.version or not args.registry or not args.bucket:
-        parser.error("record/resolve/image-tag/deployment require --version, --registry and --bucket")
+        parser.error(
+            "record/resolve/image-tag/deployment require --version, --registry and --bucket"
+        )
     if args.action == "record":
         if args.build_result is None or args.input_manifest is None:
             parser.error("record requires --build-result and --input-manifest")
         hashes = json.loads(args.input_manifest.read_text())
         check_input_hashes(input_hashes(Path.cwd()), hashes)
         target = target_from_build(
-            json.loads(args.build_result.read_text()), args.version, args.registry, args.bucket, hashes,
+            json.loads(args.build_result.read_text()),
+            args.version,
+            args.registry,
+            args.bucket,
+            hashes,
         )
         save_target(args.record, target)
     else:

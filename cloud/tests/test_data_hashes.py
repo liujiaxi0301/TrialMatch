@@ -35,10 +35,17 @@ class InputHashTests(unittest.TestCase):
                 release.check_input_hashes(changed, hashes)
 
     def test_missing_files_and_incomplete_or_invalid_hash_records_fail(self):
-        with tempfile.TemporaryDirectory() as directory, self.assertRaisesRegex(ValueError, "raw.dvc"):
+        with (
+            tempfile.TemporaryDirectory() as directory,
+            self.assertRaisesRegex(ValueError, "raw.dvc"),
+        ):
             release.input_hashes(Path(directory))
         valid = dict.fromkeys(release.FILES, "a" * 64)
-        for hashes in ({}, dict(valid, unexpected="a" * 64), dict(valid, **{release.FILES[-1]: "bad"})):
+        for hashes in (
+            {},
+            dict(valid, unexpected="a" * 64),
+            dict(valid, **{release.FILES[-1]: "bad"}),
+        ):
             with self.subTest(hashes=hashes), self.assertRaises(ValueError):
                 release.data_fingerprint(hashes)
 
@@ -54,23 +61,37 @@ class CheckedPublicationTests(unittest.TestCase):
             path.write_bytes(name.encode())
         self.hashes = release.input_hashes(self.root)
         self.target = release.target_from_build(
-            fixtures.build_result(), fixtures.VERSION, fixtures.REGISTRY, fixtures.BUCKET, self.hashes,
+            fixtures.build_result(),
+            fixtures.VERSION,
+            fixtures.REGISTRY,
+            fixtures.BUCKET,
+            self.hashes,
         )
         self.target_path = self.root / "release_target.json"
         release.save_target(self.target_path, self.target)
         self.objects = {}
         self.enterContext(patch.object(tasks, "ROOT", self.root))
         self.enterContext(redirect_stdout(io.StringIO()))
-        self.blob = self.enterContext(patch.object(
-            tasks, "blob", side_effect=lambda uri: fixtures.MemoryBlob(self.objects, uri),
-        ))
+        self.blob = self.enterContext(
+            patch.object(
+                tasks,
+                "blob",
+                side_effect=lambda uri: fixtures.MemoryBlob(self.objects, uri),
+            )
+        )
 
     def publish(self, target=None):
         target = target or self.target
-        with patch("sys.argv", [
-            "tasks", "publish", "--output=" + target["release_uri"].removesuffix("/release.json"),
-            "--image=" + target["workflow_image"], "--release-target=" + str(self.target_path),
-        ]):
+        with patch(
+            "sys.argv",
+            [
+                "tasks",
+                "publish",
+                "--output=" + target["release_uri"].removesuffix("/release.json"),
+                "--image=" + target["workflow_image"],
+                "--release-target=" + str(self.target_path),
+            ],
+        ):
             tasks.main()
 
     def test_unchanged_inputs_publish_and_republish_identically(self):
@@ -79,7 +100,9 @@ class CheckedPublicationTests(unittest.TestCase):
         self.publish()
         self.assertEqual(self.objects, saved)
         manifest = json.loads(self.objects[self.target["release_uri"]])
-        self.assertEqual({name: item["sha256"] for name, item in manifest["files"].items()}, self.hashes)
+        self.assertEqual(
+            {name: item["sha256"] for name, item in manifest["files"].items()}, self.hashes
+        )
 
     def test_changed_or_missing_input_stops_before_any_storage_call(self):
         for name in release.FILES:
@@ -112,15 +135,20 @@ class CheckedPublicationTests(unittest.TestCase):
         index_uri = manifest["files"][release.FILES[-1]]["uri"]
         self.assertEqual(self.objects[index_uri], original)
         self.assertNotEqual(index.read_bytes(), original)
-        self.assertEqual(hashlib.sha256(self.objects[index_uri]).hexdigest(), self.hashes[release.FILES[-1]])
+        self.assertEqual(
+            hashlib.sha256(self.objects[index_uri]).hexdigest(), self.hashes[release.FILES[-1]]
+        )
 
     def test_new_data_gets_distinct_release_even_with_same_source_and_image(self):
         self.publish()
         old_objects = self.objects.copy()
         (self.root / release.FILES[-1]).write_bytes(b"new version of ignored snapshot")
         updated = release.target_from_build(
-            fixtures.build_result(build_id="build-B"), fixtures.VERSION, fixtures.REGISTRY,
-            fixtures.BUCKET, release.input_hashes(self.root),
+            fixtures.build_result(build_id="build-B"),
+            fixtures.VERSION,
+            fixtures.REGISTRY,
+            fixtures.BUCKET,
+            release.input_hashes(self.root),
         )
         self.assertEqual(updated["source_version"], self.target["source_version"])
         self.assertEqual(updated["workflow_image"], self.target["workflow_image"])

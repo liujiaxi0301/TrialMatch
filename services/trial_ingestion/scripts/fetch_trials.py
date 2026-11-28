@@ -6,11 +6,7 @@ import requests
 
 API_URL = "https://clinicaltrials.gov/api/v2/studies"
 
-RAW_DIR = (
-    Path(__file__).resolve().parents[1]
-    / "data"
-    / "raw"
-)
+RAW_DIR = Path(__file__).resolve().parents[1] / "data" / "raw"
 
 CONDITION = "Type 2 Diabetes"
 
@@ -100,27 +96,15 @@ if __name__ == "__main__":
             status=status,
         )
 
-        print(
-            f"{status}: "
-            f"{len(studies)} studies"
-        )
+        print(f"{status}: {len(studies)} studies")
 
         for study in studies:
-            nct_id = (
-                study["protocolSection"]
-                ["identificationModule"]
-                ["nctId"]
-            )
+            nct_id = study["protocolSection"]["identificationModule"]["nctId"]
 
             trials_by_id[nct_id] = study
 
-    all_studies = list(
-        trials_by_id.values()
-    )
+    all_studies = list(trials_by_id.values())
 
     save_trials(all_studies)
 
-    print(
-        f"Collected {len(all_studies)} "
-        f"unique candidate trials"
-    )
+    print(f"Collected {len(all_studies)} unique candidate trials")

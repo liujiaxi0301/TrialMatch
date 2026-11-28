@@ -75,12 +75,14 @@ def main():
             assert len(set(ranked_ids)) == 5
             assert set(ranked_ids) <= set(manifest["trial_ids"])
 
-            rankings.append({
-                "query_id": q["query_id"],
-                "method": METHOD,
-                "ranked_trial_ids": ranked_ids,
-                "index_version": status["index_version"],
-            })
+            rankings.append(
+                {
+                    "query_id": q["query_id"],
+                    "method": METHOD,
+                    "ranked_trial_ids": ranked_ids,
+                    "index_version": status["index_version"],
+                }
+            )
 
             print(f"{q['query_id']}: {', '.join(ranked_ids)}")
 

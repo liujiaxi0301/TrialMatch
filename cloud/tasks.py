@@ -32,7 +32,9 @@ def digest(path):
 
 
 def write_json(uri, value):
-    blob(uri).upload_from_string(json.dumps(value, indent=2) + "\n", content_type="application/json")
+    blob(uri).upload_from_string(
+        json.dumps(value, indent=2) + "\n", content_type="application/json"
+    )
 
 
 def log(event, **values):
@@ -112,11 +114,15 @@ def fetch(release, output):
     with tarfile.open(archive, "w:gz") as target:
         target.add(module / "data/raw", arcname="raw")
     blob(f"{output}/raw.tar.gz").upload_from_filename(archive)
-    write_json(f"{output}/snapshot.json", {
-        "release_uri": release, "raw_files": len(sources),
-        "archive_sha256": digest(archive),
-        "dvc_pointer_sha256": digest(module / "data/raw.dvc"),
-    })
+    write_json(
+        f"{output}/snapshot.json",
+        {
+            "release_uri": release,
+            "raw_files": len(sources),
+            "archive_sha256": digest(archive),
+            "dvc_pointer_sha256": digest(module / "data/raw.dvc"),
+        },
+    )
     log("raw_snapshot_restored", count=len(sources), output=output)
 
 
@@ -131,7 +137,11 @@ def process(source, output):
     with tarfile.open(archive) as source_tar:
         source_tar.extractall(ROOT / "services/trial_ingestion/data", filter="data")
     command(sys.executable, "prepare_data.py", "--from-raw")
-    publish(output, manifest["image"], {name: item["sha256"] for name, item in manifest["files"].items()})
+    publish(
+        output,
+        manifest["image"],
+        {name: item["sha256"] for name, item in manifest["files"].items()},
+    )
     blob(f"{output}/raw_reproduction.json").upload_from_filename(
         ROOT / "artifacts/infra/raw_reproduction.json"
     )
@@ -160,16 +170,23 @@ def validate(source, output):
     workflow = ScreeningWorkflow(settings)
     patient_id = data.manifest()["patient_ids"][0]
     started = time.monotonic()
-    response = workflow.screen(ScreenRequest(
-        patient_id=patient_id, question="Which type 2 diabetes trials may suit this patient?", top_k=3
-    ))
+    response = workflow.screen(
+        ScreenRequest(
+            patient_id=patient_id,
+            question="Which type 2 diabetes trials may suit this patient?",
+            top_k=3,
+        )
+    )
     if response.result_status in {"ERROR", "PARTIAL"} or not response.candidate_trials:
         raise ValueError("Offline screening did not complete")
     report = {
-        "status": "PASSED", "release_uri": f"{source}/release.json",
-        "trials": len(data.trials), "patients": len(data.patients),
+        "status": "PASSED",
+        "release_uri": f"{source}/release.json",
+        "trials": len(data.trials),
+        "patients": len(data.patients),
         "criteria": sum(len(rows) for rows in data.criteria.values()),
-        "vectors": restored["vector_count"], "source_sha256": data.hashes,
+        "vectors": restored["vector_count"],
+        "source_sha256": data.hashes,
         "offline_screening_status": response.result_status,
         "smoke_seconds": round(time.monotonic() - started, 3),
         "scope": "Data reproduction and functional validation; no training or clinical benchmark.",
@@ -186,16 +203,28 @@ def retrieve(source, output):
         raise ValueError("Retrieval requires a validated data release")
     download_release(report["release_uri"])
     destination = ROOT / "artifacts/retrieval/retrieval_runs.jsonl"
-    command(sys.executable, "-m", "evaluation.ms3.run_retrieval",
-            "--encoders", "gemini", "--output", str(destination))
+    command(
+        sys.executable,
+        "-m",
+        "evaluation.ms3.run_retrieval",
+        "--encoders",
+        "gemini",
+        "--output",
+        str(destination),
+    )
     config_path = destination.with_suffix(".config.json")
     config = json.loads(config_path.read_text())
     config["release_uri"] = report["release_uri"]
     config_path.write_text(json.dumps(config, indent=2) + "\n")
     for path in (destination, config_path):
         blob(f"{output}/{path.name}").upload_from_filename(path)
-    log("retrieval_rankings_saved", output=output, queries=config["query_count"],
-        methods=len(config["methods"]), scope="Rankings only; human scoring is separate.")
+    log(
+        "retrieval_rankings_saved",
+        output=output,
+        queries=config["query_count"],
+        methods=len(config["methods"]),
+        scope="Rankings only; human scoring is separate.",
+    )
 
 
 def serve():
@@ -215,7 +244,9 @@ def serve():
         index = VectorIndex(trained, data, data.manifest())
         snapshot = trained.artifacts / "finetuned-index.json"
         # Save beside the model directory so it never changes the checkpoint digest.
-        remote = blob(f"{trained.embedding_checkpoint.rsplit('/', 1)[0]}/indexes/{index.version}.json")
+        remote = blob(
+            f"{trained.embedding_checkpoint.rsplit('/', 1)[0]}/indexes/{index.version}.json"
+        )
         if remote.exists():
             snapshot.parent.mkdir(parents=True, exist_ok=True)
             remote.download_to_filename(snapshot)
@@ -230,15 +261,26 @@ def serve():
             index.export(snapshot)
             remote.upload_from_filename(snapshot, if_generation_match=0)
         log("cloud_index_ready", collection=status["collection"], vectors=status["vector_count"])
-    os.execvp(sys.executable, [
-        sys.executable, "-m", "uvicorn", "services.frontend.app:app",
-        "--host", "0.0.0.0", "--port", os.environ.get("PORT", "8080"),
-    ])
+    os.execvp(
+        sys.executable,
+        [
+            sys.executable,
+            "-m",
+            "uvicorn",
+            "services.frontend.app:app",
+            "--host",
+            "0.0.0.0",
+            "--port",
+            os.environ.get("PORT", "8080"),
+        ],
+    )
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=["publish", "fetch", "process", "validate", "retrieve", "serve"])
+    parser.add_argument(
+        "action", choices=["publish", "fetch", "process", "validate", "retrieve", "serve"]
+    )
     parser.add_argument("--source")
     parser.add_argument("--output")
     parser.add_argument("--image", default="")
@@ -250,7 +292,10 @@ def main():
         hashes = None
         if args.release_target:
             target = read_target(args.release_target)
-            if args.image != target["workflow_image"] or args.output + "/release.json" != target["release_uri"]:
+            if (
+                args.image != target["workflow_image"]
+                or args.output + "/release.json" != target["release_uri"]
+            ):
                 raise ValueError("Publication image/address does not match the selected build")
             hashes = target["input_sha256"]
         publish(args.output, args.image, hashes)

@@ -26,7 +26,7 @@ def rebuild_trials(manifest):
             "Run make reproduce to restore the DVC snapshot."
         )
 
-    snapshot_date, = manifest["trial_snapshot_dates"]
+    (snapshot_date,) = manifest["trial_snapshot_dates"]
     trials = []
     for source in raw_files:
         trial = normalize_trial(json.loads(source.read_text(encoding="utf-8")))

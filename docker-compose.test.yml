@@ -16,6 +16,9 @@ services:
       COVERAGE_FILE: /tmp/ms4.coverage
     volumes:
       - ./services:/app/services:ro
+      - ./cloud:/app/cloud:ro
+      - ./evaluation:/app/evaluation:ro
+      - ./prepare_data.py:/app/prepare_data.py:ro
       - ./scripts:/app/scripts:ro
       - ./ruff.toml:/app/ruff.toml:ro
       - ./artifacts/ms4:/app/artifacts/ms4

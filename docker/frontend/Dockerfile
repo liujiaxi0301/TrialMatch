@@ -3,6 +3,8 @@ WORKDIR /tests
 COPY docker/frontend/package.json docker/frontend/package-lock.json ./
 RUN npm ci
 COPY services/frontend/e2e/ ./
+COPY services/frontend/static/ ./static/
+COPY .prettierrc.json ./
 CMD ["npm", "test"]
 
 FROM nginx:1.28.0-alpine AS runtime

@@ -16,7 +16,7 @@ The desktop interface follows the MS2 concept of keeping patient context separat
 
 **Historical UI design (MS2).**
 
-![Original TrialMatch UI mock-up from MS2](images/ms2-original-ui-mockup.png)
+![Original TrialMatch UI mock-up from MS2](images/ms2-original-ui-mockup.jpg)
 
 *Figure 1. Original MS2 interface mock-up, showing patient selection, a screening question, and the planned trial and evidence review workflow.*
 
@@ -31,6 +31,11 @@ The desktop interface follows the MS2 concept of keeping patient context separat
 ![Actual MS4 screening result with expanded criteria and evidence](images/ms4-screening-results-evidence.png)
 
 *Figure 3. Actual MS4 browser-to-API screening result in local offline mode, with a trial's criterion assessments and patient evidence expanded.* The screenshot documents an HTTP-backed local screening flow, not live-model inference or cloud deployment.
+
+**Live model integration.** The same browser flow was also verified locally with
+both Gemini and the trained BioClinical encoder, including actual Vertex AI calls,
+evidence inspection, human review and JSON export. The [live demo evidence](TEST_DOCUMENTATION.md#local-live-demo)
+contains screenshots, model identities and observed outcomes.
 
 ## 2. System architecture
 
@@ -148,7 +153,6 @@ Each criterion may be `MET`, `NOT_MET`, or `UNKNOWN`. Trial-level outcomes inclu
 | GET | `/patients` | None | Synthetic patient summaries |
 | GET | `/patients/{patient_id}` | Path `patient_id` | Normalized patient record |
 | POST | `/screen` | `ScreenRequest` | `ScreenResponse` with candidates, assessments, evidence and provenance |
-| POST | `/retrieve` | Patient ID, question and `top_k` | Local vector-demo retrieval chunks |
 
 `ScreenRequest` requires exactly one of `patient_id` or an inline normalized `patient`, a nonblank `question` and `top_k` from 1–5. In live mode, `retrieval_model` can select `gemini` or `finetuned`. `ScreenResponse` includes `run_id`, `result_status`, patient identity/reference date, `candidate_trials`, `warnings`, `errors`, `provenance` and `metrics`; each candidate includes criterion assessments and cited evidence. Input errors return HTTP 422, missing patients 404, unavailable dependencies 503, and timeouts 504 where applicable. A successful HTTP response is **not** a clinical eligibility determination.
 

@@ -20,9 +20,15 @@ RUN useradd --create-home --uid 1000 app \
     && mkdir -p /app/artifacts /tmp/uv-cache \
     && chown -R app:app /app /tmp/uv-cache
 COPY --chown=app:app cloud/__init__.py cloud/tasks.py cloud/release.py ./cloud/
-COPY --chown=app:app services/rag_workflow/*.py ./services/rag_workflow/
+COPY --chown=app:app services/rag_workflow/__init__.py services/rag_workflow/api.py services/rag_workflow/cli.py \
+    services/rag_workflow/config.py services/rag_workflow/data.py services/rag_workflow/embedding_providers.py \
+    services/rag_workflow/encoders.py services/rag_workflow/evidence_rules.py services/rag_workflow/index.py \
+    services/rag_workflow/index_switching.py services/rag_workflow/index_versions.py services/rag_workflow/judge.py \
+    services/rag_workflow/observability.py services/rag_workflow/providers.py services/rag_workflow/readiness.py \
+    services/rag_workflow/retrieve.py services/rag_workflow/rules.py services/rag_workflow/schemas.py \
+    services/rag_workflow/workflow.py ./services/rag_workflow/
 COPY --chown=app:app services/rag_workflow/prompts/ ./services/rag_workflow/prompts/
-COPY --chown=app:app services/frontend/__init__.py services/frontend/app.py services/frontend/vector_demo.py ./services/frontend/
+COPY --chown=app:app services/frontend/__init__.py services/frontend/app.py ./services/frontend/
 
 USER app
 CMD ["python", "-m", "uvicorn", "services.frontend.app:app", "--host", "0.0.0.0", "--port", "8080"]

@@ -30,10 +30,12 @@ def build_result(digest=DIGEST_A, build_id="build-A"):
     return {
         "id": build_id,
         "status": "SUCCESS",
-        "results": {"images": [
-            {"name": f"{REGISTRY}/workflow:{VERSION}-{build_id}", "digest": digest},
-            {"name": f"{REGISTRY}/api:{VERSION}-{build_id}", "digest": API_DIGEST},
-        ]},
+        "results": {
+            "images": [
+                {"name": f"{REGISTRY}/workflow:{VERSION}-{build_id}", "digest": digest},
+                {"name": f"{REGISTRY}/api:{VERSION}-{build_id}", "digest": API_DIGEST},
+            ]
+        },
     }
 
 
@@ -63,7 +65,11 @@ class ReleaseIdentityTests(unittest.TestCase):
     def test_rebuild_and_republish_preserve_existing_releases(self):
         first = release.target_from_build(build_result(), VERSION, REGISTRY, BUCKET, HASHES)
         second = release.target_from_build(
-            build_result(DIGEST_B, build_id="build-B"), VERSION, REGISTRY, BUCKET, HASHES,
+            build_result(DIGEST_B, build_id="build-B"),
+            VERSION,
+            REGISTRY,
+            BUCKET,
+            HASHES,
         )
         objects = {}
         with tempfile.TemporaryDirectory() as directory:
@@ -89,7 +95,8 @@ class ReleaseIdentityTests(unittest.TestCase):
                 self.assertEqual(objects, after_publish)
                 self.assertEqual({uri: objects[uri] for uri in old_objects}, old_objects)
                 self.assertEqual(
-                    json.loads(objects[second["release_uri"]])["image"], second["workflow_image"],
+                    json.loads(objects[second["release_uri"]])["image"],
+                    second["workflow_image"],
                 )
                 (root / "data.json").write_text('{"data":"changed"}\n')
                 with self.assertRaisesRegex(ValueError, "different content"):
@@ -100,7 +107,9 @@ class ReleaseIdentityTests(unittest.TestCase):
         cases = [
             {"status": "FAILURE"},
             {"status": "SUCCESS", "results": {"images": []}},
-            build_result(None), build_result("sha256:abc"), build_result("latest"),
+            build_result(None),
+            build_result("sha256:abc"),
+            build_result("latest"),
         ]
         wrong_image = build_result()
         wrong_image["results"]["images"][0]["name"] = f"{REGISTRY}/api:{VERSION}"
@@ -169,7 +178,9 @@ class DeployReleaseTests(unittest.TestCase):
         (self.root / "cloud").mkdir(parents=True)
         for name in ("deploy.sh", "release.py", "build.yaml", "__init__.py"):
             shutil.copy2(ROOT / "cloud" / name, self.root / "cloud" / name)
-        (self.root / ".gitignore").write_text("artifacts/\nsecrets/\n__pycache__/\n" + release.FILES[-1] + "\n")
+        (self.root / ".gitignore").write_text(
+            "artifacts/\nsecrets/\n__pycache__/\n" + release.FILES[-1] + "\n"
+        )
         (self.root / "secrets").mkdir()
         (self.root / "secrets/google-credentials.json").write_text("{}")
         for name in release.FILES:
@@ -183,16 +194,30 @@ class DeployReleaseTests(unittest.TestCase):
         )
         subprocess.run(["git", "init", "-q", str(self.root)], check=True, capture_output=True)
         subprocess.run(["git", "-C", str(self.root), "add", "."], check=True, capture_output=True)
-        subprocess.run([
-            "git", "-C", str(self.root), "-c", "user.name=Test", "-c", "user.email=test@example.com",
-            "commit", "-qm", "Fixture",
-        ], check=True, capture_output=True)
+        subprocess.run(
+            [
+                "git",
+                "-C",
+                str(self.root),
+                "-c",
+                "user.name=Test",
+                "-c",
+                "user.email=test@example.com",
+                "commit",
+                "-qm",
+                "Fixture",
+            ],
+            check=True,
+            capture_output=True,
+        )
         binaries = Path(directory.name) / "bin"
         binaries.mkdir()
         (binaries / "python3").symlink_to(sys.executable)
         self.log = Path(directory.name) / "calls.jsonl"
         self.registry_state = Path(directory.name) / "registry.json"
-        fake = f"#!{sys.executable}\n" + '''import json, os, sys, uuid
+        fake = (
+            f"#!{sys.executable}\n"
+            + """import json, os, sys, uuid
 from pathlib import Path
 import yaml
 args = sys.argv[1:]
@@ -244,22 +269,30 @@ if name == "gcloud":
     if os.environ.get("FAKE_CHANGE_INPUT"):
         Path(os.environ["FAKE_CHANGE_INPUT"]).write_text("changed during cloud build")
     print(json.dumps({"id": build_id, "status": "SUCCESS", "results": {"images": results}}))
-'''
+"""
+        )
         for name in ("gcloud", "docker"):
             executable = binaries / name
             executable.write_text(fake)
             executable.chmod(0o755)
         self.env = dict(
-            os.environ, PATH=f"{binaries}:{os.environ['PATH']}",
-            FAKE_CALL_LOG=str(self.log), FAKE_DIGEST=DIGEST_A,
-            FAKE_API_DIGEST=API_DIGEST, FAKE_REGISTRY_STATE=str(self.registry_state),
+            os.environ,
+            PATH=f"{binaries}:{os.environ['PATH']}",
+            FAKE_CALL_LOG=str(self.log),
+            FAKE_DIGEST=DIGEST_A,
+            FAKE_API_DIGEST=API_DIGEST,
+            FAKE_REGISTRY_STATE=str(self.registry_state),
         )
         self.artifacts = self.root / "artifacts/cloud"
 
     def run_action(self, action, success=True):
         result = subprocess.run(
-            ["bash", "cloud/deploy.sh", action], cwd=self.root, env=self.env,
-            text=True, capture_output=True, check=False,
+            ["bash", "cloud/deploy.sh", action],
+            cwd=self.root,
+            env=self.env,
+            text=True,
+            capture_output=True,
+            check=False,
         )
         if success:
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
@@ -268,7 +301,11 @@ if name == "gcloud":
         return result
 
     def calls(self):
-        return [json.loads(line) for line in self.log.read_text().splitlines()] if self.log.exists() else []
+        return (
+            [json.loads(line) for line in self.log.read_text().splitlines()]
+            if self.log.exists()
+            else []
+        )
 
     def validate_current_build(self):
         """Run the real compiler/record writer; simulate only Vertex and GCS responses."""
@@ -276,24 +313,36 @@ if name == "gcloud":
         output = f"gs://{BUCKET}/pipelines/test-run/processed"
         report = {"status": "PASSED", "release_uri": output + "/release.json"}
         with (
-            chdir(self.root), redirect_stdout(io.StringIO()),
+            chdir(self.root),
+            redirect_stdout(io.StringIO()),
             patch.object(pipeline.aiplatform, "init"),
             patch.object(pipeline.aiplatform, "PipelineJob") as job_class,
             patch.object(pipeline, "blob") as blob,
-            patch("sys.argv", [
-                "pipeline", "--project=test-project", "--region=us-east1",
-                f"--bucket={BUCKET}", "--image=" + target["workflow_image"],
-                "--release=" + target["release_uri"],
-                "--release-target=artifacts/cloud/release_target.json",
-            ]),
+            patch(
+                "sys.argv",
+                [
+                    "pipeline",
+                    "--project=test-project",
+                    "--region=us-east1",
+                    f"--bucket={BUCKET}",
+                    "--image=" + target["workflow_image"],
+                    "--release=" + target["release_uri"],
+                    "--release-target=artifacts/cloud/release_target.json",
+                ],
+            ),
         ):
             job = job_class.return_value
             job.resource_name = "projects/test-project/locations/us-east1/pipelineJobs/current"
             job.state = SimpleNamespace(name="PIPELINE_STATE_SUCCEEDED")
             job.task_details = [
-                SimpleNamespace(task_name=name, outputs={key: SimpleNamespace(
-                    artifacts=[SimpleNamespace(uri=uri)],
-                )})
+                SimpleNamespace(
+                    task_name=name,
+                    outputs={
+                        key: SimpleNamespace(
+                            artifacts=[SimpleNamespace(uri=uri)],
+                        )
+                    },
+                )
                 for name, key, uri in (
                     ("process-trials", "processed", output),
                     ("validate-data", "report", f"gs://{BUCKET}/pipelines/test-run/report"),
@@ -301,11 +350,14 @@ if name == "gcloud":
             ]
             blob.return_value.download_as_text.return_value = json.dumps(report)
             input_manifest = {
-                "schema_version": 1, "image": target["workflow_image"],
+                "schema_version": 1,
+                "image": target["workflow_image"],
                 "files": {name: {"sha256": sha} for name, sha in target["input_sha256"].items()},
             }
             input_blob = SimpleNamespace(download_as_text=lambda: json.dumps(input_manifest))
-            blob.side_effect = lambda uri: input_blob if uri == target["release_uri"] else blob.return_value
+            blob.side_effect = lambda uri: (
+                input_blob if uri == target["release_uri"] else blob.return_value
+            )
             pipeline.main()
         return json.loads((self.artifacts / "validated_deployment.json").read_text())
 
@@ -331,14 +383,18 @@ if name == "gcloud":
             self.env["FAKE_DIGEST"] = "sha256:" + "c" * 64
             self.run_action("publish")
             self.run_action("pipeline")
-            publish, pipeline = [c for c in self.calls()
-                                 if c["tool"] == "docker" and c["args"][0] == "run"][-2:]
+            publish, pipeline = [
+                c for c in self.calls() if c["tool"] == "docker" and c["args"][0] == "run"
+            ][-2:]
             for call in (publish, pipeline):
                 self.assertEqual(call["tool"], "docker")
-                self.assertIn("GOOGLE_APPLICATION_CREDENTIALS=/secrets/google-credentials.json", call["args"])
+                self.assertIn(
+                    "GOOGLE_APPLICATION_CREDENTIALS=/secrets/google-credentials.json", call["args"]
+                )
                 self.assertIn("--image=" + target["workflow_image"], call["args"])
             self.assertIn(
-                "--output=" + target["release_uri"].removesuffix("/release.json"), publish["args"],
+                "--output=" + target["release_uri"].removesuffix("/release.json"),
+                publish["args"],
             )
             self.assertIn("--release=" + target["release_uri"], pipeline["args"])
             self.assertIn("--release-target=artifacts/cloud/release_target.json", publish["args"])
@@ -432,16 +488,23 @@ if name == "gcloud":
         record = self.validate_current_build()
         path = self.artifacts / "validated_deployment.json"
         invalid_records = [
-            None, {}, dict(record, status="FAILED"), dict(record, project="another-project"),
-            dict(record, region="us-west1"), dict(record, validated_release_uri=""),
+            None,
+            {},
+            dict(record, status="FAILED"),
+            dict(record, project="another-project"),
+            dict(record, region="us-west1"),
+            dict(record, validated_release_uri=""),
             dict(record, pipeline_job=""),
         ]
         for field, value in (
-            ("build_id", "old-build"), ("api_image", f"{REGISTRY}/api@{DIGEST_B}"),
+            ("build_id", "old-build"),
+            ("api_image", f"{REGISTRY}/api@{DIGEST_B}"),
             ("workflow_image", f"{REGISTRY}/workflow@{DIGEST_B}"),
             ("release_uri", "gs://old-input/release.json"),
         ):
-            invalid_records.append(dict(record, build_target=dict(record["build_target"], **{field: value})))
+            invalid_records.append(
+                dict(record, build_target=dict(record["build_target"], **{field: value}))
+            )
         for invalid in invalid_records:
             with self.subTest(record=invalid):
                 if invalid is None:
@@ -494,15 +557,21 @@ if name == "gcloud":
         self.run_action("database")
         call = self.calls()[-1]
         self.assertEqual(call["args"][:3], ["compute", "instances", "create"])
-        self.assertIn("--metadata=chroma-image=" + REGISTRY + "/chroma:" + target["image_tag"], call["args"])
+        self.assertIn(
+            "--metadata=chroma-image=" + REGISTRY + "/chroma:" + target["image_tag"], call["args"]
+        )
 
     def test_database_does_not_update_an_existing_vm(self):
         self.run_action("build")
         self.env["FAKE_DATABASE_EXISTS"] = "1"
         self.run_action("database")
-        self.assertEqual([call["args"][:3] for call in self.calls()[1:]], [
-            ["compute", "disks", "describe"], ["compute", "instances", "describe"],
-        ])
+        self.assertEqual(
+            [call["args"][:3] for call in self.calls()[1:]],
+            [
+                ["compute", "disks", "describe"],
+                ["compute", "instances", "describe"],
+            ],
+        )
 
 
 if __name__ == "__main__":

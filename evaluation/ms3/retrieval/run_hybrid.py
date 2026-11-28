@@ -72,29 +72,31 @@ def main():
             if len(ids) != len(set(ids)):
                 raise RuntimeError("Duplicate trial IDs in results")
 
-            rankings.append({
-                "query_id": query["query_id"],
-                "patient_id": query["patient_id"],
-                "method": METHOD,
-                "ranked_trial_ids": ids,
-                "index_version": status["index_version"],
-            })
+            rankings.append(
+                {
+                    "query_id": query["query_id"],
+                    "patient_id": query["patient_id"],
+                    "method": METHOD,
+                    "ranked_trial_ids": ids,
+                    "index_version": status["index_version"],
+                }
+            )
 
             for rank, hit in enumerate(hits, 1):
                 semantic = hit.get("semantic_hit") or {}
 
-                csv_rows.append({
-                    "query_id": query["query_id"],
-                    "method": METHOD,
-                    "rank": rank,
-                    "trial_id": hit["trial_id"],
-                    "rank_score": hit["rank_score"],
-                    "bm25_score": hit["bm25_score"],
-                    "semantic_criterion_id": semantic.get("criterion_id", ""),
-                    "semantic_cosine_distance": semantic.get(
-                        "cosine_distance", ""
-                    ),
-                })
+                csv_rows.append(
+                    {
+                        "query_id": query["query_id"],
+                        "method": METHOD,
+                        "rank": rank,
+                        "trial_id": hit["trial_id"],
+                        "rank_score": hit["rank_score"],
+                        "bm25_score": hit["bm25_score"],
+                        "semantic_criterion_id": semantic.get("criterion_id", ""),
+                        "semantic_cosine_distance": semantic.get("cosine_distance", ""),
+                    }
+                )
 
             print(f"{query['query_id']}: {', '.join(ids)}")
 
@@ -108,15 +110,20 @@ def main():
                 for row in rankings:
                     f.write(json.dumps(row) + "\n")
 
-            with (output / "hybrid_candidates.csv").open(
-                "w", newline=""
-            ) as f:
-                writer = csv.DictWriter(f, fieldnames=[
-                    "query_id", "method", "rank", "trial_id",
-                    "rank_score", "bm25_score",
-                    "semantic_criterion_id",
-                    "semantic_cosine_distance",
-                ])
+            with (output / "hybrid_candidates.csv").open("w", newline="") as f:
+                writer = csv.DictWriter(
+                    f,
+                    fieldnames=[
+                        "query_id",
+                        "method",
+                        "rank",
+                        "trial_id",
+                        "rank_score",
+                        "bm25_score",
+                        "semantic_criterion_id",
+                        "semantic_cosine_distance",
+                    ],
+                )
                 writer.writeheader()
                 writer.writerows(csv_rows)
 

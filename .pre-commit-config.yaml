@@ -12,7 +12,7 @@ repos:
         name: Keep credentials out of Git
         entry: Do not commit .env files, secrets or credential JSON files.
         language: fail
-        files: '(^|/)(\.env$|secrets/)|(^|/)[^/]*(credentials|service-account)[^/]*\.json$'
+        files: '(^|/)(\.env($|\.(?!example$))|secrets/)|(^|/)[^/]*(credentials|service-account)[^/]*\.json$'
       - id: locked-dependencies
         name: Check service dependency locks
         entry: make lock-check
@@ -24,4 +24,4 @@ repos:
         entry: make check
         language: system
         pass_filenames: false
-        files: '^(services/(rag_workflow|frontend)/|scripts/(ms4/|verify_api\.py$)|docker/|docker-compose.*\.yml$|ruff\.toml$|Makefile$|\.pre-commit-config\.yaml$|\.github/workflows/)'
+        files: '^(services/|cloud/|evaluation/|scripts/|prepare_data\.py$|docker/|docker-compose.*\.yml$|ruff\.toml$|\.prettierrc\.json$|Makefile$|\.pre-commit-config\.yaml$|\.github/workflows/)'

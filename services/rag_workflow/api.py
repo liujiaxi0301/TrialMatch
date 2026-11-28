@@ -23,7 +23,7 @@ from .workflow import ScreeningWorkflow
 
 def create_app(settings: Settings | None = None) -> FastAPI:
     config = settings or Settings()
-    app = FastAPI(title="TrialMatch MS2 Part 3", version="0.1.0")
+    app = FastAPI(title="TrialMatch API", version="0.1.0")
     origins = [
         item.strip()
         for item in os.environ.get(

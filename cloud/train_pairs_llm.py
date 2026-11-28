@@ -64,17 +64,25 @@ def overlap(query: str, criterion: str) -> float:
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--criteria", type=Path,
-                        default=ROOT / "services/trial_ingestion/data/processed/criteria.jsonl")
-    parser.add_argument("--manifest", type=Path,
-                        default=ROOT / "services/rag_workflow/examples/demo_manifest.json")
+    parser.add_argument(
+        "--criteria",
+        type=Path,
+        default=ROOT / "services/trial_ingestion/data/processed/criteria.jsonl",
+    )
+    parser.add_argument(
+        "--manifest", type=Path, default=ROOT / "services/rag_workflow/examples/demo_manifest.json"
+    )
     parser.add_argument("--output", type=Path, default=ROOT / "artifacts/training/pairs_llm.jsonl")
     parser.add_argument("--limit", type=int, default=2000, help="Criteria to send; bounds cost")
     parser.add_argument("--batch", type=int, default=20, help="Criteria per request")
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--negatives", type=int, default=4)
-    parser.add_argument("--max-overlap", type=float, default=0.6,
-                        help="Reject a query that mostly repeats its criterion")
+    parser.add_argument(
+        "--max-overlap",
+        type=float,
+        default=0.6,
+        help="Reject a query that mostly repeats its criterion",
+    )
     parser.add_argument("--validation-share", type=float, default=0.1)
     parser.add_argument("--seed", type=int, default=0)
     args = parser.parse_args()
@@ -82,7 +90,8 @@ def main():
     held_out = set(json.loads(args.manifest.read_text())["trial_ids"])
     rows = [json.loads(line) for line in args.criteria.read_text().splitlines()]
     pool_rows = [
-        r for r in rows
+        r
+        for r in rows
         if r["trial_id"] not in held_out
         and r.get("criterion_text")
         and not GENERIC.search(r["criterion_text"].lower())
@@ -91,15 +100,18 @@ def main():
     assert not ({r["trial_id"] for r in pool_rows} & held_out), "benchmark trials leaked"
     random.Random(args.seed).shuffle(pool_rows)
     selected = pool_rows[: args.limit]
-    print(f"{len(rows)} criteria -> {len(pool_rows)} eligible -> {len(selected)} sent "
-          f"in {-(-len(selected) // args.batch)} requests")
+    print(
+        f"{len(rows)} criteria -> {len(pool_rows)} eligible -> {len(selected)} sent "
+        f"in {-(-len(selected) // args.batch)} requests"
+    )
 
     provider = GeminiProvider(Settings())
     batches = [selected[i : i + args.batch] for i in range(0, len(selected), args.batch)]
 
     def ask(batch):
-        payload = {"criteria": [{"index": i, "text": r["criterion_text"]}
-                                for i, r in enumerate(batch)]}
+        payload = {
+            "criteria": [{"index": i, "text": r["criterion_text"]} for i, r in enumerate(batch)]
+        }
         try:
             answer = provider.generate(SYSTEM, payload, Queries)
         except (ProviderError, ValueError) as exc:
@@ -136,22 +148,25 @@ def main():
     for row, query in kept:
         own = by_trial[row["trial_id"]]
         negatives = [
-            index[k]["criterion_text"] for k in bm25.top(query, 40)
+            index[k]["criterion_text"]
+            for k in bm25.top(query, 40)
             if index[k]["trial_id"] != row["trial_id"]
             and normalize(index[k]["criterion_text"]) not in own
         ][: args.negatives]
         if not negatives:
             continue
-        pairs.append({
-            "query": query,
-            "positive": row["criterion_text"],
-            "negatives": negatives,
-            "trial_id": row["trial_id"],
-            "criterion_id": row["criterion_id"],
-            "criterion_type": row.get("criterion_type"),
-            "split": split_of(row["trial_id"], args.validation_share),
-            "query_source": "llm",
-        })
+        pairs.append(
+            {
+                "query": query,
+                "positive": row["criterion_text"],
+                "negatives": negatives,
+                "trial_id": row["trial_id"],
+                "criterion_id": row["criterion_id"],
+                "criterion_type": row.get("criterion_type"),
+                "split": split_of(row["trial_id"], args.validation_share),
+                "query_source": "llm",
+            }
+        )
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("w") as handle:

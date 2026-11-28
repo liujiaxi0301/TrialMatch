@@ -18,6 +18,10 @@ RUN useradd --create-home --uid 1000 app \
 COPY --chown=app:app services/trial_ingestion/scripts/*.py ./services/trial_ingestion/scripts/
 COPY --chown=app:app prepare_data.py ./
 
+# Compose runs with the host UID; keep DVC configuration and cache discoverable.
+ENV HOME=/home/app
+ENV USER=app
+ENV XDG_CACHE_HOME=/tmp/.cache
 USER app
 # Pull the committed DVC pointers without mounting the host Git checkout.
 RUN dvc config --global core.no_scm true

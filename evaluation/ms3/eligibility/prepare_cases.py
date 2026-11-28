@@ -41,9 +41,7 @@ def write_frozen(path, content):
     """Create once; refuse to silently change an existing cohort."""
     if path.exists():
         if path.read_text(encoding="utf-8") != content:
-            raise RuntimeError(
-                f"Frozen file differs from regenerated content: {path}"
-            )
+            raise RuntimeError(f"Frozen file differs from regenerated content: {path}")
         print(f"Already frozen and verified: {path.name}")
         return
 
@@ -68,8 +66,7 @@ def main():
 
     with LABELS.open(newline="", encoding="utf-8") as f:
         labels = {
-            (row["query_id"], row["trial_id"]): int(row["relevance"])
-            for row in csv.DictReader(f)
+            (row["query_id"], row["trial_id"]): int(row["relevance"]) for row in csv.DictReader(f)
         }
 
     expected_qids = [f"Q{i:02d}" for i in range(1, 9)]
@@ -85,9 +82,7 @@ def main():
 
         assert patient_id in manifest["patient_ids"]
         assert trial_id in manifest["trial_ids"]
-        assert labels[(qid, trial_id)] == 2, (
-            f"{qid}/{trial_id} is not labeled highly relevant"
-        )
+        assert labels[(qid, trial_id)] == 2, f"{qid}/{trial_id} is not labeled highly relevant"
 
         patient = store.patient(patient_id)
         trial = store.trials[trial_id]
@@ -102,20 +97,22 @@ def main():
 
         total_counts.update(counts)
 
-        cases.append({
-            "case_id": f"E{qid[1:]}",
-            "source_query_id": qid,
-            "split": "all",
-            "patient_id": patient_id,
-            "trial_id": trial_id,
-            "question": query["question"],
-            "patient_reference_date": patient["reference_date"],
-            "trial_snapshot_date": trial["snapshot_date"],
-            "selection_basis": "manual_topical_relevance_2",
-            "inclusion_count": counts["inclusion"],
-            "exclusion_count": counts["exclusion"],
-            "criterion_count": len(criteria),
-        })
+        cases.append(
+            {
+                "case_id": f"E{qid[1:]}",
+                "source_query_id": qid,
+                "split": "all",
+                "patient_id": patient_id,
+                "trial_id": trial_id,
+                "question": query["question"],
+                "patient_reference_date": patient["reference_date"],
+                "trial_snapshot_date": trial["snapshot_date"],
+                "selection_basis": "manual_topical_relevance_2",
+                "inclusion_count": counts["inclusion"],
+                "exclusion_count": counts["exclusion"],
+                "criterion_count": len(criteria),
+            }
+        )
 
     assert len(cases) == 8
     assert total_counts["inclusion"] == 32
@@ -137,14 +134,9 @@ def main():
         "eligibility_predictions_used_for_selection": False,
     }
 
-    cases_text = "".join(
-        json.dumps(c, ensure_ascii=False) + "\n"
-        for c in cases
-    )
+    cases_text = "".join(json.dumps(c, ensure_ascii=False) + "\n" for c in cases)
 
-    manifest_text = (
-        json.dumps(provenance, indent=2, ensure_ascii=False) + "\n"
-    )
+    manifest_text = json.dumps(provenance, indent=2, ensure_ascii=False) + "\n"
 
     # Validate both existing outputs before creating either.
     outputs = [

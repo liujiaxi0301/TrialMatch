@@ -122,9 +122,12 @@ class ReleaseFailureTests(unittest.TestCase):
 
     def test_retrieval_failure_does_not_upload_rankings(self):
         self.blob.return_value.download_as_text.side_effect = None
-        self.blob.return_value.download_as_text.return_value = json.dumps({
-            "status": "PASSED", "release_uri": "gs://test/release.json",
-        })
+        self.blob.return_value.download_as_text.return_value = json.dumps(
+            {
+                "status": "PASSED",
+                "release_uri": "gs://test/release.json",
+            }
+        )
         self.command.side_effect = subprocess.CalledProcessError(1, "retrieval")
         with (
             patch.object(tasks, "download_release"),

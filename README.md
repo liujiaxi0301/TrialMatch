@@ -12,7 +12,7 @@ information. This is a research demo, not a clinical eligibility decision.
 - Fine-tuned index switching and rollback with checkpoint checks and immediate readiness refresh.
 - Data/provenance validation, browser review tests and application design documentation.
 - Separate frontend and API containers, with one-command local startup.
-- Pre-commit checks formatting, code, config files and dependency locks before a commit.
+- Shared Python and frontend formatting, code/config checks and service dependency locks.
 - GitHub Actions repeats the checks, builds images and tests the real browser-to-API flow.
 - Backend coverage must reach 50%; test failures also fail CI. Reports are saved as CI artifacts.
 - A container recreation test verifies Chroma persistence.
@@ -62,8 +62,8 @@ credentials. Unsupported or missing information remains UNKNOWN.
 | `make down` | Stop the containers and keep the saved database. |
 | `make reproduce` | Restore raw trials with DVC, rebuild and verify processed files, then start the offline app. |
 | `make hooks` | Install the local pre-commit hook (requires uv). |
-| `make check` | Check Python code and format, then run pytest with coverage. |
-| `make fmt` | Apply the shared Python formatting rules. |
+| `make check` | Check code and Python/frontend formatting, then run pytest with coverage. |
+| `make fmt` | Format maintained Python and frontend source; see development prerequisites below. |
 | `make ci` | Build, repeat pre-commit checks, start the app, verify Chroma persistence and run browser tests (requires uv). |
 | `make coverage` | Run backend/API tests and enforce the 50% coverage gate. |
 | `make e2e` | Test the running local app in Chromium. Run `make up` first. |
@@ -81,6 +81,8 @@ installs only its own locked dependencies. The static frontend uses pinned Nginx
 its browser-test image has a separate npm lockfile. `docker/workflow/`, `docker/trainer/` and
 `docker/retrieval/` provide the separate cloud job environments.
 Processed data stays in `services/`; generated files stay in ignored `artifacts/`.
+For source editing, install uv and run `npm ci --prefix docker/frontend` before
+`make fmt`. Startup and CI format checks use Docker; Node is not needed on the host.
 
 ## Online Screening
 
@@ -104,6 +106,9 @@ retraining. The first local start downloads the model and builds its index; late
 starts reuse the files. Initial model loading can make the first request slower.
 Index switching and rollback are described in the [index guide](services/rag_workflow/INDEX_VERSIONING.md).
 Both screening and readiness follow the selected encoder without a restart.
+
+Both live choices were verified through the local browser, including evidence
+review and JSON export. See the [live demo results and screenshots](docs/ms4/TEST_DOCUMENTATION.md#local-live-demo).
 
 ## API
 

@@ -4,7 +4,7 @@
 export LOCAL_UID := $(shell id -u)
 export LOCAL_GID := $(shell id -g)
 TEST_COMPOSE = docker compose -f docker-compose.yml -f docker-compose.test.yml
-PYTHON_PATHS = services/rag_workflow services/frontend scripts/ms4 scripts/verify_api.py
+PYTHON_PATHS = cloud services evaluation prepare_data.py scripts
 PRE_COMMIT = uv tool run pre-commit==4.3.0
 
 dirs:
@@ -48,10 +48,12 @@ lint: dirs
 
 fmt:
 	uv tool run ruff==0.17.1 format --no-cache --config ruff.toml $(PYTHON_PATHS)
+	docker/frontend/node_modules/.bin/prettier --write 'services/frontend/**/*.{js,css,html}'
 
 format-check: dirs
 	$(TEST_COMPOSE) run --build --rm --no-deps -T api-tests \
 		ruff format --check --no-cache --config ruff.toml $(PYTHON_PATHS)
+	$(TEST_COMPOSE) run --build --rm --no-deps -T browser-tests npm run format:check
 
 lock-check:
 	# Each service selects its own Python, independent of the CI runner default.

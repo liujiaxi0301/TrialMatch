@@ -29,8 +29,13 @@ from cloud.train import code_commit, gcs_blob
 
 ROOT = Path(__file__).resolve().parents[1]
 DIGEST = re.compile(r"^[a-z0-9./_-]+@sha256:[0-9a-f]{64}$")
-FINISHED = {"JOB_STATE_SUCCEEDED", "JOB_STATE_FAILED", "JOB_STATE_CANCELLED",
-            "JOB_STATE_EXPIRED", "JOB_STATE_PARTIALLY_SUCCEEDED"}
+FINISHED = {
+    "JOB_STATE_SUCCEEDED",
+    "JOB_STATE_FAILED",
+    "JOB_STATE_CANCELLED",
+    "JOB_STATE_EXPIRED",
+    "JOB_STATE_PARTIALLY_SUCCEEDED",
+}
 RUN_ID = re.compile(r"^[a-z0-9][a-z0-9-]{2,62}$")
 
 
@@ -40,33 +45,60 @@ def config_env() -> dict:
 
 
 def worker_pool(args, output: str, commit: str) -> list[dict]:
-    command_args = ["--pairs", *args.pairs, "--output", output,
-                    "--epochs", str(args.epochs), "--batch-size", str(args.batch_size),
-                    "--lr", str(args.lr), "--temperature", str(args.temperature),
-                    "--max-length", str(args.max_length),
-                    "--max-negatives", str(args.max_negatives), "--seed", str(args.seed),
-                    "--wandb-project", args.wandb_project, "--run-name", args.run_id,
-                    "--image-uri", args.image]
+    command_args = [
+        "--pairs",
+        *args.pairs,
+        "--output",
+        output,
+        "--epochs",
+        str(args.epochs),
+        "--batch-size",
+        str(args.batch_size),
+        "--lr",
+        str(args.lr),
+        "--temperature",
+        str(args.temperature),
+        "--max-length",
+        str(args.max_length),
+        "--max-negatives",
+        str(args.max_negatives),
+        "--seed",
+        str(args.seed),
+        "--wandb-project",
+        args.wandb_project,
+        "--run-name",
+        args.run_id,
+        "--image-uri",
+        args.image,
+    ]
     if args.wandb_entity:
         command_args += ["--wandb-entity", args.wandb_entity]
     if args.wandb_secret:
-        command_args += ["--wandb-secret",
-                         f"projects/{args.project}/secrets/{args.wandb_secret}/versions/latest"]
+        command_args += [
+            "--wandb-secret",
+            f"projects/{args.project}/secrets/{args.wandb_secret}/versions/latest",
+        ]
     if args.source_release:
         command_args += ["--source-release", args.source_release]
     if args.no_amp:
         command_args.append("--no-amp")
     machine = {"machine_type": args.machine_type}
     if args.accelerator_count:  # Vertex rejects an accelerator type with a count of zero.
-        machine.update(accelerator_type=args.accelerator_type,
-                       accelerator_count=args.accelerator_count)
-    return [{
-        "machine_spec": machine,
-        "replica_count": 1,
-        "container_spec": {"image_uri": args.image, "command": ["python", "-m", "cloud.train"],
-                           "args": command_args,
-                           "env": [{"name": "CODE_COMMIT", "value": commit}]},
-    }]
+        machine.update(
+            accelerator_type=args.accelerator_type, accelerator_count=args.accelerator_count
+        )
+    return [
+        {
+            "machine_spec": machine,
+            "replica_count": 1,
+            "container_spec": {
+                "image_uri": args.image,
+                "command": ["python", "-m", "cloud.train"],
+                "args": command_args,
+                "env": [{"name": "CODE_COMMIT", "value": commit}],
+            },
+        }
+    ]
 
 
 def remote_sha256(uri: str) -> str:
@@ -79,13 +111,18 @@ def remote_sha256(uri: str) -> str:
 
 def verify_checkpoint(manifest: dict) -> dict:
     """Recompute every checkpoint file's SHA256 from GCS against the manifest."""
-    actual = {name: remote_sha256(f"{manifest['artifact_uri']}/{name}")
-              for name in manifest["artifact_files"]}
+    actual = {
+        name: remote_sha256(f"{manifest['artifact_uri']}/{name}")
+        for name in manifest["artifact_files"]
+    }
     combined = hashlib.sha256(json.dumps(actual, sort_keys=True).encode()).hexdigest()
-    return {"artifact_uri": manifest["artifact_uri"], "files": actual,
-            "artifact_sha256": combined,
-            "matches_manifest": actual == manifest["artifact_files"]
-            and combined == manifest["artifact_sha256"]}
+    return {
+        "artifact_uri": manifest["artifact_uri"],
+        "files": actual,
+        "artifact_sha256": combined,
+        "matches_manifest": actual == manifest["artifact_files"]
+        and combined == manifest["artifact_sha256"],
+    }
 
 
 def job_logs(project: str, job_id: str) -> list[str]:
@@ -93,21 +130,26 @@ def job_logs(project: str, job_id: str) -> list[str]:
     import google.auth
     from google.auth.transport.requests import AuthorizedSession
 
-    credentials, _ = google.auth.default(
-        scopes=["https://www.googleapis.com/auth/cloud-platform"])
+    credentials, _ = google.auth.default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
     session = AuthorizedSession(credentials)
-    body = {"resourceNames": [f"projects/{project}"], "orderBy": "timestamp asc",
-            "pageSize": 1000,
-            "filter": f'resource.type="ml_job" AND resource.labels.job_id="{job_id}"'}
+    body = {
+        "resourceNames": [f"projects/{project}"],
+        "orderBy": "timestamp asc",
+        "pageSize": 1000,
+        "filter": f'resource.type="ml_job" AND resource.labels.job_id="{job_id}"',
+    }
     lines = []
     while True:
-        response = session.post("https://logging.googleapis.com/v2/entries:list", json=body,
-                                timeout=60)
+        response = session.post(
+            "https://logging.googleapis.com/v2/entries:list", json=body, timeout=60
+        )
         response.raise_for_status()
         page = response.json()
         for entry in page.get("entries", []):
             text = entry.get("textPayload") or json.dumps(entry.get("jsonPayload", {}))
-            lines.append(f"{entry.get('timestamp', '')} {entry.get('severity', '')} {text}".rstrip())
+            lines.append(
+                f"{entry.get('timestamp', '')} {entry.get('severity', '')} {text}".rstrip()
+            )
         if not page.get("nextPageToken"):
             return lines
         body["pageToken"] = page["nextPageToken"]
@@ -116,7 +158,8 @@ def job_logs(project: str, job_id: str) -> list[str]:
 def parse_args(argv=None):
     env = config_env()
     parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument("--project", default=env.get("GCP_PROJECT"))
     parser.add_argument("--region", default=env.get("GCP_REGION", "us-east1"))
     parser.add_argument("--bucket", default=env.get("GCS_BUCKET"))
@@ -126,10 +169,18 @@ def parse_args(argv=None):
     parser.add_argument("--service-account", default="")
     parser.add_argument("--machine-type", default="n1-standard-4")
     parser.add_argument("--accelerator-type", default="NVIDIA_TESLA_T4")
-    parser.add_argument("--accelerator-count", type=int, default=1,
-                        help="0 runs the job on CPU only, for projects without GPU quota")
-    parser.add_argument("--max-run-seconds", type=int, default=5400,
-                        help="Vertex cancels the job after this long; bounds the GPU spend")
+    parser.add_argument(
+        "--accelerator-count",
+        type=int,
+        default=1,
+        help="0 runs the job on CPU only, for projects without GPU quota",
+    )
+    parser.add_argument(
+        "--max-run-seconds",
+        type=int,
+        default=5400,
+        help="Vertex cancels the job after this long; bounds the GPU spend",
+    )
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--lr", type=float, default=2e-5)
@@ -140,14 +191,20 @@ def parse_args(argv=None):
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--wandb-project", default="trialmatch-ms3")
     parser.add_argument("--wandb-entity", default="")
-    parser.add_argument("--wandb-secret", default="wandb-api-key",
-                        help="Secret Manager secret name; empty to track offline")
+    parser.add_argument(
+        "--wandb-secret",
+        default="wandb-api-key",
+        help="Secret Manager secret name; empty to track offline",
+    )
     parser.add_argument("--source-release", default="")
     parser.add_argument("--evidence", type=Path, help="Directory for the run's evidence files")
     parser.add_argument("--dry-run", action="store_true", help="Print the job spec and stop")
-    parser.add_argument("--attach", default="",
-                        help="Resource name of a job already submitted with these arguments; "
-                             "wait for it and collect its evidence instead of submitting again")
+    parser.add_argument(
+        "--attach",
+        default="",
+        help="Resource name of a job already submitted with these arguments; "
+        "wait for it and collect its evidence instead of submitting again",
+    )
     parser.add_argument("--poll-seconds", type=int, default=30)
     args = parser.parse_args(argv)
     if not DIGEST.fullmatch(args.image):
@@ -160,8 +217,9 @@ def parse_args(argv=None):
         parser.error("--accelerator-count cannot be negative")
     if not args.project or not args.bucket:
         parser.error("--project and --bucket are required")
-    args.service_account = (args.service_account
-                            or f"trialmatch-pipeline@{args.project}.iam.gserviceaccount.com")
+    args.service_account = (
+        args.service_account or f"trialmatch-pipeline@{args.project}.iam.gserviceaccount.com"
+    )
     return args
 
 
@@ -172,18 +230,27 @@ def main(argv=None):
     commit = code_commit()
     output = f"gs://{args.bucket}/training/{args.run_id}"
     pools = worker_pool(args, output, commit)
-    spec = {"display_name": f"trialmatch-{args.run_id}", "project": args.project,
-            "region": args.region, "service_account": args.service_account,
-            "max_run_seconds": args.max_run_seconds, "output": output, "code_commit": commit,
-            "worker_pool_specs": pools}
+    spec = {
+        "display_name": f"trialmatch-{args.run_id}",
+        "project": args.project,
+        "region": args.region,
+        "service_account": args.service_account,
+        "max_run_seconds": args.max_run_seconds,
+        "output": output,
+        "code_commit": commit,
+        "worker_pool_specs": pools,
+    }
     print(json.dumps(spec, indent=2))
     if args.dry_run:
         return 0
 
     from google.cloud import aiplatform
 
-    aiplatform.init(project=args.project, location=args.region,
-                    staging_bucket=f"gs://{args.bucket}/training/staging")
+    aiplatform.init(
+        project=args.project,
+        location=args.region,
+        staging_bucket=f"gs://{args.bucket}/training/staging",
+    )
     if args.attach:
         job = aiplatform.CustomJob.get(args.attach)
         if job.display_name != spec["display_name"]:
@@ -207,9 +274,14 @@ def main(argv=None):
         if state in FINISHED:
             break
         time.sleep(args.poll_seconds)
-    record.update(state=state, error=getattr(job.error, "message", "") or "", create_time=str(job.create_time), end_time=str(job.end_time),
-                  console=f"https://console.cloud.google.com/vertex-ai/locations/{args.region}"
-                          f"/training/{job.name}?project={args.project}")
+    record.update(
+        state=state,
+        error=getattr(job.error, "message", "") or "",
+        create_time=str(job.create_time),
+        end_time=str(job.end_time),
+        console=f"https://console.cloud.google.com/vertex-ai/locations/{args.region}"
+        f"/training/{job.name}?project={args.project}",
+    )
     succeeded = state == "JOB_STATE_SUCCEEDED"
     if succeeded:
         manifest = json.loads(gcs_blob(f"{output}/training_manifest.json").download_as_text())

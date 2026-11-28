@@ -1,7 +1,6 @@
 # Local setup and CI
 
-Part D provides the runtime and automated checks for the other modules. It follows
-the course's per-service containers, locked dependencies, Compose networking and
+The local runtime follows the course's per-service containers, locked dependencies, Compose networking and
 GitHub Actions build/lint/test approach. It does not redeploy the cloud application.
 
 ## Start locally
@@ -67,7 +66,9 @@ an older snapshot from a temporary local remote without cloud credentials.
 - Processed inputs remain in `services/`; generated output is ignored in `artifacts/`.
   Credentials stay in ignored `secrets/`, mounted read-only and excluded from images.
 - Make passes the host UID/GID to Python/test containers so Linux CI reports remain
-  writable. It creates required output directories automatically.
+  writable. It creates required output directories automatically. DVC retains a
+  known home/user and a writable cache even when the host UID has no container
+  password-file entry, as on macOS.
 
 ## Tests and CI
 
@@ -79,13 +80,13 @@ make hooks
 
 The hook checks private keys, credential file paths, YAML/TOML syntax, merge
 markers and service lockfile consistency. Application changes also trigger Ruff
-lint, `ruff format --check` and pytest with the coverage gate. Existing unittest
+lint, Python and frontend format checks, and pytest with the coverage gate. Existing unittest
 test cases run through pytest without rewriting their assertions. The hook allows
 older branches without this configuration, including the frozen MS3 branch.
 
 ```bash
 make lint         # Ruff correctness checks, shell syntax and Compose validation
-make fmt          # Apply the shared formatter to application Python and MS4 scripts
+make fmt          # Format maintained Python and frontend source
 make format-check # Check formatting without editing files
 make check        # Lint, format check and pytest with coverage
 make pre-commit   # Run all hooks against tracked files
@@ -97,7 +98,12 @@ make ci           # Build, pre-commit checks, startup, persistence and browser t
 make down         # Keep the local vector database
 ```
 
-Jiaxi's original entry point remains supported:
+Formatting uses Ruff for maintained Python and Prettier for HTML, CSS and JavaScript.
+Hash-pinned evaluation files remain byte-for-byte frozen. To apply frontend
+formatting with `make fmt`, first run `npm ci --prefix docker/frontend` (Node required
+only for editing); format checks run inside Docker.
+
+The coverage script can also be called directly:
 `bash scripts/ms4/check_coverage.sh`. It now builds its test image with locked tools
 and writes reports even if a test fails. Coverage includes all Python source in
 `services/rag_workflow/` and `services/frontend/`, excluding their tests. Browser JS
@@ -133,14 +139,14 @@ in Actions. No GCP secrets are
 required and no deployment is triggered. A failed check makes the workflow red;
 requiring green checks before merging is a separate GitHub branch protection setting.
 
-## Module handoffs
+## Adding tests
 
-- A: page at port 8080, API at 8081; add browser cases under `services/frontend/e2e/`.
-- B: Chroma service name/volume above; keep model collections separate. Index
+- The page is at port 8080, API at 8081; add browser cases under `services/frontend/e2e/`.
+- Index integration: Chroma service name/volume above; keep model collections separate. Index
   unit tests in the backend test directory are discovered by the coverage command.
-- C: add API integration cases under `services/rag_workflow/tests/` or
+- Add API integration cases under `services/rag_workflow/tests/` or
   `services/frontend/tests/`; the existing suites run automatically.
-- E: take the coverage/browser reports and CI run link for Test Documentation.
+- Take the coverage/browser reports and CI run link for Test Documentation.
   Use reports from the same commit as the submitted code; saved reports from an
   earlier commit do not verify later changes.
 

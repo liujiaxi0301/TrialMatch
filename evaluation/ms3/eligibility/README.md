@@ -24,7 +24,8 @@ and 14 criteria respectively. Patient reference date: November 30, 2021;
 trial snapshot: October 11, 2026. Labels were prepared independently of baseline
 predictions. E08 exc_001 was corrected from NOT_MET to UNKNOWN before evaluation.
 
-The current CLI accepts only `--split all`. E01–E02 were inspected during
+The current CLI accepts only `--split all`; use the commands in this README
+rather than the old split examples in the frozen script header. E01–E02 were inspected during
 development, so the combined result is not an independent held-out test.
 Cases are purposive, criteria within a trial are correlated, and some judgments
 depend on synthetic-data conventions. No clinician adjudicated the labels.

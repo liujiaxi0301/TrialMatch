@@ -44,7 +44,7 @@ class RetrievalTaskTests(unittest.TestCase):
     def setUp(self):
         tmp = tempfile.TemporaryDirectory()
         self.addCleanup(tmp.cleanup)
-        self.root = Path(tmp.name)
+        self.root = Path(tmp.name).resolve()
         self.enterContext(redirect_stdout(io.StringIO()))
         self.enterContext(patch.object(retrieval, "ROOT", self.root))
         self.enterContext(patch.object(tasks, "ROOT", self.root))
@@ -54,44 +54,78 @@ class RetrievalTaskTests(unittest.TestCase):
         self.enterContext(patch.object(tasks, "blob", side_effect=self.lookup))
         query_path = self.root / retrieval.QUERIES
         query_path.parent.mkdir(parents=True)
-        query_path.write_text("".join(json.dumps({"query_id": q, "question": "synthetic query",
-                                                "patient_id": "synthetic-patient"}) + "\n"
-                                      for q in fixtures.contract()["query_ids"]))
+        query_path.write_text(
+            "".join(
+                json.dumps(
+                    {
+                        "query_id": q,
+                        "question": "synthetic query",
+                        "patient_id": "synthetic-patient",
+                    }
+                )
+                + "\n"
+                for q in fixtures.contract()["query_ids"]
+            )
+        )
         self.release_uri = "gs://run/processed/release.json"
         data_release = {"schema_version": 1, "files": {}}
         for name in release.FILES:
             uri = "gs://run/processed/" + name
-            content = (json.dumps({"trial_ids": fixtures.contract()["trial_ids"]}).encode()
-                       if name == retrieval.BENCHMARK else b"synthetic file bytes")
+            content = (
+                json.dumps({"trial_ids": fixtures.contract()["trial_ids"]}).encode()
+                if name == retrieval.BENCHMARK
+                else b"synthetic file bytes"
+            )
             self.objects[uri] = content
             data_release["files"][name] = {"uri": uri, "sha256": retrieval.sha256(content)}
         self.objects[self.release_uri] = json.dumps(data_release).encode()
         self.hashes = dict.fromkeys(("trials", "criteria", "patients"), "e" * 64)
-        self.report = {"status": "PASSED", "release_uri": self.release_uri, "source_sha256": self.hashes}
+        self.report = {
+            "status": "PASSED",
+            "release_uri": self.release_uri,
+            "source_sha256": self.hashes,
+        }
         self.objects[self.SOURCE + "/validation.json"] = json.dumps(self.report).encode()
         model_files = {"config.json": b"{}", "model.safetensors": b"synthetic weights"}
         for name, content in model_files.items():
             self.objects[f"{self.TRAINING}/model/{name}"] = content
         digests = {name: retrieval.sha256(content) for name, content in model_files.items()}
         self.training = {
-            "schema_version": 1, "workflow_type": "contrastive-encoder-finetune",
-            "source_release_uri": self.release_uri, "image_uri": self.TRAINER,
-            "artifact_uri": self.TRAINING + "/model", "artifact_files": digests,
+            "schema_version": 1,
+            "workflow_type": "contrastive-encoder-finetune",
+            "source_release_uri": self.release_uri,
+            "image_uri": self.TRAINER,
+            "artifact_uri": self.TRAINING + "/model",
+            "artifact_files": digests,
             "artifact_sha256": retrieval.sha256(json.dumps(digests, sort_keys=True).encode()),
-            "config": {"batch_size": 8}, "pair_files": [{"uri": "built-from:" + self.release_uri}],
-            "code_commit": "f" * 40, "experiment": {"url": "test-only-run"},
+            "config": {"batch_size": 8},
+            "pair_files": [{"uri": "built-from:" + self.release_uri}],
+            "code_commit": "f" * 40,
+            "experiment": {"url": "test-only-run"},
         }
-        self.enterContext(patch("services.rag_workflow.data.DataStore",
-                                return_value=SimpleNamespace(hashes=self.hashes)))
+        self.enterContext(
+            patch(
+                "services.rag_workflow.data.DataStore",
+                return_value=SimpleNamespace(hashes=self.hashes),
+            )
+        )
         self.storage = self.enterContext(patch("google.cloud.storage.Client"))
         self.storage.return_value.list_blobs.side_effect = lambda bucket, prefix: [
             self.lookup(uri) for uri in self.objects if uri.startswith(f"gs://{bucket}/{prefix}")
         ]
-        self.runner = self.enterContext(patch.object(retrieval.subprocess, "run", side_effect=self.rank))
+        self.runner = self.enterContext(
+            patch.object(retrieval.subprocess, "run", side_effect=self.rank)
+        )
 
     def expected(self):
-        return retrieval.expected_manifest(self.SOURCE + "/validation.json", self.report, self.TRAINING,
-            json.dumps(self.training).encode(), self.IMAGE, retrieval.benchmark_contract(self.release_uri))
+        return retrieval.expected_manifest(
+            self.SOURCE + "/validation.json",
+            self.report,
+            self.TRAINING,
+            json.dumps(self.training).encode(),
+            self.IMAGE,
+            retrieval.benchmark_contract(self.release_uri),
+        )
 
     def rank(self, argv, **kwargs):
         work = Path(argv[argv.index("--output") + 1]).parent
@@ -115,9 +149,13 @@ class RetrievalTaskTests(unittest.TestCase):
         self.assertIn(self.OUTPUT + "/" + retrieval.MANIFEST, self.objects)
 
     def test_old_manifest_or_unexpected_pairs_fail_before_ranking(self):
-        for key, bad in (("source_release_uri", "gs://old/release.json"),
-                         ("image_uri", "example/old"), ("artifact_uri", "gs://old/model"),
-                         ("pair_files", []), ("artifact_sha256", "0" * 64)):
+        for key, bad in (
+            ("source_release_uri", "gs://old/release.json"),
+            ("image_uri", "example/old"),
+            ("artifact_uri", "gs://old/model"),
+            ("pair_files", []),
+            ("artifact_sha256", "0" * 64),
+        ):
             with self.subTest(key=key):
                 original = self.training[key]
                 self.training[key] = bad
@@ -155,8 +193,10 @@ class RetrievalTaskTests(unittest.TestCase):
         self.assertFalse(any(uri.startswith(self.OUTPUT) for uri in self.objects))
 
     def test_failed_upload_cannot_publish_success_manifest(self):
-        with (patch.object(MemoryBlob, "upload_from_string", side_effect=OSError("Upload failed")),
-              self.assertRaises(OSError)):
+        with (
+            patch.object(MemoryBlob, "upload_from_string", side_effect=OSError("Upload failed")),
+            self.assertRaises(OSError),
+        ):
             self.run_task()
         self.assertNotIn(self.OUTPUT + "/" + retrieval.MANIFEST, self.objects)
 
@@ -183,30 +223,45 @@ class RetrievalTaskTests(unittest.TestCase):
                         rows[-1] = rows[0]
                     else:
                         rows[0]["ranked_trial_ids"] = ["NCT-foreign"]
-                    results[retrieval.FILES[0]] = "".join(json.dumps(r) + "\n" for r in rows).encode()
+                    results[retrieval.FILES[0]] = "".join(
+                        json.dumps(r) + "\n" for r in rows
+                    ).encode()
                 with self.assertRaises(RuntimeError):
                     retrieval.verify_results(results, expected)
 
     def test_real_jenny_entry_accepts_current_manifest_without_frozen_snapshot(self):
         from evaluation.ms3 import run_retrieval as entry
 
-        store = SimpleNamespace(hashes=self.hashes, manifest=lambda: {"trial_ids": fixtures.contract()["trial_ids"]},
-                                patient=lambda patient_id: {})
-        settings = SimpleNamespace(embedding_model="test-model", embedding_revision="f" * 40, dimension=768)
+        store = SimpleNamespace(
+            hashes=self.hashes,
+            manifest=lambda: {"trial_ids": fixtures.contract()["trial_ids"]},
+            patient=lambda patient_id: {},
+        )
+        settings = SimpleNamespace(
+            embedding_model="test-model", embedding_revision="f" * 40, dimension=768
+        )
         index = SimpleNamespace(name="test-new-checkpoint-collection", provider=object())
-        lexical = SimpleNamespace(rank=lambda query: [(key, 1) for key in fixtures.contract()["trial_ids"]])
+        lexical = SimpleNamespace(
+            rank=lambda query: [(key, 1) for key in fixtures.contract()["trial_ids"]]
+        )
 
         def real_entry(argv, **kwargs):
-            with patch("sys.argv", ["retrieval", *argv[3:]]), patch.dict("os.environ", {"SOURCE_COMMIT": "f" * 40}):
+            with (
+                patch("sys.argv", ["retrieval", *argv[3:]]),
+                patch.dict("os.environ", {"SOURCE_COMMIT": "f" * 40}),
+            ):
                 entry.main()
 
         self.runner.side_effect = real_entry
-        with (patch.object(entry, "ROOT", self.root), patch.object(entry, "DataStore", return_value=store),
-              patch.object(entry, "Retriever", return_value=SimpleNamespace(lexical=lexical)),
-              patch.object(entry, "patient_query", return_value="synthetic patient query"),
-              patch.object(entry, "build_finetuned_index", return_value=(settings, index)) as tuned,
-              patch.object(entry, "dense_trials", return_value=fixtures.contract()["trial_ids"]),
-              patch.object(entry, "build_index") as frozen):
+        with (
+            patch.object(entry, "ROOT", self.root),
+            patch.object(entry, "DataStore", return_value=store),
+            patch.object(entry, "Retriever", return_value=SimpleNamespace(lexical=lexical)),
+            patch.object(entry, "patient_query", return_value="synthetic patient query"),
+            patch.object(entry, "build_finetuned_index", return_value=(settings, index)) as tuned,
+            patch.object(entry, "dense_trials", return_value=fixtures.contract()["trial_ids"]),
+            patch.object(entry, "build_index") as frozen,
+        ):
             record = self.run_task()
         frozen.assert_not_called()
         self.assertEqual(tuned.call_args.args[3], self.training["artifact_sha256"])

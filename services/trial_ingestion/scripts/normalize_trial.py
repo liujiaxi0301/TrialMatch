@@ -38,16 +38,18 @@ def normalize_trial(trial: dict):
     for location in raw_locations:
         geo = location.get("geoPoint", {})
 
-        locations.append({
-            "facility": location.get("facility"),
-            "status": location.get("status"),
-            "city": location.get("city"),
-            "state": location.get("state"),
-            "zip": location.get("zip"),
-            "country": location.get("country"),
-            "latitude": geo.get("lat"),
-            "longitude": geo.get("lon"),
-        })
+        locations.append(
+            {
+                "facility": location.get("facility"),
+                "status": location.get("status"),
+                "city": location.get("city"),
+                "state": location.get("state"),
+                "zip": location.get("zip"),
+                "country": location.get("country"),
+                "latitude": geo.get("lat"),
+                "longitude": geo.get("lon"),
+            }
+        )
 
     return {
         "trial_id": identification["nctId"],
@@ -56,11 +58,7 @@ def normalize_trial(trial: dict):
         "overall_status": status.get("overallStatus"),
         "conditions": conditions_module.get("conditions", []),
         "keywords": conditions_module.get("keywords", []),
-        "mesh_terms": [
-            mesh.get("term")
-            for mesh in meshes
-            if mesh.get("term")
-        ],
+        "mesh_terms": [mesh.get("term") for mesh in meshes if mesh.get("term")],
         "study_type": design.get("studyType"),
         "phases": design.get("phases", []),
         "brief_summary": description.get("briefSummary"),
@@ -74,9 +72,7 @@ def normalize_trial(trial: dict):
         "enrollment_type": enrollment.get("type"),
         "start_date": status.get("startDateStruct", {}).get("date"),
         "completion_date": status.get("completionDateStruct", {}).get("date"),
-        "last_update_date": status.get(
-            "lastUpdatePostDateStruct", {}
-        ).get("date"),
+        "last_update_date": status.get("lastUpdatePostDateStruct", {}).get("date"),
         "source": "ClinicalTrials.gov API v2",
         "snapshot_date": date.today().isoformat(),
     }

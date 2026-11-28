@@ -66,9 +66,33 @@ GENERIC = re.compile(
 
 def content_terms(text: str) -> set[str]:
     """Topic words of a metadata term, ignoring the disease anchor every trial shares."""
-    stop = {"of", "the", "and", "in", "with", "for", "to", "a", "an", "or", "type",
-            "mellitus", "diabetes", "diabetic", "study", "studies", "trial", "trials",
-            "patients", "patient", "adults", "adult", "disease", "2", "ii"}
+    stop = {
+        "of",
+        "the",
+        "and",
+        "in",
+        "with",
+        "for",
+        "to",
+        "a",
+        "an",
+        "or",
+        "type",
+        "mellitus",
+        "diabetes",
+        "diabetic",
+        "study",
+        "studies",
+        "trial",
+        "trials",
+        "patients",
+        "patient",
+        "adults",
+        "adult",
+        "disease",
+        "2",
+        "ii",
+    }
     return {t for t in tokens(text) if t not in stop and len(t) > 3}
 
 
@@ -101,15 +125,24 @@ def queries_for(trial: dict) -> list[str]:
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--trials", type=Path,
-                        default=ROOT / "services/trial_ingestion/data/processed/trials.jsonl")
-    parser.add_argument("--criteria", type=Path,
-                        default=ROOT / "services/trial_ingestion/data/processed/criteria.jsonl")
-    parser.add_argument("--manifest", type=Path,
-                        default=ROOT / "services/rag_workflow/examples/demo_manifest.json")
+    parser.add_argument(
+        "--trials", type=Path, default=ROOT / "services/trial_ingestion/data/processed/trials.jsonl"
+    )
+    parser.add_argument(
+        "--criteria",
+        type=Path,
+        default=ROOT / "services/trial_ingestion/data/processed/criteria.jsonl",
+    )
+    parser.add_argument(
+        "--manifest", type=Path, default=ROOT / "services/rag_workflow/examples/demo_manifest.json"
+    )
     parser.add_argument("--output", type=Path, default=ROOT / "artifacts/training/pairs.jsonl")
-    parser.add_argument("--max-shared", type=int, default=3,
-                        help="Drop criterion text reused by more than this many trials")
+    parser.add_argument(
+        "--max-shared",
+        type=int,
+        default=3,
+        help="Drop criterion text reused by more than this many trials",
+    )
     parser.add_argument("--positives-per-query", type=int, default=4)
     parser.add_argument("--negatives-per-positive", type=int, default=4)
     parser.add_argument("--validation-share", type=float, default=0.1)
@@ -129,7 +162,9 @@ def main():
     owners = defaultdict(set)
     for row in criteria:
         owners[normalize(row["criterion_text"])].add(row["trial_id"])
-    distinctive = [c for c in criteria if len(owners[normalize(c["criterion_text"])]) <= args.max_shared]
+    distinctive = [
+        c for c in criteria if len(owners[normalize(c["criterion_text"])]) <= args.max_shared
+    ]
 
     by_trial = defaultdict(list)
     for row in distinctive:
@@ -154,7 +189,8 @@ def main():
             # Drop any mined text that shares the topic more strongly than the positive
             # does: those are unlabelled relevant criteria, not negatives.
             mined = [
-                key for key in bm25.top(query, 160)
+                key
+                for key in bm25.top(query, 160)
                 if pool[key]["trial_id"] != trial_id
                 and normalize(pool[key]["criterion_text"]) not in own_text
                 and not topical(pool[key]["criterion_text"], topic_terms)
@@ -164,15 +200,17 @@ def main():
                 negatives = mined[start : start + args.negatives_per_positive]
                 if not negatives:
                     continue
-                rows.append({
-                    "query": query,
-                    "positive": positive["criterion_text"],
-                    "negatives": [pool[key]["criterion_text"] for key in negatives],
-                    "trial_id": trial_id,
-                    "criterion_id": positive["criterion_id"],
-                    "criterion_type": positive.get("criterion_type"),
-                    "split": split_of(trial_id, args.validation_share),
-                })
+                rows.append(
+                    {
+                        "query": query,
+                        "positive": positive["criterion_text"],
+                        "negatives": [pool[key]["criterion_text"] for key in negatives],
+                        "trial_id": trial_id,
+                        "criterion_id": positive["criterion_id"],
+                        "criterion_type": positive.get("criterion_type"),
+                        "split": split_of(trial_id, args.validation_share),
+                    }
+                )
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("w") as handle:

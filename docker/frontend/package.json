@@ -2,6 +2,12 @@
   "name": "trialmatch-browser-tests",
   "private": true,
   "version": "0.1.0",
-  "scripts": {"test": "playwright test"},
-  "devDependencies": {"@playwright/test": "1.56.1"}
+  "scripts": {
+    "test": "playwright test",
+    "format:check": "prettier --check '*.js' 'static/**/*.{js,css,html}'"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1",
+    "prettier": "3.6.2"
+  }
 }

@@ -14,7 +14,6 @@ from services.rag_workflow.data import DataStore
 
 
 class EligibilityEvaluationTests(unittest.TestCase):
-
     @classmethod
     def setUpClass(cls):
         cls.store = DataStore(Settings())
@@ -31,25 +30,18 @@ class EligibilityEvaluationTests(unittest.TestCase):
     def copied_run(self, change_rows=None, change_meta=None):
         # Temporary files stay inside repo so existing output paths work.
         # They are automatically removed after each test.
-        with tempfile.TemporaryDirectory(
-            prefix="_test_", dir=ev.RESULTS
-        ) as d:
+        with tempfile.TemporaryDirectory(prefix="_test_", dir=ev.RESULTS) as d:
             folder = Path(d)
             path = folder / "fixture_predictions.jsonl"
 
             rows = ev.read_jsonl(self.original)
-            meta = json.loads(
-                self.original_meta.read_text(encoding="utf-8")
-            )
+            meta = json.loads(self.original_meta.read_text(encoding="utf-8"))
 
             if change_rows:
                 change_rows(rows)
 
             path.write_text(
-                "".join(
-                    json.dumps(r, ensure_ascii=False) + "\n"
-                    for r in rows
-                ),
+                "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows),
                 encoding="utf-8",
             )
 
@@ -92,9 +84,7 @@ class EligibilityEvaluationTests(unittest.TestCase):
         self.assertEqual(score["n"], 5)
         self.assertEqual(score["accuracy"], 0.6)
         self.assertEqual(score["macro_f1"], 0.61111)
-        self.assertEqual(
-            score["per_class"]["MET"]["recall"], 0.5
-        )
+        self.assertEqual(score["per_class"]["MET"]["recall"], 0.5)
         self.assertEqual(
             score["confusion_gold_rows_pred_columns"]["NOT_MET"]["MET"],
             1,
@@ -136,14 +126,10 @@ class EligibilityEvaluationTests(unittest.TestCase):
             "load_gold",
             side_effect=AssertionError("Gold accessed during inference"),
         ):
-            rows = ev.predict_case(
-                self.cases[0], self.store, Settings(), None
-            )
+            rows = ev.predict_case(self.cases[0], self.store, Settings(), None)
 
         self.assertEqual(len(rows), 22)
-        self.assertEqual(
-            len({r["criterion_id"] for r in rows}), 22
-        )
+        self.assertEqual(len({r["criterion_id"] for r in rows}), 22)
 
     def test_frozen_baseline_reproduces_metrics(self):
         original_files = (
@@ -151,22 +137,16 @@ class EligibilityEvaluationTests(unittest.TestCase):
             self.original_meta,
             self.original_metrics,
         )
-        hashes_before = {
-            p: ev.sha256_file(p) for p in original_files
-        }
+        hashes_before = {p: ev.sha256_file(p) for p in original_files}
 
         with self.copied_run() as path:
             report = self.evaluate(path)
-            score = report[
-                "criterion_metrics_all_outputs_including_failures"
-            ]
+            score = report["criterion_metrics_all_outputs_including_failures"]
 
             self.assertEqual(score["n"], 115)
             self.assertEqual(score["accuracy"], 0.78261)
             self.assertEqual(score["macro_f1"], 0.54956)
-            self.assertEqual(
-                report["inference_failures"]["count"], 0
-            )
+            self.assertEqual(report["inference_failures"]["count"], 0)
             self.assertTrue(report["official_reporting_ready"])
             self.assertEqual(
                 report["class_safety"]["gold_definite_predicted_unknown"],
@@ -183,9 +163,7 @@ class EligibilityEvaluationTests(unittest.TestCase):
             with path.open("a", encoding="utf-8") as f:
                 f.write("\n")
 
-            with self.assertRaisesRegex(
-                AssertionError, "Prediction file changed"
-            ):
+            with self.assertRaisesRegex(AssertionError, "Prediction file changed"):
                 self.evaluate(path)
 
     def test_duplicate_criterion_is_rejected(self):
@@ -193,9 +171,7 @@ class EligibilityEvaluationTests(unittest.TestCase):
             rows[1] = dict(rows[0])
 
         with self.copied_run(change_rows=duplicate) as path:
-            with self.assertRaisesRegex(
-                AssertionError, "Duplicate prediction key"
-            ):
+            with self.assertRaisesRegex(AssertionError, "Duplicate prediction key"):
                 self.evaluate(path)
 
     def test_inference_error_not_valid_abstention(self):
@@ -213,9 +189,7 @@ class EligibilityEvaluationTests(unittest.TestCase):
             report = self.evaluate(path)
 
             self.assertFalse(report["official_reporting_ready"])
-            self.assertEqual(
-                report["inference_failures"]["count"], 1
-            )
+            self.assertEqual(report["inference_failures"]["count"], 1)
             self.assertEqual(
                 report["criterion_metrics_successful_outputs_only"]["n"],
                 114,

@@ -2,6 +2,7 @@
 **/.venv
 **/__pycache__
 **/.env
+**/.env.*
 **/secrets
 **/*service-account*.json
 **/*credentials*.json

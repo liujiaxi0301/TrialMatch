@@ -17,8 +17,14 @@ MANIFEST = Path(train.ROOT / "services/rag_workflow/examples/demo_manifest.json"
 
 
 def pair(trial_id, split="train", **extra):
-    return {"query": "Find trials of metformin.", "positive": "Taking metformin.",
-            "negatives": ["No pacemaker."], "trial_id": trial_id, "split": split, **extra}
+    return {
+        "query": "Find trials of metformin.",
+        "positive": "Taking metformin.",
+        "negatives": ["No pacemaker."],
+        "trial_id": trial_id,
+        "split": split,
+        **extra,
+    }
 
 
 class LeakageTests(unittest.TestCase):
@@ -29,8 +35,9 @@ class LeakageTests(unittest.TestCase):
         self.assertEqual(len(self.held_out), 50)
 
     def test_clean_pairs_pass(self):
-        train.assert_no_leakage([pair("NCT00000000"), pair("NCT00000001", "validation")],
-                                self.held_out)
+        train.assert_no_leakage(
+            [pair("NCT00000000"), pair("NCT00000001", "validation")], self.held_out
+        )
 
     def test_a_demo_trial_aborts(self):
         demo = min(self.held_out)
@@ -51,8 +58,13 @@ class LeakageTests(unittest.TestCase):
         demo = min(self.held_out)
         with tempfile.TemporaryDirectory() as directory:
             pairs = Path(directory) / "pairs.jsonl"
-            pairs.write_text("\n".join(json.dumps(p) for p in (
-                pair("NCT00000000"), pair("NCT00000001", "validation"), pair(demo))) + "\n")
+            pairs.write_text(
+                "\n".join(
+                    json.dumps(p)
+                    for p in (pair("NCT00000000"), pair("NCT00000001", "validation"), pair(demo))
+                )
+                + "\n"
+            )
             with self.assertRaises(train.LeakageError), redirect_stderr(io.StringIO()):
                 train.main(["--pairs", str(pairs), "--output", str(Path(directory) / "run")])
             self.assertFalse((Path(directory) / "run/model").exists())
@@ -75,44 +87,65 @@ class ReleasePairTests(unittest.TestCase):
             def download_to_filename(path):
                 Path(path).write_bytes(objects[uri])
 
-            return SimpleNamespace(download_as_text=lambda: objects[uri].decode(),
-                                   download_to_filename=download_to_filename)
+            return SimpleNamespace(
+                download_as_text=lambda: objects[uri].decode(),
+                download_to_filename=download_to_filename,
+            )
 
         return patch.object(train, "gcs_blob", side_effect=blob)
 
     def test_a_report_that_did_not_pass_is_rejected(self):
         objects = {"gs://run/report/validation.json": json.dumps({"status": "FAILED"}).encode()}
-        with tempfile.TemporaryDirectory() as directory, self.blobs(objects), \
-                self.assertRaisesRegex(ValueError, "PASSED"):
+        with (
+            tempfile.TemporaryDirectory() as directory,
+            self.blobs(objects),
+            self.assertRaisesRegex(ValueError, "PASSED"),
+        ):
             train.pairs_from_release("gs://run/report", Path(directory))
 
     def test_a_release_file_with_the_wrong_checksum_is_rejected(self):
-        release = {"files": {
-            f"services/x/{name}": {"uri": f"gs://run/processed/{key}", "sha256": "0" * 64}
-            for key, name in train.RELEASE_FILES.items()}}
+        release = {
+            "files": {
+                f"services/x/{name}": {"uri": f"gs://run/processed/{key}", "sha256": "0" * 64}
+                for key, name in train.RELEASE_FILES.items()
+            }
+        }
         objects = {
             "gs://run/report/validation.json": json.dumps(
-                {"status": "PASSED", "release_uri": "gs://run/processed/release.json"}).encode(),
+                {"status": "PASSED", "release_uri": "gs://run/processed/release.json"}
+            ).encode(),
             "gs://run/processed/release.json": json.dumps(release).encode(),
             **{f"gs://run/processed/{key}": b"changed" for key in train.RELEASE_FILES},
         }
-        with tempfile.TemporaryDirectory() as directory, self.blobs(objects), \
-                self.assertRaisesRegex(ValueError, "Checksum mismatch"):
+        with (
+            tempfile.TemporaryDirectory() as directory,
+            self.blobs(objects),
+            self.assertRaisesRegex(ValueError, "Checksum mismatch"),
+        ):
             train.pairs_from_release("gs://run/report", Path(directory))
 
     def test_pairs_are_built_from_the_validated_release(self):
-        files = {key: (train.ROOT / name).read_bytes() for key, name in {
-            "trials": "services/trial_ingestion/data/processed/trials.jsonl",
-            "criteria": "services/trial_ingestion/data/processed/criteria.jsonl",
-            "manifest": "services/rag_workflow/examples/demo_manifest.json"}.items()}
-        release = {"files": {
-            f"services/x/{train.RELEASE_FILES[key]}": {
-                "uri": f"gs://run/processed/{key}",
-                "sha256": hashlib.sha256(content).hexdigest()}
-            for key, content in files.items()}}
+        files = {
+            key: (train.ROOT / name).read_bytes()
+            for key, name in {
+                "trials": "services/trial_ingestion/data/processed/trials.jsonl",
+                "criteria": "services/trial_ingestion/data/processed/criteria.jsonl",
+                "manifest": "services/rag_workflow/examples/demo_manifest.json",
+            }.items()
+        }
+        release = {
+            "files": {
+                f"services/x/{train.RELEASE_FILES[key]}": {
+                    "uri": f"gs://run/processed/{key}",
+                    "sha256": hashlib.sha256(content).hexdigest(),
+                }
+                for key, content in files.items()
+            }
+        }
         objects = {
             "gs://run/report/validation.json": json.dumps(
-                {"status": "PASSED", "release_uri": "gs://run/processed/release.json"}).encode(),
+                {"status": "PASSED", "release_uri": "gs://run/processed/release.json"}
+            ).encode(),
             "gs://run/processed/release.json": json.dumps(release).encode(),
             **{f"gs://run/processed/{key}": content for key, content in files.items()},
         }
@@ -140,8 +173,10 @@ class PoolingTests(unittest.TestCase):
         class Tokenizer:
             def __call__(self, texts, **_):
                 rows = [i % 3 for i in range(len(texts))]
-                return {"input_ids": torch.tensor(rows).unsqueeze(1).repeat(1, 5),
-                        "attention_mask": mask[rows]}
+                return {
+                    "input_ids": torch.tensor(rows).unsqueeze(1).repeat(1, 5),
+                    "attention_mask": mask[rows],
+                }
 
         class Model:
             config = SimpleNamespace(hidden_size=768)
@@ -159,10 +194,15 @@ class PoolingTests(unittest.TestCase):
         from services.rag_workflow.embedding_providers import BioClinicalProvider
 
         with tempfile.TemporaryDirectory() as directory:
-            provider = BioClinicalProvider(Settings(
-                embedding_provider="bioclinical", embedding_model="test-encoder",
-                embedding_revision="a" * 40, dimension=768, artifacts=Path(directory),
-            ))
+            provider = BioClinicalProvider(
+                Settings(
+                    embedding_provider="bioclinical",
+                    embedding_model="test-encoder",
+                    embedding_revision="a" * 40,
+                    dimension=768,
+                    artifacts=Path(directory),
+                )
+            )
             provider.tokenizer, provider.model = self.tokenizer, self.model
             texts = ["aaa", "bb", "c"]  # Distinct lengths; encode() sorts by length.
             served = self.torch.tensor(provider.embed_many(texts))

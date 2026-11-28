@@ -1,4 +1,4 @@
-"""Read Part 1/2 artifacts without modifying their schemas or source facts."""
+"""Read normalized trial and patient files without modifying their source facts."""
 
 import hashlib
 import json
@@ -68,13 +68,13 @@ def patient_facts(patient: dict) -> list[dict]:
 
 def validate_patient(patient: dict) -> dict:
     if patient.get("schema_version") != "0.3":
-        raise ValueError("Expected normalized patient schema_version 0.3 from Part 2")
+        raise ValueError("Expected normalized patient schema_version 0.3")
     if not patient.get("patient_id") or not parse_date(patient.get("reference_date")):
         raise ValueError("patient_id and a valid reference_date are required")
     if not isinstance(patient.get("demographics"), dict):
-        raise TypeError("Invalid demographics: expected a Part 2 object")
+        raise TypeError("Invalid demographics: expected an object")
     if not isinstance(patient.get("medications", {}), dict):
-        raise TypeError("Invalid medications: expected the separate Part 2 evidence arrays")
+        raise TypeError("Invalid medications: expected an object containing evidence arrays")
     for key in ("conditions", "observations", "procedures"):
         if not isinstance(patient.get(key, []), list):
             raise TypeError(f"Invalid {key}: expected an array")
@@ -98,7 +98,7 @@ def validate_patient(patient: dict) -> dict:
         if code is not None and (
             not isinstance(code, dict) or not isinstance(code.get("coding", []), list)
         ):
-            raise ValueError("Invalid fact code; preserve the Part 2 CodeableConcept shape")
+            raise ValueError("Invalid fact code; preserve the FHIR CodeableConcept shape")
         if fact.get("resource_type") != "Patient":
             for date_key in (
                 "effective_date",
@@ -114,7 +114,7 @@ def validate_patient(patient: dict) -> dict:
                 when = parse_date(fact.get(date_key))
                 if when and when > reference:
                     raise ValueError(
-                        "Patient contains a future event; reprocess it with Part 2 reference-date filtering"
+                        "Patient contains a future event; reprocess it with reference-date filtering"
                     )
         subject = fact.get("subject_reference")
         if subject and subject.split("/")[-1].removeprefix("urn:uuid:") != patient["patient_id"]:

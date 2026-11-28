@@ -1,4 +1,4 @@
-# Frontend and browser E2E (Part A)
+# Frontend and browser testing
 
 ## Scope and integration
 
@@ -60,11 +60,11 @@ not automatically retried. These states are covered by the browser tests below.
 - `services/frontend/e2e/playwright.config.js`: shared browser configuration;
   `REPORT_DIR` optionally changes the artifact location.
 
-## Run and hand off to Part D
+## Run locally
 
 The existing Dockerfile copies the whole static directory, including the new
-assets. No new runtime package or container change is needed. Rebuild after
-changing static files; an already built image does not update itself.
+assets. No new runtime package or container change is needed. Local Compose mounts static files, so refreshing shows edits. Deployment images
+must be rebuilt after source changes.
 
 ```bash
 make up

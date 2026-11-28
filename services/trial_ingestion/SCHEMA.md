@@ -13,11 +13,11 @@ data/processed/
 The two files are linked by `trial_id`.
 
 
-# 1. `trials.jsonl`
+## 1. `trials.jsonl`
 
 Each line represents one normalized clinical trial selected for the current Type 2 Diabetes (T2D) TrialMatch corpus.
 
-## Fields
+### Fields
 
 | Field | Type | Nullable | Description |
 |---|---|---:|---|
@@ -45,7 +45,7 @@ Each line represents one normalized clinical trial selected for the current Type
 | `source` | string | no | Data source. Currently `ClinicalTrials.gov API v2`. |
 | `snapshot_date` | string | no | Date when the processed snapshot was generated. |
 
-## Example
+### Example
 
 ```json
 {
@@ -76,7 +76,7 @@ Each line represents one normalized clinical trial selected for the current Type
 ```
 
 
-# 2. Location Structure
+## 2. Location Structure
 
 Each item in `locations` uses the following structure:
 
@@ -107,11 +107,11 @@ Example:
 ```
 
 
-# 3. `criteria.jsonl`
+## 3. `criteria.jsonl`
 
 Each line represents one eligibility criterion or one unresolved eligibility-text segment.
 
-## Fields
+### Fields
 
 | Field | Type | Allowed Values | Description |
 |---|---|---|---|
@@ -122,7 +122,7 @@ Each line represents one eligibility criterion or one unresolved eligibility-tex
 | `parse_status` | string | `parsed`, `ambiguous` | Whether criterion structure was resolved reliably. |
 | `parse_method` | string | `deterministic`, `llm` | Method used to produce the current representation. |
 
-## Example
+### Example
 
 ```json
 {
@@ -136,7 +136,7 @@ Each line represents one eligibility criterion or one unresolved eligibility-tex
 ```
 
 
-# 4. Criterion ID Convention
+## 4. Criterion ID Convention
 
 Criterion IDs use the following format:
 
@@ -162,9 +162,9 @@ NCT06864546_unk_001
 ```
 
 
-# 5. Parsing Status
+## 5. Parsing Status
 
-## `parsed`
+### `parsed`
 
 The parser identified a usable criterion type and criterion boundary.
 
@@ -175,7 +175,7 @@ The parser identified a usable criterion type and criterion boundary.
 }
 ```
 
-## `ambiguous`
+### `ambiguous`
 
 The original text is retained because the parser could not determine the structure reliably.
 
@@ -197,9 +197,9 @@ Examples include:
 Ambiguous records should be preserved rather than dropped or guessed.
 
 
-# 6. Parsing Method
+## 6. Parsing Method
 
-## `deterministic`
+### `deterministic`
 
 The record was produced by the rule-based eligibility parser.
 
@@ -215,14 +215,14 @@ or:
 parse_status = ambiguous
 ```
 
-## `llm`
+### `llm`
 
 Reserved for records that may later be resolved using an LLM-assisted fallback parser.
 
 LLM fallback is not required for records already parsed reliably.
 
 
-# 7. Missing Value Policy
+## 7. Missing Value Policy
 
 The following conventions are used across processed files:
 
@@ -235,7 +235,7 @@ The following conventions are used across processed files:
 - Empty eligibility placeholders such as `-` or `\-` do not generate criterion records.
 
 
-# 8. Criterion Parsing Rules
+## 8. Criterion Parsing Rules
 
 The deterministic parser follows these rules:
 
@@ -255,7 +255,7 @@ The deterministic parser follows these rules:
 - If structure cannot be resolved safely, preserve the text with `parse_status = ambiguous`.
 
 
-# 9. Downstream Contract
+## 9. Downstream Contract
 
 Downstream TrialMatch components should use:
 

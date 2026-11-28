@@ -26,8 +26,16 @@ window.TrialMatchReview = (() => {
     summary.setAttribute('role', 'status');
     banner.append(
       element('h3', '', 'Review the assessments'),
-      element('p', 'small', 'Keep the original assessment and add your own decision with a reason.'),
-      element('p', 'small muted', 'Session only. Not saved to the server. Export before changing patients, models, or starting another run.'),
+      element(
+        'p',
+        'small',
+        'Keep the original assessment and add your own decision with a reason.',
+      ),
+      element(
+        'p',
+        'small muted',
+        'Session only. Not saved to the server. Export before changing patients, models, or starting another run.',
+      ),
       summary,
     );
     const exportButton = element('button', 'quiet', 'Export human review');
@@ -35,18 +43,22 @@ window.TrialMatchReview = (() => {
     exportButton.disabled = true;
     exportButton.addEventListener('click', () => {
       if (current !== session) return;
-      showJson('Human review export', {
-        schema_version: 'trialmatch-human-review-v1',
-        source_run_id: response.run_id,
-        patient_id: response.patient_id,
-        patient_reference_date: response.patient_reference_date,
-        exported_at: new Date().toISOString(),
-        persistence: 'local_export_only',
-        original_response_unchanged: true,
-        criterion_reviews: Array.from(session.reviews.values()),
-        review_history: session.history,
-      }, `human-review-${response.run_id}.json`,
-      'Local human annotations linked to the original run. No server save was performed; backend scores and trial statuses remain unchanged.');
+      showJson(
+        'Human review export',
+        {
+          schema_version: 'trialmatch-human-review-v1',
+          source_run_id: response.run_id,
+          patient_id: response.patient_id,
+          patient_reference_date: response.patient_reference_date,
+          exported_at: new Date().toISOString(),
+          persistence: 'local_export_only',
+          original_response_unchanged: true,
+          criterion_reviews: Array.from(session.reviews.values()),
+          review_history: session.history,
+        },
+        `human-review-${response.run_id}.json`,
+        'Local human annotations linked to the original run. No server save was performed; backend scores and trial statuses remain unchanged.',
+      );
     });
     banner.append(exportButton);
     container.querySelector('.result-heading').after(banner);
@@ -73,7 +85,7 @@ window.TrialMatchReview = (() => {
         const choiceLabel = element('label', 'field-label', 'Your assessment');
         const choice = element('select', 'human-decision');
         choice.setAttribute('aria-label', 'Your assessment');
-        decisions.forEach(decision => choice.add(new Option(decision, decision)));
+        decisions.forEach((decision) => choice.add(new Option(decision, decision)));
         choice.value = assessment.decision;
         choiceLabel.append(choice);
         const reasonLabel = element('label', 'field-label', 'Reason for review');
@@ -106,10 +118,13 @@ window.TrialMatchReview = (() => {
             ? `Human assessment: ${review.reviewed_decision}. Reason: ${review.reason}`
             : '';
           const total = session.reviews.size;
-          summary.textContent = total ? `${total} criterion review(s) applied locally` : 'No human edits';
+          summary.textContent = total
+            ? `${total} criterion review(s) applied locally`
+            : 'No human edits';
           exportButton.disabled = session.history.length === 0;
-          const trialTotal = Array.from(session.reviews.values())
-            .filter(item => item.trial_id === trial.trial_id).length;
+          const trialTotal = Array.from(session.reviews.values()).filter(
+            (item) => item.trial_id === trial.trial_id,
+          ).length;
           trialCount.textContent = trialTotal
             ? `${trialTotal} of ${trial.criteria_assessments.length} criteria reviewed locally`
             : 'No human edits for this trial';
@@ -143,7 +158,8 @@ window.TrialMatchReview = (() => {
         restore.addEventListener('click', () => {
           if (current !== session || !session.reviews.has(key)) return;
           session.history.push({
-            action: 'restore', trial_id: trial.trial_id,
+            action: 'restore',
+            trial_id: trial.trial_id,
             criterion_id: assessment.criterion_id,
             original_decision: assessment.decision,
             reviewed_at: new Date().toISOString(),

@@ -35,8 +35,11 @@ MODEL = "thomas-sounack/BioClinical-ModernBERT-base"
 REVISION = "c3648aa87af95837c809e6f0c5f85d08160db437"
 POOLING = "attention-mask-mean-including-special-tokens-v1"
 WORKFLOW_TYPE = "contrastive-encoder-finetune"
-RELEASE_FILES = {"trials": "processed/trials.jsonl", "criteria": "processed/criteria.jsonl",
-                 "manifest": "demo_manifest.json"}
+RELEASE_FILES = {
+    "trials": "processed/trials.jsonl",
+    "criteria": "processed/criteria.jsonl",
+    "manifest": "demo_manifest.json",
+}
 
 
 class LeakageError(ValueError):
@@ -70,9 +73,9 @@ def fetch(uri: str, directory: Path) -> Path:
 
 def upload_tree(directory: Path, uri: str) -> None:
     for path in sorted(p for p in directory.rglob("*") if p.is_file()):
-        gcs_blob(f"{uri.rstrip('/')}/{path.relative_to(directory).as_posix()}").upload_from_filename(
-            str(path)
-        )
+        gcs_blob(
+            f"{uri.rstrip('/')}/{path.relative_to(directory).as_posix()}"
+        ).upload_from_filename(str(path))
 
 
 def pairs_from_release(report_uri: str, directory: Path) -> tuple[Path, str]:
@@ -84,7 +87,9 @@ def pairs_from_release(report_uri: str, directory: Path) -> tuple[Path, str]:
     if not report_uri.endswith(".json"):
         report_uri = report_uri.rstrip("/") + "/validation.json"
     report = json.loads(gcs_blob(report_uri).download_as_text())
-    if report.get("status") != "PASSED" or not str(report.get("release_uri", "")).startswith("gs://"):
+    if report.get("status") != "PASSED" or not str(report.get("release_uri", "")).startswith(
+        "gs://"
+    ):
         raise ValueError("Training requires a PASSED validation report naming its release")
     release = json.loads(gcs_blob(report["release_uri"]).download_as_text())
     local = {}
@@ -98,10 +103,21 @@ def pairs_from_release(report_uri: str, directory: Path) -> tuple[Path, str]:
             raise ValueError(f"Checksum mismatch in the validated release: {name}")
     output = directory / "release" / "pairs.jsonl"
     subprocess.run(
-        [sys.executable, "-m", "cloud.train_pairs", "--trials", str(local["trials"]),
-         "--criteria", str(local["criteria"]), "--manifest", str(local["manifest"]),
-         "--output", str(output)],
-        cwd=ROOT, check=True,
+        [
+            sys.executable,
+            "-m",
+            "cloud.train_pairs",
+            "--trials",
+            str(local["trials"]),
+            "--criteria",
+            str(local["criteria"]),
+            "--manifest",
+            str(local["manifest"]),
+            "--output",
+            str(output),
+        ],
+        cwd=ROOT,
+        check=True,
     )
     return output, report["release_uri"]
 
@@ -126,10 +142,15 @@ def load_pair_source(path: Path, uri: str, expected_sha256=None):
     content = path.read_bytes()
     actual = hashlib.sha256(content).hexdigest()
     if expected_sha256 is not None and actual != expected_sha256:
-        raise ValueError(f"Training pairs checksum mismatch: {uri}; expected {expected_sha256}, got {actual}")
+        raise ValueError(
+            f"Training pairs checksum mismatch: {uri}; expected {expected_sha256}, got {actual}"
+        )
     rows = parse_pairs(content, path)
     source = {
-        "uri": uri, "sha256": actual, "expected_sha256": expected_sha256, "pairs": len(rows),
+        "uri": uri,
+        "sha256": actual,
+        "expected_sha256": expected_sha256,
+        "pairs": len(rows),
         "train": sum(r["split"] == "train" for r in rows),
         "validation": sum(r["split"] == "validation" for r in rows),
     }
@@ -178,7 +199,10 @@ def code_commit() -> str:
         ).stdout.strip()
         dirty = subprocess.run(
             ["git", "status", "--porcelain", "--untracked-files=no"],
-            cwd=ROOT, capture_output=True, text=True, check=True,
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=True,
         ).stdout.strip()
         return commit + ("-dirty" if dirty else "")
     except (OSError, subprocess.CalledProcessError):
@@ -287,8 +311,11 @@ def load_encoder(args, device, tokenizer, probe, want_amp):
 
     def load(variant):
         return AutoModel.from_pretrained(
-            args.model, revision=args.revision, trust_remote_code=False,
-            torch_dtype=torch.float32, **variant,
+            args.model,
+            revision=args.revision,
+            trust_remote_code=False,
+            torch_dtype=torch.float32,
+            **variant,
         )
 
     model = load(ENCODER_VARIANTS[0])
@@ -302,21 +329,24 @@ def load_encoder(args, device, tokenizer, probe, want_amp):
         if report["attempts"]:
             model = load(variant)
         model = model.to(device)
-        gap = numeric_gap(probe_embeddings(model, tokenizer, probe, device, args.max_length),
-                          reference)
+        gap = numeric_gap(
+            probe_embeddings(model, tokenizer, probe, device, args.max_length), reference
+        )
         report["attempts"].append({"variant": variant, "max_abs_gap_fp32": gap})
         print(json.dumps({"numerics": report["attempts"][-1]}), flush=True)
         if gap <= NUMERIC_TOLERANCE:
             break
         model = None  # Drop the rejected copy before loading the next variant.
     else:
-        raise RuntimeError(f"No encoder variant matches the CPU reference on {device}: "
-                           f"{json.dumps(report['attempts'])}")
+        raise RuntimeError(
+            f"No encoder variant matches the CPU reference on {device}: "
+            f"{json.dumps(report['attempts'])}"
+        )
     amp = False
     if want_amp:
         gap = numeric_gap(
-            probe_embeddings(model, tokenizer, probe, device, args.max_length, half=True),
-            reference)
+            probe_embeddings(model, tokenizer, probe, device, args.max_length, half=True), reference
+        )
         amp = gap <= 10 * NUMERIC_TOLERANCE
         report["max_abs_gap_fp16"] = gap
         print(json.dumps({"numerics": {"max_abs_gap_fp16": gap, "amp": amp}}), flush=True)
@@ -342,9 +372,10 @@ def evaluate(model, tokenizer, pairs, device, args) -> dict:
     pool = sorted({p["positive"] for p in pairs} | {n for p in pairs for n in p["negatives"]})
     position = {text: i for i, text in enumerate(pool)}
     queries = sorted(relevant)
-    scores = encode(model, tokenizer, queries, device, args.max_length) @ encode(
-        model, tokenizer, pool, device, args.max_length
-    ).T
+    scores = (
+        encode(model, tokenizer, queries, device, args.max_length)
+        @ encode(model, tokenizer, pool, device, args.max_length).T
+    )
     top = scores.topk(min(10, len(pool)), dim=1).indices.tolist()
     recall = mrr = 0.0
     for query, ranked in zip(queries, top, strict=True):
@@ -377,11 +408,18 @@ def start_tracking(args, config: dict, directory: Path):
             os.environ["WANDB_API_KEY"] = payload.payload.data.decode().strip()
         except Exception as exc:  # noqa: BLE001 - tracking must never stop training
             print(f"Could not read the W&B secret ({type(exc).__name__}); tracking offline")
-    mode = os.environ.get("WANDB_MODE") or ("online" if os.environ.get("WANDB_API_KEY") else "offline")
+    mode = os.environ.get("WANDB_MODE") or (
+        "online" if os.environ.get("WANDB_API_KEY") else "offline"
+    )
     directory.mkdir(parents=True, exist_ok=True)
-    options = {"project": args.wandb_project, "entity": args.wandb_entity or None,
-                   "name": args.run_name or None, "config": config, "dir": str(directory),
-                   "job_type": "train"}
+    options = {
+        "project": args.wandb_project,
+        "entity": args.wandb_entity or None,
+        "name": args.run_name or None,
+        "config": config,
+        "dir": str(directory),
+        "job_type": "train",
+    }
     try:
         return wandb.init(mode=mode, **options)
     except Exception as exc:  # noqa: BLE001
@@ -393,18 +431,29 @@ def parse_args(argv=None):
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    parser.add_argument("--pairs", nargs="*", default=[],
-                        help="One or more pair files, local paths or gs:// URIs")
-    parser.add_argument("--pairs-sha256", nargs="+", default=[],
-                        help="Expected SHA256 for each --pairs path, in the same order; "
-                             "required for extra pairs with --validated-report")
-    parser.add_argument("--validated-report", default="",
-                        help="gs:// validation report of a pipeline run; pairs are built "
-                             "from the release it validated and added to --pairs")
+    parser.add_argument(
+        "--pairs", nargs="*", default=[], help="One or more pair files, local paths or gs:// URIs"
+    )
+    parser.add_argument(
+        "--pairs-sha256",
+        nargs="+",
+        default=[],
+        help="Expected SHA256 for each --pairs path, in the same order; "
+        "required for extra pairs with --validated-report",
+    )
+    parser.add_argument(
+        "--validated-report",
+        default="",
+        help="gs:// validation report of a pipeline run; pairs are built "
+        "from the release it validated and added to --pairs",
+    )
     parser.add_argument("--output", required=True, help="Local directory or gs:// prefix")
-    parser.add_argument("--manifest", type=Path,
-                        default=ROOT / "services/rag_workflow/examples/demo_manifest.json",
-                        help="Benchmark manifest whose trial_ids must never be trained on")
+    parser.add_argument(
+        "--manifest",
+        type=Path,
+        default=ROOT / "services/rag_workflow/examples/demo_manifest.json",
+        help="Benchmark manifest whose trial_ids must never be trained on",
+    )
     parser.add_argument("--model", default=MODEL)
     parser.add_argument("--revision", default=REVISION)
     parser.add_argument("--epochs", type=int, default=3)
@@ -413,25 +462,37 @@ def parse_args(argv=None):
     parser.add_argument("--weight-decay", type=float, default=0.01)
     parser.add_argument("--warmup-ratio", type=float, default=0.1)
     parser.add_argument("--temperature", type=float, default=0.05)
-    parser.add_argument("--max-length", type=int, default=256,
-                        help="Token budget per text during training; longer text is truncated")
-    parser.add_argument("--max-negatives", type=int, default=4,
-                        help="Hard negatives used per pair")
+    parser.add_argument(
+        "--max-length",
+        type=int,
+        default=256,
+        help="Token budget per text during training; longer text is truncated",
+    )
+    parser.add_argument("--max-negatives", type=int, default=4, help="Hard negatives used per pair")
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--device", default="auto", choices=["auto", "cuda", "mps", "cpu"])
-    parser.add_argument("--no-amp", action="store_true",
-                        help="Disable float16 autocast on CUDA")
-    parser.add_argument("--limit", type=int, default=0,
-                        help="Use only this many training pairs (smoke runs)")
+    parser.add_argument("--no-amp", action="store_true", help="Disable float16 autocast on CUDA")
+    parser.add_argument(
+        "--limit", type=int, default=0, help="Use only this many training pairs (smoke runs)"
+    )
     parser.add_argument("--wandb-project", default="trialmatch-ms3")
     parser.add_argument("--wandb-entity", default="")
     parser.add_argument("--run-name", default="")
-    parser.add_argument("--wandb-secret", default="",
-                        help="Secret Manager version holding the W&B API key, read at run time")
-    parser.add_argument("--source-release", default="",
-                        help="URI of the validated release.json the pairs were built from")
-    parser.add_argument("--image-uri", default=os.environ.get("TRAINER_IMAGE_URI", ""),
-                        help="Digest-pinned trainer image, recorded in the manifest")
+    parser.add_argument(
+        "--wandb-secret",
+        default="",
+        help="Secret Manager version holding the W&B API key, read at run time",
+    )
+    parser.add_argument(
+        "--source-release",
+        default="",
+        help="URI of the validated release.json the pairs were built from",
+    )
+    parser.add_argument(
+        "--image-uri",
+        default=os.environ.get("TRAINER_IMAGE_URI", ""),
+        help="Digest-pinned trainer image, recorded in the manifest",
+    )
     args = parser.parse_args(argv)
     if not args.pairs and not args.validated_report:
         parser.error("give --pairs, --validated-report, or both")
@@ -471,17 +532,30 @@ def main(argv=None):
     torch.manual_seed(args.seed)
     device = args.device
     if device == "auto":
-        device = ("cuda" if torch.cuda.is_available()
-                  else "mps" if torch.backends.mps.is_available() else "cpu")
+        device = (
+            "cuda"
+            if torch.cuda.is_available()
+            else "mps"
+            if torch.backends.mps.is_available()
+            else "cpu"
+        )
     commit = code_commit()
     config = {
         **{k: (str(v) if isinstance(v, Path) else v) for k, v in vars(args).items()},
-        "device": device, "amp": device == "cuda" and not args.no_amp, "pooling": POOLING, "normalization": "l2", "loss": "info-nce",
+        "device": device,
+        "amp": device == "cuda" and not args.no_amp,
+        "pooling": POOLING,
+        "normalization": "l2",
+        "loss": "info-nce",
         "negatives": "in-batch positives and mined hard negatives",
-        "workflow_type": WORKFLOW_TYPE, "code_commit": commit, "pair_files": sources,
-        "train_pairs": len(train), "validation_pairs": len(validation),
+        "workflow_type": WORKFLOW_TYPE,
+        "code_commit": commit,
+        "pair_files": sources,
+        "train_pairs": len(train),
+        "validation_pairs": len(validation),
         "held_out_trials": len(held_out),
-        "torch": torch.__version__, "transformers": transformers.__version__,
+        "torch": torch.__version__,
+        "transformers": transformers.__version__,
     }
     print(json.dumps(config, indent=2))
     run = start_tracking(args, config, output)
@@ -490,11 +564,15 @@ def main(argv=None):
         args.model, revision=args.revision, trust_remote_code=False
     )
     # Short and long texts in one batch, so padding and the local attention window are used.
-    probe = [train[0]["query"], train[0]["positive"],
-             " ".join(row["positive"] for row in train[:12]),
-             " ".join(row["query"] for row in train[:40])]
-    model, amp, numerics = load_encoder(args, device, tokenizer, probe,
-                                        device == "cuda" and not args.no_amp)
+    probe = [
+        train[0]["query"],
+        train[0]["positive"],
+        " ".join(row["positive"] for row in train[:12]),
+        " ".join(row["query"] for row in train[:40]),
+    ]
+    model, amp, numerics = load_encoder(
+        args, device, tokenizer, probe, device == "cuda" and not args.no_amp
+    )
     model = model.to(device)
     config.update(amp=amp, numerics=numerics)
     if run is not None:
@@ -520,7 +598,9 @@ def main(argv=None):
     warmup = max(1, int(total * args.warmup_ratio))
     scheduler = torch.optim.lr_scheduler.LambdaLR(
         optimizer,
-        lambda s: (s + 1) / warmup if s < warmup else max(0.0, (total - s) / max(1, total - warmup)),
+        lambda s: (
+            (s + 1) / warmup if s < warmup else max(0.0, (total - s) / max(1, total - warmup))
+        ),
     )
     scaler = torch.amp.GradScaler("cuda", enabled=amp)
     shuffler = random.Random(args.seed)
@@ -545,8 +625,14 @@ def main(argv=None):
             optimizer.zero_grad(set_to_none=True)
             step += 1
             if run is not None:
-                run.log({"train/loss": loss.item(), "train/lr": scheduler.get_last_lr()[0],
-                         "epoch": epoch}, step=step)
+                run.log(
+                    {
+                        "train/loss": loss.item(),
+                        "train/lr": scheduler.get_last_lr()[0],
+                        "epoch": epoch,
+                    },
+                    step=step,
+                )
             if step % 20 == 0 or step == total:
                 print(f"epoch {epoch} step {step}/{total} loss {loss.item():.4f}", flush=True)
         validate(epoch, step)
@@ -569,10 +655,14 @@ def main(argv=None):
             "url": None if offline else run.url,
             "run_id": run.id,
         }
-        run.summary.update({"checkpoint_sha256": checkpoint,
-                            "baseline/val/recall@10": baseline["val/recall@10"],
-                            "baseline/val/mrr@10": baseline["val/mrr@10"],
-                            "baseline/val/loss": baseline["val/loss"]})
+        run.summary.update(
+            {
+                "checkpoint_sha256": checkpoint,
+                "baseline/val/recall@10": baseline["val/recall@10"],
+                "baseline/val/mrr@10": baseline["val/mrr@10"],
+                "baseline/val/loss": baseline["val/loss"],
+            }
+        )
     artifact_uri = f"{args.output.rstrip('/')}/model" if remote else str(model_dir.resolve())
     manifest = {
         "schema_version": 1,
@@ -603,8 +693,15 @@ def main(argv=None):
         run.finish()
     if remote:
         upload_tree(output, args.output)
-    print(json.dumps({k: manifest[k] for k in
-                      ("artifact_uri", "artifact_sha256", "experiment", "validation")}, indent=2))
+    print(
+        json.dumps(
+            {
+                k: manifest[k]
+                for k in ("artifact_uri", "artifact_sha256", "experiment", "validation")
+            },
+            indent=2,
+        )
+    )
     print(f"Training manifest: {args.output.rstrip('/')}/training_manifest.json")
 
 
