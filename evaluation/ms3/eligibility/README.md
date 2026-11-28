@@ -248,12 +248,21 @@ They cover:
 - Metric correctness on synthetic inputs
 - Trial-level status aggregation
 - Gold-loader isolation during the tested inference path
-- Reproduction of saved baseline metrics
+- Scoring frozen prediction fixtures to reproduce the saved metric values
 - Detection of tampered prediction files
+- Rejection of mismatched or missing code fingerprints before scoring
 - Rejection of duplicate criterion predictions
 - Handling of inference failures separately from valid UNKNOWN outputs
 
 Tests do not require new Gemini calls.
+
+The scoring tests copy the frozen prediction rows and metadata into a temporary
+directory. Only that test copy is assigned the current code fingerprints, so
+scoring checks can run after application changes. The committed predictions,
+metadata and metrics remain unchanged. A separate negative test verifies that
+the real evaluator still rejects changed or missing fingerprints before reading
+gold labels or writing score outputs. This is a scoring regression, not a new
+model evaluation or reproduction of the historical inference environment.
 
 ## 7. Integration Contract
 

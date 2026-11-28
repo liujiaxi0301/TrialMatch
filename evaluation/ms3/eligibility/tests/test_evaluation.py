@@ -1,4 +1,4 @@
-"""Offline regression tests for the frozen MS3 eligibility benchmark."""
+"""Offline scoring regressions using frozen MS3 predictions as test fixtures."""
 
 import contextlib
 import io
@@ -41,6 +41,11 @@ class EligibilityEvaluationTests(unittest.TestCase):
             meta = json.loads(
                 self.original_meta.read_text(encoding="utf-8")
             )
+
+            # Exercise the current scorer with historical prediction rows as fixtures.
+            # This temporary copy is not a new model run or a reproduction of its
+            # original code provenance. Keep the committed metadata unchanged.
+            meta["code_sha256"] = ev.code_hashes()
 
             if change_rows:
                 change_rows(rows)
@@ -145,7 +150,7 @@ class EligibilityEvaluationTests(unittest.TestCase):
             len({r["criterion_id"] for r in rows}), 22
         )
 
-    def test_frozen_baseline_reproduces_metrics(self):
+    def test_frozen_prediction_fixture_reproduces_metrics(self):
         original_files = (
             self.original,
             self.original_meta,
@@ -187,6 +192,27 @@ class EligibilityEvaluationTests(unittest.TestCase):
                 AssertionError, "Prediction file changed"
             ):
                 self.evaluate(path)
+
+    def test_mismatched_or_missing_code_hash_is_rejected_before_scoring(self):
+        tracked_file = "services/rag_workflow/retrieve.py"
+
+        for mismatch in ("changed", "missing"):
+            with self.subTest(mismatch=mismatch):
+                def alter_code_hash(meta):
+                    if mismatch == "changed":
+                        meta["code_sha256"][tracked_file] = "0" * 64
+                    else:
+                        del meta["code_sha256"][tracked_file]
+
+                with self.copied_run(change_meta=alter_code_hash) as path:
+                    with patch.object(ev, "load_gold") as gold_loader:
+                        with self.assertRaisesRegex(
+                            RuntimeError, "Pipeline or protocol changed since prediction"
+                        ):
+                            self.evaluate(path)
+                        gold_loader.assert_not_called()
+                    self.assertFalse((path.parent / "fixture_metrics.json").exists())
+                    self.assertFalse((path.parent / "fixture_disagreements.csv").exists())
 
     def test_duplicate_criterion_is_rejected(self):
         def duplicate(rows):
