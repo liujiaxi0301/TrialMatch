@@ -1,0 +1,97 @@
+{
+  "recorded_at": "2026-11-23T05:24:34.533527+00:00",
+  "base_commit": "5a114b99aea24bddb3455b5bf31bc4c1dafd7766",
+  "branch": "xuyang/ms4-backend",
+  "scope": "Existing API, application and workflow tests, plus actual localhost HTTP against the offline integrated backend. No production-code changes.",
+  "environment": {
+    "runtime": "host virtual environment, not Docker",
+    "python": "3.12.14",
+    "platform": "Linux x86_64",
+    "mode": "offline",
+    "uv": "uv 0.12.23 (x86_64-unknown-linux-gnu)",
+    "packages": {
+      "fastapi": "0.143.2",
+      "starlette": "1.8.0",
+      "pydantic": "2.14.1",
+      "chromadb": "1.5.9",
+      "httpx": "0.28.1",
+      "uvicorn": "0.54.0"
+    },
+    "dependency_setup": "uv sync --frozen --no-default-groups --group api --group dev --python 3.12",
+    "lock_sha256": "900ad16ac89bd7fa60c737dbc05cb4d2462d5a99d0ad5d2106ddbdcfa72657fa"
+  },
+  "unit_and_in_process_integration": {
+    "command": "TRIALMATCH_MODE=offline ANONYMIZED_TELEMETRY=False PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest services.rag_workflow.tests.test_api_operations services.frontend.tests.test_application services.rag_workflow.tests.test_workflow -v",
+    "exit_code": 0,
+    "tests": 51,
+    "passed": 51,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "duration_seconds": 13.258,
+    "modules": {
+      "services.rag_workflow.tests.test_api_operations": 25,
+      "services.frontend.tests.test_application": 5,
+      "services.rag_workflow.tests.test_workflow": 21
+    },
+    "log": "artifacts/ms4/backend-tests.log"
+  },
+  "http": {
+    "command": ".venv/bin/python demo/ovrz/verify_ms3_api.py --base-url http://127.0.0.1:8080 --require-operations --screen --output artifacts/ms4/api-http.json",
+    "exit_code": 0,
+    "checks": 8,
+    "passed": true,
+    "report": "docs/ms4/evidence/api-http.json"
+  },
+  "data_validation": {
+    "command": ".venv/bin/python prepare_data.py",
+    "exit_code": 0,
+    "trials": 1313,
+    "criteria": 18456,
+    "source_files": {
+      "trials": {
+        "source": "services/trial_ingestion/data/processed/trials.jsonl",
+        "sha256": "1678d523a1246319d4ae5ba8d2dd5d4ab1359746ad71fb7feee67b20bb07edd6"
+      },
+      "criteria": {
+        "source": "services/trial_ingestion/data/processed/criteria.jsonl",
+        "sha256": "f7701a9979eb105219407c553703752879f6a2c55fb8736240c8e7bddc96de59"
+      },
+      "patients": {
+        "source": "services/patient_processing/data/processed/batch25_patients.jsonl",
+        "sha256": "33ac165b9be7c564207325ae951d40b9cfdc3b72f8fb2f56e3e58193894331a1"
+      }
+    }
+  },
+  "startup_attempts": [
+    {
+      "command": "make up",
+      "exit_code": 2,
+      "result": "Docker buildx configuration path under the home directory was read-only.",
+      "log": "artifacts/ms4/local-startup.log"
+    },
+    {
+      "command": "DOCKER_CONFIG=/tmp/trialmatch-ms4-docker make up",
+      "exit_code": 2,
+      "result": "Image build reached pip install uv==0.13.1 but container DNS could not resolve the package host.",
+      "log": "artifacts/ms4/local-startup-writable-cache.log"
+    }
+  ],
+  "not_verified": [
+    "Docker application startup",
+    "GitHub Actions",
+    "Live Gemini or fine-tuned encoder inference",
+    "Browser E2E",
+    "MS4 index switch/rollback",
+    "Full-suite coverage or Jessie reported 83% baseline"
+  ],
+  "artifact_sha256": {
+    "artifacts/ms4/backend-tests.log": "a74a3aeda5369c9b9854545e7abfcfffb8ff636f35c83d033c24a0341bf2638d",
+    "artifacts/ms4/api-http.json": "770e4b9ceb291d937847469890c0c531c9b06088a259ce12ab3880d258dfa2db",
+    "artifacts/ms4/api-examples.json": "aa9f1910d807f01f3b4a4da6a2f53299d97c6686257330088ee858546c68f342",
+    "artifacts/ms4/openapi.json": "551e2485a60f343ee6c0d6b4719f0562d47cae1314268f4e37a71398161ef56f",
+    "artifacts/ms4/data-validation.log": "2817afcde29c029da5a9ff32e7e02582e12e64d5ff970b2eed075ca8e8c7c019",
+    "artifacts/ms4/local-startup.log": "5a3aa190f23c6a8d48ab2dbc308e4b6d8caaa1a850c49e3919994c62cb4480a3",
+    "artifacts/ms4/local-startup-writable-cache.log": "29db25caae3f6284f668ae107807a154a442f1cc58075f178395f312dd3a3ac3"
+  }
+}

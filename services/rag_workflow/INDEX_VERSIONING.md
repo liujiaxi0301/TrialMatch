@@ -5,6 +5,13 @@ encoders. Sections 8–12 were added in MS4: the fine-tuned encoder catalog, swi
 rollback and recovery. The design and the interfaces for the other parts are in
 [`docs/ms4/EMBEDDING_INDEX.md`](../../docs/ms4/EMBEDDING_INDEX.md).
 
+The Part C integration on Part B commit `c36fe77` (including D) adopts
+per-request selection and readiness refresh without an API restart. These C
+changes are on `xuyang/ms4-backend`; verification was recorded from the worktree
+before commit. Historical evidence below retains its original scope; see
+[selection integration](../../docs/ms4/SELECTION_INTEGRATION.md) for C's separate
+verification.
+
 This is a logical snapshot workflow for Part 3. Git records the code, dependency lockfile, source data, snapshot summary and DVC pointer. DVC stores the exported documents, metadata and vectors. Chroma serves a restored collection. DVC runs in the `trial-processing` image.
 
 The current local snapshot contains **607 vectors, 256 dimensions, 50 trials** from the existing Gemini index. Export and restore do not call GCP or re-embed text. The snapshot contains public trial criteria and vectors, with no patient records, credentials or model-generated patient explanations. Patient files remain under the existing Git workflow; this change does not migrate Parts 1/2 to DVC.
@@ -208,7 +215,27 @@ The **active** encoder is runtime state, stored beside that backend's readiness 
 - **Valid record**: the named catalog entry is used.
 - **Damaged record, or an encoder not in the catalog**: `ENCODER_SELECTION_INVALID`. The record
   is never repaired, and the code never falls back silently.
-- `gemini` and an unset `retrieval_model` never read the record.
+- `gemini` and an omitted/null `retrieval_model` never read the record. Omitted/null
+  keeps the environment-derived settings; it does not mean the active fine-tuned encoder.
+
+In the C-integrated API, `/screen` resolves the encoder once and keeps those
+settings for the workflow, provenance and logs. A switch during an in-flight
+request changes subsequent requests, not that request's encoder. `/ready`
+resolves selection on every request and retains only the latest settings/probe
+for each selector. Its normal 30-second cache applies while the resolved settings
+remain unchanged; an observed change after switch/rollback creates a fresh probe
+without restarting the API. An A → B → A switch entirely between readiness
+requests can reuse A's unexpired report because the cache compares settings,
+not selection-record revisions.
+
+A damaged record returns 503 from `/ready` with
+`checks.encoder_selection.code="ENCODER_SELECTION_INVALID"` and
+`cache_ttl_seconds=0`, and discards the selector's prior probe. The next request
+resolves a repaired/removed record and creates a fresh probe. `/screen` selection
+errors use a `detail.code` envelope; provider/index errors caught later by the
+workflow use `ScreenResponse.errors` (503 ERROR without candidates, or 200 PARTIAL
+with retained results). No HTTP switching endpoint or active-encoder metadata
+field is added; use the CLI for activation and status.
 
 ## 9. Switch runbook
 
@@ -238,11 +265,19 @@ CLI arguments apply to an embedded database.
    `ALREADY_ACTIVE` with the record unchanged. Any error exits with status 1 and a JSON
    `{"error": CODE}`, and the record is unchanged.
 
-3. Restart the API so the cached readiness probe uses the new encoder:
+3. Check the activated version and live readiness. The C-integrated API resolves
+   the new selection on the next request; no restart is needed:
 
    ```bash
-   docker compose restart rag-api
+   docker compose exec -T rag-api python -m services.rag_workflow.cli \
+     --retrieval-model finetuned index-status
+   curl --fail-with-body 'http://localhost:8081/ready?retrieval_model=finetuned'
    ```
+
+   The URL uses D's default direct API port; adjust it if `API_PORT` is overridden.
+   In offline mode, readiness does not validate the live index or model access;
+   use `index-status` to inspect the selected index. Even live readiness does not
+   prove model permissions or inference availability.
 
 Building a fine-tuned index downloads the checkpoint (about 600 MB) and encodes every criterion
 fragment on CPU. It needs Google credentials with read access to the checkpoint bucket.
@@ -252,13 +287,13 @@ fragment on CPU. It needs Google credentials with read access to the checkpoint 
 ```bash
 docker compose exec -T rag-api python -m services.rag_workflow.cli \
   --retrieval-model finetuned rollback-index
-
-docker compose restart rag-api
 ```
 
 Rollback re-verifies the previous encoder's collection and swaps `active` and `previous`. It
 never creates an encoder and never re-encodes. Running it twice alternates between the two
-versions. If the previous encoder is unevaluated, add `--allow-unevaluated`.
+versions. If the previous encoder is unevaluated, add `--allow-unevaluated`. Repeat
+the status/readiness checks from section 9; the next request resolves the rollback
+without an API restart, and an in-flight screening request retains its resolved encoder.
 
 ## 11. Recovering from failures
 
@@ -270,7 +305,7 @@ write, every failure leaves the served index unchanged.
 | `switch-index` failed during encoding | Fix the cause and rerun the same command. The partial candidate collection has no readiness manifest, is never served, and is reused |
 | `EMBEDDING_CHECKPOINT_MISMATCH` | Remove `cache/checkpoints/<sha256>` and `<sha256>.complete` under the artifacts root so the checkpoint downloads again; check the catalog digest |
 | `ROLLBACK_TARGET_NOT_READY` | Restore the previous encoder's snapshot with `restore-index --input <snapshot>`, then run `rollback-index` again |
-| `ENCODER_SELECTION_INVALID` | Inspect the file printed in the message, then move it aside. The backend returns to the default encoder |
+| `ENCODER_SELECTION_INVALID` | Inspect the file printed by the CLI, then move it aside. The next fine-tuned selection returns to the default encoder; readiness discards the prior failed selection state without an API restart |
 | `ENCODER_SELECTION_WRITE_FAILED` | The old record is intact. Fix disk space or permissions, then rerun |
 
 For example, to move a damaged record aside on the Compose backend:

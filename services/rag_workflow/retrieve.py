@@ -6,6 +6,7 @@ import re
 from collections import Counter
 
 from .data import event_date, label, patient_facts
+from .providers import ProviderError
 
 STOP = {
     "the",
@@ -223,7 +224,26 @@ class Retriever:
         rankings = [lexical]
         semantic = {}
         if self.vector_index is not None:
-            vector_hits = self.vector_index.query(query)
+            expected_criteria = {
+                trial_id: {criterion["criterion_id"] for criterion in self.store.criteria[trial_id]}
+                for trial_id in self.manifest["trial_ids"]
+            }
+            try:
+                vector_hits = self.vector_index.query(query)
+                # Validate query metadata before it can enter ranking or patient-facing results.
+                for hit in vector_hits:
+                    if (
+                        hit["trial_id"] not in expected_criteria
+                        or hit["criterion_id"] not in expected_criteria[hit["trial_id"]]
+                    ):
+                        raise ValueError("Index hit does not belong to the selected trial criteria")
+            except (ProviderError, TimeoutError):
+                raise
+            except Exception as exc:
+                # Keep malformed index data/transport errors out of HTTP 404/422 paths.
+                raise ProviderError(
+                    "INDEX_UNAVAILABLE", "Retrieval index unavailable or invalid."
+                ) from exc
             rankings.append([(hit["trial_id"], 0) for hit in vector_hits])
             semantic = {hit["trial_id"]: hit for hit in vector_hits}
         scores = Counter()

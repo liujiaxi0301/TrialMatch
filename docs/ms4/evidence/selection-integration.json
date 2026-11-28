@@ -1,0 +1,213 @@
+{
+  "recorded_at_utc": "2026-11-28T03:21:20.567648+00:00",
+  "branch": "xuyang/ms4-backend",
+  "base_commit": "c36fe7784816b9c50468b186f53ca133803ff25c",
+  "source_state": "Uncommitted C changes on B c36fe77, which includes D; previous C work restored after fast-forward and retained in a local backup stash.",
+  "combined_branches": {
+    "ovrz/ms4-frontend-e2e": "b2b42869063f6a1fdad802ce01dbebee0162a062",
+    "jenny/ms4-index": "c36fe7784816b9c50468b186f53ca133803ff25c",
+    "jiaxi/ms4-validation": "ddc88164932721bbbe21c6e59e10b9fa2a3bb81f",
+    "yixiao/ms4-infra": "91f163ffbf30c7b5853b16625da19683818fd61f"
+  },
+  "composition": "Temporary B+D checkout with A/E branch deltas plus current C source and four C test/helper files. A/E were not merged into the working C branch.",
+  "runner": "Host Python 3.12.14 executing bash scripts/ms4/check_coverage.sh --container, with offline defaults, HF/transformers offline, embedded Chroma and deterministic model adapters. --container skips Docker orchestration here.",
+  "package_versions": {
+    "pytest": "8.4.2",
+    "coverage": "7.10.7",
+    "ruff": "0.17.1",
+    "fastapi": "0.143.2",
+    "pydantic": "2.14.1",
+    "chromadb": "1.5.9",
+    "httpx": "0.28.1"
+  },
+  "exit_code": 0,
+  "backend": {
+    "tests": 144,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 4,
+    "passed": 140,
+    "skip_details": [
+      {
+        "class": "services.rag_workflow.tests.test_embedding_providers.PoolingTests",
+        "name": "test_checkpoint_is_verified_against_its_digest_before_loading",
+        "reason": "Install the optional embeddings group"
+      },
+      {
+        "class": "services.rag_workflow.tests.test_embedding_providers.PoolingTests",
+        "name": "test_finetuned_checkpoint_needs_a_digest_and_gets_its_own_identity",
+        "reason": "Install the optional embeddings group"
+      },
+      {
+        "class": "services.rag_workflow.tests.test_embedding_providers.PoolingTests",
+        "name": "test_masked_pooling_ignores_padding_and_query_document_share_encoding",
+        "reason": "Install the optional embeddings group"
+      },
+      {
+        "class": "services.rag_workflow.tests.test_embedding_providers.PoolingTests",
+        "name": "test_nonfinite_cached_vector_is_rejected_without_loading_model",
+        "reason": "Install the optional embeddings group"
+      }
+    ]
+  },
+  "frontend_python": {
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 6,
+    "skip_details": []
+  },
+  "new_lifecycle_tests": {
+    "total": 12,
+    "passed": 12,
+    "includes_non_utf8_subcase": true
+  },
+  "coverage": {
+    "display_percent": 85,
+    "lines_covered": 1841,
+    "lines_valid": 2161,
+    "line_rate": 0.8519,
+    "threshold_percent": 50,
+    "scope": [
+      "services/rag_workflow",
+      "services/frontend"
+    ],
+    "omit": "*/tests/*"
+  },
+  "initial_regression": {
+    "test_methods": 11,
+    "failure_records": 8,
+    "note": "Original pre-fix lifecycle tests; final suite adds a rollback fresh-probe case and non-UTF8 subcase."
+  },
+  "encoding_regression": {
+    "test_methods": 1,
+    "failure_records": 1,
+    "symptom": "non-UTF8 selection returned ready500 before UnicodeError boundary fix"
+  },
+  "http": {
+    "passed": true,
+    "checks": 8,
+    "runner": "Separate offline Uvicorn process on localhost using the current C working branch."
+  },
+  "docker": {
+    "command": "DOCKER_CONFIG=/tmp/trialmatch-ms4-docker make coverage",
+    "exit_code": 2,
+    "result": "Build failed before tests: container DNS resolution failed downloading uv==0.13.1."
+  },
+  "limits": [
+    "Four optional torch/transformers pooling tests skipped on host.",
+    "No combined Docker/CI/browser verification or real model inference.",
+    "Unchanged resolved settings retain the 30-second readiness report cache, including unobserved A-to-B-to-A transitions."
+  ],
+  "current_c_source_sha256": {
+    "services/rag_workflow/api.py": "61930d86d0329cd4a8ad90d302e286626d6442e2572730161f90499857c3a113",
+    "services/rag_workflow/workflow.py": "e41ec095a7f7c6b0cae4a0fe2b3f817e8475b491ca295f567d2d71184e53d289",
+    "services/rag_workflow/retrieve.py": "f588f91c84a4166cea72295802d114687d53698dd7396f484493752fdfdb6bf9",
+    "services/rag_workflow/encoders.py": "133824ebdc604c9192ac07d98cd97c748373787d21c2826c31588833f5cdcf53",
+    "services/rag_workflow/tests/api_fixtures.py": "2d97e07970723a7a5ebdc2ac54f15c966ea8c9d3926f5313faa3cb213a7c4f37",
+    "services/rag_workflow/tests/test_api_dependency_failures.py": "51bf0b7f1d5f2e8afa896805ff6acc3d057a7e874dc2f5c7a79044be069da037",
+    "services/rag_workflow/tests/test_api_model_selection.py": "87347eea536c01cac71ccab2a874488f270bd511f06349fbbcc9cbd18b1fc9c9",
+    "services/rag_workflow/tests/test_api_selection_lifecycle.py": "cac30f0491cbfcc03039ebf717484b9f274956df0da4d73e6cc1e6b7cf15e3d0"
+  },
+  "combined_source_sha256": {
+    "ruff.toml": "abdc6db70c59ac5b09a6c986d0205033af66f67babd3ce75b5caeb32d0296b8a",
+    "scripts/ms4/check_chroma.py": "267e7c23f2c22cf38e4dbb18d8fbe9b8a12444e0bd4c09686b92d4688c4cb170",
+    "scripts/ms4/check_coverage.sh": "6f954038c03c470ed81a73c429bf4e7c31a0be6f37724b762f4dda81626cebca",
+    "services/frontend/__init__.py": "b806c87803ec4ab03aa1186a760bb33680bc370cf6f3c7182eb7e78ca7254d02",
+    "services/frontend/app.py": "5c5d8078a0d8732e6cab4af9bb9ce6460cec6d48796022a183d9553fe73d7338",
+    "services/frontend/prepare.py": "78ccfd3b1f5dcce45c01755b5e824c703086293a8611dacd6d37bc1308c0036b",
+    "services/frontend/tests/test_application.py": "066f57f4706d755b2ca51b14431abfe57dfa1574b9be4b935813fb3043799e73",
+    "services/frontend/vector_demo.py": "9d667868be9d13b478ee2b09684c69e5cc9cc204c56093793732d4714ffabaf8",
+    "services/rag_workflow/__init__.py": "5d2fa8543deda5f68f21e6ebf022dbbbeaf2a654ea95e400714d8e62665e5b42",
+    "services/rag_workflow/api.py": "61930d86d0329cd4a8ad90d302e286626d6442e2572730161f90499857c3a113",
+    "services/rag_workflow/cli.py": "b3520b4109764fcf9b653e01a1aaac39f860e2d89be5335e0f42948dd965b5aa",
+    "services/rag_workflow/config.py": "d34c18aff6f1e9e8662a9af128cf3b485e0781639fcfb2e60815ab157b52d44f",
+    "services/rag_workflow/data.py": "e6a4ed6c65a3d9148fd484e6b360a7d2fa9d504addf97ba6ef8ab7e65318424b",
+    "services/rag_workflow/embedding_providers.py": "8646ad5e84a20233286e1d6a0058bf1b8c56c264aca8ebe4d60bfeb40aee2983",
+    "services/rag_workflow/encoders.py": "133824ebdc604c9192ac07d98cd97c748373787d21c2826c31588833f5cdcf53",
+    "services/rag_workflow/evidence_rules.py": "23e8a9c38ee08da108384ae966b6a1f6ac6bcfe4327af8c4efb9cc70dee47c02",
+    "services/rag_workflow/index.py": "cf3d73863dfcfd35e7bccc0d8fd57a8c86392f473ad74c32d360869be5e0fdcb",
+    "services/rag_workflow/index_switching.py": "6c12cd5e23702b421b49163e557e954266c3e14e75c1542f92fc88fd5f5fb959",
+    "services/rag_workflow/index_versions.py": "10d4832d54056b3c0feb599a402f85043b247d78992f9d6d6d044197725b491b",
+    "services/rag_workflow/judge.py": "33d40398ff12ed791a84945f8d5ab75ff51dd2d76962a36150f58762490bace5",
+    "services/rag_workflow/observability.py": "cec5bf05750aa8d2a33a48d4e1fe9296d4167f80dc337a684d00afca79507a62",
+    "services/rag_workflow/providers.py": "d7d546b3fb20af23f0862bffaeb55d11e411b7539798cdb009ec2ac1d16bb4b4",
+    "services/rag_workflow/readiness.py": "c10c63f388b8c4f25385f8236804f5f4ca70511f6a34e96454ae303f3960bfa1",
+    "services/rag_workflow/retrieve.py": "f588f91c84a4166cea72295802d114687d53698dd7396f484493752fdfdb6bf9",
+    "services/rag_workflow/rules.py": "7981c0131c191d0ae2f14c473fcb5075156c9a610c7329e3e12bd9c5d05e4695",
+    "services/rag_workflow/schemas.py": "bd17db7b4545b72086fad2a6b80ce3839d82292fbf53910ce9bf845aae6257da",
+    "services/rag_workflow/tests/__init__.py": "63063d52620d80329d064badc3e5e580b3e009ae192ea6bc5b8f842271d5b8f8",
+    "services/rag_workflow/tests/api_fixtures.py": "2d97e07970723a7a5ebdc2ac54f15c966ea8c9d3926f5313faa3cb213a7c4f37",
+    "services/rag_workflow/tests/test_api_dependency_failures.py": "51bf0b7f1d5f2e8afa896805ff6acc3d057a7e874dc2f5c7a79044be069da037",
+    "services/rag_workflow/tests/test_api_model_selection.py": "87347eea536c01cac71ccab2a874488f270bd511f06349fbbcc9cbd18b1fc9c9",
+    "services/rag_workflow/tests/test_api_operations.py": "5f980034ce3c58c3abe2206b56448c1729975d9979f58a73541fad6a0dd4fe5d",
+    "services/rag_workflow/tests/test_api_selection_lifecycle.py": "cac30f0491cbfcc03039ebf717484b9f274956df0da4d73e6cc1e6b7cf15e3d0",
+    "services/rag_workflow/tests/test_embedding_providers.py": "bf75be0588b5de90aa86c5646f2e40575103442e8d0474a271016b0270daf715",
+    "services/rag_workflow/tests/test_evidence_rules.py": "86ef5a1ea1d36ad2afb2858e3e8a997189c1ba1e144bba0f799351c91713b658",
+    "services/rag_workflow/tests/test_evidence_support.py": "9be7e4c14ab821a99ac68f0b7a109c6334632be696ecac2c07b35b8f6aa0f9ac",
+    "services/rag_workflow/tests/test_grounding_case.py": "4bc87a633dbe1ee253abf0d99d6e0c96200da6affd27d283a70142cf84e9b044",
+    "services/rag_workflow/tests/test_index_switching.py": "57d41f69886231177a3a64ffbbd0c122134e8980df620984f14e7d6e0f577102",
+    "services/rag_workflow/tests/test_index_versions.py": "360ce9294d131d669bcf57c2d6d0f16eadc76362010c3531c1a6132763d79f5b",
+    "services/rag_workflow/tests/test_ms4_provenance.py": "8f0f770f659166eaa65f17d5730c1eb0ed4aab002b273ae18d4cb3f52d92c680",
+    "services/rag_workflow/tests/test_ms4_system_validation.py": "409855b70d1c0f113cff7c2f4ca34acb28e2eca96ce50ae47f80724c4163e0b7",
+    "services/rag_workflow/tests/test_workflow.py": "c8cfcac9732e9230525b1a7d532bd860c627a2a2d82ac2622dfcab2a318422fd",
+    "services/rag_workflow/verify_grounding.py": "84a242d4b9b2fd95ee45b1aaaa4a5dccc75f10ebdc3ca55d171d63487368b844",
+    "services/rag_workflow/workflow.py": "e41ec095a7f7c6b0cae4a0fe2b3f817e8475b491ca295f567d2d71184e53d289"
+  },
+  "artifact_sha256": {
+    "artifacts/ms4/selection-integration/api-http.json": "2eae667d7cf1c39548ab5fed6fa7459e930402b6b6ac3c55abcccd89abdceac1",
+    "artifacts/ms4/selection-integration/backup-stash.txt": "0dad872d106c5bba290f38ada799a42937b8ad8a4e1e26ead4045411c428d257",
+    "artifacts/ms4/selection-integration/before-integration-files.json": "fdedb8327b05e0af372ad44dbf7b5774d13bd67f0b996aa18e3266366349a3db",
+    "artifacts/ms4/selection-integration/combined/backend-tests.txt": "3fc9d6669b16a3bbfb450301129448aa0bb27c985bb75ed3a5183eaa5779cf14",
+    "artifacts/ms4/selection-integration/combined/backend-tests.xml": "088a8669ff5070f364cca4e60b9c38e5eabaffbfc53ad4b0fb765d004afd2f37",
+    "artifacts/ms4/selection-integration/combined/coverage.txt": "dbc13173522f0cc03928aa63176682147232fef28b67a5e7e0372f5e11793dc2",
+    "artifacts/ms4/selection-integration/combined/coverage.xml": "885cde5ccbc4638f221d873477fc3ed329be2d82082a5ea4b80b4c67a53bfdf6",
+    "artifacts/ms4/selection-integration/combined/coverage_html/.gitignore": "8c2eb1fa82c314dc11791274cb7aa967245d1908442d6e788bc77f6e1aa5c2b8",
+    "artifacts/ms4/selection-integration/combined/coverage_html/class_index.html": "850ff965918c826c60b824418c666bb2c06da0bd4f79852f9b9419fc19c30ae9",
+    "artifacts/ms4/selection-integration/combined/coverage_html/coverage_html_cb_6fb7b396.js": "2729fbfe97d05ac3f05b5ccbbd204ab5786c273c674f0ff3b01160c0d356549c",
+    "artifacts/ms4/selection-integration/combined/coverage_html/favicon_32_cb_58284776.png": "bc8100fa8743c11bd243eb3259f4b012758651612fd9bf93bf8b734d17f02561",
+    "artifacts/ms4/selection-integration/combined/coverage_html/function_index.html": "9d7b19bc2101cdcfb5002426ad8e9f60af84dce18968df04834bb0ff7b2b6327",
+    "artifacts/ms4/selection-integration/combined/coverage_html/index.html": "ee3e1aa477363cb8d955fc11ca5634f8479525a40b44cf49b729cde5b7e8f58f",
+    "artifacts/ms4/selection-integration/combined/coverage_html/keybd_closed_cb_ce680311.png": "7d9bf8ae66370e4349b4f423ac5279501384e4374da1fde675e099582ed33a8a",
+    "artifacts/ms4/selection-integration/combined/coverage_html/status.json": "780867b56890313571fac0a253a24f1debbf92ad73c9b7c0a0ffc7a89170e5a8",
+    "artifacts/ms4/selection-integration/combined/coverage_html/style_cb_6b508a39.css": "260670822e5f111c53343bd1cc218eea48ed9761042cb8528965e1f3c0bfba75",
+    "artifacts/ms4/selection-integration/combined/coverage_html/z_1f4d285bb5e35971___init___py.html": "44fb2dbed4f2184826c68703cab1d794ee3c08005fc922a2f787439bd03672f0",
+    "artifacts/ms4/selection-integration/combined/coverage_html/z_1f4d285bb5e35971_api_py.html": "6e3993e820b6ea213ea9a7ee02e436302fff1a0a96468deb0e94f4956de3b3d9",
+    "artifacts/ms4/selection-integration/combined/coverage_html/z_1f4d285bb5e35971_cli_py.html": "83ff15b3051851b374a693f3355e0f6b7f658da96a8897cde0fef0f2dfcb7475",
+    "artifacts/ms4/selection-integration/combined/coverage_html/z_1f4d285bb5e35971_config_py.html": "9e9f439c661135033e17c98e69aa0dbfd04d7237ece36b04a7c2beba8eede898",
+    "artifacts/ms4/selection-integration/combined/coverage_html/z_1f4d285bb5e35971_data_py.html": "dc802da8389c69a6d013ec161bc7591d96ebc3055fcf512f12683f152ab9535b",
+    "artifacts/ms4/selection-integration/combined/coverage_html/z_1f4d285bb5e35971_embedding_providers_py.html": "61c60a842e485dc937068e68e0c905162b444686bdb87ec8ce85d3b602de2df8",
+    "artifacts/ms4/selection-integration/combined/coverage_html/z_1f4d285bb5e35971_encoders_py.html": "0336ada5a4b2819eb0e23a3833988cfa025f0543fa2e98e48bc755f2c84ac44c",
+    "artifacts/ms4/selection-integration/combined/coverage_html/z_1f4d285bb5e35971_evidence_rules_py.html": "95c3777a3aea7ef7e5214a13a51127b981ff2e04b8a38d4a91531edc60e3dd52",
+    "artifacts/ms4/selection-integration/combined/coverage_html/z_1f4d285bb5e35971_index_py.html": "410e5a14e2d61bacac3f5eb319b1718a3c0cdc6f47dda4423310e44fb56c6564",
+    "artifacts/ms4/selection-integration/combined/coverage_html/z_1f4d285bb5e35971_index_switching_py.html": "201106fb06ff2e6638989ac2552e0ecaababcf489c37f8a2cda4ccf8db886965",
+    "artifacts/ms4/selection-integration/combined/coverage_html/z_1f4d285bb5e35971_index_versions_py.html": "05e13dba4460a179d4384e6d77c1409faadbfa491913b316cb5f9eb18b3d4fc9",
+    "artifacts/ms4/selection-integration/combined/coverage_html/z_1f4d285bb5e35971_judge_py.html": "42902f0d84e525c34f170e48235d30f5c1864e61ad1ffa8476cbc441cb21dbc0",
+    "artifacts/ms4/selection-integration/combined/coverage_html/z_1f4d285bb5e35971_observability_py.html": "28ec662336974cc50edbc610a63d0f3b40c142bfeebe68e9efd618b9a4763c47",
+    "artifacts/ms4/selection-integration/combined/coverage_html/z_1f4d285bb5e35971_providers_py.html": "9d5c996e1ff382689f9bdad6aef3b85b08c91c900f5a87ad75df90ab46adbc47",
+    "artifacts/ms4/selection-integration/combined/coverage_html/z_1f4d285bb5e35971_readiness_py.html": "9b1dc6a4c70b0c485df904857d9b198040a490f0af560ebfa4a9a2c1a9764cb2",
+    "artifacts/ms4/selection-integration/combined/coverage_html/z_1f4d285bb5e35971_retrieve_py.html": "c4c1831c2b126979cd9d8a540d01d843a2795014bde2171dfe7ff593813bcd9b",
+    "artifacts/ms4/selection-integration/combined/coverage_html/z_1f4d285bb5e35971_rules_py.html": "5b6250055ed07770d7bdb6cd477e891ecc9138cc444f56900c9ba7968e127d41",
+    "artifacts/ms4/selection-integration/combined/coverage_html/z_1f4d285bb5e35971_schemas_py.html": "a923d353fec9fec7604e270fc88bdd8d9f497025ff6b5eb5b0d19595eb7a1b01",
+    "artifacts/ms4/selection-integration/combined/coverage_html/z_1f4d285bb5e35971_verify_grounding_py.html": "d98af6a9a146bc097c15b1826e41425b64ad03cacc9dd1330fb89db446512647",
+    "artifacts/ms4/selection-integration/combined/coverage_html/z_1f4d285bb5e35971_workflow_py.html": "42cf5137cde3ecf932c5badef675bdb6c3b7748e8212a4d277c9933e6c06b4e1",
+    "artifacts/ms4/selection-integration/combined/coverage_html/z_539e426cd78a16e8___init___py.html": "ee15cf02636a0279601ae01a564e0968af93d0c2518df0af262fdb685d15a707",
+    "artifacts/ms4/selection-integration/combined/coverage_html/z_539e426cd78a16e8_app_py.html": "52ac942560fe57aa22d749bd3d1101b1a8ce6dcfe315ba4e59f84428ba0c3dea",
+    "artifacts/ms4/selection-integration/combined/coverage_html/z_539e426cd78a16e8_prepare_py.html": "de30781182f5e0bd8532a42c5ba558b22e2949fc82de18810b72e953ac17852a",
+    "artifacts/ms4/selection-integration/combined/coverage_html/z_539e426cd78a16e8_vector_demo_py.html": "a331dee452a1a4cea3ed9964c5f8ce905926d89065babef7ee01e2b0a1d1e6d9",
+    "artifacts/ms4/selection-integration/combined/frontend-api-tests.txt": "181ba6503ac0c914f4abe94966a4244bc56c23e446654be19fc6d3f6d6230d1d",
+    "artifacts/ms4/selection-integration/combined/frontend-api-tests.xml": "fbaa847b5c75213cb80beb4b7c80b7009656c1553bb7e64bdacd7f1c92b6c19d",
+    "artifacts/ms4/selection-integration/combined-coverage-host.log": "512d258c3dd2cbcf6e6a196a3fcd75d34edf9a546caca73de67ee6fa88e467ad",
+    "artifacts/ms4/selection-integration/combined-worktree-path.txt": "983e3e33810c0734ad34662effda7c142eeeba9a8651a01ed5993d28d4938d35",
+    "artifacts/ms4/selection-integration/docker-coverage.log": "67077e6320f8d6af8ab03b3481b7e106a3ae28df5341a696fa57f462d368c9d0",
+    "artifacts/ms4/selection-integration/encoding-before.log": "3874757919129f5de59f869699c332886134a416d2b7e1aad5d6caca782e159e",
+    "artifacts/ms4/selection-integration/http-checker.log": "14339413b41e3fe27d245c870a9388fdac142574541e67f739c3fab19f9987b4",
+    "artifacts/ms4/selection-integration/http-server.log": "ac32845397db878e66668e023c2c963efff5ecfa082dbc7008b2c35f42aa3c6d",
+    "artifacts/ms4/selection-integration/lifecycle-after.log": "4f16c3dbaf7411bea17ce4bd7d7fd65bb273f52e662078034ed889a6348af288",
+    "artifacts/ms4/selection-integration/lifecycle-before.log": "a1b430f06c3e4b2a449cdce6a014ed9f8b17f48769e90a0b734313c81f62d6c6",
+    "artifacts/ms4/selection-integration/previous-c.patch": "33965e41b26d4cea23eb27719d7a9372bf3dc1fdc20780abe4b48c0537da155c",
+    "artifacts/ms4/selection-integration/ruff-format.log": "c41f85223aa1b97c37a8ea492c445dcaa79c6dd41c35ab1d2a2d23e90f2e5471",
+    "artifacts/ms4/selection-integration/ruff-lint.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+  }
+}

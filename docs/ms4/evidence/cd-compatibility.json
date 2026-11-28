@@ -1,0 +1,211 @@
+{
+  "recorded_at_utc": "2026-11-23T22:05:59.599553+00:00",
+  "c_branch": "xuyang/ms4-backend",
+  "c_base_commit": "5a114b99aea24bddb3455b5bf31bc4c1dafd7766",
+  "d_branch": "yixiao/ms4-infra",
+  "d_commit": "91f163ffbf30c7b5853b16625da19683818fd61f",
+  "composition": "Detached D worktree plus current C production diff applied with git apply and three new C test/helper files copied; no branch merge, commit or push.",
+  "environment": "Host Python 3.12.14 with root API/dev dependencies and pytest 8.4.2 + coverage 7.10.7 added; not the Docker test image.",
+  "package_versions": {
+    "pytest": "8.4.2",
+    "coverage": "7.10.7",
+    "ruff": "0.17.1",
+    "fastapi": "0.143.2",
+    "pydantic": "2.14.1",
+    "chromadb": "1.5.9",
+    "httpx": "0.28.1"
+  },
+  "command": "bash scripts/ms4/check_coverage.sh --container",
+  "command_note": "Invokes the internal runner on the host; the --container flag skips Docker orchestration. It does not establish a Docker run.",
+  "environment_overrides": {
+    "TRIALMATCH_MODE": "offline",
+    "TRIALMATCH_SERVE_UI": "false",
+    "CHROMADB_HOST": "",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "ANONYMIZED_TELEMETRY": "False",
+    "HF_HUB_OFFLINE": "1",
+    "TRANSFORMERS_OFFLINE": "1",
+    "COVERAGE_MIN": "50",
+    "COVERAGE_FILE": "<isolated-worktree>/artifacts/ms4/.coverage"
+  },
+  "exit_code": 0,
+  "backend": {
+    "tests": 116,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 4,
+    "passed": 112,
+    "skip_details": [
+      {
+        "class": "services.rag_workflow.tests.test_embedding_providers.PoolingTests",
+        "name": "test_checkpoint_is_verified_against_its_digest_before_loading",
+        "reason": "Install the optional embeddings group"
+      },
+      {
+        "class": "services.rag_workflow.tests.test_embedding_providers.PoolingTests",
+        "name": "test_finetuned_checkpoint_needs_a_digest_and_gets_its_own_identity",
+        "reason": "Install the optional embeddings group"
+      },
+      {
+        "class": "services.rag_workflow.tests.test_embedding_providers.PoolingTests",
+        "name": "test_masked_pooling_ignores_padding_and_query_document_share_encoding",
+        "reason": "Install the optional embeddings group"
+      },
+      {
+        "class": "services.rag_workflow.tests.test_embedding_providers.PoolingTests",
+        "name": "test_nonfinite_cached_vector_is_rejected_without_loading_model",
+        "reason": "Install the optional embeddings group"
+      }
+    ]
+  },
+  "frontend_python": {
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 6,
+    "skip_details": []
+  },
+  "coverage": {
+    "lines_valid": 1946,
+    "lines_covered": 1610,
+    "line_rate": 0.8273,
+    "display_percent": 83,
+    "threshold_percent": 50,
+    "scope": [
+      "services/rag_workflow",
+      "services/frontend"
+    ],
+    "omit": "*/tests/*"
+  },
+  "new_c_integration_tests": {
+    "total": 18,
+    "passed": 18,
+    "skipped": 0
+  },
+  "static_checks": {
+    "lint": {
+      "command": "ruff check --no-cache --config ruff.toml services/rag_workflow services/frontend scripts/ms4",
+      "exit_code": 0
+    },
+    "format": {
+      "command": "ruff format --check --no-cache --config ruff.toml services/rag_workflow services/frontend scripts/ms4",
+      "exit_code": 0
+    }
+  },
+  "d_remote_ci": {
+    "run_id": 45272384781,
+    "url": "https://github.com/liujiaxi0301/TrialMatch/actions/runs/45272384781",
+    "head_sha": "91f163ffbf30c7b5853b16625da19683818fd61f",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": {
+      "application": "success",
+      "pipeline": "success",
+      "retrieval-runtime": "success"
+    },
+    "artifact": {
+      "name": "ms4-application-reports",
+      "id": 14864884330,
+      "expired": false
+    },
+    "includes_local_c_changes": false
+  },
+  "limits": [
+    "Four pooling tests skipped because optional torch/transformers are absent on host.",
+    "DVC test moved by D to cloud/tests and is outside this application coverage run.",
+    "No combined Docker startup, Nginx/browser E2E, remote Chroma or GitHub Actions run.",
+    "No real Gemini/fine-tuned model inference; C live routing uses deterministic model adapters."
+  ],
+  "c_worktree_source_sha256": {
+    "services/rag_workflow/api.py": "53f731d4b57bad758f70e615efd09e6a764417e51214c05ba2adb064ebeb5fe5",
+    "services/rag_workflow/retrieve.py": "f588f91c84a4166cea72295802d114687d53698dd7396f484493752fdfdb6bf9",
+    "services/rag_workflow/workflow.py": "9e832a422396f2bd75bbfa85bed57151dd04e497173db6b3831277ca8bb557d8",
+    "services/rag_workflow/tests/api_fixtures.py": "2d97e07970723a7a5ebdc2ac54f15c966ea8c9d3926f5313faa3cb213a7c4f37",
+    "services/rag_workflow/tests/test_api_dependency_failures.py": "51bf0b7f1d5f2e8afa896805ff6acc3d057a7e874dc2f5c7a79044be069da037",
+    "services/rag_workflow/tests/test_api_model_selection.py": "87347eea536c01cac71ccab2a874488f270bd511f06349fbbcc9cbd18b1fc9c9"
+  },
+  "combined_source_sha256": {
+    "scripts/ms4/check_chroma.py": "267e7c23f2c22cf38e4dbb18d8fbe9b8a12444e0bd4c09686b92d4688c4cb170",
+    "services/frontend/__init__.py": "b806c87803ec4ab03aa1186a760bb33680bc370cf6f3c7182eb7e78ca7254d02",
+    "services/frontend/app.py": "5c5d8078a0d8732e6cab4af9bb9ce6460cec6d48796022a183d9553fe73d7338",
+    "services/frontend/prepare.py": "78ccfd3b1f5dcce45c01755b5e824c703086293a8611dacd6d37bc1308c0036b",
+    "services/frontend/tests/test_application.py": "066f57f4706d755b2ca51b14431abfe57dfa1574b9be4b935813fb3043799e73",
+    "services/frontend/vector_demo.py": "9d667868be9d13b478ee2b09684c69e5cc9cc204c56093793732d4714ffabaf8",
+    "services/rag_workflow/__init__.py": "5d2fa8543deda5f68f21e6ebf022dbbbeaf2a654ea95e400714d8e62665e5b42",
+    "services/rag_workflow/api.py": "53f731d4b57bad758f70e615efd09e6a764417e51214c05ba2adb064ebeb5fe5",
+    "services/rag_workflow/cli.py": "eba517888b5a6e02a1b559b6978f8791f6cd72ab3c04026d06bb7edfec022c02",
+    "services/rag_workflow/config.py": "aeae34acc7b9edce683141eaeeb469808d6bba46f859a37b03ae77c052bba1d1",
+    "services/rag_workflow/data.py": "e6a4ed6c65a3d9148fd484e6b360a7d2fa9d504addf97ba6ef8ab7e65318424b",
+    "services/rag_workflow/embedding_providers.py": "8646ad5e84a20233286e1d6a0058bf1b8c56c264aca8ebe4d60bfeb40aee2983",
+    "services/rag_workflow/evidence_rules.py": "23e8a9c38ee08da108384ae966b6a1f6ac6bcfe4327af8c4efb9cc70dee47c02",
+    "services/rag_workflow/index.py": "6898d293d20530eacf25ba2e82d45a9b4a021484fede02fe2eeec5e1f6201256",
+    "services/rag_workflow/index_versions.py": "f0a67d0850005b1fecb61abaf7958302f7c3c12ec2329e1bbddbd87a45ea75b3",
+    "services/rag_workflow/judge.py": "33d40398ff12ed791a84945f8d5ab75ff51dd2d76962a36150f58762490bace5",
+    "services/rag_workflow/observability.py": "cec5bf05750aa8d2a33a48d4e1fe9296d4167f80dc337a684d00afca79507a62",
+    "services/rag_workflow/providers.py": "d7d546b3fb20af23f0862bffaeb55d11e411b7539798cdb009ec2ac1d16bb4b4",
+    "services/rag_workflow/readiness.py": "c10c63f388b8c4f25385f8236804f5f4ca70511f6a34e96454ae303f3960bfa1",
+    "services/rag_workflow/retrieve.py": "f588f91c84a4166cea72295802d114687d53698dd7396f484493752fdfdb6bf9",
+    "services/rag_workflow/rules.py": "7981c0131c191d0ae2f14c473fcb5075156c9a610c7329e3e12bd9c5d05e4695",
+    "services/rag_workflow/schemas.py": "bd17db7b4545b72086fad2a6b80ce3839d82292fbf53910ce9bf845aae6257da",
+    "services/rag_workflow/tests/__init__.py": "63063d52620d80329d064badc3e5e580b3e009ae192ea6bc5b8f842271d5b8f8",
+    "services/rag_workflow/tests/api_fixtures.py": "2d97e07970723a7a5ebdc2ac54f15c966ea8c9d3926f5313faa3cb213a7c4f37",
+    "services/rag_workflow/tests/test_api_dependency_failures.py": "51bf0b7f1d5f2e8afa896805ff6acc3d057a7e874dc2f5c7a79044be069da037",
+    "services/rag_workflow/tests/test_api_model_selection.py": "87347eea536c01cac71ccab2a874488f270bd511f06349fbbcc9cbd18b1fc9c9",
+    "services/rag_workflow/tests/test_api_operations.py": "5f980034ce3c58c3abe2206b56448c1729975d9979f58a73541fad6a0dd4fe5d",
+    "services/rag_workflow/tests/test_embedding_providers.py": "bf75be0588b5de90aa86c5646f2e40575103442e8d0474a271016b0270daf715",
+    "services/rag_workflow/tests/test_evidence_rules.py": "86ef5a1ea1d36ad2afb2858e3e8a997189c1ba1e144bba0f799351c91713b658",
+    "services/rag_workflow/tests/test_evidence_support.py": "9be7e4c14ab821a99ac68f0b7a109c6334632be696ecac2c07b35b8f6aa0f9ac",
+    "services/rag_workflow/tests/test_grounding_case.py": "4bc87a633dbe1ee253abf0d99d6e0c96200da6affd27d283a70142cf84e9b044",
+    "services/rag_workflow/tests/test_index_versions.py": "360ce9294d131d669bcf57c2d6d0f16eadc76362010c3531c1a6132763d79f5b",
+    "services/rag_workflow/tests/test_workflow.py": "c8cfcac9732e9230525b1a7d532bd860c627a2a2d82ac2622dfcab2a318422fd",
+    "services/rag_workflow/verify_grounding.py": "84a242d4b9b2fd95ee45b1aaaa4a5dccc75f10ebdc3ca55d171d63487368b844",
+    "services/rag_workflow/workflow.py": "d72f99f7e71ac366efed39f08c02249657f3470df7add45770b7bb8b0b269c6e",
+    "scripts/ms4/check_coverage.sh": "6f954038c03c470ed81a73c429bf4e7c31a0be6f37724b762f4dda81626cebca",
+    "docker-compose.test.yml": "c521951b880026ec5fd36f0b13f0f7a0f809f01e117ffceecf350998181061f4",
+    "ruff.toml": "abdc6db70c59ac5b09a6c986d0205033af66f67babd3ce75b5caeb32d0296b8a"
+  },
+  "artifact_sha256": {
+    "artifacts/ms4/cd-compatibility/backend-tests.txt": "207ba91034e785677c77131012b353c42ba51ee78994b2aa3dbfb9d655b9b3c3",
+    "artifacts/ms4/cd-compatibility/backend-tests.xml": "6f2da489be64ab31763b7c0d8765695af9046ac0a38b7a1124b946a54d971dd3",
+    "artifacts/ms4/cd-compatibility/c-on-d.patch": "1762d485ca4d57a9d308775e3602d0d7e66853b1a4b8576ed0ef686b03144609",
+    "artifacts/ms4/cd-compatibility/coverage.txt": "b5ba7e39ff4d77b5cab7ef60457669a8b1071e8da170462687d3bba48adc6307",
+    "artifacts/ms4/cd-compatibility/coverage.xml": "82e393d98a33ae1a414ac7865f5f83f65442a2265f75666b7500c4531c97bb11",
+    "artifacts/ms4/cd-compatibility/coverage_html/.gitignore": "8c2eb1fa82c314dc11791274cb7aa967245d1908442d6e788bc77f6e1aa5c2b8",
+    "artifacts/ms4/cd-compatibility/coverage_html/class_index.html": "7d0d95f6ce76afb89e91a1a27bffcaec42b8669ccf7763fe3d9e6a923f3c7c27",
+    "artifacts/ms4/cd-compatibility/coverage_html/coverage_html_cb_6fb7b396.js": "2729fbfe97d05ac3f05b5ccbbd204ab5786c273c674f0ff3b01160c0d356549c",
+    "artifacts/ms4/cd-compatibility/coverage_html/favicon_32_cb_58284776.png": "bc8100fa8743c11bd243eb3259f4b012758651612fd9bf93bf8b734d17f02561",
+    "artifacts/ms4/cd-compatibility/coverage_html/function_index.html": "b6d1b8d4eff29697b21a06ccb889afdc58e721521a6e2c45549cc07cb4258b15",
+    "artifacts/ms4/cd-compatibility/coverage_html/index.html": "b0705181611620e251667af8a101eec3297abe93dc40fb4b6739a4aab09380ff",
+    "artifacts/ms4/cd-compatibility/coverage_html/keybd_closed_cb_ce680311.png": "7d9bf8ae66370e4349b4f423ac5279501384e4374da1fde675e099582ed33a8a",
+    "artifacts/ms4/cd-compatibility/coverage_html/status.json": "1a5f238986e56b171eb6a6f844b78beabab3a5e15ea76c4480cfd0c25099681c",
+    "artifacts/ms4/cd-compatibility/coverage_html/style_cb_6b508a39.css": "260670822e5f111c53343bd1cc218eea48ed9761042cb8528965e1f3c0bfba75",
+    "artifacts/ms4/cd-compatibility/coverage_html/z_1f4d285bb5e35971___init___py.html": "53c94b8c775fa2bc03af0b96247c07a6ca3e2939311ba4c95f11e6684de84c7d",
+    "artifacts/ms4/cd-compatibility/coverage_html/z_1f4d285bb5e35971_api_py.html": "4ade6d0dbe52502cb4ff71051dec920051eb5bdb4b81937ffa5b4630673c1bed",
+    "artifacts/ms4/cd-compatibility/coverage_html/z_1f4d285bb5e35971_cli_py.html": "9bf6079f81211c71ffe120da5a64c58be63050f20045d2be1a773c1acdbf4996",
+    "artifacts/ms4/cd-compatibility/coverage_html/z_1f4d285bb5e35971_config_py.html": "c21872a5ae8d60a4ff8e4b1da6cee9cc8857359429523c887ead278b3bab78d3",
+    "artifacts/ms4/cd-compatibility/coverage_html/z_1f4d285bb5e35971_data_py.html": "5c12655ac195f103be9286e9603c6cd5aba6af02830433690cb07ad18465c21d",
+    "artifacts/ms4/cd-compatibility/coverage_html/z_1f4d285bb5e35971_embedding_providers_py.html": "26ba58801e2b76b22e3d6aac9515dc0882f02cfda21166ec37866c5384b0cb3b",
+    "artifacts/ms4/cd-compatibility/coverage_html/z_1f4d285bb5e35971_evidence_rules_py.html": "0c77efb91f5cedefc8af093749f93a660e9d0723515c0f8be65540cf540970f9",
+    "artifacts/ms4/cd-compatibility/coverage_html/z_1f4d285bb5e35971_index_py.html": "c46a03b7ce89705694f33c9b192b5cc03353ebfe97e7a492a824a3e092ceb7f1",
+    "artifacts/ms4/cd-compatibility/coverage_html/z_1f4d285bb5e35971_index_versions_py.html": "4c9dc19afaa948503b6dba1c49ec4399a319ca330d104cbf6fe1ea47cf8018e1",
+    "artifacts/ms4/cd-compatibility/coverage_html/z_1f4d285bb5e35971_judge_py.html": "43a0528a31fb5cc986c605f8259e63fd6bdb19f91e1baf707e38ba47095045ea",
+    "artifacts/ms4/cd-compatibility/coverage_html/z_1f4d285bb5e35971_observability_py.html": "8dcfeed70b7c410207609f0dee1379f571cbe261a6826879d468ec106bad5aa1",
+    "artifacts/ms4/cd-compatibility/coverage_html/z_1f4d285bb5e35971_providers_py.html": "32feb8772c095f13628feb2717c9c8208547a72c37d65f44a7f4b80a5a5b6959",
+    "artifacts/ms4/cd-compatibility/coverage_html/z_1f4d285bb5e35971_readiness_py.html": "b417f6900ea04f2e1156a91c3cd71ab9a7df91fcf132e319c5699b30d59624d7",
+    "artifacts/ms4/cd-compatibility/coverage_html/z_1f4d285bb5e35971_retrieve_py.html": "11608f3e827bf0cf69f112b0f4d8e215a5fc472812dd92e9da6c08bdca3a1258",
+    "artifacts/ms4/cd-compatibility/coverage_html/z_1f4d285bb5e35971_rules_py.html": "4ef8d8bb825295b0f8220f5cd7b01307917991cb7fa5fa8b3e17b8dd6769b73f",
+    "artifacts/ms4/cd-compatibility/coverage_html/z_1f4d285bb5e35971_schemas_py.html": "088049d88d46cbba049d46b2d6fa68efd49053231949464e10c378cbc958522b",
+    "artifacts/ms4/cd-compatibility/coverage_html/z_1f4d285bb5e35971_verify_grounding_py.html": "2903d88db207ce28c9562fa739986b848002fe87ba973f2ad8aea0451ee2d05f",
+    "artifacts/ms4/cd-compatibility/coverage_html/z_1f4d285bb5e35971_workflow_py.html": "784782f81e6bd6c322cd5f9213a9b2b0d4497a4e66e32bf3fdd8b81fad741a39",
+    "artifacts/ms4/cd-compatibility/coverage_html/z_539e426cd78a16e8___init___py.html": "0ac6da32f50790557ca9f1707a786546aa08117367567d9a0696d810cd44ea1c",
+    "artifacts/ms4/cd-compatibility/coverage_html/z_539e426cd78a16e8_app_py.html": "18bfd9a63b65aa715e8399c685ea98399c73a5b7a946fa046b55b7813558346f",
+    "artifacts/ms4/cd-compatibility/coverage_html/z_539e426cd78a16e8_prepare_py.html": "1a13b15e75c3b6e01f8bceab31b230e92c886c34bca57995e1dfb8d2e1d49a24",
+    "artifacts/ms4/cd-compatibility/coverage_html/z_539e426cd78a16e8_vector_demo_py.html": "6c75db799c634d0c7c83eae763dd34bcf4e09bd98d6ba16e27c30610df6de6ff",
+    "artifacts/ms4/cd-compatibility/format.log": "21a61ae0f7b0971d38a01e6a0b3b4e7d53ef9ca8a0e23eb8c6ab3742fbb5f1c7",
+    "artifacts/ms4/cd-compatibility/frontend-api-tests.txt": "dcb8132912161a73064fbbed7e4c5e5dec14e7f2dd125c6312004acd370fc8c2",
+    "artifacts/ms4/cd-compatibility/frontend-api-tests.xml": "9e749dab38d1ec87abf2026d9a0a8e46d6298ea459b0e8707fddd8792377fabc",
+    "artifacts/ms4/cd-compatibility/host-script.log": "67f67b5c2f0c83d7878c7bcb504d0688b752e3d6818dbe911d4118b54f1023ba",
+    "artifacts/ms4/cd-compatibility/lint.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+  }
+}

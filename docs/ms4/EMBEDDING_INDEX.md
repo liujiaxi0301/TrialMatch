@@ -20,29 +20,40 @@ retrieval quality or clinical accuracy. No encoder was retrained for MS4.
 
 ### 1.1 For Part C (Backend and API)
 
-**How the API selects an index.** Each request calls
-`Settings.for_retrieval(request.retrieval_model)` (`workflow.py:81`). The request field is
-unchanged: `retrieval_model ∈ {null, "gemini", "finetuned"}`.
+**How the API selects an index.** In the C+B integration, `/screen` resolves
+`Settings.for_retrieval(request.retrieval_model)` once and shares those settings
+with workflow execution and screening logs. The request field is unchanged:
+`retrieval_model ∈ {null, "gemini", "finetuned"}`. See the
+[API contract](API_CONTRACT.md) and the implementation in
+[`api.py`](../../services/rag_workflow/api.py) and
+[`workflow.py`](../../services/rag_workflow/workflow.py).
 
 | `retrieval_model` | Encoder | Behaviour change in MS4 |
 | --- | --- | --- |
-| `null` | Environment defaults (Gemini, or BM25 only in offline mode) | None |
+| Omitted or `null` | Environment settings (normally Gemini, or BM25 only in offline mode) | None; does not read the active fine-tuned record |
 | `"gemini"` | `gemini-embedding-001`, 256 dimensions | None |
 | `"finetuned"` | The **active** fine-tuned encoder for this Chroma backend | Reads the selection record. Without one, the result is identical, field for field, to MS3 (`train-20261110-t4-r3`) |
 
 **Switching does not change the API.** The routes, request schema and response schema are
-unchanged. `/screen` re-reads the selection on every request, so a switch applies to the next
-screening request. `/ready` caches one `ReadinessProbe` per `retrieval_model` for the life of
-the process (`api.py:48`), so **restart `rag-api` after a switch or rollback** to keep
-`/ready` consistent with `/screen` (see the proposal in §1.4).
+unchanged. `/screen` re-reads the selection for each request; a later switch does
+not change the settings already resolved for an in-flight request or its logs.
+`/ready` also resolves the selection on each request and replaces its cached probe
+when it observes changed settings. **No API restart is needed after switch or rollback**
+with Part C's integrated lifecycle handling (see §1.4).
 
 **`/ready?retrieval_model=…`** checks the data and manifest, then, in live mode only, the
 index of the selected encoder (manifest, collection, IDs, text, metadata, dimension and
 record checksum). It returns `200` when ready and `503` otherwise, with
 `checks.<stage>.code`. It never calls a model.
 
-**Error codes.** The API returns `ProviderError` codes as `503 {"detail": {"code": …}}` on
-`/screen` and as `checks.index.code` on `/ready`.
+**Error codes and bodies.** A selection-resolution failure such as
+`ENCODER_SELECTION_INVALID` reaches `/screen` as
+`503 {"detail": {"code": …, "message": "Screening dependency unavailable."}}`.
+Provider/index failures captured inside the workflow instead appear in the full
+`ScreenResponse.errors`: no candidates gives 503 `result_status="ERROR"`, while
+retained results with errors give 200 `result_status="PARTIAL"`. Do not assume
+every `ProviderError` uses a `detail` envelope. On `/ready`, selection failures
+use `checks.encoder_selection.code`; index checks use `checks.index.code`.
 
 | Code | Source | Trigger |
 | --- | --- | --- |
@@ -95,7 +106,7 @@ dependencies were added.
 | Status | `docker compose exec -T rag-api python -m services.rag_workflow.cli --retrieval-model finetuned index-status` |
 | Switch | `docker compose exec -T rag-api python -m services.rag_workflow.cli --retrieval-model finetuned switch-index --to <name> [--allow-unevaluated] [--snapshot <file>]` |
 | Roll back | `docker compose exec -T rag-api python -m services.rag_workflow.cli --retrieval-model finetuned rollback-index` |
-| After a switch or rollback | `docker compose restart rag-api` |
+| After a switch or rollback | Check `index-status` and `/ready?retrieval_model=finetuned`; the C-integrated API resolves the new selection without a restart |
 | Tests | `make coverage` (runs `test_index_switching.py` with the other backend tests; offline, no new dependencies) |
 
 **Cloud note.** `cloud/setup.sh` only lets `trialmatch-api` create objects under
@@ -140,43 +151,38 @@ The readiness manifest also records `schema_version`, `collection`, `vector_coun
 
 See §3 for the full results.
 
-### 1.4 Proposed change for Part C (not applied)
+### 1.4 Selection lifecycle adopted in Part C integration
 
-With a damaged selection record, `/screen` correctly returns
-`503 ENCODER_SELECTION_INVALID`. However, `/ready?retrieval_model=finetuned` returns
-**`500 INTERNAL_ERROR`**, because `api.py` builds the probe outside its error handling. The
-`lru_cache` also keeps the pre-switch settings. A minimal fix, for Part C to accept or adapt:
+The original Part B proposal addressed a stale readiness probe and a 500 response
+for damaged selection records. Part C integrates this behavior on the B/D base
+in `xuyang/ms4-backend`; C verification was recorded from the worktree before
+commit. The historical Part B results in §3 do not establish results for these
+later C changes.
 
-```diff
--    @lru_cache(maxsize=3)
--    def readiness(retrieval_model=None):
--        return ReadinessProbe(config.for_retrieval(retrieval_model), workflow)
-+    @lru_cache(maxsize=8)
-+    def probe_for(settings):
-+        return ReadinessProbe(settings, workflow)
-+
-+    def readiness(retrieval_model=None):
-+        # Keyed by resolved settings, so a switch/rollback is picked up without a restart.
-+        return probe_for(config.for_retrieval(retrieval_model))
+- `/ready` resolves selection on every request, retaining only the latest
+  resolved `Settings` and `ReadinessProbe` for each selector. An unchanged
+  configuration reuses the probe's 30-second report cache. An observed switch or
+  rollback to different settings creates a fresh probe rather than reusing an
+  older encoder's report.
+- A selection failure discards that selector's probe and returns 503 with
+  `check_scope="encoder_selection"`, `checks.encoder_selection.code`, and
+  `cache_ttl_seconds=0`. Repairing or removing the record is picked up by the next
+  request without restarting the API, including a return to the same encoder.
+- `/screen` uses one resolved settings snapshot for the workflow, response
+  provenance and logs. A record change during a request affects later requests;
+  it does not retarget the current request or make its logs claim a newer model.
+- Omitted/null and explicit Gemini selectors do not read the fine-tuned record.
+  This integration adds neither an HTTP switch route nor active-encoder metadata
+  fields. `index-status` continues to report the catalog name.
 
-     @app.get("/ready", tags=["Operations"])
-     def ready(retrieval_model: RetrievalModel | None = None):
--        report = readiness(retrieval_model).check()
-+        try:
-+            report = readiness(retrieval_model).check()
-+        except ProviderError as exc:
-+            report = {
-+                "ready": False,
-+                "mode": config.mode,
-+                "check_scope": "encoder_selection",
-+                "checks": {"encoder_selection": {"status": "FAIL", "code": safe_code(exc.code)}},
-+            }
-         emit("readiness_checked", ready=report["ready"], check_scope=report["check_scope"])
-         return JSONResponse(status_code=200 if report["ready"] else 503, content=report)
-```
-
-`Settings` is a frozen dataclass and therefore hashable. Exposing the active encoder name in
-`/ready` or `/metadata` is a separate Part C decision. Until then, `index-status` reports it.
+Implementation: [`api.py`](../../services/rag_workflow/api.py),
+[`workflow.py`](../../services/rag_workflow/workflow.py), and
+[`readiness.py`](../../services/rag_workflow/readiness.py). Separate C verification
+is recorded in [selection integration](SELECTION_INTEGRATION.md). Readiness still
+does not call models, and an unchanged configuration can retain its cached report
+for 30 seconds. The cache compares settings, not record revisions: an A → B → A
+switch entirely between readiness requests can reuse A's unexpired report.
+Readiness is not a lock on subsequent screening.
 
 ---
 
@@ -231,7 +237,7 @@ flowchart TD
     S5 -- fails --> F5["Stop: INDEX_SMOKE_FAILED<br/>record unchanged"]
     S5 -- ok --> S6["Atomic write of selection record<br/>temp file, fsync, os.replace<br/>active = NAME, previous = old"]
     S6 -- fails --> F6["Stop: ENCODER_SELECTION_WRITE_FAILED<br/>old record intact"]
-    S6 --> L["Live: restart rag-api"]
+    S6 --> L["Next request resolves new encoder<br/>no API restart"]
     L --> R0["rollback-index"]
     R0 --> R1{"previous recorded?"}
     R1 -- no --> F7["Stop: ENCODER_ROLLBACK_UNAVAILABLE"]
@@ -253,7 +259,7 @@ because the only step that changes what is served is the final atomic `os.replac
 | Candidate fails verification | `INDEX_*` | None | Run `restore-index` from a known snapshot into a fresh artifacts directory, or investigate |
 | Smoke query fails | `INDEX_SMOKE_FAILED` | None | Investigate the Chroma server; retry |
 | Record write fails (disk full, permissions) | `ENCODER_SELECTION_WRITE_FAILED` | None; the old record is byte-identical | Fix the disk or permissions; rerun |
-| Selection record damaged | `ENCODER_SELECTION_INVALID` | Fine-tuned requests fail with 503; Gemini and offline are unaffected | Inspect the file, then move it aside: the backend returns to the default encoder |
+| Selection record damaged | `ENCODER_SELECTION_INVALID` | Fine-tuned selection fails with 503; Gemini and omitted/null selectors do not read this record | Inspect the file, then move it aside: the next fine-tuned selection resolves the default without an API restart |
 | Previous index damaged or missing at rollback | `ROLLBACK_TARGET_NOT_READY` | None; still on the current encoder | `restore-index` the previous snapshot, then roll back again |
 | Live collection tampered after activation | `INDEX_CONTENT_MISMATCH` (and others) | Fine-tuned retrieval fails closed | `rollback-index`, or restore the snapshot into a fresh database |
 

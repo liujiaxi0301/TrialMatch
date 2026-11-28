@@ -122,7 +122,7 @@ def load_selection(settings) -> dict | None:
         text = path.read_text(encoding="utf-8")
     except FileNotFoundError:
         return None
-    except OSError as exc:
+    except (OSError, UnicodeError) as exc:
         raise _invalid(path, f"unreadable: {type(exc).__name__}") from exc
     try:
         record = json.loads(text)
@@ -134,11 +134,12 @@ def load_selection(settings) -> dict | None:
         raise _invalid(path, "unsupported schema_version")
     if record.get("retrieval_model") != "finetuned":
         raise _invalid(path, "retrieval_model is not finetuned")
-    if record.get("active") not in ENCODERS:
+    active, previous = record.get("active"), record.get("previous")
+    if not isinstance(active, str) or active not in ENCODERS:
         raise _invalid(path, "active is not in the encoder catalog")
-    if record.get("previous") is not None and record["previous"] not in ENCODERS:
+    if previous is not None and (not isinstance(previous, str) or previous not in ENCODERS):
         raise _invalid(path, "previous is not in the encoder catalog")
-    if record.get("previous") == record["active"]:
+    if previous == active:
         raise _invalid(path, "previous equals active")
     for key in ("index_version", "previous_index_version"):
         value = record.get(key)

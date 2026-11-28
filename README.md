@@ -2,6 +2,14 @@
 
 Team: **Orange Chicken**.
 
+MS4 Part C: [API Contract](docs/ms4/API_CONTRACT.md) and
+[API integration results](docs/ms4/API_INTEGRATION.md), with the
+[initial backend baseline](docs/ms4/BACKEND_VALIDATION.md) preserved separately.
+See the [C/D compatibility check](docs/ms4/D_INTEGRATION.md) for D's runtime,
+test entry points and the combined host verification.
+The latest [active-encoder API integration](docs/ms4/SELECTION_INTEGRATION.md)
+documents C's readiness and per-request selection fixes on the B/D base.
+
 TrialMatch uses synthetic patient records to find type 2 diabetes trials and review
 eligibility criteria. Responses include source evidence, screening barriers and missing
 information. This is a research demo, not a clinical eligibility decision.

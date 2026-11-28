@@ -1,0 +1,136 @@
+{
+  "recorded_at": "2026-11-23T05:42:48.973523+00:00",
+  "base_commit": "5a114b99aea24bddb3455b5bf31bc4c1dafd7766",
+  "branch": "xuyang/ms4-backend",
+  "source_state": "Uncommitted Part C worktree changes on the stated base commit; tested source hashes identify this run.",
+  "scope": "Real API/workflow/retrieval/judgment/embedded-Chroma integration with deterministic model adapters or mocked SDK calls; separate actual localhost HTTP against offline Backend.",
+  "environment": {
+    "runtime": "host virtual environment, not Docker",
+    "python": "3.12.14",
+    "mode": "offline suite default; fixture tests explicitly exercise live routing with model doubles",
+    "packages": {
+      "fastapi": "0.143.2",
+      "pydantic": "2.14.1",
+      "chromadb": "1.5.9",
+      "httpx": "0.28.1",
+      "uvicorn": "0.54.0"
+    },
+    "test_environment": {
+      "TRIALMATCH_MODE": "offline",
+      "CHROMADB_HOST": "",
+      "ANONYMIZED_TELEMETRY": "False",
+      "PYTHONDONTWRITEBYTECODE": "1"
+    }
+  },
+  "changes": [
+    "Translate unclassified index initialization/query failures into INDEX_UNAVAILABLE instead of patient/client errors.",
+    "Reject retrieved trial/criterion IDs outside the selected source subset.",
+    "Return ARTIFACT_UNAVAILABLE when workflow initialization finds missing manifest keys.",
+    "Retain existing ProviderError codes, direct timeout 504, patient 404/input 422, and partial-result semantics."
+  ],
+  "new_tests": {
+    "dependency_failure_methods": 12,
+    "model_selection_methods": 6,
+    "total": 18,
+    "all_passed_in_final_regression": true
+  },
+  "test_runs": [
+    {
+      "suite": "rag_workflow",
+      "command": "python -m unittest discover -s services/rag_workflow/tests -v",
+      "tests": 117,
+      "passed": 112,
+      "skipped": 5,
+      "failures": 0,
+      "errors": 0,
+      "exit_code": 0,
+      "duration_seconds": 20.413,
+      "skipped_cases": [
+        {
+          "test": "test_old_pointer_recovers_original_bytes_from_local_remote (test_dvc_snapshot.DvcSnapshotTests.test_old_pointer_recovers_original_bytes_from_local_remote)",
+          "reason": "Install versioning group"
+        },
+        {
+          "test": "test_checkpoint_is_verified_against_its_digest_before_loading (test_embedding_providers.PoolingTests.test_checkpoint_is_verified_against_its_digest_before_loading)",
+          "reason": "Install the optional embeddings group"
+        },
+        {
+          "test": "test_finetuned_checkpoint_needs_a_digest_and_gets_its_own_identity (test_embedding_providers.PoolingTests.test_finetuned_checkpoint_needs_a_digest_and_gets_its_own_identity)",
+          "reason": "Install the optional embeddings group"
+        },
+        {
+          "test": "test_masked_pooling_ignores_padding_and_query_document_share_encoding (test_embedding_providers.PoolingTests.test_masked_pooling_ignores_padding_and_query_document_share_encoding)",
+          "reason": "Install the optional embeddings group"
+        },
+        {
+          "test": "test_nonfinite_cached_vector_is_rejected_without_loading_model (test_embedding_providers.PoolingTests.test_nonfinite_cached_vector_is_rejected_without_loading_model)",
+          "reason": "Install the optional embeddings group"
+        }
+      ],
+      "log": "artifacts/ms4/rag-regression-tests.log"
+    },
+    {
+      "suite": "frontend_python",
+      "command": "python -m unittest discover -s services/frontend/tests -v",
+      "tests": 5,
+      "passed": 5,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "exit_code": 0,
+      "duration_seconds": 6.314,
+      "skipped_cases": [],
+      "log": "artifacts/ms4/application-regression-tests.log"
+    }
+  ],
+  "totals": {
+    "tests": 122,
+    "passed": 117,
+    "skipped": 5,
+    "failures": 0,
+    "errors": 0
+  },
+  "http": {
+    "checks": 8,
+    "passed": true,
+    "exit_code": 0,
+    "report": "docs/ms4/evidence/api-http-integration.json"
+  },
+  "lint": {
+    "tool": "ruff",
+    "version": "0.17.1",
+    "scope": [
+      "services/rag_workflow/api.py",
+      "services/rag_workflow/workflow.py",
+      "services/rag_workflow/retrieve.py",
+      "services/rag_workflow/tests/api_fixtures.py",
+      "services/rag_workflow/tests/test_api_dependency_failures.py",
+      "services/rag_workflow/tests/test_api_model_selection.py"
+    ],
+    "passed": true
+  },
+  "source_sha256": {
+    "services/rag_workflow/api.py": "53f731d4b57bad758f70e615efd09e6a764417e51214c05ba2adb064ebeb5fe5",
+    "services/rag_workflow/workflow.py": "9e832a422396f2bd75bbfa85bed57151dd04e497173db6b3831277ca8bb557d8",
+    "services/rag_workflow/retrieve.py": "f588f91c84a4166cea72295802d114687d53698dd7396f484493752fdfdb6bf9",
+    "services/rag_workflow/tests/api_fixtures.py": "2d97e07970723a7a5ebdc2ac54f15c966ea8c9d3926f5313faa3cb213a7c4f37",
+    "services/rag_workflow/tests/test_api_dependency_failures.py": "51bf0b7f1d5f2e8afa896805ff6acc3d057a7e874dc2f5c7a79044be069da037",
+    "services/rag_workflow/tests/test_api_model_selection.py": "87347eea536c01cac71ccab2a874488f270bd511f06349fbbcc9cbd18b1fc9c9",
+    "uv.lock": "900ad16ac89bd7fa60c737dbc05cb4d2462d5a99d0ad5d2106ddbdcfa72657fa"
+  },
+  "artifact_sha256": {
+    "artifacts/ms4/rag-regression-tests.log": "62d2cb94bdd440d89c04ff386ccee29fe0e80fc30950f4ba2606115f2ea43233",
+    "artifacts/ms4/application-regression-tests.log": "0a0847ec4fb5e65f9d0046d4113791b12a8d980e55ac38a37396708f291b5055",
+    "artifacts/ms4/api-http-integration.json": "b95d9325e8c3cec7d3784c32c6adfa21aaab940a035d8799eef24f7e8618adc7",
+    "artifacts/ms4/dependency-tests-before.log": "d1670bdabff5093fc604b096a23bdc70849325e4abd673c6ecedb2b9a08e4227",
+    "artifacts/ms4/index-identity-before.log": "cfe33236c31d63f7c816f211c56b97a42824e24144c69cdce353273311c94a1f"
+  },
+  "not_verified": [
+    "Docker startup or GitHub Actions",
+    "Real Gemini/model checkpoint inference or clinical accuracy",
+    "Browser E2E",
+    "Part B rebuild/switch/rollback interface",
+    "Coverage percentage; Jessie coverage script remains the team entry point",
+    "Four optional embedding tests and one DVC test skipped due to missing dependencies"
+  ]
+}

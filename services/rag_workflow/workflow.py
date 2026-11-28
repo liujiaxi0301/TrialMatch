@@ -77,8 +77,16 @@ class ScreeningWorkflow:
         self.store = DataStore(self.settings)
         self.manifest = self.store.manifest()
 
-    def screen(self, request: ScreenRequest) -> ScreenResponse:
-        settings = self.settings.for_retrieval(request.retrieval_model)
+    def screen(
+        self, request: ScreenRequest, *, resolved_settings: Settings | None = None
+    ) -> ScreenResponse:
+        # The HTTP adapter shares this immutable selection with its completion log.
+        # Direct workflow callers still resolve the current encoder for each call.
+        settings = (
+            resolved_settings
+            if resolved_settings is not None
+            else self.settings.for_retrieval(request.retrieval_model)
+        )
         if settings.mode == "offline" and request.retrieval_model is not None:
             raise ValueError("Retrieval model selection requires live mode")
         settings.validate()
@@ -113,7 +121,15 @@ class ScreeningWorkflow:
             if settings.mode == "live":
                 provider = GeminiProvider(settings)
                 embedding = create_embedding_provider(settings, gemini=provider)
-                vector_index = VectorIndex(settings, self.store, self.manifest, embedding)
+                try:
+                    vector_index = VectorIndex(settings, self.store, self.manifest, embedding)
+                except (ProviderError, TimeoutError):
+                    raise
+                except Exception as exc:
+                    # Dependency initialization failures are not patient/request errors.
+                    raise ProviderError(
+                        "INDEX_UNAVAILABLE", "Retrieval index unavailable or invalid."
+                    ) from exc
             hits = Retriever(self.store, self.manifest, vector_index).retrieve(
                 patient, request.question, request.top_k
             )

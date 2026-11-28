@@ -1,7 +1,9 @@
 """Thin local/demo HTTP adapter. Business logic stays in workflow.py."""
 
 import os
+from datetime import UTC, datetime
 from functools import lru_cache
+from threading import Lock
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -45,13 +47,41 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     def workflow():
         return ScreeningWorkflow(config)
 
-    @lru_cache(maxsize=3)
+    readiness_probes = {}
+    readiness_lock = Lock()
+
     def readiness(retrieval_model=None):
-        return ReadinessProbe(config.for_retrieval(retrieval_model), workflow)
+        # Resolve selection on every request, even while the index report is cached.
+        # Keep only the latest probe per selector so an observed rollback rechecks it.
+        with readiness_lock:
+            try:
+                resolved = config.for_retrieval(retrieval_model)
+            except ProviderError:
+                readiness_probes.pop(retrieval_model, None)
+                raise
+            probe = readiness_probes.get(retrieval_model)
+            if probe is None or probe.settings != resolved:
+                probe = ReadinessProbe(resolved, workflow)
+                readiness_probes[retrieval_model] = probe
+            return probe
 
     @app.get("/ready", tags=["Operations"])
     def ready(retrieval_model: RetrievalModel | None = None):
-        report = readiness(retrieval_model).check()
+        try:
+            report = readiness(retrieval_model).check()
+        except ProviderError as exc:
+            report = {
+                "ready": False,
+                "mode": config.mode,
+                "check_scope": "encoder_selection",
+                "checked_at": datetime.now(UTC).isoformat(),
+                "cache_ttl_seconds": 0,
+                "model_access": "NOT_REQUIRED" if config.mode == "offline" else "NOT_PROBED",
+                "note": "Current retrieval encoder selection is unavailable.",
+                "checks": {
+                    "encoder_selection": {"status": "FAIL", "code": safe_code(exc.code)},
+                },
+            }
         emit("readiness_checked", ready=report["ready"], check_scope=report["check_scope"])
         return JSONResponse(status_code=200 if report["ready"] else 503, content=report)
 
@@ -88,13 +118,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     def screen(request: ScreenRequest):
         try:
             service = workflow()
-        except (FileNotFoundError, ValueError, TypeError) as exc:
+        except (FileNotFoundError, ValueError, TypeError, KeyError) as exc:
             raise HTTPException(
                 status_code=503,
                 detail={"code": "ARTIFACT_UNAVAILABLE", "message": "Data or manifest unavailable."},
             ) from exc
         try:
-            result = service.screen(request)
+            resolved = config.for_retrieval(request.retrieval_model)
+            result = service.screen(request, resolved_settings=resolved)
         except KeyError as exc:
             raise HTTPException(status_code=404, detail="Patient not found") from exc
         except (ValueError, TypeError) as exc:
@@ -119,7 +150,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                     "message": "Screening dependency unavailable.",
                 },
             ) from exc
-        log_screening(result, config.for_retrieval(request.retrieval_model))
+        log_screening(result, resolved)
         if result.result_status == "ERROR":
             return JSONResponse(status_code=503, content=result.model_dump(mode="json"))
         return result
