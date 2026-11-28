@@ -105,7 +105,9 @@ and unrelated training/pipeline code are outside this denominator.
 
 The browser suite covers patient selection, a real screening request, returned
 trial IDs, criterion details, JSON evidence review, empty input and proxied API
-validation errors. It does not mock the API. The Chroma test uses a reserved test
+validation errors. Success and human-review cases call the real API; empty-response,
+provider-failure, timeout and cancellation cases intercept `/screen` to test UI
+behavior under controlled failures. The Chroma test uses a reserved test
 collection and removes that collection after verification, preserving other indexes.
 It also verifies index switching, failed-switch recovery and rollback through
 `scripts/ms4/check_index_switch.py`, with fake encoders and disposable test collections.
@@ -124,7 +126,10 @@ It also verifies index switching, failed-switch recovery and rollback through
 `.github/workflows/pipeline-checks.yml` runs on pushes and pull requests. The
 `application` job executes `make ci`, including the same pre-commit checks, uploads
 reports even on failure, then cleans up. The existing `pipeline` and
-`retrieval-runtime` jobs also run their suites through pytest. No GCP secrets are
+`retrieval-runtime` jobs also run their suites through pytest. `pipeline` includes
+`services/patient_processing/tests/`; `retrieval-runtime` includes
+`evaluation/retrieval/test_benchmark.py`. Their results appear as separate test steps
+in Actions. No GCP secrets are
 required and no deployment is triggered. A failed check makes the workflow red;
 requiring green checks before merging is a separate GitHub branch protection setting.
 

@@ -84,6 +84,9 @@ jobs:
       - name: Validate the committed data snapshot
         run: docker/workflow/.venv/bin/python prepare_data.py
 
+      - name: Test patient normalization and source provenance
+        run: docker/workflow/.venv/bin/python -m pytest -ra --import-mode=importlib services/patient_processing/tests
+
       - name: Run pipeline regression tests
         run: >-
           docker/workflow/.venv/bin/python -m pytest -ra --import-mode=importlib
@@ -133,3 +136,5 @@ jobs:
           docker/retrieval/.venv/bin/python -m pytest -ra --import-mode=importlib
           cloud/tests/test_finetuned_retrieval.py cloud/tests/test_retrieval_runtime.py
           cloud/tests/test_train.py::PoolingTests
+      - name: Test retrieval metrics and rank fusion
+        run: docker/retrieval/.venv/bin/python -m pytest -ra --import-mode=importlib evaluation/retrieval/test_benchmark.py

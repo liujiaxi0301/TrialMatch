@@ -2,7 +2,7 @@
 
 **Team:** Orange Chicken  
 **Milestone:** MS4  
-**Local integration verified:** November 27, 2026. Remote CI evidence below refers to an earlier commit.
+**Integration verified:** November 27, 2026. Local results and remote CI evidence are listed below.
 
 ## 1. Testing approach
 
@@ -26,6 +26,8 @@ The matrix maps acceptance conditions to automated checks in the integrated code
 | --- | --- | --- | --- |
 | Unit — screening rules | Criteria with supported evidence are assessed consistently; unsupported information remains `UNKNOWN` | `test_evidence_rules.py`, `test_evidence_support.py` | Passed |
 | Unit — retrieval and index | Embedding interfaces, snapshot identities, checksums and restoration reject incompatible or corrupted data | `test_embedding_providers.py`, `test_index_versions.py` | Passed |
+| Unit — patient processing | FHIR normalization preserves source links and handles reference dates, missing values and unresolved medications | `services/patient_processing/tests/test_process_patients.py` | 6 passed |
+| Unit — retrieval metrics | Known ranks, duplicate fragments, empty labels and rank-fusion ties produce the expected metrics | `evaluation/retrieval/test_benchmark.py` | 3 passed |
 | Integration — API | Invalid inputs, missing patients, dependency failures and readiness states produce appropriate HTTP responses | `test_api_operations.py`, `test_application.py` | Passed |
 | Integration — screening | Offline retrieval returns criterion assessments and consistent status/response fields | `test_workflow.py`, `test_grounding_case.py` | Passed |
 | System — source integrity | Duplicate trial/patient/criterion IDs and orphan criteria are rejected | `test_ms4_system_validation.py` (SV-01) | Passed |
@@ -68,9 +70,15 @@ quality. Test counts across the last two suites overlap in shared retrieval test
 they are not an additive repository-wide count.
 
 Reports are generated under ignored `artifacts/ms4/`; CI uploads them as
-`ms4-application-reports`. No remote CI or cloud deployment is claimed for this local
-integration. The earlier [successful Actions run](https://github.com/liujiaxi0301/TrialMatch/actions/runs/45912304011)
-verified `06ebddd`; rerun Actions after publishing the integrated branch.
+`ms4-application-reports`. The [successful integration run](https://github.com/liujiaxi0301/TrialMatch/actions/runs/46101327301)
+verified `d47fad1`: all three jobs passed, including application, pipeline and retrieval
+runtime. That run predates the two standalone test steps below.
+
+CI now also runs all six patient-processing tests in the `pipeline` job and all three
+retrieval-metric tests in `retrieval-runtime`. For the latest verification, open
+[this branch's Actions runs](https://github.com/liujiaxi0301/TrialMatch/actions?query=branch%3Ayixiao%2Fms4-infra)
+and select the run matching the commit being reviewed. Both new steps must pass;
+their pytest counts appear in the job logs. CI does not redeploy the cloud app.
 
 ### CI verification path
 
@@ -105,11 +113,19 @@ make down          # Stop services and preserve the Chroma volume
 
 Use `make lint` and `make format-check` for code checks, or `make ci` for the broader build, pre-commit, startup, persistence and browser sequence. Coverage reports are written to `artifacts/ms4/` (`coverage.txt`, `coverage.xml`, `coverage_html/`, JUnit results). See [Infrastructure](INFRASTRUCTURE.md) for service configuration and troubleshooting.
 
+To run the standalone patient-processing and retrieval-metric tests with their CI
+environments, install `uv` and run:
+
+```bash
+uv run --project docker/workflow --locked python -m pytest -ra --import-mode=importlib services/patient_processing/tests
+uv run --project docker/retrieval --locked python -m pytest -ra --import-mode=importlib evaluation/retrieval/test_benchmark.py
+```
+
 A manual smoke check follows the same user journey: select a synthetic patient, enter a type 2 diabetes screening question, run screening, expand criterion/evidence details, and inspect the response JSON. An empty question should display a validation message without submitting a screening request.
 
 ## 5. Scope and limitations
 
-The CI workflow covers the application Python suites, 13 browser tests, Chroma persistence/switching, pipeline/evaluation suites and retrieval runtime. The repository also contains `services/patient_processing/tests/test_process_patients.py`; that standalone suite is **not included in the current CI commands**. Browser failure cases deliberately intercept `/screen`; they verify UI behavior rather than an actual provider outage.
+The CI workflow covers the application Python suites, 13 browser tests, Chroma persistence/switching, patient processing, pipeline/evaluation suites, retrieval runtime and retrieval metrics. Browser success and human-review cases call the actual local API. Failure cases deliberately intercept `/screen`; they verify UI behavior rather than an actual provider outage.
 
 - Automated browser tests exercise the **offline** application; they do not prove Gemini/Vertex permissions, live model responses or cloud deployment availability.
 - The provenance test checks three synthetic patients and two returned trials per patient; the corruption test checks four defined mutations. Neither is exhaustive fuzzing or clinical validation.
