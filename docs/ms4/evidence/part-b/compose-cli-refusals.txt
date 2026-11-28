@@ -1,0 +1,38 @@
+# Recorded 2026-11-27 on branch jenny/ms4-index against `make up` (offline Compose, HTTP Chroma).
+# No credentials, checkpoint download or model call. Each refusal leaves the selection record absent.
+
+$ docker compose exec -T rag-api python -m services.rag_workflow.cli --retrieval-model finetuned index-status
+{"error": "INDEX_NOT_READY", "message": "Run build-index or restore-index for this data/model/subset."}
+[exit 1]
+
+$ docker compose exec -T rag-api python -m services.rag_workflow.cli --retrieval-model finetuned switch-index --to pipeline-20261112
+{"error": "ENCODER_NOT_EVALUATED", "message": "pipeline-20261112 was not scored in the retrieval benchmark; pass --allow-unevaluated to activate it for a demonstration."}
+[exit 1]
+
+$ docker compose exec -T rag-api python -m services.rag_workflow.cli --retrieval-model finetuned switch-index --to no-such-encoder
+{"error": "ENCODER_UNKNOWN", "message": "Unknown fine-tuned encoder 'no-such-encoder'; choose one of ['pipeline-20261112', 'train-20261110-t4-r3']."}
+[exit 1]
+
+$ docker compose exec -T rag-api python -m services.rag_workflow.cli --retrieval-model finetuned rollback-index
+{"error": "ENCODER_ROLLBACK_UNAVAILABLE", "message": "No previous fine-tuned encoder is recorded."}
+[exit 1]
+
+$ docker compose exec -T rag-api python -m services.rag_workflow.cli switch-index --to pipeline-20261112
+usage: cli.py [-h] [--mode {offline,live}]
+              [--retrieval-model {gemini,finetuned}]
+              {inspect-data,make-manifest,build-index,index-status,export-index,restore-index,switch-index,rollback-index,export-schema,screen}
+              ...
+cli.py: error: switch-index requires --retrieval-model finetuned
+[exit 2]
+
+$ docker compose exec -T rag-api python -m services.rag_workflow.cli --retrieval-model finetuned switch-index --help
+usage: cli.py switch-index [-h] --to TO [--snapshot SNAPSHOT]
+                           [--allow-unevaluated]
+
+options:
+  -h, --help           show this help message and exit
+  --to TO              Encoder name from encoders.py
+  --snapshot SNAPSHOT  Restore the candidate from this snapshot instead of
+                       encoding
+  --allow-unevaluated
+[exit 0]
