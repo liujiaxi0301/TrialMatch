@@ -1,0 +1,24 @@
+# Recorded 2026-11-27 on branch jenny/ms4-index against `make up` (offline Compose). Recovery from a damaged selection record.
+
+# A truncated record was written to artifacts/infra/rag_workflow/indexes/http-66ed9a0e94e2/active-finetuned.json
+$ docker compose exec -T rag-api python -m services.rag_workflow.cli --retrieval-model finetuned index-status
+{"error": "ENCODER_SELECTION_INVALID", "message": "/app/artifacts/infra/rag_workflow/indexes/http-66ed9a0e94e2/active-finetuned.json is invalid (not JSON). It is not repaired or ignored automatically; inspect it, then move it aside to return to the declared default."}
+[exit 1]
+
+$ curl -s -o /dev/null -w %{http_code}
+ http://localhost:8081/ready?retrieval_model=gemini
+200
+[exit 0]
+
+$ mv artifacts/infra/rag_workflow/indexes/http-66ed9a0e94e2/active-finetuned.json artifacts/infra/rag_workflow/indexes/http-66ed9a0e94e2/active-finetuned.json.invalid
+[exit 0]
+
+$ docker compose exec -T rag-api python -m services.rag_workflow.cli --retrieval-model finetuned index-status
+{"error": "INDEX_NOT_READY", "message": "Run build-index or restore-index for this data/model/subset."}
+[exit 1]
+
+$ docker compose restart rag-api
+ Container handoff-document-review-9b100b-rag-api-1  Restarting
+ Container handoff-document-review-9b100b-rag-api-1  Started
+[exit 0]
+

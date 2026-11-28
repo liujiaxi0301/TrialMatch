@@ -1,4 +1,4 @@
-"""Runtime settings and the fixed MS3 retrieval checkpoint; no credentials."""
+"""Runtime settings and retrieval encoder selection; no credentials."""
 
 import os
 from dataclasses import dataclass, field, replace
@@ -91,18 +91,11 @@ class Settings:
                 embedding_checkpoint_sha256="",
             )
         if model == "finetuned":
-            # November 10 checkpoint used in the completed MS3 retrieval report.
-            return replace(
-                self,
-                embedding_provider="bioclinical",
-                embedding_model="thomas-sounack/BioClinical-ModernBERT-base",
-                dimension=768,
-                embedding_revision="c3648aa87af95837c809e6f0c5f85d08160db437",
-                embedding_checkpoint="gs://trialmatch-ac215-yixiao-ms3/training/train-20261110-t4-r3/model",
-                embedding_checkpoint_sha256="7dcec7d9c8ca3697ee60091346723130ebb37263254e81a69a0aff038dbc931c",
-                embedding_max_tokens=2048,
-                embedding_device="cpu",
-            )
+            # The backend's active-encoder record, else the November 10 MS3 checkpoint.
+            # A damaged record raises ENCODER_SELECTION_INVALID; it never falls back silently.
+            from .encoders import active_encoder, apply_encoder
+
+            return apply_encoder(self, active_encoder(self))
         raise ValueError("Unknown retrieval model")
 
     def validate(self) -> None:

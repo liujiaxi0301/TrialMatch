@@ -9,7 +9,7 @@ The current local snapshot contains **607 vectors, 256 dimensions, 50 trials** f
 | Layer | Versioned information |
 |---|---|
 | Git | Code, `uv.lock`, processed source files, trial-subset manifest, DVC pointer, snapshot summary |
-| Logical index identity | Trial/criterion file SHA-256 hashes, selected trial IDs, embedding model, dimension, chunker revision |
+| Logical index identity | Trial/criterion file SHA-256 hashes, selected trial IDs, embedding model, dimension, chunker revision; for BioClinical also revision, pooling, token budget and checkpoint SHA-256 |
 | Exact snapshot artifact | Documents, metadata and stored vectors; DVC file checksum and a SHA-256 summary |
 | Runtime database | A separate `trialmatch-<identity-hash>` collection for each identity; backend-specific readiness manifest and exact record digest |
 | Database software | Chroma version recorded in the snapshot; client and server versions are pinned in their service lockfiles |
@@ -160,3 +160,130 @@ uv run --locked ruff check services/rag_workflow
 ```
 
 The DVC integration test uses a temporary Git repository and local-directory remote. It records two versions, selects the older Git pointer, removes only its disposable working file/cache, pulls the original bytes and verifies clean status. It never pushes this branch or uploads to cloud storage. The test is in `cloud/tests/test_dvc_snapshot.py` and runs in the workflow environment.
+
+## 8. Fine-tuned encoder catalog and selection record (MS4)
+
+`services/rag_workflow/encoders.py` declares the fine-tuned checkpoints that may serve retrieval.
+It is a `.py` file because the `rag-api` image copies only `services/rag_workflow/*.py`.
+
+| Name | Evaluated | Role |
+| --- | --- | --- |
+| `train-20261110-t4-r3` | Yes, MS3 retrieval benchmark | `DEFAULT_FINETUNED` |
+| `pipeline-20261112` | **No** | Demonstration target only; requires `--allow-unevaluated` |
+
+Both use base `thomas-sounack/BioClinical-ModernBERT-base@c3648aa87af95837c809e6f0c5f85d08160db437`,
+768 dimensions and a 2,048-token budget. Each entry fixes the checkpoint URI and SHA-256.
+
+The **active** encoder is runtime state, stored beside that backend's readiness manifests:
+
+| Backend | Selection record |
+| --- | --- |
+| Embedded Chroma | `$TRIALMATCH_ARTIFACTS/indexes/active-finetuned.json` |
+| HTTP Chroma (Compose, Cloud Run) | `$TRIALMATCH_ARTIFACTS/indexes/http-<backend12>/active-finetuned.json` |
+
+```json
+{
+  "schema_version": 1,
+  "retrieval_model": "finetuned",
+  "active": "pipeline-20261112",
+  "previous": "train-20261110-t4-r3",
+  "index_version": "<20 hex>",
+  "previous_index_version": "<20 hex>",
+  "activated_at": "<UTC ISO-8601>",
+  "history": [{"action": "switch", "from": "…", "to": "…", "index_version": "…", "at": "…"}]
+}
+```
+
+- **No record**: `Settings.for_retrieval("finetuned")` returns the MS3 settings unchanged
+  (`train-20261110-t4-r3`). Cloud Run starts without a record and therefore serves the default.
+- **Valid record**: the named catalog entry is used.
+- **Damaged record, or an encoder not in the catalog**: `ENCODER_SELECTION_INVALID`. The record
+  is never repaired, and the code never falls back silently.
+- `gemini` and an unset `retrieval_model` never read the record.
+
+## 9. Switch runbook
+
+Run from the repository root while the stack is running (`make up` or `make live`). The same
+CLI arguments apply to an embedded database.
+
+1. Check the current state. The output includes `encoder_selection.active` and `.previous`,
+   with `evaluated`, `index_version` and `index_status` for each:
+
+   ```bash
+   docker compose exec -T rag-api python -m services.rag_workflow.cli \
+     --retrieval-model finetuned index-status
+   ```
+
+2. Switch. Use `--allow-unevaluated` only for the unevaluated demonstration checkpoint:
+
+   ```bash
+   docker compose exec -T rag-api python -m services.rag_workflow.cli \
+     --retrieval-model finetuned switch-index --to pipeline-20261112 --allow-unevaluated
+   ```
+
+   Add `--snapshot <file>` to restore the candidate from an exported snapshot instead of
+   encoding. The command checks the catalog and evaluation flag, verifies the checkpoint
+   SHA-256 (downloading it once to `cache/checkpoints/`), builds or restores into the
+   candidate's own collection, runs `verify()` and two probe queries, and only then replaces
+   the record atomically (temporary file, `fsync`, `os.replace`). It prints `SWITCHED`, or
+   `ALREADY_ACTIVE` with the record unchanged. Any error exits with status 1 and a JSON
+   `{"error": CODE}`, and the record is unchanged.
+
+3. Restart the API so the cached readiness probe uses the new encoder:
+
+   ```bash
+   docker compose restart rag-api
+   ```
+
+Building a fine-tuned index downloads the checkpoint (about 600 MB) and encodes every criterion
+fragment on CPU. It needs Google credentials with read access to the checkpoint bucket.
+
+## 10. Rollback runbook
+
+```bash
+docker compose exec -T rag-api python -m services.rag_workflow.cli \
+  --retrieval-model finetuned rollback-index
+
+docker compose restart rag-api
+```
+
+Rollback re-verifies the previous encoder's collection and swaps `active` and `previous`. It
+never creates an encoder and never re-encodes. Running it twice alternates between the two
+versions. If the previous encoder is unevaluated, add `--allow-unevaluated`.
+
+## 11. Recovering from failures
+
+The full failure-mode table is in `docs/ms4/EMBEDDING_INDEX.md` §2.4. Until the final record
+write, every failure leaves the served index unchanged.
+
+| Symptom | Recovery |
+| --- | --- |
+| `switch-index` failed during encoding | Fix the cause and rerun the same command. The partial candidate collection has no readiness manifest, is never served, and is reused |
+| `EMBEDDING_CHECKPOINT_MISMATCH` | Remove `cache/checkpoints/<sha256>` and `<sha256>.complete` under the artifacts root so the checkpoint downloads again; check the catalog digest |
+| `ROLLBACK_TARGET_NOT_READY` | Restore the previous encoder's snapshot with `restore-index --input <snapshot>`, then run `rollback-index` again |
+| `ENCODER_SELECTION_INVALID` | Inspect the file printed in the message, then move it aside. The backend returns to the default encoder |
+| `ENCODER_SELECTION_WRITE_FAILED` | The old record is intact. Fix disk space or permissions, then rerun |
+
+For example, to move a damaged record aside on the Compose backend:
+
+```bash
+mv artifacts/infra/rag_workflow/indexes/http-66ed9a0e94e2/active-finetuned.json \
+  artifacts/infra/rag_workflow/indexes/http-66ed9a0e94e2/active-finetuned.json.invalid
+```
+
+## 12. Gemini compared with fine-tuned
+
+| | Gemini | Fine-tuned BioClinical |
+| --- | --- | --- |
+| Versions | One (`gemini-embedding-001`, 256 dimensions) | Catalog in `encoders.py` |
+| Index source | DVC snapshot `index_snapshots/current.json` | `build-index` or `switch-index`; cloud snapshots under `{checkpoint parent}/indexes/` |
+| Switching | Not applicable | `switch-index` / `rollback-index` |
+| Identity | Source, subset, model, dimension, chunker | The same, plus encoder revision, pooling, token budget and checkpoint SHA-256 |
+| Credentials | Vertex AI for building; none to restore | GCS read for the checkpoint; none to restore a snapshot or roll back |
+
+**Verification.** `services/rag_workflow/tests/test_index_switching.py` (14 tests, part of
+`make coverage`) runs switch, failed switch, rollback and recovery on embedded Chroma, using
+local test checkpoints and fake encoders. `docs/ms4/evidence/part-b/` holds the same cycle
+against the Compose Chroma server, together with the CLI refusals and the recovery commands
+above, as run in Compose. A switch to a real GCS checkpoint has **not** been run yet, because
+it needs credentials and a 600 MB download.
