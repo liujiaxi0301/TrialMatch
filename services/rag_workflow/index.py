@@ -9,6 +9,7 @@ from pathlib import Path
 from .embedding_providers import encoder_identity
 from .index_versions import (
     IndexSnapshot,
+    index_directory,
     load_snapshot,
     matching_record,
     read_records,
@@ -38,12 +39,8 @@ class VectorIndex:
             self.identity["encoder"] = encoder
         self.version = content_hash(self.identity)[:20]
         self.name = f"trialmatch-{self.version}"
-        indexes = settings.artifacts / "indexes"
-        if settings.chroma_host:
-            backend = content_hash([settings.chroma_host, settings.chroma_port])[:12]
-            indexes = indexes / f"http-{backend}"
         # HTTP and embedded stores can share artifacts/caches but need separate readiness/digests.
-        self.manifest_path = indexes / f"{self.version}.json"
+        self.manifest_path = index_directory(settings) / f"{self.version}.json"
         import chromadb
         from chromadb.config import Settings as ChromaSettings
 

@@ -8,7 +8,7 @@ from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, FiniteFloat, StrictInt, StrictStr
 
-from .providers import ProviderError
+from .providers import ProviderError, content_hash
 
 
 class VectorRecord(BaseModel):
@@ -43,6 +43,15 @@ class IndexSnapshot(BaseModel):
     vector_count: int = Field(gt=0)
     records_sha256: Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]
     records: list[VectorRecord]
+
+
+def index_directory(settings) -> Path:
+    """Backend-specific readiness directory: HTTP and embedded Chroma never share manifests."""
+    indexes = settings.artifacts / "indexes"
+    if settings.chroma_host:
+        backend = content_hash([settings.chroma_host, settings.chroma_port])[:12]
+        indexes = indexes / f"http-{backend}"
+    return indexes
 
 
 def records_hash(records: list[dict]) -> str:
