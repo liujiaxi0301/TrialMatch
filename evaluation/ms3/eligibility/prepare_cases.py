@@ -4,6 +4,7 @@ Selection is based on previously reviewed topical relevance labels.
 No eligibility predictions are used.
 """
 
+import argparse
 import csv
 import hashlib
 import json
@@ -16,8 +17,8 @@ from services.rag_workflow.data import DataStore
 BASE = Path(__file__).resolve().parent
 MS3 = BASE.parent
 
-QUERIES = MS3 / "retrieval_queries.jsonl"
-LABELS = MS3 / "retrieval_labels.csv"
+QUERIES = MS3 / "retrieval" / "retrieval_queries.jsonl"
+LABELS = MS3 / "retrieval" / "retrieval_labels.csv"
 
 # Fixed, purposively selected patient-trial cases.
 TRIAL_SELECTION = {
@@ -52,6 +53,10 @@ def write_frozen(path, content):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output-dir", type=Path, default=Path("artifacts/eligibility-cohort"))
+    args = parser.parse_args()
+    args.output_dir.mkdir(parents=True, exist_ok=True)
     store = DataStore(Settings())
     manifest = store.manifest()
 
@@ -143,8 +148,8 @@ def main():
 
     # Validate both existing outputs before creating either.
     outputs = [
-        (BASE / "eligibility_cases.jsonl", cases_text),
-        (BASE / "cohort_manifest.json", manifest_text),
+        (args.output_dir / "eligibility_cases.jsonl", cases_text),
+        (args.output_dir / "cohort_manifest.json", manifest_text),
     ]
 
     for path, content in outputs:
@@ -156,7 +161,7 @@ def main():
 
     print("\n=== Eligibility Cohort ===")
     print("Patient-trial pairs: 8")
-    print("Dev: 2 | Reporting: 6")
+    print("Evaluation split: all (8 cases)")
     print("Inclusion criteria: 32")
     print("Exclusion criteria: 83")
     print("Total criteria: 115")

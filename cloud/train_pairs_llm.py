@@ -9,7 +9,7 @@ Needs live credentials, so it runs on a workstation that has them, not in CI. Th
 provider caches every response on disk by content hash, so re-running costs nothing
 and produces the same queries.
 
-    uv run --locked --group embeddings --env-file services/rag_workflow/.env \
+    uv run --locked --group embeddings --env-file .env \
       python -m cloud.train_pairs_llm --limit 4000
 """
 

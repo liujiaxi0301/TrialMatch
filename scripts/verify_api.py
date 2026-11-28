@@ -1,4 +1,4 @@
-"""Module E HTTP smoke checks. No model request unless --screen is supplied."""
+"""HTTP smoke checks. No model request unless --screen is supplied."""
 
 import argparse
 import json
@@ -80,8 +80,8 @@ def verify(base_url, *, token=None, timeout=180, screen=False, require_operation
         and ("/screen" in schema.get("paths", {}))
     )
     check("/screen", 422, {})
-    check("/screen", 404, {"patient_id": "missing-ms3-smoke", "question": "Find trials"})
-    check("/screen", 422, {"patient_id": "missing-ms3-smoke", "question": " ", "top_k": 6})
+    check("/screen", 404, {"patient_id": "missing-smoke-patient", "question": "Find trials"})
+    check("/screen", 422, {"patient_id": "missing-smoke-patient", "question": " ", "top_k": 6})
     operations_present = isinstance(schema, dict) and "/ready" in schema.get("paths", {})
     readiness = check("/ready", 200) if operations_present or require_operations else None
     if operations_present or require_operations:

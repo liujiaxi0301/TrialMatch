@@ -1,8 +1,8 @@
 # API and Monitoring
 
-The FastAPI app serves the web page and screening API locally and on
-[Cloud Run](https://trialmatch-15733748057.us-east1.run.app).
-The cloud page and API are public and require no login.
+Locally, Nginx serves the web page and proxies requests to FastAPI.
+The [Cloud Run deployment](https://trialmatch-15733748057.us-east1.run.app)
+hosts the page and API together using the standalone image target.
 
 ## Endpoints
 
@@ -17,7 +17,7 @@ The cloud page and API are public and require no login.
 Live requests accept `retrieval_model=gemini` or `finetuned` in the JSON body.
 `/ready` accepts it as a query parameter. Readiness checks do not call Gemini or
 verify inference quota; `model_access=NOT_PROBED` reflects that limit.
-See the [request and response guide](../../services/rag_workflow/README.md#api-contract).
+See the [request and response guide](../services/rag_workflow/README.md#api-contract).
 
 Each response includes `X-Request-ID`. Screening responses also have a separate
 `run_id`; logs connect the two. Invalid input returns 422, missing patients 404,
@@ -63,39 +63,18 @@ Report PARTIAL and UNKNOWN separately from HTTP success.
 Start the local app with `make up` or `make live`, then run:
 
 ```bash
-docker compose exec -T rag-api python -m unittest services.rag_workflow.tests.test_api_operations -v
+make coverage
 ```
 
 The existing host-side HTTP checker can make one actual screening request:
 
 ```bash
-uv run --locked python demo/ovrz/verify_ms3_api.py \
+uv run --locked python scripts/verify_api.py \
   --base-url http://localhost:8080 --require-operations --screen \
-  --output artifacts/ms3-api/http.json
+  --output artifacts/api/http.json
 ```
 
 For the public cloud app, use
 `--base-url https://trialmatch-15733748057.us-east1.run.app`; no token is needed.
 Without `--screen`, the checker does not call a model. In live mode a screening
 request uses Gemini. Redirects do not count as successful API responses.
-
-## Evidence and Limits
-
-On November 12, cloud revision `trialmatch-b7738f4` returned three candidates,
-`result_status=OK` and no recorded errors for both Gemini and Fine-tuned BioClinical.
-The encoder provenance matched the evaluated November 10 checkpoint; both choices
-used Gemini for generation. [Online response screenshot](evidence/cloud-screening.jpg).
-
-After public access was enabled on November 12, the page and API documentation
-returned 200 without cookies or authorization headers. All eight HTTP checks passed,
-including one live screening request with `result_status=OK`.
-
-The original module checks are in [verification.json](evidence/module-e/verification.json),
-[offline HTTP checks](evidence/module-e/offline-http.json),
-[live HTTP checks](evidence/module-e/live-http.json) and
-[application log samples](evidence/module-e/application-logs.jsonl).
-Those November 11 local records are historical, not the later cloud run.
-They also record Windows cache/Chroma file-lock issues in the wider test suite.
-Current integration verification used macOS/Linux; it does not establish a full
-Windows test pass. Successful requests do not establish clinical accuracy or
-latency percentiles. Temporary logs and test outputs stay under ignored `artifacts/`.

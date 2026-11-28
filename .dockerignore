@@ -13,3 +13,9 @@ artifacts
 **/node_modules
 **/playwright-report
 **/test-results
+**/CLAUDE.md
+**/AGENTS.md
+**/GEMINI.md
+**/.claude
+**/.codex
+**/.cursor

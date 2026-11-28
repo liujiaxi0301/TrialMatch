@@ -93,7 +93,7 @@ is null. A high score cannot cancel a barrier.
 Malformed requests return 422; unknown patients return 404; unavailable data/indexes
 or model failures can return 503. Partial assessments may return HTTP 200 with
 `result_status=PARTIAL`. The CLI exits nonzero for ERROR/PARTIAL. API errors must not
-be replaced by mock results. [Logging and error handling](../../docs/ms3/API_MONITORING.md).
+be replaced by mock results. [Logging and error handling](../../docs/API_MONITORING.md).
 
 ## Assessment Boundaries
 

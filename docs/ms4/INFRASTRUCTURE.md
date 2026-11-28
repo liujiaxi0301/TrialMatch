@@ -4,15 +4,6 @@ Part D provides the runtime and automated checks for the other modules. It follo
 the course's per-service containers, locked dependencies, Compose networking and
 GitHub Actions build/lint/test approach. It does not redeploy the cloud application.
 
-The relevant course methods are from September 8–15 (uv, containers, layers and
-Compose), October 6 (software testing), October 8 (networking and credentials),
-October 15 (application design), November 5 (API/frontend separation) and
-November 19 (CI and browser testing).
-
-October 6 explicitly allows Make in place of Just (56:53–56:56). We retain the
-team's Make commands as that stable interface. The same lecture's Ruff formatter,
-pytest, locked uv environments and pre-commit checks are implemented below.
-
 ## Start locally
 
 Install Docker with Compose v2 and make, then start Docker. From a clean checkout:
@@ -143,12 +134,8 @@ requiring green checks before merging is a separate GitHub branch protection set
 - C: add API integration cases under `services/rag_workflow/tests/` or
   `services/frontend/tests/`; the existing suites run automatically.
 - E: take the coverage/browser reports and CI run link for Test Documentation.
-  Local reports are available before pushing; the real Actions run and screenshot
-  can only be collected after the branch is pushed.
-
-The new A/B/C MS4 branches were not available when this integration started. Their
-additional commands or external dependencies should be incorporated when delivered;
-this setup already exercises the current app and Jiaxi's coverage scope.
+  Use reports from the same commit as the submitted code; saved reports from an
+  earlier commit do not verify later changes.
 
 ## Troubleshooting
 

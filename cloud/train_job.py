@@ -3,7 +3,7 @@
     python -m cloud.train_job \
       --image us-east1-docker.pkg.dev/<project>/trialmatch/trainer@sha256:<digest> \
       --pairs gs://<bucket>/training/pairs/<sha>/pairs.jsonl \
-      --evidence docs/ms3/evidence/module-b/<date>
+      --evidence artifacts/training/<run-id>
 
 The image must be pinned by digest. The W&B key is never passed here: the job reads it
 from Secret Manager at run time with its own service account, so it appears in neither

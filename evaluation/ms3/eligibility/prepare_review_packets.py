@@ -1,5 +1,6 @@
 """Prepare prediction-blinded eligibility review materials."""
 
+import argparse
 import json
 from pathlib import Path
 
@@ -31,6 +32,10 @@ def json_text(obj):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output-dir", type=Path, default=Path("artifacts/eligibility-review"))
+    args = parser.parse_args()
+    output = args.output_dir
     store = DataStore(Settings())
     cases = [
         json.loads(line)
@@ -177,19 +182,19 @@ def main():
 
         outputs = [
             (
-                BASE / "source_facts" / f"{case_id}.jsonl",
+                output / "source_facts" / f"{case_id}.jsonl",
                 facts_text,
             ),
             (
-                BASE / "trial_sources" / f"{case_id}.json",
+                output / "trial_sources" / f"{case_id}.json",
                 trial_text,
             ),
             (
-                BASE / "review_packets" / f"{case_id}.md",
+                output / "review_packets" / f"{case_id}.md",
                 "\n".join(lines) + "\n",
             ),
             (
-                BASE / "reviewed_labels" / f"{case_id}.json",
+                output / "reviewed_labels" / f"{case_id}.json",
                 json_text(review_template) + "\n",
             ),
         ]
@@ -216,7 +221,7 @@ def main():
     print("Cases: 8")
     print("Criteria: 115")
     print("Model predictions used: 0")
-    print(f"Files saved under: {BASE}")
+    print(f"Files saved under: {output}")
 
 
 if __name__ == "__main__":

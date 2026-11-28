@@ -1,8 +1,8 @@
-# ChromaDB index versioning (MS2)
+# Chroma index versioning
 
-This is a logical snapshot workflow for Part 3. Git records the code, dependency lockfile, source data, snapshot summary and DVC pointer. DVC stores the exported documents, metadata and vectors. Chroma serves a restored collection. DVC runs in the `trial-processing` image.
+Git records the code, dependency lockfile, source data, snapshot summary and DVC pointer. DVC stores the exported documents, metadata and vectors. Chroma serves a restored collection. DVC runs in the `trial-processing` image.
 
-The current local snapshot contains **607 vectors, 256 dimensions, 50 trials** from the existing Gemini index. Export and restore do not call GCP or re-embed text. The snapshot contains public trial criteria and vectors, with no patient records, credentials or model-generated patient explanations. Patient files remain under the existing Git workflow; this change does not migrate Parts 1/2 to DVC.
+The current local snapshot contains **607 vectors, 256 dimensions, 50 trials** from the existing Gemini index. Export and restore do not call GCP or re-embed text. The snapshot contains public trial criteria and vectors, with no patient records, credentials or model-generated patient explanations. Patient files remain versioned in Git.
 
 ## What defines a version?
 
@@ -12,7 +12,7 @@ The current local snapshot contains **607 vectors, 256 dimensions, 50 trials** f
 | Logical index identity | Trial/criterion file SHA-256 hashes, selected trial IDs, embedding model, dimension, chunker revision |
 | Exact snapshot artifact | Documents, metadata and stored vectors; DVC file checksum and a SHA-256 summary |
 | Runtime database | A separate `trialmatch-<identity-hash>` collection for each identity; backend-specific readiness manifest and exact record digest |
-| Database software | Chroma version recorded in the snapshot; client and server use the version pinned in the root lockfile |
+| Database software | Chroma version recorded in the snapshot; client and server versions are pinned in their service lockfiles |
 
 Changing data, subset, model, dimension or chunker revision creates another collection. A completed collection is reused after validation, rather than overwritten by `build-index`. Earlier collections are retained. `index-status` and live retrieval check the IDs, source text, metadata, vector dimensions and record checksum, so changing vectors without changing their count is detected.
 
@@ -48,11 +48,11 @@ uv run --locked \
   python -m services.rag_workflow.cli build-index
 ```
 
-An existing complete legacy collection is validated and given a checksum without creating a cloud client or re-embedding. This migration has already been completed in this local checkout. If no index exists, `build-index` needs the normal GCP environment and incurs embedding usage, as described in the main README. A copied ready file without a matching database is insufficient.
+An existing complete legacy collection is validated and given a checksum without creating a cloud client or re-embedding. If no index exists, `build-index` needs the normal GCP environment and incurs embedding usage, as described in the main README. A copied ready file without a matching database is insufficient.
 
 ## 3. Export and record a data version
 
-Stop index writers before building/exporting/restoring; MS2 assumes one index writer. Queries may continue against an existing completed collection. No distributed write lock is implemented.
+Stop index writers before building/exporting/restoring; the current implementation assumes one index writer. Queries may continue against an existing completed collection. No distributed write lock is implemented.
 
 ```bash
 uv run --locked \
@@ -80,7 +80,7 @@ Changing `current.json` alone does not record a new DVC version: rerun `dvc add`
 
 ## 4. Restore into a fresh local database
 
-First obtain the snapshot. On this machine it is already available. Another machine needs the DVC pointer **and** access to its matching cache/shared remote; cloning Git alone does not download the vectors.
+First obtain the snapshot using the DVC pointer and access to its matching cache/shared remote; cloning Git alone does not download the vectors.
 
 Use a different artifact directory to test restoration while preserving the working database:
 
@@ -107,7 +107,7 @@ The default DVC remote `team` is configured in `.dvc/config`:
 gs://trialmatch-ac215-yixiao-dvc/dvc
 ```
 
-The bucket belongs to GCP project `trialmatch-ac215-yixiao` and uses Standard storage in `us-east1`. It is private. Team accounts have bucket-level Storage Object Viewer and Storage Object Creator roles for downloading data and uploading new versions. Storage access is separate from Gemini access.
+The bucket belongs to GCP project `trialmatch-ac215-yixiao` and uses Standard storage in `us-east1`. It is private. Downloading requires object read permission; publishing new versions requires object creation permission on the bucket. Storage access is separate from Gemini access.
 
 With the Google Cloud CLI installed, sign in on your own machine:
 
@@ -149,7 +149,7 @@ docker compose exec -T rag-api python -m services.rag_workflow.cli restore-index
 docker compose exec -T rag-api python -m services.rag_workflow.cli index-status
 ```
 
-The same commands work after `make live`; both modes use the root `docker-compose.yml`. Build/pull a RAG image containing this revision first. No frontend work or API contract changes are required. The database volume provides persistence; DVC provides retrievable snapshot versions. This is a collection export using Chroma's [Get API](https://docs.trychroma.com/docs/querying-collections/query-and-get), not a physical backup of the server's database/configuration.
+The same commands work after `make live`; both modes use the root `docker-compose.yml`. The database volume provides persistence; DVC provides retrievable snapshot versions. This is a collection export using Chroma's [Get API](https://docs.trychroma.com/docs/querying-collections/query-and-get), not a physical backup of the server's database/configuration.
 
 ## 7. Verification and review
 
@@ -159,8 +159,4 @@ uv run --locked \
 uv run --locked ruff check services/rag_workflow
 ```
 
-The DVC integration test uses a temporary Git repository and local-directory remote. It records two versions, selects the older Git pointer, removes only its disposable working file/cache, pulls the original bytes and verifies clean status. It never pushes this branch or uploads to cloud storage. DVC is included in the shared dependencies.
-
-`examples/index_versioning_verification.json` records the real 607-vector embedded/Docker restore checks. Stored document vectors are used as retrieval probes, so this verifies database restoration rather than a new LLM screening run. New model calls and frontend testing are outside this change.
-
-For review, inspect this guide, `index.py`, `index_versions.py`, the three CLI commands, snapshot summary/pointer and the new tests. Review code, source/configuration and snapshot pointer together before publishing.
+The DVC integration test uses a temporary Git repository and local-directory remote. It records two versions, selects the older Git pointer, removes only its disposable working file/cache, pulls the original bytes and verifies clean status. It never pushes this branch or uploads to cloud storage. The test is in `cloud/tests/test_dvc_snapshot.py` and runs in the workflow environment.

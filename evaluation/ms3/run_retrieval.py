@@ -1,4 +1,4 @@
-"""Ranked trial IDs for the fixed MS3 retrieval benchmark (retrieval_protocol.md).
+"""Ranked trial IDs for the fixed retrieval benchmark (retrieval/retrieval_protocol.md).
 
 Runs the production retrieval components over the fixed manifest trial universe
 for Q01-Q08 and writes `retrieval_runs.jsonl` plus a configuration record.
@@ -88,8 +88,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--encoders", nargs="*", default=["bioclinical"],
                         choices=["gemini", "bioclinical"])
-    parser.add_argument("--queries", type=Path, default=HERE / "retrieval_queries.jsonl")
-    parser.add_argument("--output", type=Path, default=HERE / "retrieval_runs.jsonl")
+    parser.add_argument("--queries", type=Path, default=HERE / "retrieval" / "retrieval_queries.jsonl")
+    parser.add_argument("--output", type=Path, default=ROOT / "artifacts/embedding_eval/retrieval_runs.jsonl")
     parser.add_argument("--top-k", type=int, default=5)
     parser.add_argument("--finetuned-manifest", type=Path,
                         help="training_manifest.json of the checkpoint to add as finetuned_*")

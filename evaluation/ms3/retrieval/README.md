@@ -8,7 +8,7 @@
 - Relevance: 0 = irrelevant, 1 = partially relevant, 2 = directly relevant.
 - Task: topical relevance, NOT individual patient eligibility.
 
-The original benchmark definition is in `retrieval_protocol.md`. Some historical paths in that document predate the move into `retrieval/`.
+The original benchmark definition is in `retrieval_protocol.md`.
 
 ## Gold labels
 
@@ -24,12 +24,12 @@ Additional reviews used method-blind packets and AI-assisted, non-clinician asse
 
 - `retrieval_runs.jsonl`: 80 rankings, ten methods x eight queries.
 - `retrieval_runs.config.json`: method configurations.
-- `runs_handoff.md`: Jenny's training and retrieval provenance.
+- `PROVENANCE.md`: Training and retrieval provenance.
 - `results/*_rankings.jsonl`: four legacy baselines.
 
 Methods include BM25, frozen BioClinical dense/hybrid, and fine-tuned dense/hybrid, with question-only and patient-aware variants.
 
-The original generation runner is on branch `jenny/ms3-training`. The transferred ranking outputs and configuration are preserved without modification.
+The generation runner is [run_retrieval.py](../run_retrieval.py); see [provenance and commands](PROVENANCE.md). Frozen rankings and configuration remain unchanged.
 
 The legacy BM25 rankings exactly match Jenny's BM25 rankings, so they are not treated as independent experiments.
 

@@ -17,7 +17,7 @@ from cloud.training_inputs import verify_training_manifest
 FILES = ("retrieval_runs.jsonl", "retrieval_runs.config.json")
 MANIFEST = "finetuned_retrieval_manifest.json"
 BENCHMARK = "services/rag_workflow/examples/demo_manifest.json"
-QUERIES = "evaluation/ms3/retrieval_queries.jsonl"
+QUERIES = "evaluation/ms3/retrieval/retrieval_queries.jsonl"
 METHODS = {f"{method}_{mode}" for method in ("bm25", "finetuned_dense", "finetuned_hybrid")
            for mode in ("question", "patient")}
 SCOPE = "Rankings from this run's trained encoder; human relevance scoring remains separate."

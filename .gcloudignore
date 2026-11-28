@@ -12,3 +12,9 @@ artifacts
 services/trial_ingestion/data/raw
 services/rag_workflow/index_snapshots/current.json
 services/rag_workflow/index_snapshots/current.manifest.json
+**/CLAUDE.md
+**/AGENTS.md
+**/GEMINI.md
+**/.claude
+**/.codex
+**/.cursor

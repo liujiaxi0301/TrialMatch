@@ -170,7 +170,7 @@ Do not use this benchmark alone to authorize clinical deployment.
   generalization claims.
 - Fine-tuned vs frozen comparisons follow Jenny's reported
   matched settings; the training and encoding provenance
-  are documented in `runs_handoff.md` and
+  are documented in `PROVENANCE.md` and
   `retrieval_runs.config.json`.
 
 Evaluation code: `evaluate_retrieval_complete.py`.

@@ -4,7 +4,7 @@
 export LOCAL_UID := $(shell id -u)
 export LOCAL_GID := $(shell id -g)
 TEST_COMPOSE = docker compose -f docker-compose.yml -f docker-compose.test.yml
-PYTHON_PATHS = services/rag_workflow services/frontend scripts/ms4
+PYTHON_PATHS = services/rag_workflow services/frontend scripts/ms4 scripts/verify_api.py
 PRE_COMMIT = uv tool run pre-commit==4.3.0
 
 dirs:

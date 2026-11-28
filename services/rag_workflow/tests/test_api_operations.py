@@ -388,7 +388,7 @@ class ApiOperationsTests(unittest.TestCase):
 
 class HttpVerifierTests(unittest.TestCase):
     def test_smoke_checks_reject_false_readiness_and_nonobject_screen(self):
-        from demo.ovrz.verify_ms3_api import verify
+        from scripts.verify_api import verify
 
         for ready, screening, expected in (
             (True, {"result_status": "OK", "candidate_trials": [{}]}, True),
@@ -416,7 +416,7 @@ class HttpVerifierTests(unittest.TestCase):
                     responses.append(response)
                 opener = Mock()
                 opener.open.side_effect = responses
-                with patch("demo.ovrz.verify_ms3_api.build_opener", return_value=opener):
+                with patch("scripts.verify_api.build_opener", return_value=opener):
                     report = verify(
                         "http://127.0.0.1:8080",
                         screen=True,

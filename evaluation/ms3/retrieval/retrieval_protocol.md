@@ -7,7 +7,7 @@
 ## 1. Fixed benchmark
 
 - **Code/data:** `milestone2` commit `f2fedbd` and its `demo_manifest.json` checksums.
-- **Queries:** `evaluation/ms3/retrieval_queries.jsonl` — Q01–Q08, each with `query_id`, `patient_id`, `question`.
+- **Queries:** `evaluation/ms3/retrieval/retrieval_queries.jsonl` — Q01–Q08, each with `query_id`, `patient_id`, `question`.
 - **Search universe:** Only the **50 trial IDs** in `services/rag_workflow/examples/demo_manifest.json` (not all 1,313 trials).
 - **Patient source:** `services/patient_processing/data/processed/batch25_patients.jsonl`.
 - **Shared input:** Each method uses the same question and patient record, starting from the existing `patient_query(patient, question)` representation in `retrieve.py`. Query rewriting may add legitimate synonyms, **not invented patient facts**.
@@ -15,7 +15,7 @@
 
 ## 2. Methods and output (Jenny → Jiaxi)
 
-Compare **BM25**, existing **BM25 + Gemini embedding hybrid**, and Jenny's new rewriting/embedding variants. Return **up to 5 distinct trial IDs**, ranked best to worst, per query and method, as `evaluation/ms3/retrieval_runs.jsonl`:
+Compare **BM25**, existing **BM25 + Gemini embedding hybrid**, and Jenny's new rewriting/embedding variants. Return **up to 5 distinct trial IDs**, ranked best to worst, per query and method, as `artifacts/embedding_eval/retrieval_runs.jsonl`:
 
 ```json
 {"query_id":"Q01","method":"rewrite_hybrid_v1","ranked_trial_ids":["NCT03264352","NCT03549754","NCT04880005"]}
@@ -25,7 +25,7 @@ Compare **BM25**, existing **BM25 + Gemini embedding hybrid**, and Jenny's new r
 
 **Fair comparison:** Keep inputs and trial universe fixed. Existing BM25 searches trial titles/conditions/summaries/criteria, while the semantic index uses criterion fragments; therefore BM25 vs existing hybrid is a **system comparison**, not proof that embeddings alone caused any difference. To isolate rewriting or embeddings, keep other components as constant as possible and document changes.
 
-## 3. Reference labels (Jiaxi)
+## 3. Reference labels
 
 Manually review each **`(query_id, trial_id)`** against trial titles, summaries, conditions, and relevant criteria; judge **topic/query relevance, not whether this patient qualifies**.
 
@@ -35,7 +35,7 @@ Manually review each **`(query_id, trial_id)`** against trial titles, summaries,
 | **1** | Clearly related but only partially matches the query |
 | **0** | No substantive match; generic T2D overlap alone is insufficient |
 
-Save `evaluation/ms3/retrieval_labels.csv` with:
+Save `evaluation/ms3/retrieval/retrieval_labels.csv` with:
 
 `query_id,trial_id,relevance,reason,source_reference`
 
@@ -47,6 +47,5 @@ Save `evaluation/ms3/retrieval_labels.csv` with:
 - **nDCG@5:** Ranking quality using grades **0/1/2**, gain `2^grade - 1`, and the ideal ordering of the **judged pooled candidates** for that query. Report if no relevant candidate was judged.
 - Calculate per-query scores and separate Q01–Q02 development vs Q03–Q08 test averages. Flag missing labels rather than scoring them. Include 2–3 concrete ranking/error examples. Do **not** claim full-corpus Recall@K, statistical significance, or clinical accuracy.
 
-**Handoff:** Jiaxi shares this protocol + eight queries now → Jenny returns ranked IDs and configurations → Jiaxi completes/reviews pooled labels, runs automated scoring, and produces CSV/JSON metrics + a short comparison report. Jiaxi will also develop the **separate eligibility benchmark** and provide a local evaluation command for later pipeline integration.
 
 **Limits:** Only eight queries, synthetic patients (reference date 2021-11-30), and a historical trial snapshot (2026-10-11). Results are exploratory engineering evidence, not clinical recommendations.

@@ -11,7 +11,6 @@ Convert official Synthea FHIR R4 Bundles into source-linked **schema 0.3 patient
 | One raw FHIR to fact example | [Source mapping](examples/fhir_to_facts_mapping.md) |
 | Shared RAG input | [25-patient JSONL](data/processed/batch25_patients.jsonl) |
 | Exact source and selected patients | [Source manifest](data/sample_source.json), [cohort selection](data/processed/batch25_selection.json) |
-| Patient-stage evidence | [Validation record](evidence/patient_delivery_checks.json), [test log](evidence/patient_tests.txt), [sample replay](evidence/sample_run.txt) |
 | MS3 evaluation | [Eligibility benchmark](../../evaluation/ms3/eligibility/README.md) |
 
 ## Source and cohort
@@ -30,7 +29,7 @@ All 25 have recorded HbA1c/BMI/blood-pressure evidence; eGFR/AST/ALT presence is
 
 ## Run from the repository root
 
-The extractor uses only the Python standard library. This integrated checkout uses Python 3.12 and the root [pyproject.toml](../../pyproject.toml) and [uv.lock](../../uv.lock). Original standalone-module validation used Python 3.12.14 and uv 0.12.23. Follow the root [setup instructions](../../README.md#quick-start) for Docker; the commands below are for a local shared uv environment.
+The extractor uses only the Python standard library. This integrated checkout uses Python 3.12 and the root [pyproject.toml](../../pyproject.toml) and [uv.lock](../../uv.lock). Follow the root [setup instructions](../../README.md#quick-start) for Docker; the commands below are for a local shared uv environment.
 
 ```bash
 uv sync --locked

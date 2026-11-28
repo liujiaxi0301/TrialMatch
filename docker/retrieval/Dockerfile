@@ -8,7 +8,8 @@ RUN uv sync --frozen --no-dev --no-cache
 COPY cloud/__init__.py cloud/tasks.py cloud/release.py cloud/training_inputs.py cloud/finetuned_retrieval.py ./cloud/
 COPY services/rag_workflow/*.py ./services/rag_workflow/
 COPY evaluation/retrieval/__init__.py evaluation/retrieval/benchmark.py ./evaluation/retrieval/
-COPY evaluation/ms3/run_retrieval.py evaluation/ms3/retrieval_queries.jsonl ./evaluation/ms3/
+COPY evaluation/ms3/run_retrieval.py ./evaluation/ms3/
+COPY evaluation/ms3/retrieval/retrieval_queries.jsonl ./evaluation/ms3/retrieval/
 RUN python -m cloud.finetuned_retrieval --help \
     && python -m evaluation.ms3.run_retrieval --help
 ARG SOURCE_COMMIT

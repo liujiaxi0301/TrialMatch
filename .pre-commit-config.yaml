@@ -24,4 +24,4 @@ repos:
         entry: make check
         language: system
         pass_filenames: false
-        files: '^(services/(rag_workflow|frontend)/|scripts/ms4/|docker/|docker-compose.*\.yml$|ruff\.toml$|Makefile$|\.pre-commit-config\.yaml$|\.github/workflows/)'
+        files: '^(services/(rag_workflow|frontend)/|scripts/(ms4/|verify_api\.py$)|docker/|docker-compose.*\.yml$|ruff\.toml$|Makefile$|\.pre-commit-config\.yaml$|\.github/workflows/)'

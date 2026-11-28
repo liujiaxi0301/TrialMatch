@@ -16,8 +16,7 @@ services:
       COVERAGE_FILE: /tmp/ms4.coverage
     volumes:
       - ./services:/app/services:ro
-      - ./demo:/app/demo:ro
-      - ./scripts/ms4:/app/scripts/ms4:ro
+      - ./scripts:/app/scripts:ro
       - ./ruff.toml:/app/ruff.toml:ro
       - ./artifacts/ms4:/app/artifacts/ms4
     command: [bash, scripts/ms4/check_coverage.sh, --container]

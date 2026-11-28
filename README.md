@@ -16,16 +16,16 @@ information. This is a research demo, not a clinical eligibility decision.
 
 See [local setup, CI and integration notes](docs/ms4/INFRASTRUCTURE.md).
 
-## MS3 Foundation
+## System
 
-| MS3 component | Implementation and evidence |
-| --- | --- |
-| Training | Contrastive encoder training on Vertex AI, tracked in W&B; [successful run and reproduction](docs/ms3/evidence/module-b/2026-11-10/README.md). |
-| Deployment | [Cloud Run app](https://trialmatch-15733748057.us-east1.run.app), private Chroma VM and shared GCS data. |
-| Automated workflow | Four-step Vertex pipeline for data recovery, processing, validation and retrieval; [screenshots](docs/ms3/evidence/module-a/screenshots.md). |
-| Monitoring and API | Structured Cloud Logging, request IDs, readiness checks and API tests; [API guide](docs/ms3/API_MONITORING.md). |
-| Model comparison | Gemini or the evaluated fine-tuned encoder in the app; [retrieval benchmark](evaluation/ms3/retrieval/README.md). |
-| Containers | Each Python service has its own Dockerfile, pyproject.toml and uv.lock. |
+The app supports Gemini and a fine-tuned encoder for hybrid retrieval, followed
+by rules and Gemini for criterion assessment. The cloud deployment uses Cloud Run,
+a private Chroma VM and GCS. Vertex Pipelines automates data processing and optional
+training/evaluation. Each Python service has its own Dockerfile and locked dependencies.
+
+- [Cloud pipeline](cloud/README.md) and [serving encoder](docs/training/README.md).
+- [API and monitoring](docs/API_MONITORING.md).
+- [Retrieval and eligibility evaluation](evaluation/ms3/README.md).
 
 ## Modules
 
@@ -178,7 +178,7 @@ and produces BM25/Gemini rankings. Each task passes versioned files through GCS.
 [Successful run](https://console.cloud.google.com/vertex-ai/locations/us-east1/pipelines/runs/trialmatch-data-pipeline-20261112024908?project=trialmatch-ac215-yixiao).
 Use `bash cloud/deploy.sh pipeline --compile-only` to compile without submitting.
 Training and evaluation are optional branches documented in the
-[pipeline training guide](docs/ms3/module-a-training.md).
+[cloud workflow guide](cloud/README.md).
 
 For an application-only change, build the image, then update the app using the
 command below. This keeps the currently deployed data release; use the full sequence
@@ -217,7 +217,7 @@ This launcher uses host `uv` and Python. Add `--dry-run` to inspect the job with
 submitting. Vertex needs T4 quota and the pipeline service account needs access to
 the `wandb-api-key` Secret Manager secret. Verify `experiment.mode=online` in the
 manifest; without the key, tracking falls back to offline mode.
-[Training configuration, screenshots and limitations](docs/ms3/evidence/module-b/2026-11-10/README.md).
+[Training configuration and limitations](docs/training/README.md).
 
 The submitted retrieval report compares 14 saved methods using eight queries and
 182 judgments. Reproduce its scores without training, cloud access or model calls:
@@ -249,7 +249,7 @@ jsonPayload.message="http_request"
 
 Use `jsonPayload.message="screening_completed"` for model summaries or add
 `jsonPayload.status_code>=400` for HTTP errors. Cloud Run also shows request and latency
-metrics. [Logging fields and HTTP verification](docs/ms3/API_MONITORING.md).
+metrics. [Logging fields and HTTP verification](docs/API_MONITORING.md).
 
 Run the backend/API tests and coverage check in the test container:
 
@@ -265,19 +265,9 @@ the existing unittest-style test cases remain supported.
 Other module tests and protocols are linked from their READMEs. Local tests and
 HTTP success do not establish clinical accuracy.
 
-## MS3 Submission Evidence
+## Submission history
 
-The following evidence comes from the MS3 submission. Earlier MS2 materials remain in the
-[`milestone2` branch](https://github.com/liujiaxi0301/TrialMatch/tree/milestone2).
-
-- [Presentation slides](docs/ms3/TrialMatch-MS3.pptx).
-- [Training run and W&B charts](docs/ms3/evidence/module-b/2026-11-10/README.md).
-- [Vertex pipeline screenshots](docs/ms3/evidence/module-a/screenshots.md).
-- [Evidence summary and evaluation provenance](docs/ms3/submission-evidence.md).
-- Online verification on November 12: revision `trialmatch-b7738f4`; both retrieval
-  options returned three candidates with `result_status=OK` and no recorded errors.
-
-![Online trained-encoder screening response](docs/ms3/evidence/cloud-screening.jpg)
-
-The frozen MS3 submission is on **milestone3**. MS4 development continues separately;
-the final MS4 submission must use the **milestone4** branch.
+MS4 development builds on the frozen [milestone3 submission](https://github.com/liujiaxi0301/TrialMatch/tree/milestone3).
+Previous slides, screenshots and execution logs remain there; this branch keeps
+current code, reusable evaluation assets and operational documentation.
+The final MS4 submission must use the **milestone4** branch.
