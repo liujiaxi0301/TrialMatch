@@ -1,4 +1,6 @@
 const { defineConfig } = require('@playwright/test');
+const path = require('node:path');
+const reportDir = process.env.REPORT_DIR || '/reports';
 
 module.exports = defineConfig({
   testDir: '.',
@@ -8,11 +10,11 @@ module.exports = defineConfig({
   retries: 0,
   timeout: 60000,
   expect: { timeout: 15000 },
-  outputDir: '/reports/browser-results',
+  outputDir: path.join(reportDir, 'browser-results'),
   reporter: [
     ['list'],
-    ['html', { outputFolder: '/reports/playwright-report', open: 'never' }],
-    ['junit', { outputFile: '/reports/browser-results.xml' }],
+    ['html', { outputFolder: path.join(reportDir, 'playwright-report'), open: 'never' }],
+    ['junit', { outputFile: path.join(reportDir, 'browser-results.xml') }],
   ],
   use: {
     baseURL: process.env.BASE_URL || 'http://localhost:8080',

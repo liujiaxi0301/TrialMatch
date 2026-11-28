@@ -1,4 +1,5 @@
 const { test, expect } = require('@playwright/test');
+const path = require('node:path');
 
 // Real browser -> Nginx -> FastAPI -> offline screening. No intercepted APIs.
 test('patient selection, screening and evidence review', async ({ page }) => {
@@ -34,7 +35,7 @@ test('patient selection, screening and evidence review', async ({ page }) => {
   expect(exported.candidate_trials).toEqual(body.candidate_trials);
   await page.locator('#closeDialog').click();
   await page.locator('summary').filter({ hasText: 'Criteria & evidence' }).first().click();
-  await page.screenshot({ path: '/reports/screening.png', fullPage: true });
+  await page.screenshot({ path: path.join(process.env.REPORT_DIR || '/reports', 'screening.png'), fullPage: true });
   expect(errors).toEqual([]);
 });
 
